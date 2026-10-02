@@ -306,6 +306,7 @@ public class KycService : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
+        ValidateJwt(request.Jwt);
         ValidateIdentification(request.Account, request.Memo, request.MemoType);
         ValidateTransactionType(request.TransactionId, request.Type);
 
@@ -353,6 +354,8 @@ public class KycService : IDisposable
         {
             throw new ArgumentNullException(nameof(request));
         }
+
+        ValidateJwt(request.Jwt);
 
         var fields = new Dictionary<string, string>();
         AddIfPresent(fields, "id", request.Id);
@@ -431,6 +434,8 @@ public class KycService : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
+        ValidateJwt(request.Jwt);
+
         if (string.IsNullOrWhiteSpace(request.Id))
         {
             throw new ArgumentException("The customer ID must not be empty.", nameof(request));
@@ -473,6 +478,8 @@ public class KycService : IDisposable
         {
             throw new ArgumentNullException(nameof(request));
         }
+
+        ValidateJwt(request.Jwt);
 
         if (!TryParseHttpUrl(request.Url, out var url, out var callbackUri))
         {
@@ -527,6 +534,8 @@ public class KycService : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
+        ValidateJwt(request.Jwt);
+
         if (string.IsNullOrWhiteSpace(request.Account))
         {
             throw new ArgumentException("The account must not be empty.", nameof(request));
@@ -574,6 +583,8 @@ public class KycService : IDisposable
         {
             throw new ArgumentNullException(nameof(request));
         }
+
+        ValidateJwt(request.Jwt);
 
         if (request.File == null)
         {
@@ -629,6 +640,8 @@ public class KycService : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
+        ValidateJwt(request.Jwt);
+
         if (string.IsNullOrWhiteSpace(request.FileId) && string.IsNullOrWhiteSpace(request.CustomerId))
         {
             throw new ArgumentException("Either a file ID or a customer ID is required.", nameof(request));
@@ -671,7 +684,9 @@ public class KycService : IDisposable
     /// <param name="method">The HTTP method.</param>
     /// <param name="url">The absolute request URL.</param>
     /// <param name="content">The request body, or <c>null</c>; disposed with the request.</param>
-    /// <param name="jwt">The SEP-10 or SEP-45 JWT sent as the bearer token.</param>
+    /// <param name="jwt">
+    ///     The SEP-10 or SEP-45 JWT sent as the bearer token, already checked with <see cref="ValidateJwt" />.
+    /// </param>
     /// <param name="customerEndpoint">
     ///     Whether the endpoint is a <c>/customer</c> endpoint, on which 404 means "customer not found".
     /// </param>
@@ -689,25 +704,6 @@ public class KycService : IDisposable
         bool readSuccessBody,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(jwt))
-        {
-            content?.Dispose();
-            throw new ArgumentException("A SEP-10 or SEP-45 JWT is required for every SEP-0012 request.",
-                "request");
-        }
-
-        foreach (var c in jwt)
-        {
-            // A JWT is base64url segments joined by dots. Anything outside printable ASCII would otherwise surface
-            // from System.Net.Http as a FormatException or an HttpRequestException that looks like a transport fault.
-            if (c <= ' ' || c > '~')
-            {
-                content?.Dispose();
-                throw new ArgumentException(
-                    "The JWT must consist of printable ASCII characters, without whitespace.", "request");
-            }
-        }
-
         // After every argument check, so a disposed service reports an invalid request the same way a live one does.
         if (_disposed)
         {
@@ -1106,6 +1102,30 @@ public class KycService : IDisposable
         }
 
         return builder.ToString();
+    }
+
+    /// <summary>
+    ///     Rejects a JWT that is empty or is not printable ASCII. Every public method calls it first, before any request
+    ///     content exists, so an invalid JWT never leaves content to dispose.
+    /// </summary>
+    private static void ValidateJwt(string jwt)
+    {
+        if (string.IsNullOrWhiteSpace(jwt))
+        {
+            throw new ArgumentException("A SEP-10 or SEP-45 JWT is required for every SEP-0012 request.",
+                "request");
+        }
+
+        foreach (var c in jwt)
+        {
+            // A JWT is base64url segments joined by dots. Anything outside printable ASCII would otherwise surface
+            // from System.Net.Http as a FormatException or an HttpRequestException that looks like a transport fault.
+            if (c <= ' ' || c > '~')
+            {
+                throw new ArgumentException(
+                    "The JWT must consist of printable ASCII characters, without whitespace.", "request");
+            }
+        }
     }
 
     /// <summary>
