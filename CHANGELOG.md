@@ -164,6 +164,44 @@ All notable changes to this project are documented here. The format is based on
     itself is detected on the callback path after the fact.
   - Typed exceptions under `StellarDotnetSdk.Sep.Sep0007.Exceptions` (base `Sep7Exception`), and a new
     `SEP-0007_COMPATIBILITY_MATRIX.md` (100%, 31/31 fields).
+- **SEP-12 KYC API client** (`StellarDotnetSdk.Sep.Sep0012`, SEP-12 v1.15.0): `KycService` covers every
+  endpoint — `GET`/`PUT /customer`, `PUT /customer/verification` (deprecated, marked `[Obsolete]`),
+  `PUT /customer/callback`, `DELETE /customer/{account}`, `POST`/`GET /customer/files` — and
+  `FromDomainAsync` discovers `KYC_SERVER` from stellar.toml, falling back to `TRANSFER_SERVER`, and raises
+  `KycServiceException` for a declared server that is not an absolute `https` URL. Requests take a SEP-10 or
+  SEP-45 JWT and must go to an `https` server, and a callback URL registered with `PUT /customer/callback`
+  must be `https` too, which SEP-12 itself does not require (plain `http` only for `localhost` or a
+  loopback IP in its standard form, in both cases).
+  `PUT /customer` sends SEP-9 fields (via the existing `Sep0009` types), custom fields and files as
+  `multipart/form-data` with every binary part last, plus `*_verification` codes and `*_file_id`
+  references; the client-side rules of SEP-12 (a `type` with every `transaction_id`, no memo for a `C...`
+  account) are checked before sending, and so is a name used by both a text field and a file. Customer
+  statuses, provided-field statuses and field types are typed enums matched against the exact SEP-12
+  literals — on the response properties and on the enum types themselves — so an unknown value or a bare
+  ordinal fails the parse instead of reading as `ACCEPTED`.
+  Response bodies are capped at 1 MiB, the whole exchange (body included) is bounded by the client's
+  timeout, duplicate JSON properties are rejected in success and error bodies alike (the hardening issue
+  [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205) asks for elsewhere), and error
+  statuses map to `AuthenticationRequiredException`, `CustomerNotFoundException`,
+  `PayloadTooLargeException` or `KycServiceException`, carrying the anchor's `error` text (and, on a plain
+  `KycServiceException`, any `Retry-After` delay as `RetryAfterDelay`); an invalid success body, including
+  one that is not valid UTF-8, raises `InvalidKycResponseException`, and server text quoted in any exception
+  message is clamped and stripped of control and format characters. The internal client does not follow
+  redirects; with a caller's client, a response from another origin, or to a request a redirect resent with
+  another method (`POST`, `PUT` or `DELETE` turned into `GET`), is rejected. File names are percent-encoded
+  per RFC 7578, and a request's `ToString()` redacts the JWT, SEP-9 and custom field values, file contents
+  and names, verification codes, file references and callback-URL secrets, but prints identifiers (customer
+  ID, account, memo, memo type, type, transaction ID, language, file ID, content type) with control and
+  format characters replaced. The SEP-12 converters are public and attached to the response properties, so a
+  consumer's source-generated `JsonSerializerContext` can use the response types with the same converter checks,
+  including the rejection of a `null` entry in `fields` or `provided_fields`. Duplicate-property rejection and the
+  nullable-annotation checks come from `JsonOptions.DefaultOptions` instead: a consumer's own options need
+  `AllowDuplicateProperties = false` and `RespectNullableAnnotations = true` for those.
+  `KycCallbackSignature` verifies the `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
+  `<timestamp>.<host>.<body>`, with a freshness window, over the body as a string or raw bytes), and
+  `GetSignedHost` derives the host string the anchor signs (`host:port` when the callback URL names a port);
+  `GetCustomerInfoResponse.FromJson` parses the callback payload. Compatibility matrix:
+  `StellarDotnetSdk/Compatibility/sep/SEP-0012_COMPATIBILITY_MATRIX.md` (100%, 90/90 fields).
 - **SEP-38 (Anchor RFQ API) client**, new namespace `StellarDotnetSdk.Sep.Sep0038` (SEP-38 v2.5.0):
   - `QuoteService` covers `GET /info`, `GET /prices`, `GET /price`, `POST /quote` and `GET /quote/:id`,
     and `QuoteService.FromDomainAsync` discovers `ANCHOR_QUOTE_SERVER` from stellar.toml. The JWT is
@@ -955,3 +993,6 @@ All notable changes to this project are documented here. The format is based on
   classes now call a single internal helper rather than keeping separate copies.
   The `InvalidOperationException` carve-out in `ResultValue` is now expressed as an exclusion from the
   shared set rather than by re-listing the other types.
+- SEP-45 `ClientWebAuthContract` now accepts a challenge or token response that starts with a UTF-8 byte order
+  mark; it was rejected as invalid JSON. It reads response bodies through the size-bounded reader the SEP-12
+  `KycService` uses, so a fix to that reader reaches both clients.

@@ -60,6 +60,29 @@ public static class RetryAfterParser
     }
 
     /// <summary>
+    ///     Reads the <c>Retry-After</c> header of a response into a positive <see cref="TimeSpan" /> (clamped to
+    ///     <see cref="MaxRepresentableDelay" />), or null if it is absent, unparseable, in the past, or non-positive.
+    ///     The typed <see cref="HttpResponseHeaders.RetryAfter" /> is null for a value .NET cannot read, such as an
+    ///     ISO 8601 date, a leading <c>+</c> or delta-seconds beyond <see cref="int.MaxValue" />, so the first raw
+    ///     value is parsed with <see cref="Parse" /> instead. <c>KycService</c> and
+    ///     <see cref="RetryingHttpMessageHandler" /> both read the header through this method, so they report the same
+    ///     delay.
+    /// </summary>
+    internal static TimeSpan? FromHeaders(HttpResponseHeaders headers)
+    {
+        var parsed = ToTimeSpan(headers.RetryAfter);
+        if (parsed is null && headers.TryGetValues("Retry-After", out var rawValues))
+        {
+            foreach (var raw in rawValues)
+            {
+                return Parse(raw);
+            }
+        }
+
+        return parsed;
+    }
+
+    /// <summary>
     ///     Parses an arbitrary value (a string in delay-seconds or HTTP-date form, int, long, TimeSpan,
     ///     <see cref="DateTime" />, <see cref="DateTimeOffset" />, or <see cref="RetryConditionHeaderValue" />)
     ///     into a positive <see cref="TimeSpan" />, or null if unparseable, missing, or non-positive.

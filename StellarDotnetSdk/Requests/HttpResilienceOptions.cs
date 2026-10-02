@@ -460,11 +460,11 @@ public static class HttpResilienceOptionsPresets
     ///     </para>
     ///     <para>
     ///         <b>Scope:</b> this preset is for <c>Server</c> (Horizon) only. Do NOT wire it into SEP service
-    ///         clients (<c>ClientWebAuth</c>, <c>InteractiveService</c>, <c>TransferServerService</c>):
-    ///         SEP-10 <c>POST /auth</c> consumes a one-shot challenge, SEP-24
+    ///         clients (<c>ClientWebAuth</c>, <c>InteractiveService</c>, <c>TransferServerService</c>,
+    ///         <c>KycService</c>): SEP-10 <c>POST /auth</c> consumes a one-shot challenge, SEP-24
     ///         <c>POST /transactions/{deposit,withdraw}/interactive</c>
-    ///         creates a fresh transaction row per call, and SEP-6 <c>PATCH /transactions/{id}</c> is not in the
-    ///         official spec. For SEP clients, use <see cref="WithConnectionRetries" /> (mind its all-methods
+    ///         creates a fresh transaction row per call, SEP-12 <c>POST /customer/files</c> stores a fresh file
+    ///         per call, and SEP-6 <c>PATCH /transactions/{id}</c> is not in the official spec. For SEP clients, use <see cref="WithConnectionRetries" /> (mind its all-methods
     ///         connection-retry caveat) or build a custom <see cref="HttpResilienceOptions" /> whose
     ///         <see cref="HttpResilienceOptions.RetryHttpMethods" />
     ///         only contains <c>GET</c>/<c>HEAD</c>/<c>OPTIONS</c>.
