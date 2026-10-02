@@ -4,7 +4,10 @@
 # must be stripped by hand when copying the .x files (see README.md, "Updating
 # XDR schemas"); this check reports every leftover directive by file and line.
 module PreprocessorCheck
-  DIRECTIVE = /\A\s*#\s*(if|ifdef|ifndef|elif|else|endif|define|undef)\b/
+  # Any directive name, not only the conditional ones: xdrgen rejects them all.
+  # A %-prefixed line (e.g. %#include) is passed through by xdrgen and never
+  # matches, because it does not start with #.
+  DIRECTIVE = /\A\s*#\s*[a-z]+\b/
 
   # Returns "path:line: text" for every preprocessor directive in the files.
   def self.find_directives(paths)

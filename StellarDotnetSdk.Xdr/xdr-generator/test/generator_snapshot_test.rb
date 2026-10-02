@@ -61,6 +61,28 @@ class GeneratorSnapshotTest < Minitest::Test
     end
   end
 
+  # xdrgen chokes on any directive, not only the conditional ones; a %-prefixed
+  # line is passed through to the output and is not a directive.
+  def test_preprocessor_check_detects_any_directive_name
+    Dir.mktmpdir("xdrgen-preprocessor-") do |tmp_dir|
+      path = File.join(tmp_dir, "directives.x")
+      File.write(path, <<~XDR)
+        %#include "xdr/Stellar-types.h"
+        #include "xdr/Stellar-ledger.h"
+        #pragma once
+        #error unsupported
+        #line 7
+        #elifdef CAP_0084_MUXED_CONTRACT
+        typedef int Foo;
+      XDR
+
+      assert_equal ["#{path}:2: #include \"xdr/Stellar-ledger.h\"", "#{path}:3: #pragma once",
+                    "#{path}:4: #error unsupported", "#{path}:5: #line 7",
+                    "#{path}:6: #elifdef CAP_0084_MUXED_CONTRACT"],
+                   PreprocessorCheck.find_directives([path])
+    end
+  end
+
   private
 
   def fixture_paths
