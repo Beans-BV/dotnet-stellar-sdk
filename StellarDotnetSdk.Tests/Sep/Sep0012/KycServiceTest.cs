@@ -2255,6 +2255,23 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    public async Task Response_WithMalformedUtf8InAnUnknownProperty_ThrowsInvalidKycResponseException()
+    {
+        // System.Text.Json skips an unknown property without decoding it, so only a check of the whole body can
+        // reject these bytes.
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(WithInvalidUtf8("{\"status\":\"REJECTED\",\"unknown\":\"a", "b\"}")),
+        });
+        using var service = new KycService(KycServerUrl, new HttpClient(handler));
+
+        var ex = await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+
+        StringAssert.Contains(ex.Message, "not valid UTF-8");
+    }
+
+    [TestMethod]
     public async Task ErrorResponse_WithMalformedUtf8_IsStillMappedByItsType()
     {
         // A 403 maps to AuthenticationRequiredException only through the body's "type", so error bodies stay

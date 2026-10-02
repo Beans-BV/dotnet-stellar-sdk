@@ -95,8 +95,9 @@ public class KycService : IDisposable
     private const string FileIdSuffix = "_file_id";
     private static readonly string[] MemoTypes = { "text", "id", "hash" };
 
-    // Throws on malformed input instead of substituting U+FFFD, which would turn corrupt bytes into a valid string.
-    // Used for success bodies only: an error body stays lenient, so its "type" still selects the exception.
+    // Validates a success body before it is parsed from its bytes: System.Text.Json does not check the bytes of a
+    // value it skips, and a replacing decoder would turn corrupt bytes into U+FFFD. An error body stays lenient, so
+    // its "type" still selects the exception.
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
 
     private readonly HttpClient _httpClient;
@@ -695,7 +696,7 @@ public class KycService : IDisposable
     ///     its body, so a body the caller would discard cannot turn a completed operation into an error.
     /// </param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    private async Task<(string? Body, int Status)> SendAsync(
+    private async Task<(ArraySegment<byte> Body, int Status)> SendAsync(
         HttpMethod method,
         string url,
         HttpContent? content,
@@ -782,15 +783,14 @@ public class KycService : IDisposable
 
             if (response.IsSuccessStatusCode && !readSuccessBody)
             {
-                return (null, status);
+                return (default, status);
             }
 
-            string? body;
+            ArraySegment<byte>? body;
             try
             {
-                var encoding = response.IsSuccessStatusCode ? StrictUtf8 : Encoding.UTF8;
                 body = await BoundedResponseBody
-                    .ReadAsStringAsync(response, MaxResponseBodyBytes, encoding, timeoutSource.Token)
+                    .ReadAsBytesAsync(response, MaxResponseBodyBytes, timeoutSource.Token)
                     .ConfigureAwait(false);
             }
             catch (IOException ex)
@@ -803,24 +803,32 @@ public class KycService : IDisposable
                 // The status alone still selects the exception type; only the anchor's error text is lost.
                 body = null;
             }
-            catch (DecoderFallbackException ex)
-            {
-                // Only the strict decoder throws this, and only success bodies use it.
-                throw new InvalidKycResponseException("SEP-0012 response body is not valid UTF-8.", status, ex);
-            }
 
             if (response.IsSuccessStatusCode)
             {
-                if (body == null)
+                if (body is not { } bytes)
                 {
                     throw new InvalidKycResponseException(
                         $"SEP-0012 response body exceeds the {MaxResponseBodyBytes}-byte limit.", status);
                 }
 
-                return (body, status);
+                try
+                {
+                    // Checks every byte without building a string; the body is parsed from these bytes.
+                    StrictUtf8.GetCharCount(bytes.Array!, bytes.Offset, bytes.Count);
+                }
+                catch (DecoderFallbackException ex)
+                {
+                    throw new InvalidKycResponseException("SEP-0012 response body is not valid UTF-8.", status, ex);
+                }
+
+                return (bytes, status);
             }
 
-            throw CreateErrorException(method, status, body, customerEndpoint,
+            var errorBody = body is { } errorBytes
+                ? Encoding.UTF8.GetString(errorBytes.Array!, errorBytes.Offset, errorBytes.Count)
+                : null;
+            throw CreateErrorException(method, status, errorBody, customerEndpoint,
                 RetryAfterParser.FromHeaders(response.Headers));
         }
         catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested &&
@@ -909,19 +917,20 @@ public class KycService : IDisposable
     }
 
     /// <summary>
-    ///     Parses a customer response with <see cref="GetCustomerInfoResponse.FromJson" />, the parser the callback path
-    ///     uses, so a rule added there applies to both. Its <see cref="JsonException" /> is already sanitized.
+    ///     Parses a customer response with <see cref="GetCustomerInfoResponse.FromUtf8Json" />, the parser behind
+    ///     <see cref="GetCustomerInfoResponse.FromJson" /> on the callback path, so a rule added there applies to both.
+    ///     Its <see cref="JsonException" /> is already sanitized.
     /// </summary>
-    private static GetCustomerInfoResponse ParseCustomerInfo(string? body, int status)
+    private static GetCustomerInfoResponse ParseCustomerInfo(ArraySegment<byte> body, int status)
     {
-        if (string.IsNullOrWhiteSpace(body))
+        if (IsBlank(body))
         {
             throw new InvalidKycResponseException("SEP-0012 response contains no content.", status);
         }
 
         try
         {
-            return GetCustomerInfoResponse.FromJson(body!);
+            return GetCustomerInfoResponse.FromUtf8Json(body.AsSpan());
         }
         catch (JsonException ex)
         {
@@ -929,9 +938,9 @@ public class KycService : IDisposable
         }
     }
 
-    private static T Parse<T>(string? body, int status) where T : class
+    private static T Parse<T>(ArraySegment<byte> body, int status) where T : class
     {
-        if (string.IsNullOrWhiteSpace(body))
+        if (IsBlank(body))
         {
             throw new InvalidKycResponseException("SEP-0012 response contains no content.", status);
         }
@@ -939,7 +948,7 @@ public class KycService : IDisposable
         T? result;
         try
         {
-            result = JsonSerializer.Deserialize<T>(body!, JsonOptions.DefaultOptions);
+            result = JsonSerializer.Deserialize<T>(body.AsSpan(), JsonOptions.DefaultOptions);
         }
         catch (JsonException ex)
         {
@@ -951,6 +960,22 @@ public class KycService : IDisposable
 
         return result ?? throw new InvalidKycResponseException(
             $"SEP-0012 {typeof(T).Name} is the JSON literal null.", status);
+    }
+
+    /// <summary>
+    ///     Whether a body is empty or holds only JSON whitespace.
+    /// </summary>
+    private static bool IsBlank(ArraySegment<byte> body)
+    {
+        foreach (var b in body.AsSpan())
+        {
+            if (b != (byte)' ' && b != (byte)'\t' && b != (byte)'\r' && b != (byte)'\n')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static MultipartFormDataContent BuildMultipart(
