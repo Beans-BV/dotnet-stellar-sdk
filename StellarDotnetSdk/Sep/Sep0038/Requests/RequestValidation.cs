@@ -48,24 +48,27 @@ internal static class RequestValidation
     }
 
     /// <summary>
-    ///     Whether an optional value was given. <see langword="null" /> means absent; an empty or whitespace-only
-    ///     string is rejected rather than read as absent, so a value the caller set cannot silently drop out of the
-    ///     request (and, for <c>GET /prices</c>, turn a two-sided request into a valid one-sided one).
+    ///     Rejects an optional value that is set but blank. <see langword="null" /> means absent; an empty or
+    ///     whitespace-only string is rejected rather than read as absent, so a value the caller set cannot silently
+    ///     drop out of the request (and, for <c>GET /prices</c>, turn a two-sided request into a valid one-sided one).
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> is empty or whitespace.</exception>
+    internal static void RequireNullOrNonBlank(string? value, string propertyName)
+    {
+        if (value != null && string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException($"{propertyName} must be null or a non-blank value.", propertyName);
+        }
+    }
+
+    /// <summary>
+    ///     Whether an optional value was given, once <see cref="RequireNullOrNonBlank" /> has rejected a blank one.
     /// </summary>
     /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> is empty or whitespace.</exception>
     internal static bool IsProvided(string? value, string propertyName)
     {
-        if (value == null)
-        {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException($"{propertyName} must be null or a non-blank value.", propertyName);
-        }
-
-        return true;
+        RequireNullOrNonBlank(value, propertyName);
+        return value != null;
     }
 
     /// <summary>

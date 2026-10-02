@@ -119,7 +119,7 @@ public sealed record QuoteRequest
         RequestValidation.RequireExactlyOneAmount(SellAmount, BuyAmount);
         var hasSellDeliveryMethod = RequestValidation.IsProvided(SellDeliveryMethod, nameof(SellDeliveryMethod));
         var hasBuyDeliveryMethod = RequestValidation.IsProvided(BuyDeliveryMethod, nameof(BuyDeliveryMethod));
-        RequestValidation.IsProvided(CountryCode, nameof(CountryCode));
+        RequestValidation.RequireNullOrNonBlank(CountryCode, nameof(CountryCode));
         if (hasSellDeliveryMethod && hasBuyDeliveryMethod)
         {
             throw new ArgumentException(
