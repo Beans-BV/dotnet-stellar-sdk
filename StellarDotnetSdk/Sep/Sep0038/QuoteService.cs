@@ -679,7 +679,7 @@ public class QuoteService : IDisposable
                 }
 
                 // Null when the body is over the size limit.
-                byte[]? body;
+                ReadOnlyMemory<byte>? body;
                 try
                 {
                     body = await ReadBodyBoundedAsync(response, timeoutSource.Token).ConfigureAwait(false);
@@ -705,7 +705,7 @@ public class QuoteService : IDisposable
                     throw CreateErrorException(response.StatusCode, body, ReadRetryAfter(response));
                 }
 
-                if (body == null)
+                if (body is not { } json)
                 {
                     throw TooLarge(statusCode);
                 }
@@ -713,27 +713,27 @@ public class QuoteService : IDisposable
                 T? result;
                 try
                 {
-                    result = JsonSerializer.Deserialize<T>(body!, JsonOptions.DefaultOptions);
+                    result = JsonSerializer.Deserialize<T>(json.Span, JsonOptions.DefaultOptions);
                 }
                 catch (JsonException ex)
                 {
                     throw new UnexpectedResponseException(
                         $"The quote server returned HTTP {statusCode} with a body that is not a valid {typeof(T).Name}: " +
                         ex.Message,
-                        statusCode, null, DecodeBody(body!), ex);
+                        statusCode, null, DecodeBody(json), ex);
                 }
 
                 if (result == null)
                 {
                     throw new UnexpectedResponseException(
                         $"The quote server returned HTTP {statusCode} with a null body.", statusCode, null,
-                        DecodeBody(body!));
+                        DecodeBody(json));
                 }
 
                 var problem = validate?.Invoke(result);
                 if (problem != null)
                 {
-                    throw new UnexpectedResponseException(problem, statusCode, null, DecodeBody(body!));
+                    throw new UnexpectedResponseException(problem, statusCode, null, DecodeBody(json));
                 }
 
                 return result;
@@ -780,12 +780,12 @@ public class QuoteService : IDisposable
     ///     <see cref="MaxResponseBodyBytes" />. A leading UTF-8 byte order mark is skipped, as
     ///     <see cref="HttpContent.ReadAsStringAsync()" /> would; the JSON parsers reject it.
     /// </summary>
-    private static async Task<byte[]?> ReadBodyBoundedAsync(HttpResponseMessage response,
+    private static async Task<ReadOnlyMemory<byte>?> ReadBodyBoundedAsync(HttpResponseMessage response,
         CancellationToken cancellationToken)
     {
         if (response.Content == null)
         {
-            return Array.Empty<byte>();
+            return ReadOnlyMemory<byte>.Empty;
         }
 
         if (response.Content.Headers.ContentLength is long contentLength && contentLength > MaxResponseBodyBytes)
@@ -812,10 +812,11 @@ public class QuoteService : IDisposable
             buffer.Write(chunk, 0, read);
         }
 
+        // A view over the stream's own buffer, not a copy; disposing a MemoryStream leaves its buffer intact.
         var bytes = buffer.GetBuffer();
         var length = (int)buffer.Length;
         var offset = length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
-        return bytes.AsSpan(offset, length - offset).ToArray();
+        return new ReadOnlyMemory<byte>(bytes, offset, length - offset);
     }
 
     private static UnexpectedResponseException TooLarge(int statusCode)
@@ -905,11 +906,11 @@ public class QuoteService : IDisposable
         return null;
     }
 
-    private static QuoteServerException CreateErrorException(HttpStatusCode statusCode, byte[]? body,
+    private static QuoteServerException CreateErrorException(HttpStatusCode statusCode, ReadOnlyMemory<byte>? body,
         TimeSpan? retryAfterDelay)
     {
-        var text = body == null ? null : DecodeBody(body);
-        var error = body == null ? null : TryReadError(body);
+        var text = body == null ? null : DecodeBody(body.Value);
+        var error = body == null ? null : TryReadError(body.Value);
         var code = (int)statusCode;
         var message = $"The quote server returned HTTP {code}" +
                       (error == null ? "." : $": {UntrustedJsonValue.Describe(error, MaxEchoedErrorLength)}");
@@ -926,7 +927,7 @@ public class QuoteService : IDisposable
     ///     Returns the string <c>error</c> field of a SEP-38 error body, or null when the body is not a JSON object
     ///     with one. Duplicated properties make the body malformed, as everywhere else in the SDK.
     /// </summary>
-    private static string? TryReadError(byte[] body)
+    private static string? TryReadError(ReadOnlyMemory<byte> body)
     {
         try
         {
@@ -951,8 +952,8 @@ public class QuoteService : IDisposable
         return null;
     }
 
-    private static string DecodeBody(byte[] body)
+    private static string DecodeBody(ReadOnlyMemory<byte> body)
     {
-        return Encoding.UTF8.GetString(body);
+        return Encoding.UTF8.GetString(body.Span);
     }
 }
