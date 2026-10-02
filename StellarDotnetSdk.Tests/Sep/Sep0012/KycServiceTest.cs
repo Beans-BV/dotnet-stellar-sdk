@@ -647,6 +647,24 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    [DataRow("", DisplayName = "empty body")]
+    [DataRow("   ", DisplayName = "spaces")]
+    [DataRow("\t\r\n", DisplayName = "tab and line breaks")]
+    public async Task SuccessResponse_WithBlankBody_ReportsNoContent(string body)
+    {
+        // The customer parser and the generic parser each check for a blank body before parsing.
+        var (service, _) = CreateService(body);
+
+        var customer = await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+        var put = await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.PutCustomerInfoAsync(new PutCustomerInfoRequest { Jwt = Jwt, Id = CustomerId }));
+
+        StringAssert.Contains(customer.Message, "contains no content");
+        StringAssert.Contains(put.Message, "contains no content");
+    }
+
+    [TestMethod]
     public async Task GetCustomerInfoAsync_WithDeclaredOversizedBody_ThrowsWithoutReadingIt()
     {
         var stream = new TrackingStream(new byte[16]);
