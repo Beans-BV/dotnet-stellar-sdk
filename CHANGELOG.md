@@ -85,9 +85,9 @@ All notable changes to this project are documented here. The format is based on
   - The parameter's declared default stays `null`, meaning "the SDK's current default", which the SDK resolves
     to `true` when it builds the request rather than at the call site. C# compiles a declared default into every
     call site, so this lets a later change to the default — such as no longer sending the field once Stellar RPC
-    retires it — reach callers that leave the argument unset without a recompile. Code compiled against 15.x has
-    to recompile anyway (see the `useUpgradedAuth` entry under **Added**) and picks up the new default when it
-    does.
+    retires it — reach callers that leave the argument unset without a recompile. It also lets a caller pass an
+    optional setting of its own straight through. Code compiled against 15.x has to recompile anyway (see the
+    `useUpgradedAuth` entry under **Added**) and picks up the new default when it does.
   - Signing needs no change. `SorobanAuthorization.AuthorizeEntry` keeps its
     `SorobanCredentialsVersion.Preserve` default because it signs an entry whose variant simulation already
     chose: a v2 simulation yields a v2 signature over the address-bound

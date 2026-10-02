@@ -19,54 +19,26 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Selects which address-credential variant a signing operation produces.
 /// </summary>
-/// <remarks>
-///     <para>
-///         The SDK-wide CAP-71 default is <see cref="V2" />, but it is applied where an entry's variant is
-///         <em>chosen</em>, not where an existing entry is signed. The choice is made by simulation:
-///         <c>StellarRpcServer.SimulateTransaction</c> asks Stellar RPC for <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>
-///         entries unless called with <c>useUpgradedAuth: false</c>. The signing helpers that take this enum
-///         (<c>SorobanAuthorization.AuthorizeEntry</c>) sign an entry that already exists, so they default to
-///         <see cref="Preserve" />: a V2 entry yields a V2 signature and a legacy one a V1 signature, so an
-///         explicitly requested legacy simulation is signed as V1 for as long as Stellar RPC still honours
-///         <c>useUpgradedAuth: false</c>. This matches the JS and Java SDKs, whose <c>authorizeEntry</c>
-///         never changes the credential type.
-///     </para>
-///     <para>
-///         This SDK has no helper that builds an address credential from scratch (the JS and Java SDKs'
-///         <c>authorizeInvocation</c>, which default to V2 there). Code that constructs one directly picks the
-///         variant by type: <see cref="SorobanAddressCredentialsV2" /> for V2, <see cref="SorobanAddressCredentials" />
-///         for legacy.
-///     </para>
-/// </remarks>
 public enum SorobanCredentialsVersion
 {
     /// <summary>
     ///     Keep the entry's existing credential variant (V1 stays V1, V2 stays V2). The default for
-    ///     signing helpers: the variant was already chosen when the entry was produced (V2 by default
-    ///     since the CAP-71 flip, see <c>StellarRpcServer.SimulateTransaction</c>), so keeping it honours
-    ///     that choice, including an explicit legacy opt-out. Matches the JS and Java SDKs, which preserve
-    ///     the credential type. Safe for networks not yet on Protocol 27 when the input entry is itself V1.
+    ///     signing helpers. Safe for networks not yet on Protocol 27 when the input entry is itself V1.
     /// </summary>
     // Explicit values: this enum's members are positional defaults (Preserve = default(T)); pin the
     // numeric values so reordering the members cannot silently change a persisted/serialized value.
     Preserve = 0,
 
     /// <summary>
-    ///     Legacy <c>SOROBAN_CREDENTIALS_ADDRESS</c> (CAP-0046). Accepted on every protocol version so far,
-    ///     including Protocol 28: CAP-71 does not deprecate it, though it leaves deprecation open for a later
-    ///     protocol. Force this when targeting a network not yet on Protocol 27, or a verifier that cannot
-    ///     check the address-bound signature. Forcing it on a V2 entry downgrades it and gives up address
-    ///     binding: the legacy signature can be replayed against another account that shares the same
-    ///     signing key when the invocation does not itself bind the signer's address.
+    ///     Legacy <c>SOROBAN_CREDENTIALS_ADDRESS</c> (CAP-0046). Force this when targeting a network not yet
+    ///     on Protocol 27, or a verifier that cannot check the address-bound signature. Forcing it on a V2
+    ///     entry downgrades it to a legacy credential, whose signature is not bound to the credential address.
     /// </summary>
     V1 = 1,
 
     /// <summary>
     ///     Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02); rejected by
-    ///     pre-Protocol-27 networks. The variant simulation requests by default (this enum's own default is
-    ///     <see cref="Preserve" />); pass it here to upgrade a legacy entry at signing time, or to require the
-    ///     address-bound signature even when simulation came back with a legacy entry (an RPC server older
-    ///     than v27.1.0 ignores the request for V2).
+    ///     pre-Protocol-27 networks. Pass it to upgrade a legacy entry at signing time.
     /// </summary>
     V2 = 2,
 }
@@ -288,15 +260,10 @@ public static class SorobanAuthorization
     /// <param name="network">The network the transaction is submitted to.</param>
     /// <param name="version">
     ///     Which credential variant to produce. Defaults to <see cref="SorobanCredentialsVersion.Preserve" />,
-    ///     keeping the entry's existing variant: V2 in the default simulation flow; V1 after a
-    ///     <c>useUpgradedAuth: false</c> simulation that Stellar RPC still honours, on a pre-Protocol-27
-    ///     network, or from an RPC server that predates the flag. Why this default does not follow the
-    ///     SDK-wide V2 default is explained on <see cref="SorobanCredentialsVersion" />. Pass
-    ///     <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry to the Protocol 27
-    ///     address-bound credential (on a Protocol 27+ network this also requires the address-bound
-    ///     signature when an older RPC server returned V1), or
-    ///     <see cref="SorobanCredentialsVersion.V1" /> to force the legacy credential. Ignored for entries
-    ///     carrying delegated credentials, which keep their credential type.
+    ///     keeping the entry's existing variant; pass <see cref="SorobanCredentialsVersion.V2" /> to upgrade a
+    ///     legacy entry to the Protocol 27 address-bound credential, or <see cref="SorobanCredentialsVersion.V1" />
+    ///     to force the legacy credential. Ignored for entries carrying delegated credentials, which keep their
+    ///     credential type.
     /// </param>
     /// <param name="forAddress">
     ///     Optional address of the credential node that receives the signature. When omitted, the
