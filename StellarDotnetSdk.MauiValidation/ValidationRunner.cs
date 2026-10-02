@@ -110,7 +110,7 @@ public sealed class ValidationRunner
         {
             if (_funded != null)
             {
-                DisposeLater(_funded)?.Dispose();
+                AsDisposableOrNull(_funded)?.Dispose();
             }
             // Per-run state: a later run on this instance must not reuse the disposed account or the old timing.
             _funded = null;
@@ -210,10 +210,11 @@ public sealed class ValidationRunner
     }
 
     /// <summary>
-    ///     Disposes <paramref name="keyPair" /> when the SDK in use makes it disposable. Published packages up to 15.1.0
-    ///     do not, and the app can be built against them (see the csproj).
+    ///     Returns <paramref name="keyPair" /> as <see cref="IDisposable" /> when the SDK in use makes it disposable,
+    ///     and null otherwise. Published packages up to 15.1.0 do not, and the app can be built against them
+    ///     (see the csproj).
     /// </summary>
-    private static IDisposable? DisposeLater(KeyPair keyPair)
+    private static IDisposable? AsDisposableOrNull(KeyPair keyPair)
     {
         return (object)keyPair as IDisposable;
     }
@@ -227,7 +228,7 @@ public sealed class ValidationRunner
     private static string CheckRfc8032KnownAnswer()
     {
         var keyPair = KeyPair.FromSecretSeed(Convert.FromHexString(Rfc8032Seed));
-        using var keyPairLifetime = DisposeLater(keyPair);
+        using var keyPairLifetime = AsDisposableOrNull(keyPair);
         Expect(Convert.ToHexString(keyPair.PublicKey).Equals(Rfc8032PublicKey, StringComparison.OrdinalIgnoreCase),
             "public key does not match RFC 8032");
         var signature = keyPair.Sign([]);
@@ -240,18 +241,18 @@ public sealed class ValidationRunner
     private static string CheckRandomKeyPair()
     {
         var keyPair = KeyPair.Random();
-        using var keyPairLifetime = DisposeLater(keyPair);
+        using var keyPairLifetime = AsDisposableOrNull(keyPair);
         var data = "stellar maui validation"u8.ToArray();
         var signature = keyPair.Sign(data);
         Expect(keyPair.Verify(data, signature), "fresh signature failed to verify");
         signature[0] ^= 0x01;
         Expect(!keyPair.Verify(data, signature), "tampered signature verified");
         var watchOnly = KeyPair.FromAccountId(keyPair.AccountId);
-        using var watchOnlyLifetime = DisposeLater(watchOnly);
+        using var watchOnlyLifetime = AsDisposableOrNull(watchOnly);
         Expect(!watchOnly.CanSign(), "public-only key pair claims it can sign");
         // The StrKey string round trip is what this checks, so the seed goes through a string on purpose.
         var roundTripped = KeyPair.FromSecretSeed(keyPair.SecretSeed!);
-        using var roundTrippedLifetime = DisposeLater(roundTripped);
+        using var roundTrippedLifetime = AsDisposableOrNull(roundTripped);
         Expect(roundTripped.AccountId == keyPair.AccountId, "StrKey seed round trip changed the account");
         return $"sign/verify/tamper/StrKey ok for {keyPair.AccountId}";
     }
@@ -260,7 +261,7 @@ public sealed class ValidationRunner
     {
         using var server = new Server(HorizonTestnetUrl);
         var keyPair = KeyPair.Random();
-        var keyPairLifetime = DisposeLater(keyPair);
+        var keyPairLifetime = AsDisposableOrNull(keyPair);
         try
         {
             await server.TestNetFriendBot.FundAccount(keyPair.AccountId).Execute().WaitAsync(NetworkTimeout);
@@ -309,7 +310,7 @@ public sealed class ValidationRunner
         var source = RequireFunded();
         using var server = new Server(HorizonTestnetUrl);
         var destination = KeyPair.Random();
-        using var destinationLifetime = DisposeLater(destination);
+        using var destinationLifetime = AsDisposableOrNull(destination);
         // LaunchDarkly does not dispose a handler it is given.
         using var socketsHandler = new SocketsHttpHandler();
         using var rawCts = new CancellationTokenSource(NetworkTimeout);
