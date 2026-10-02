@@ -156,28 +156,8 @@ public sealed class ExactDecimalJsonConverter : JsonConverter<decimal>
     }
 
     /// <summary>The parts of a literal that matched the grammar, as offsets into it.</summary>
-    private readonly struct Literal
-    {
-        public Literal(bool negative, int integerStart, int integerEnd, int fractionStart, int fractionEnd,
-            bool hasExponent, long exponent)
-        {
-            Negative = negative;
-            IntegerStart = integerStart;
-            IntegerEnd = integerEnd;
-            FractionStart = fractionStart;
-            FractionEnd = fractionEnd;
-            HasExponent = hasExponent;
-            Exponent = exponent;
-        }
-
-        public bool Negative { get; }
-        public int IntegerStart { get; }
-        public int IntegerEnd { get; }
-        public int FractionStart { get; }
-        public int FractionEnd { get; }
-        public bool HasExponent { get; }
-        public long Exponent { get; }
-    }
+    private readonly record struct Literal(bool Negative, int IntegerStart, int IntegerEnd, int FractionStart,
+        int FractionEnd, bool HasExponent, long Exponent);
 
     /// <summary>
     ///     Validates the grammar: an optional <c>-</c>, digits, an optional <c>.</c> and digits, and an optional
