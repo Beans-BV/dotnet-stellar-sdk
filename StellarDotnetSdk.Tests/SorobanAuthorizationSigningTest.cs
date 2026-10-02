@@ -283,20 +283,18 @@ public class SorobanAuthorizationSigningTest
 
     /// <summary>
     ///     <see cref="SorobanAuthorization.AuthorizeEntryWithDelegates" /> takes no
-    ///     <see cref="SorobanCredentialsVersion" />: whatever variant the input entry carries, it emits
+    ///     <see cref="SorobanCredentialsVersion" />: given the V2 entry the default simulation produces, it emits
     ///     <c>SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES</c> whose root and delegate signatures are both over the
-    ///     address-bound (CAP-0071-01) payload. Covers both the legacy input and the V2 input the flipped
-    ///     simulation default now produces.
+    ///     address-bound (CAP-0071-01) payload. The legacy input is covered by
+    ///     <see cref="AuthorizeEntryWithDelegates_ProducesDelegatedCredentialThatRoundTrips" />.
     /// </summary>
     [TestMethod]
-    [DataRow(false, DisplayName = "from a legacy V1 entry")]
-    [DataRow(true, DisplayName = "from a V2 entry")]
-    public void AuthorizeEntryWithDelegates_AnyInputVariant_SignsAddressBoundPayload(bool inputIsV2)
+    public void AuthorizeEntryWithDelegates_OnV2Entry_SignsAddressBoundPayload()
     {
         var network = Network.Public();
         var rootKp = KeyPair.Random();
         var delegateKp = KeyPair.Random();
-        var entry = UnsignedAddressEntry(rootKp, inputIsV2);
+        var entry = UnsignedAddressEntry(rootKp, v2: true);
         var rootHash = SorobanAuthorization.BuildAddressAuthPreimageHash(
             network, new ScAccountId(rootKp.AccountId), Nonce, ValidUntil, entry.RootInvocation);
 
