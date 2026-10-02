@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Keeps the Stellar SDK intact when the app is trimmed with TrimMode=full.
+
+    The SDK (de)serializes its Horizon and Stellar RPC models with reflection-based System.Text.Json. It has no
+    source-generated JsonSerializerContext, so the trimmer cannot see which constructors, properties and converters
+    are used at runtime and removes them. Rooting the whole assembly keeps them.
+
+    Needed together with <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>,
+    which TrimMode=full turns off. Not needed with TrimMode=partial, the MAUI default.
+    See docs/maui-compatibility.md.
+-->
+<linker>
+    <assembly fullname="StellarDotnetSdk" preserve="all" />
+</linker>
