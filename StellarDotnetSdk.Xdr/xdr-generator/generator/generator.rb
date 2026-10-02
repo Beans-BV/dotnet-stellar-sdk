@@ -245,11 +245,6 @@ class CsharpGenerator < Xdrgen::Generators::Base
   # ============================================================================
 
   def render_typedef(typedef, out)
-    if typedef.declaration.is_a?(AST::Declarations::String)
-      render_string_typedef typedef, out
-      return
-    end
-
     out.puts "public #{typedef.name.camelize}()"
     out.puts '{'
     out.puts '}'
@@ -261,7 +256,11 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
     out.puts '}'
     out.puts
-    out.puts "public #{decl_string typedef.declaration} InnerValue { get; set; }"
+    if typedef.declaration.is_a?(AST::Declarations::String)
+      render_string_typedef_properties out
+    else
+      out.puts "public #{decl_string typedef.declaration} InnerValue { get; set; }"
+    end
     out.puts
 
     out.puts "public static void Encode(XdrDataOutputStream stream, #{name typedef} encoded#{name typedef})"
@@ -298,21 +297,11 @@ class CsharpGenerator < Xdrgen::Generators::Base
   end
 
   # XDR strings are byte strings with no encoding guarantee, so a string typedef
-  # keeps the raw bytes as its source of truth and round-trips them verbatim.
+  # keeps the raw bytes as its source of truth and round-trips them verbatim
+  # (see the String branches of encode_innervalue_body and decode_innervalue_body).
   # InnerValue is a UTF-8 view over those bytes, kept for source compatibility;
   # its getter decodes leniently and must not be used to rebuild the bytes.
-  def render_string_typedef(typedef, out)
-    out.puts "public #{typedef.name.camelize}()"
-    out.puts '{'
-    out.puts '}'
-    out.puts
-    out.puts "public #{typedef.name.camelize}(string value)"
-    out.puts '{'
-    out.indent do
-      out.puts 'InnerValue = value;'
-    end
-    out.puts '}'
-    out.puts
+  def render_string_typedef_properties(out)
     out.puts '/// <summary>'
     out.puts '///     The raw bytes of the string exactly as they appear on the wire. They are not'
     out.puts '///     guaranteed to be valid UTF-8 and are encoded and decoded verbatim.'
@@ -330,37 +319,6 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'get => InnerBytes == null ? null : System.Text.Encoding.UTF8.GetString(InnerBytes);'
       out.puts 'set => InnerBytes = value == null ? null : System.Text.Encoding.UTF8.GetBytes(value);'
-    end
-    out.puts '}'
-    out.puts
-
-    out.puts "public static void Encode(XdrDataOutputStream stream, #{name typedef} encoded#{name typedef})"
-    out.puts '{'
-    out.indent do
-      out.puts "stream.WriteStringBytes(encoded#{name typedef}.InnerBytes);"
-    end
-    out.puts '}'
-    out.puts
-
-    out.puts "public static #{name typedef} Decode(XdrDataInputStream stream, int maxDepth)"
-    out.puts '{'
-    out.indent do
-      out.puts 'if (maxDepth <= 0)'
-      out.indent do
-        out.puts "throw new InvalidDataException(\"Maximum decoding depth reached while decoding #{name typedef}\");"
-      end
-      out.puts 'maxDepth -= 1;'
-      out.puts "var decoded#{name typedef} = new #{name typedef}();"
-      out.puts "decoded#{name typedef}.InnerBytes = stream.ReadStringBytes();"
-      out.puts "return decoded#{name typedef};"
-    end
-    out.puts '}'
-    out.puts
-
-    out.puts "public static #{name typedef} Decode(XdrDataInputStream stream)"
-    out.puts '{'
-    out.indent do
-      out.puts "return Decode(stream, XdrDataInputStream.DefaultMaxDepth);"
     end
     out.puts '}'
   end
@@ -564,6 +522,8 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def encode_innervalue_body(value, member, out)
     case member.declaration
+    when AST::Declarations::String
+      out.puts "stream.WriteStringBytes(#{value}.InnerBytes);"
     when AST::Declarations::Opaque
       out.puts "var #{member.name.camelize(:lower)}Size = #{value}.InnerValue.Length;"
       if member.declaration.fixed?
@@ -743,6 +703,8 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def decode_innervalue_body(value, member, out, depth_var)
     case member.declaration
+    when AST::Declarations::String
+      out.puts "#{value}.InnerBytes = stream.ReadStringBytes();"
     when AST::Declarations::Opaque
       if member.declaration.fixed?
         out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"
