@@ -23,8 +23,7 @@ namespace StellarDotnetSdk.IntegrationTests.Soroban;
 ///         default. The opt-out test cannot catch a wrong flag even today: an SDK that omits <c>false</c> still
 ///         gets legacy credentials from the server's current default, and one that sends <c>true</c> instead
 ///         passes through the NOTE branch. The request body is pinned by the unit tests
-///         <c>StellarRpcServerTest.SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue</c>,
-///         <c>SimulateTransaction_WithNullUseUpgradedAuth_SendsTrue</c> and
+///         <c>StellarRpcServerTest.SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue</c> and
 ///         <c>SimulateTransaction_WithUseUpgradedAuth_SendsJsonBoolean</c>.
 ///     </para>
 /// </summary>

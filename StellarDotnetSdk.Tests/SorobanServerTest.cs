@@ -2299,46 +2299,11 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that an explicit <see langword="null" /> <c>useUpgradedAuth</c> also sends <c>true</c>.
-    ///     <see langword="null" /> is the parameter's declared default, which the compiler embeds at every call
-    ///     site that omits the argument; the SDK keeps control of the effective default only because it resolves
-    ///     <see langword="null" /> at runtime, and this pins that resolution.
-    /// </summary>
-    [TestMethod]
-    public async Task SimulateTransaction_WithNullUseUpgradedAuth_SendsTrue()
-    {
-        // Arrange
-        const string json =
-            """
-            {
-              "jsonrpc": "2.0",
-              "id": "1",
-              "result": {
-                "latestLedger": 14245
-              }
-            }
-            """;
-        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
-
-        // Act
-        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction(), 1000, AuthMode.RECORD, null);
-
-        // Assert
-        var body = handler.RequestBody;
-        Assert.IsNotNull(body);
-        using var request = JsonDocument.Parse(body!);
-        var parameters = request.RootElement.GetProperty("params");
-        Assert.AreEqual(JsonValueKind.True, parameters.GetProperty("useUpgradedAuth").ValueKind);
-        // The other optional fields are unaffected by the flag's default.
-        Assert.AreEqual("record", parameters.GetProperty("authMode").GetString());
-        Assert.AreEqual(1000, parameters.GetProperty("resourceConfig").GetProperty("instructionLeeway").GetInt32());
-    }
-
-    /// <summary>
     ///     Pins the declared default of <c>useUpgradedAuth</c> as <see langword="null" />. A declared
-    ///     <see langword="true" /> would put the same request on the wire today, so the two tests above cannot tell
-    ///     them apart, but the compiler would copy it into every call site that omits the argument, and a later
-    ///     change of the SDK default would no longer reach those callers without a recompile.
+    ///     <see langword="true" /> would put the same request on the wire today, so
+    ///     <see cref="SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue" /> cannot tell them apart, but the
+    ///     compiler would copy it into every call site that omits the argument, and a later change of the SDK
+    ///     default would no longer reach those callers without a recompile.
     /// </summary>
     [TestMethod]
     public void SimulateTransaction_UseUpgradedAuthDeclaredDefault_IsNull()
