@@ -397,7 +397,9 @@ public class UriScheme : IDisposable
     /// <summary>
     ///     Parses a URL-decoded <c>replace</c> value, e.g.
     ///     <c>sourceAccount:X,operations[0].sourceAccount:Y;X:account paying fees,Y:receiving account</c>, into one
-    ///     <see cref="Sep7Replacement" /> per field, in order. An empty string gives an empty list.
+    ///     <see cref="Sep7Replacement" /> per field, in order. An empty string gives an empty list. A hint may contain
+    ///     <c>:</c> (only the first one separates it from its identifier), but <see cref="ReplacementsToString" />
+    ///     rejects such a hint, as other SDKs cut it off there, so these replacements cannot be passed back to it.
     /// </summary>
     /// <param name="replace">The <c>replace</c> value.</param>
     /// <returns>The replacements.</returns>
