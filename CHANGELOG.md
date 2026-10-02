@@ -10,6 +10,15 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `GetLatestLedgerResponse` now exposes the remaining `getLatestLedger` fields served by Stellar RPC:
+  `CloseTime` (`long?`, unix timestamp in seconds), `HeaderXdr`, and `MetadataXdr`. `GetHealthResponse` gains the
+  RPC v27.1.0 fields `LatestLedgerCloseTime` and `OldestLedgerCloseTime` (`long?`, unix seconds). The three close
+  times read the quoted wire value or a bare number, including under a caller's own serializer options that bind the
+  wire names but do not enable `AllowReadingFromString`. All five fields are nullable so responses from older RPC
+  servers that omit them still deserialize
+  ([#198](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/198), completes
+  [#155](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/155) and the compatibility-matrix scope of
+  [#159](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/159)).
 - **Protocol 27 (CAP-71) Soroban authorization** ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187), implements [#186](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/186)):
   - `SorobanAddressCredentialsV2` — CAP-0071-02 address-bound credentials (`SOROBAN_CREDENTIALS_ADDRESS_V2`),
     whose signature is computed over the `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage,
@@ -70,6 +79,104 @@ All notable changes to this project are documented here. The format is based on
   at finalization, while an undisposed `netstandard2.1` key copy is reclaimed by the GC without
   zeroing — and harmless for keypairs that never signed, though it disables `Sign` for them too
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
+- **SEP-0007 (URI Scheme to facilitate delegated signing)**, new namespace `StellarDotnetSdk.Sep.Sep0007`:
+  - `UriScheme` builds `web+stellar:tx` and `web+stellar:pay` request URIs with every SEP-7 parameter
+    (`GenerateSignTransactionUri`, `GeneratePayOperationUri`, typed `Memo` encoding included), and parses
+    and validates them (`ParseUri`, `TryParseUri`, `ValidateUri` → `Sep7Uri`/`Sep7ValidationResult`).
+    Validation covers the operation, per-operation parameters, addresses, amounts, assets, memo types and
+    values, `msg` length, `callback` form, `origin_domain` FQDN, `chain` nesting (at most 7 levels), and
+    rejects an `origin_domain` without a `signature`, as the spec does. A URI with a lone UTF-16 surrogate
+    is rejected, since UTF-8 has no encoding for it and its signature would also cover other URIs.
+    `destination` also takes a SEP-2 federation address; an `amount` is a positive decimal of at most
+    7 decimal places and at most the int64 stroop maximum, leading zeros allowed (`0000000000001` is 1);
+    hash memos must be exactly 32 bytes; account ids must be upper case; `callback` URLs may not carry
+    whitespace, invisible characters, credentials, a host with no valid IDN form, a fragment, a
+    malformed percent escape, a backslash or a `.`/`..` path segment. Rejections carry a typed
+    `Sep7ValidationResult.Error`, and values echoed into messages are escaped and length-clamped. Query
+    values are decoded like an HTML form (`+` is a space, as `URLSearchParams` and the other Stellar SDKs
+    write it), except in base64 values, where a raw `+` stays a `+`; escapes that are not valid UTF-8
+    (`%FF`, `%ED%A0%80`) make the request invalid, as decoders disagree on them (`URLSearchParams` reads
+    U+FFFD, .NET's own decoder keeps the escape as text).
+  - `replace` support: `ParseReplacements`/`ReplacementsToString` with `Sep7Replacement`, enforcing the
+    spec's balanced-identifier rule and rejecting Txrep paths SEP-7 forbids (`tx.` prefix, signatures,
+    `_present`/`len`).
+  - Request signing: `SignUri` and offline `VerifySignature` reproduce the spec's signed example exactly;
+    `VerifyOriginDomainSignatureAsync`/`IsValidSignedUriAsync` check the signature against the origin
+    domain's stellar.toml `URI_REQUEST_SIGNING_KEY` and optionally pin that key
+    (`UriRequestSigningKeyChangedException`). Only the stellar.toml's root `URI_REQUEST_SIGNING_KEY` is
+    read, with a non-recursive reader: the domain is chosen by whoever wrote the URI, and the general
+    `StellarToml` parser overflows the stack on a few kilobytes of hostile TOML. The stellar.toml and
+    callback responses are read with a 512 KiB cap and within the HTTP client's `Timeout`, body included;
+    the whole stellar.toml must be valid UTF-8, as TOML requires, and a callback's answer is decoded by its
+    byte order mark, else by its `Content-Type` charset if .NET supports it, else as UTF-8;
+    connection failures, including ones mid-body and resilience-pipeline rejections, surface as
+    `OriginDomainStellarTomlException` (so `IsValidSignedUriAsync` reports them) or, for the callback, as
+    `HttpRequestException`.
+  - `SignAndSubmitTransactionAsync` verifies any `origin_domain` signature before it signs, then POSTs
+    the signed envelope to the request's `callback` (https only, http for loopback) or submits it to
+    Horizon; `SubmitTransactionAsync`/`SubmitToCallbackAsync` hand on a transaction the wallet signed
+    itself, and `SubmitToCallbackAsync` refuses the same callback URLs a parsed request cannot carry
+    (whitespace, invisible characters, user info, a host with no valid IDN form, a fragment, a malformed
+    percent escape, a backslash or a `.`/`..` path segment); a callback's non-2xx answer or a
+    transaction Horizon rejects is returned, with `Sep7SubmitResult.IsSuccess`. With the SDK's own HTTP
+    client the callback POST follows no redirects (a 3xx is returned as the callback's answer) and the
+    stellar.toml fetch follows up to 5, https only, each to a fully qualified domain name (not under
+    `localhost`) on the default port without user info; a caller-supplied client that follows redirects
+    itself is detected on the callback path after the fact.
+  - Typed exceptions under `StellarDotnetSdk.Sep.Sep0007.Exceptions` (base `Sep7Exception`), and a new
+    `SEP-0007_COMPATIBILITY_MATRIX.md` (100%, 31/31 fields).
+- **SEP-38 (Anchor RFQ API) client**, new namespace `StellarDotnetSdk.Sep.Sep0038` (SEP-38 v2.5.0):
+  - `QuoteService` covers `GET /info`, `GET /prices`, `GET /price`, `POST /quote` and `GET /quote/:id`,
+    and `QuoteService.FromDomainAsync` discovers `ANCHOR_QUOTE_SERVER` from stellar.toml. The JWT is
+    optional for the first three endpoints and required for the two quote endpoints; it is the token
+    from the existing SEP-10 (`ClientWebAuth.JwtTokenAsync`) or SEP-45
+    (`ClientWebAuthContract.JwtTokenAsync`) flow. The quote server address must be https (the constructor
+    allows plain http on loopback for local development; `FromDomainAsync` never does) and carry no query,
+    fragment or user information.
+  - `PricesRequest`, `PriceRequest` and `QuoteRequest` (with `QuoteContext`: `Sep6`/`Sep24`/`Sep31`)
+    enforce the spec's request rules before sending, failing the returned task with `ArgumentException`:
+    exactly one of `SellAmount`/`BuyAmount`, one `GET /prices` side (sell or buy, the v2.3.0 buy side
+    included), at most one delivery method on `POST /quote`, and only `sep6`/`sep31` for `GET /price`.
+    A zero or negative amount fails the same way (`ArgumentOutOfRangeException`), and so does a string
+    property set to an empty or whitespace value instead of `null`, or a JWT that is not printable
+    ASCII without whitespace (`ArgumentException`). Their `ToString` redacts the JWT. Custom headers with
+    an invalid name, a `Content-Length` or `Transfer-Encoding` name, or a value outside printable ASCII
+    are rejected when the service is created, which takes a copy of them. A custom `Content-Type` or
+    `Accept` header is ignored: requests to the quote server ask for, and send, `application/json`.
+  - The response converters `ExactDecimalJsonConverter`, `UtcDateTimeOffsetJsonConverter` and
+    `NonNullElementListJsonConverter<T>` (namespace `StellarDotnetSdk.Converters`) are public, so a
+    consumer's source-generated `JsonSerializerContext` over the SEP-38 response types reads amounts and
+    timestamps the same way the SDK does.
+  - `AssetIdentifier` builds, parses and validates the Asset Identification Format (`stellar:CODE:ISSUER`,
+    `stellar:native`, `iso4217:USD`), converts to and from the SDK `Asset` types, and compares by value
+    (`Equals`, `==`, `!=`). The issuer must be in its canonical upper-case form; `FromAsset` converts it.
+  - Amounts and prices are `decimal`. Requests send them as invariant-culture strings with their scale
+    kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value that `decimal` cannot
+    hold without rounding is rejected rather than approximated. An `expires_at` without an offset is read
+    as UTC, as the spec defines, not as local time.
+  - Responses go through the hardened `JsonOptions` (duplicate properties rejected,
+    [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205)), required fields are enforced,
+    null list elements are rejected, a `GET /prices` answer must carry the list for the requested side,
+    and `GET /quote/:id` must return the requested quote (its `total_price` is optional, as that
+    endpoint's response table omits it). A `POST /quote` answer must carry a usable id, the requested
+    asset pair, no delivery method the request did not name, and an expiry no earlier than
+    `expire_after` (sent in UTC, rounded up to the whole second); prices and amounts must be greater
+    than zero, and a `GET /prices` `decimals` count must not be negative. Bodies are capped at 1 MiB
+    and streamed so the cap bounds memory (an error body over the
+    cap is dropped, and the status still selects the exception), a leading UTF-8 byte order mark is skipped, and the whole exchange, body included, stays
+    within `HttpClient.Timeout` (and `RequestTimeout` for the internal client). The internal client does
+    not follow redirects, and a response whose final location, after a caller-owned client followed
+    redirects, is another origin is rejected. Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),
+    `QuoteServerNotFoundException` (404), `UnexpectedResponseException` and
+    `NoAnchorQuoteServerFoundException`, all derived from `QuoteServerException`; an
+    `UnexpectedResponseException` for an error status carries the response's `Retry-After` as
+    `RetryAfterDelay`. Transport failures surface as `HttpRequestException`, timeouts as
+    `TaskCanceledException`.
+  - `POST /quote` is not idempotent: do not configure `QuoteService` with the `ForHorizon()` or
+    `ForSoroban()` presets, which retry `POST` on a 408, 429, 500, 502, 503 or 504 answer; the README
+    and HTTP-retry guide now say so.
+  - Compatibility matrix `StellarDotnetSdk/Compatibility/sep/SEP-0038_COMPATIBILITY_MATRIX.md`: 100%
+    (75/75 fields), with the spec's prose rules listed separately.
 
 ### Changed
 

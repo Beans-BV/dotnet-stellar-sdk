@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace StellarDotnetSdk.Converters;
@@ -34,12 +35,6 @@ internal static class UntrustedJsonValue
     private const int MaxEchoedLength = 64;
 
     /// <summary>
-    ///     Worst-case rendered length: every clamped code unit escaping to six characters, plus the two quotes and
-    ///     the truncation suffix. Sized so the hostile input this exists to bound never reallocates.
-    /// </summary>
-    private const int MaxRenderedLength = (MaxEchoedLength * 6) + 48;
-
-    /// <summary>
     ///     Formats <paramref name="value" /> as a quoted, length-clamped, escaped fragment.
     /// </summary>
     /// <param name="value">The rejected value, as read from the JSON payload.</param>
@@ -51,13 +46,41 @@ internal static class UntrustedJsonValue
     /// </returns>
     internal static string Describe(string? value)
     {
+        return Describe(value, MaxEchoedLength);
+    }
+
+    /// <summary>
+    ///     Formats <paramref name="value" /> as a quoted, escaped fragment clamped to
+    ///     <paramref name="maxEchoedLength" /> UTF-16 code units instead of the default.
+    /// </summary>
+    /// <remarks>
+    ///     For free-form prose a server supplies as a diagnostic — a SEP <c>error</c> field such as
+    ///     <c>The requested asset is not supported. See GET /prices for supported assets.</c> — which the default
+    ///     clamp, sized for enum-like wire literals, would cut mid-sentence. The escaping is identical; only the
+    ///     bound moves, and it is still a bound.
+    /// </remarks>
+    /// <param name="value">The untrusted value.</param>
+    /// <param name="maxEchoedLength">Longest run of <paramref name="value" /> to copy, in UTF-16 code units.</param>
+    /// <returns>The same shape as <see cref="Describe(string?)" />.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when <paramref name="maxEchoedLength" /> is less than 2: a shorter bound could not keep a
+    ///     surrogate pair whole.
+    /// </exception>
+    internal static string Describe(string? value, int maxEchoedLength)
+    {
+        if (maxEchoedLength < 2)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxEchoedLength), maxEchoedLength,
+                "The echo bound must be at least 2 UTF-16 code units.");
+        }
+
         if (value == null)
         {
             return "<null>";
         }
 
-        var truncated = value.Length > MaxEchoedLength;
-        var length = truncated ? MaxEchoedLength : value.Length;
+        var truncated = value.Length > maxEchoedLength;
+        var length = truncated ? maxEchoedLength : value.Length;
 
         // Never cut between the two halves of a surrogate pair: the pair is escaped as one scalar below, and
         // splitting it would report a bare surrogate code unit instead of the character the server actually
@@ -67,7 +90,9 @@ internal static class UntrustedJsonValue
             length--;
         }
 
-        var builder = new StringBuilder(MaxRenderedLength);
+        // Worst case: every copied code unit escaping to six characters, plus the two quotes and the truncation
+        // suffix. Sized so the hostile input this exists to bound never reallocates.
+        var builder = new StringBuilder((length * 6) + 48);
         builder.Append('\'');
         for (var i = 0; i < length; i++)
         {

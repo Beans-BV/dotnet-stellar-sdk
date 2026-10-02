@@ -1,0 +1,9 @@
+{
+  "sell_assets": [
+    {
+      "asset": "iso4217:BRL",
+      "price": "5.42",
+      "decimals": 2
+    }
+  ]
+}

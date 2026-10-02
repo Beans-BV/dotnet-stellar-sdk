@@ -74,6 +74,8 @@ The `stellar-dotnet-sdk` and `stellar-dotnet-sdk-xdr` packages multi-target the 
 
 NuGet resolves the best matching assembly for your project automatically.
 
+.NET MAUI: validated on an Android emulator and four physical Android devices; iOS is not validated yet. See [MAUI compatibility](docs/maui-compatibility.md) for results, required workarounds (including for the published 15.1.0 package on Android), trimming settings and known limitations.
+
 ### TFM-specific API notes
 
 - **SEP-0009 date fields** (`BirthDate`, `IdIssueDate`, `IdExpirationDate`, `RegistrationDate`): `DateOnly?` on `net8.0` / `net10.0`; `string?` (ISO `yyyy-MM-dd`) on `netstandard2.1`. JSON wire format is identical across TFMs.
@@ -84,8 +86,8 @@ NuGet resolves the best matching assembly for your project automatically.
 
 The SDK includes numerous example applications showcasing its features. Explore these standalone projects:
 
-- [Horizon Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Horizon/HorizonExamples.cs)
-- [Soroban Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Soroban/SorobanExamples.cs)
+- [Horizon Examples](Examples/Horizon/HorizonExamples.cs)
+- [Soroban Examples](Examples/Soroban/)
 
 ### HTTP retry & resilience
 
@@ -118,6 +120,7 @@ RFC-safe methods (`GET`, `HEAD`, `OPTIONS`). Each preset opts in to the addition
 | `Server.SubmitTransaction()` / `SubmitTransactionAsync()` | POST | ✅ | n/a |
 | Every `StellarRpcServer` method — read (`getLatestLedger`, `simulateTransaction`, `getEvents`, …) or write (`sendTransaction`) | POST | n/a | ✅ |
 | SEP-6 `PATCH /transactions/{id}` | PATCH | ❌ | ❌ |
+| SEP-38 `POST /quote` (`QuoteService.PostQuoteAsync`) | POST | ⚠️ yes — don't use (see below) | ⚠️ yes — don't use (see below) |
 
 Retrying `SubmitTransaction()` is safe on Stellar even though it is HTTP POST: every envelope is
 uniquely keyed by transaction hash plus the source account's sequence number, so a resubmit either
@@ -127,9 +130,9 @@ surfaces `tx_bad_seq` and your code should look up the transaction by its hash t
 original result.
 
 > **⚠️ Do not wire `ForHorizon()` or `ForSoroban()` into SEP service clients**
-> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `StellarToml` with a custom
-> `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently retrying
-> them creates real problems:
+> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `UriScheme`, `QuoteService`,
+> `StellarToml` with a custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec**
+> and silently retrying them creates real problems:
 >
 > - **SEP-10 `POST /auth`** — the spec says: *"The Server should not provide more than one JWT for
 >   a specific challenge transaction."* The challenge is one-shot. On transient failure, request a
@@ -139,9 +142,16 @@ original result.
 >   URL. The spec defines no idempotency-key mechanism.
 > - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
 >   that mutates KYC state. Treat as non-idempotent.
+> - **SEP-7 callback `POST`** (`UriScheme.SubmitToCallbackAsync`, `SignAndSubmitTransactionAsync`) —
+>   the spec says nothing about idempotency; the POST delivers a signed transaction to a URL the
+>   requester chose, and a retry delivers it again. Use `NoRetry()` (the default) for `UriScheme`:
+>   even transport retries replay it.
+> - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
+>   until it expires. Both presets retry `POST` on a 408, 429, 500, 502, 503 or 504 answer, so one
+>   call can reserve two quotes.
 >
-> For SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a custom
-> `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that
+> For the other SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a
+> custom `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that
 > transport (connection-failure) retries apply to **all** HTTP methods: a POST whose response was
 > lost may already have been processed server-side, so even `WithConnectionRetries()` carries a
 > small replay window. If that window is unacceptable, use `NoRetry()` and recover at the
