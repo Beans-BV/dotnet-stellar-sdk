@@ -6,15 +6,6 @@
 **SDK Version:** 16.0.0  
 **Updated:** 2026-09-30
 
-> **Version history:** Horizon v26.0.0 (Protocol 26) added no new endpoints — its API-visible changes were CAP-77
-> result codes (SDK support in [#177](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/177)) and CAP-73 effects
-> reusing the existing `contract_credited`/`contract_debited` types (SDK support in
-> [#179](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/179)). Horizon v27.0.0 (Protocol 27) added ingestion
-> support only, with no endpoint or response-schema changes. Horizon v27.0.1, v28.0.0 (Protocol 28, CAP-0085
-> ingestion), and v28.0.1 likewise added no endpoints or response-schema changes. Protocol 28 XDR is not yet
-> regenerated in the SDK ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207)), so XDR fields on
-> Horizon responses that carry CAP-0085 types cannot be decoded until that lands.
-
 **Public API Endpoints (in matrix):** 50
 
 > **Note:** 2 endpoints are intentionally excluded from the matrix:

@@ -5,18 +5,6 @@
 **SDK Version:** 16.0.0
 **Updated:** 2026-09-30
 
-> **Version history:** RPC v26.0.1 completed the `getLatestLedger` response (`closeTime`, `headerXdr`, `metadataXdr`;
-> SDK support in [#198](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/198)). RPC v27.0.0 changed no method
-> signatures; it updated the XDR to Protocol 27. RPC v27.1.0 added two `getHealth` response fields
-> (`latestLedgerCloseTime`, `oldestLedgerCloseTime`; SDK support in
-> [#198](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/198)) and an optional `simulateTransaction` request flag
-> (`useUpgradedAuth`; SDK support in [#209](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/209), implements
-> [#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206)). RPC v27.1.1 fixed server-side `getEvents` filter
-> matching with no API change. RPC v28.0.0 changed no method signatures; it updated the XDR to Protocol 28
-> (CAP-0083, CAP-0085). RPC v28.0.1 only bumped dependencies. Protocol 28 XDR is not yet regenerated in the SDK
-> ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207)), so `SCV_EXECUTABLE_TAG` values and
-> `CONTRACT_EXECUTABLE_EXTERNAL_REF` executables in RPC responses cannot be decoded until that lands.
-
 ## Overall Coverage
 
 **Coverage:** 100%
