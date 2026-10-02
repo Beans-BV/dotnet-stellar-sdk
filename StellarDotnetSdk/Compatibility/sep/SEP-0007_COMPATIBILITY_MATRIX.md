@@ -36,6 +36,7 @@ _Note: the field set is the one used for the SEP-7 matrices of the other Stellar
 - `StellarDotnetSdk/Sep/Sep0007/UriScheme.cs`
 - `StellarDotnetSdk/Sep/Sep0007/Sep7Uri.cs`
 - `StellarDotnetSdk/Sep/Sep0007/Sep7UriParser.cs`
+- `StellarDotnetSdk/Sep/Sep0007/Sep7StellarTomlReader.cs`
 - `StellarDotnetSdk/Sep/Sep0007/Sep7Replacement.cs`
 - `StellarDotnetSdk/Sep/Sep0007/Sep7OperationType.cs`
 - `StellarDotnetSdk/Sep/Sep0007/Sep7Parameters.cs`
