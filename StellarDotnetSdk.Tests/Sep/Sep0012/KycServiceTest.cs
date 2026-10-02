@@ -760,6 +760,23 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    [DataRow("null", DisplayName = "JSON null")]
+    [DataRow("{\"status\":\"APPROVED\"}", DisplayName = "undefined status")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":null}}", DisplayName = "null field entry")]
+    public async Task GetCustomerInfoAsync_WithInvalidBody_WrapsWhatFromJsonReports(string body)
+    {
+        // The HTTP path and the callback path share one parser, so a rule added to it cannot miss either of them.
+        var expected = Assert.ThrowsException<JsonException>(() => GetCustomerInfoResponse.FromJson(body));
+        var (service, _) = CreateService(body);
+
+        var ex = await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+
+        Assert.IsInstanceOfType(ex.InnerException, typeof(JsonException));
+        Assert.AreEqual(expected.Message, ex.InnerException!.Message);
+    }
+
+    [TestMethod]
     [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"first_name\":null}}", "fields", DisplayName = "null field entry")]
     [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"first_name\":null}}", "provided_fields",
         DisplayName = "null provided entry")]
