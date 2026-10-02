@@ -111,7 +111,7 @@ public sealed record QuoteRequest
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
     /// </exception>
-    internal string ToJson()
+    internal byte[] ToJson()
     {
         RequestValidation.RequireNonEmpty(SellAsset, nameof(SellAsset));
         RequestValidation.RequireNonEmpty(BuyAsset, nameof(BuyAsset));
@@ -158,7 +158,7 @@ public sealed record QuoteRequest
             writer.WriteEndObject();
         }
 
-        return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+        return stream.ToArray();
     }
 
     /// <summary>

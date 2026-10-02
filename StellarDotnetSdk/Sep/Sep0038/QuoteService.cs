@@ -521,9 +521,10 @@ public class QuoteService : IDisposable
         CancellationToken cancellationToken = default)
     {
         Throw.IfNull(request, nameof(request));
-        var body = request.ToJson();
-        var httpRequest = CreateRequest(HttpMethod.Post, BuildUri("quote", null), request.Jwt,
-            new StringContent(body, Encoding.UTF8, "application/json"));
+        // Sent as the UTF-8 bytes the writer produced: a string in between would decode and re-encode them.
+        var body = new ByteArrayContent(request.ToJson());
+        body.Headers.ContentType = new MediaTypeHeaderValue("application/json") { CharSet = "utf-8" };
+        var httpRequest = CreateRequest(HttpMethod.Post, BuildUri("quote", null), request.Jwt, body);
         // The anchor has already created the quote, so a rejection keeps the body: its id is in ResponseBody.
         return await SendAsync<QuoteResponse>(httpRequest, cancellationToken, quote => CheckPostedQuote(request, quote))
             .ConfigureAwait(false);
