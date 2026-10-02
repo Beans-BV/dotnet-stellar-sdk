@@ -55,8 +55,9 @@ public class TransferServerService : IDisposable
 
     /// <summary>
     ///     Creates a TransferServerService instance with the specified transfer server address.
-    ///     Use <see cref="FromDomainAsync" /> instead if you want to automatically discover the transfer
-    ///     server URL from an anchor's stellar.toml file.
+    ///     Use
+    ///     <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, CancellationToken)">FromDomainAsync</see>
+    ///     instead if you want to automatically discover the transfer server URL from an anchor's stellar.toml file.
     /// </summary>
     /// <param name="transferServiceAddress">The base URL of the anchor's transfer server endpoint</param>
     /// <param name="httpClient">

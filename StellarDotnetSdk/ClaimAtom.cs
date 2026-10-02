@@ -170,10 +170,10 @@ public class ClaimAtomLiquidityPool : ClaimAtom
     public LiquidityPoolId LiquidityPoolId { get; }
 
     /// <summary>
-    ///     Get new ClaimLiquidityAtom object parsed from an XDR ClaimLiquidityAtom.
+    ///     Creates a <see cref="ClaimAtomLiquidityPool" /> from an XDR claim atom containing liquidity pool data.
     /// </summary>
-    /// <param name="claimLiquidityAtomXdr"></param>
-    /// <returns></returns>
+    /// <param name="xdrClaimAtom">The XDR claim atom to convert.</param>
+    /// <returns>A new <see cref="ClaimAtomLiquidityPool" /> instance.</returns>
     public static ClaimAtomLiquidityPool FromXdr(Xdr.ClaimAtom xdrClaimAtom)
     {
         var claimLiquidityAtomXdr = xdrClaimAtom.LiquidityPool;

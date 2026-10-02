@@ -17,6 +17,10 @@ public class SetTrustlineFlagsOperation : Operation
     /// <summary>
     ///     Constructs a <see cref="SetTrustlineFlagsOperation" />.
     /// </summary>
+    /// <param name="asset">The asset of the trustline whose flags are modified.</param>
+    /// <param name="trustor">The account that established the trustline.</param>
+    /// <param name="setFlags">The flags to set, combined with bitwise OR. See <see cref="SetFlags" />.</param>
+    /// <param name="clearFlags">The flags to clear, combined with bitwise OR. See <see cref="ClearFlags" />.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public SetTrustlineFlagsOperation(
         Asset asset,

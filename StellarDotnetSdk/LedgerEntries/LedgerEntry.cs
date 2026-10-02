@@ -28,7 +28,7 @@ public abstract class LedgerEntry
     /// <summary>
     ///     Creates the corresponding <c>LedgerEntry</c> object from an <c>xdr.LedgerEntryData</c> object.
     /// </summary>
-    /// <param name="xdrLedgerEntry">An <c>xdr.LedgerEntryData</c> object to be converted.</param>
+    /// <param name="xdrLedgerEntryData">An <c>xdr.LedgerEntryData</c> object to be converted.</param>
     /// <returns>A <c>LedgerEntry</c> object.</returns>
     private static LedgerEntry FromXdr(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {

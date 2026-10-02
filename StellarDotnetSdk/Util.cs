@@ -40,7 +40,7 @@ public static class Util
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="s" /> is null.</exception>
     /// <exception cref="FormatException">
     ///     Thrown when <paramref name="s" /> has an odd length or contains a non-hexadecimal character —
-    ///     the same exception type <see cref="Convert.FromHexString(string)" /> throws for such input.
+    ///     the same exception type <c>Convert.FromHexString</c> (.NET 5 and later) throws for such input.
     /// </exception>
     public static byte[] HexToBytes(string s)
     {

@@ -115,6 +115,7 @@ public class RetryingHttpMessageHandler :
         }
     }
 
+#if NET8_0_OR_GREATER
     /// <summary>
     ///     Sends an HTTP request through the resilience pipeline synchronously. Mirrors
     ///     <see cref="SendAsync" /> so that <see cref="HttpClient.Send(HttpRequestMessage)" /> receives the
@@ -128,7 +129,6 @@ public class RetryingHttpMessageHandler :
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>The HTTP response message.</returns>
-#if NET8_0_OR_GREATER
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var context = ResilienceContextPool.Shared.Get(cancellationToken);

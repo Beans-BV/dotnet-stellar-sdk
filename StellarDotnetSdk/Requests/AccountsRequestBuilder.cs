@@ -15,7 +15,8 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// <summary>
     ///     Builds requests connected to accounts.
     /// </summary>
-    /// <param name="serverUri"></param>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public AccountsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "accounts", httpClient)
     {
@@ -71,7 +72,7 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     ///     Requests GET /accounts/{account}/data/{key}
     ///     https://www.stellar.org/developers/horizon/reference/endpoints/data-for-account.html
     /// </summary>
-    /// <param name="account">Account to fetch</param>
+    /// <param name="accountId">Account to fetch</param>
     /// <param name="key">Key to the data needing retrieval.</param>
     public async Task<AccountDataResponse> AccountData(string accountId, string key)
     {

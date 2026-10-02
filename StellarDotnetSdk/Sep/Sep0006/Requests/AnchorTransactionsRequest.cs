@@ -25,7 +25,7 @@ public sealed record AnchorTransactionsRequest
 
     /// <summary>
     ///     The response should contain transactions starting on or
-    ///     after this date & time.
+    ///     after this date and time.
     /// </summary>
     public DateTime? NoOlderThan { get; init; }
 
