@@ -230,21 +230,11 @@ public class RetryingHttpMessageHandler :
                         return new ValueTask<TimeSpan?>((TimeSpan?)null);
                     }
 
-                    var response = args.Outcome.Result;
-                    var parsed = RetryAfterParser.ToTimeSpan(response?.Headers.RetryAfter);
-                    if (parsed is null && response is { } r &&
-                        r.Headers.TryGetValues("Retry-After", out var rawValues))
-                    {
-                        // The typed header property is null for values .NET cannot represent (delta-seconds
-                        // beyond int.MaxValue, multiple values). Fall back to parsing the first raw string so
-                        // the same header yields the same delay here as on the typed exceptions — still
-                        // subject to the MaxRetryAfterDelay cap below.
-                        foreach (var raw in rawValues)
-                        {
-                            parsed = RetryAfterParser.Parse(raw);
-                            break;
-                        }
-                    }
+                    // Typed header first, then the raw value .NET could not read — still subject to the
+                    // MaxRetryAfterDelay cap below.
+                    var parsed = args.Outcome.Result is { } response
+                        ? RetryAfterParser.FromHeaders(response.Headers)
+                        : null;
 
                     if (parsed is { } delay)
                     {

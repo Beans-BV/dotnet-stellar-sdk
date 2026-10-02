@@ -819,7 +819,7 @@ public class KycService : IDisposable
             }
 
             throw CreateErrorException(method, status, body, customerEndpoint,
-                RetryAfterParser.ToTimeSpan(response.Headers.RetryAfter));
+                RetryAfterParser.FromHeaders(response.Headers));
         }
         catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested &&
                                                    timeoutSource.IsCancellationRequested)

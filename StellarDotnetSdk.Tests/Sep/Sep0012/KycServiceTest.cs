@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -2656,6 +2657,39 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
 
         Assert.AreEqual(TimeSpan.FromSeconds(5), ex.RetryAfterDelay);
         Assert.AreEqual((int)status, ex.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task ErrorResponse_WithRetryAfterTheTypedHeaderCannotRead_ExposesIt()
+    {
+        // HttpResponseHeaders.RetryAfter is null for these values; RetryingHttpMessageHandler reads the raw header
+        // instead, and the exception must report the same delay the retry handler would wait.
+        var isoDate = DateTimeOffset.UtcNow.AddMinutes(2)
+            .ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
+        foreach (var (value, min, max) in new[]
+                 {
+                     ("+30", TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30)),
+                     ("99999999999", RetryAfterParser.MaxRepresentableDelay, RetryAfterParser.MaxRepresentableDelay),
+                     (isoDate, TimeSpan.FromSeconds(60), TimeSpan.FromMinutes(2)),
+                 })
+        {
+            var handler = new RecordingHandler(_ =>
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+                {
+                    Content = new StringContent("{\"error\":\"slow down\"}"),
+                };
+                response.Headers.TryAddWithoutValidation("Retry-After", value);
+                return response;
+            });
+            using var service = new KycService(KycServerUrl, new HttpClient(handler));
+
+            var ex = await AssertThrowsAsync<KycServiceException>(() =>
+                service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+
+            Assert.IsNotNull(ex.RetryAfterDelay, value);
+            Assert.IsTrue(ex.RetryAfterDelay >= min && ex.RetryAfterDelay <= max, $"{value}: {ex.RetryAfterDelay}");
+        }
     }
 
     [TestMethod]
