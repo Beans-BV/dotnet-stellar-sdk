@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -62,7 +63,9 @@ public class StellarRpcServerTest
               "result": {
                 "status": "healthy",
                 "latestLedger": 453892,
+                "latestLedgerCloseTime": "1750898400",
                 "oldestLedger": 436613,
+                "oldestLedgerCloseTime": "1750812000",
                 "ledgerRetentionWindow": 17280
               }
             }
@@ -76,8 +79,65 @@ public class StellarRpcServerTest
         // Assert
         Assert.AreEqual("healthy", response.Status);
         Assert.AreEqual(453892L, response.LatestLedger);
+        Assert.AreEqual(1750898400L, response.LatestLedgerCloseTime);
         Assert.AreEqual(436613L, response.OldestLedger);
+        Assert.AreEqual(1750812000L, response.OldestLedgerCloseTime);
         Assert.AreEqual(17280L, response.LedgerRetentionWindow);
+    }
+
+    /// <summary>
+    ///     Verifies that StellarRpcServer.GetHealth tolerates responses from RPC servers older than v27.1.0 that omit
+    ///     the ledger close times.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithoutCloseTimes_ReturnsNullForMissingFields()
+    {
+        // Arrange
+        const string getHealthResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "status": "healthy",
+                "latestLedger": 453892,
+                "oldestLedger": 436613,
+                "ledgerRetentionWindow": 17280
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getHealthResponseJson);
+
+        // Act
+        var response = await sorobanServer.GetHealth();
+
+        // Assert
+        Assert.AreEqual(453892L, response.LatestLedger);
+        Assert.IsNull(response.LatestLedgerCloseTime);
+        Assert.IsNull(response.OldestLedgerCloseTime);
+    }
+
+    /// <summary>
+    ///     Verifies that the <c>getHealth</c> close times read from their quoted wire form under a caller's own
+    ///     options that do not enable <see cref="JsonNumberHandling.AllowReadingFromString" />. Stellar RPC tags both
+    ///     fields <c>,string</c>; the property-level attribute carries that to callers who deserialize the public
+    ///     response type themselves. The <c>latestLedger</c> assertion pins the scope: that field is a bare number on
+    ///     the wire, so moving the attribute to the type level would relax it and is caught here.
+    /// </summary>
+    [TestMethod]
+    public void GetHealthResponse_WithQuotedCloseTimes_UnderOptionsWithoutNumberHandling_ReturnsValues()
+    {
+        var callerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        const string json =
+            """{"status":"healthy","latestLedger":5,"latestLedgerCloseTime":"1750898400","oldestLedger":1,"oldestLedgerCloseTime":"1750812000","ledgerRetentionWindow":5}""";
+
+        var response = JsonSerializer.Deserialize<GetHealthResponse>(json, callerOptions);
+
+        Assert.AreEqual(1750898400L, response!.LatestLedgerCloseTime);
+        Assert.AreEqual(1750812000L, response.OldestLedgerCloseTime);
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetHealthResponse>("""{"latestLedger":"5"}""", callerOptions));
     }
 
     /// <summary>
@@ -126,7 +186,10 @@ public class StellarRpcServerTest
               "result": {
                 "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
                 "protocolVersion": 21,
-                "sequence": 453871
+                "sequence": 453871,
+                "closeTime": "1750898400",
+                "headerXdr": "AAAAFgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==",
+                "metadataXdr": "AAAAAgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg=="
               }
             }
             """;
@@ -140,6 +203,91 @@ public class StellarRpcServerTest
         Assert.AreEqual(21, response.ProtocolVersion);
         Assert.AreEqual(453871, response.Sequence);
         Assert.AreEqual("6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe", response.Id);
+        Assert.AreEqual(1750898400L, response.CloseTime);
+        Assert.AreEqual("AAAAFgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==", response.HeaderXdr);
+        Assert.AreEqual("AAAAAgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==", response.MetadataXdr);
+    }
+
+    /// <summary>
+    ///     Verifies that StellarRpcServer.GetLatestLedger also reads a close time sent as a bare JSON number, not only
+    ///     the quoted form Stellar RPC emits.
+    /// </summary>
+    [TestMethod]
+    public async Task GetLatestLedger_WithUnquotedCloseTime_ReadsCloseTime()
+    {
+        // Arrange
+        const string getLatestLedgerResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
+                "protocolVersion": 21,
+                "sequence": 453871,
+                "closeTime": 1750898400
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getLatestLedgerResponseJson);
+
+        // Act
+        var response = await sorobanServer.GetLatestLedger();
+
+        // Assert
+        Assert.AreEqual(1750898400L, response.CloseTime);
+    }
+
+    /// <summary>
+    ///     Verifies that <c>closeTime</c> reads from its quoted wire form under a caller's own options that do not
+    ///     enable <see cref="JsonNumberHandling.AllowReadingFromString" />, and that the allowance stays scoped to that
+    ///     property: <c>sequence</c> is a bare number on the wire and must still reject a string.
+    /// </summary>
+    [TestMethod]
+    public void GetLatestLedgerResponse_WithQuotedCloseTime_UnderOptionsWithoutNumberHandling_ReturnsValue()
+    {
+        var callerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        const string json = """{"id":"ab","protocolVersion":21,"sequence":453871,"closeTime":"1750898400"}""";
+
+        var response = JsonSerializer.Deserialize<GetLatestLedgerResponse>(json, callerOptions);
+
+        Assert.AreEqual(1750898400L, response!.CloseTime);
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetLatestLedgerResponse>("""{"sequence":"1"}""", callerOptions));
+    }
+
+    /// <summary>
+    ///     Verifies that StellarRpcServer.GetLatestLedger tolerates responses from RPC servers that omit the
+    ///     ledger close time, header, and metadata fields.
+    /// </summary>
+    [TestMethod]
+    public async Task GetLatestLedger_WithoutOptionalFields_ReturnsNullForMissingFields()
+    {
+        // Arrange
+        const string getLatestLedgerResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
+                "protocolVersion": 21,
+                "sequence": 453871
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getLatestLedgerResponseJson);
+
+        // Act
+        var response = await sorobanServer.GetLatestLedger();
+
+        // Assert
+        Assert.AreEqual(453871, response.Sequence);
+        Assert.IsNull(response.CloseTime);
+        Assert.IsNull(response.HeaderXdr);
+        Assert.IsNull(response.MetadataXdr);
     }
 
     /// <summary>

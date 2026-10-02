@@ -16,5 +16,9 @@ internal static class GetLatestLedgerExample
 
         Console.WriteLine($"Server protocol version: {response.ProtocolVersion}");
         Console.WriteLine($"Server latest ledger: {response.Sequence}");
+        Console.WriteLine($"Latest ledger hash: {response.Id}");
+        Console.WriteLine($"Latest ledger close time (unix): {response.CloseTime?.ToString() ?? "(not provided)"}");
+        Console.WriteLine($"Latest ledger header XDR: {response.HeaderXdr ?? "(not provided)"}");
+        Console.WriteLine($"Latest ledger metadata XDR length: {response.MetadataXdr?.Length.ToString() ?? "(not provided)"}");
     }
 }

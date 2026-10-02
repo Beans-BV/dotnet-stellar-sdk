@@ -19,10 +19,13 @@ public class SorobanRpcFlowTests : SorobanIntegrationTestBase
         // GetHealth
         var health = await Rpc.GetHealth();
         health.Status.Should().Be("healthy");
+        health.LatestLedgerCloseTime.Should().BeGreaterThan(0);
+        health.OldestLedgerCloseTime.Should().BeInRange(1, health.LatestLedgerCloseTime!.Value);
 
         // GetLatestLedger
         var latest = await Rpc.GetLatestLedger();
         latest.Sequence.Should().BeGreaterThan(0);
+        latest.CloseTime.Should().BeGreaterThan(0);
 
         // GetAccount (retries across the Horizon -> RPC ingestion handoff)
         var account = await CreateFundedAccountAsync();

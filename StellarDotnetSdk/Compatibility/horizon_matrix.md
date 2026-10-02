@@ -1,10 +1,10 @@
 # Horizon API vs Stellar .NET SDK Compatibility Matrix
 
-**Horizon Version:** v25.0.0 (released 2025-12-11)  
-**Horizon Source:** [v25.0.0](https://github.com/stellar/stellar-horizon/releases/tag/v25.0.0)  
+**Horizon Version:** v28.0.1 (released 2026-08-27)  
+**Horizon Source:** [v28.0.1](https://github.com/stellar/stellar-horizon/releases/tag/v28.0.1)  
 **SDK:** `StellarDotnetSdk`  
-**SDK Version:** 14.0.0  
-**Updated:** 2026-03-27
+**SDK Version:** 16.0.0  
+**Updated:** 2026-09-30
 
 **Public API Endpoints (in matrix):** 50
 
