@@ -19,7 +19,9 @@ internal static class BoundedResponseBody
     /// </summary>
     /// <param name="response">The response whose body is read.</param>
     /// <param name="maxBytes">The largest body accepted, in bytes.</param>
-    /// <param name="encoding">The encoding the body is decoded with.</param>
+    /// <param name="encoding">
+    ///     The UTF-8 encoding the body is decoded with, strict or lenient. Only a UTF-8 byte order mark is skipped.
+    /// </param>
     /// <param name="cancellationToken">Cancellation token for the read.</param>
     /// <exception cref="DecoderFallbackException">
     ///     Thrown when <paramref name="encoding" /> throws on invalid input and the body is not valid in it.

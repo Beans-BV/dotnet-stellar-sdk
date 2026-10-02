@@ -35,9 +35,9 @@ public class ClientWebAuthContract : IDisposable
     public const uint DefaultSignatureExpirationLedgers = 10;
 
     /// <summary>
-    ///     Upper bound on a SEP-45 server response body. The challenge and JWT payloads are small; this
-    ///     stops a hostile or malfunctioning server from exhausting memory by streaming an unbounded body
-    ///     into a string. 512 KiB is generous headroom over a real challenge response (~1-2 KB).
+    ///     Upper bound on a SEP-45 server response body. The challenge and JWT payloads are small, and
+    ///     512 KiB is generous headroom over a real challenge response (~1-2 KB). It rejects an oversized
+    ///     body but does not bound memory: see <see cref="ReadBodyBoundedAsync" />.
     /// </summary>
     private const int MaxResponseBodyBytes = 512 * 1024;
 
@@ -231,9 +231,10 @@ public class ClientWebAuthContract : IDisposable
 
     /// <summary>
     ///     Reads an HTTP response body into a string with an upper size bound, through the reader the SEP-12 client
-    ///     shares. SEP-45 challenge and JWT payloads are small; this prevents a hostile or malfunctioning server from
-    ///     exhausting memory by streaming an unbounded body. Throws <see cref="HttpRequestException" /> when the body
-    ///     exceeds <see cref="MaxResponseBodyBytes" />; callers translate it to their SEP-45 response exception.
+    ///     shares. Throws <see cref="HttpRequestException" /> when the body exceeds <see cref="MaxResponseBodyBytes" />;
+    ///     callers translate it to their SEP-45 response exception. The requests use the default
+    ///     <see cref="HttpCompletionOption.ResponseContentRead" />, so <see cref="HttpClient" /> has already buffered
+    ///     the whole body: the limit rejects an oversized body, but does not bound the memory it used.
     /// </summary>
     private static async Task<string> ReadBodyBoundedAsync(HttpResponseMessage response)
     {
