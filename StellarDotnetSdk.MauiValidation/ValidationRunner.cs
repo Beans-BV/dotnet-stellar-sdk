@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.EventSources;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
@@ -269,7 +270,20 @@ public sealed class ValidationRunner
         try
         {
             await server.TestNetFriendBot.FundAccount(keyPair.AccountId).Execute().WaitAsync(NetworkTimeout);
-            var account = await server.Accounts.Account(keyPair.AccountId).WaitAsync(NetworkTimeout);
+            // Horizon's servers ingest independently: one that has not seen Friendbot's ledger yet answers 404, so the
+            // account is read up to 4 more times, 2 s apart.
+            StellarDotnetSdk.Responses.AccountResponse? account = null;
+            for (var attempt = 1; account == null; attempt++)
+            {
+                try
+                {
+                    account = await server.Accounts.Account(keyPair.AccountId).WaitAsync(NetworkTimeout);
+                }
+                catch (HttpResponseException ex) when (ex.StatusCode == 404 && attempt < 5)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(2));
+                }
+            }
             Expect(account.AccountId == keyPair.AccountId, $"Horizon returned account {account.AccountId}");
             Expect(account.SequenceNumber > 0, $"funded account has sequence {account.SequenceNumber}");
             var native = account.Balances.Single(b => b.AssetType == "native");
