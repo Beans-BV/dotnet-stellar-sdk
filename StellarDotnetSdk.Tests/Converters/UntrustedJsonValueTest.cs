@@ -294,4 +294,37 @@ public class UntrustedJsonValueTest
 
         return true;
     }
+
+    /// <summary>
+    ///     Verifies that the explicit-bound overload echoes prose longer than the default clamp in full, so a
+    ///     server's human-readable error message is not cut mid-sentence.
+    /// </summary>
+    [TestMethod]
+    public void Describe_WithExplicitBound_EchoesUpToThatBound()
+    {
+        var sentence = new string('a', 200);
+
+        Assert.AreEqual($"'{sentence}'", UntrustedJsonValue.Describe(sentence, 256));
+        Assert.AreEqual($"'{new string('a', 10)}' (truncated, 200 UTF-16 code units)",
+            UntrustedJsonValue.Describe(sentence, 10));
+    }
+
+    /// <summary>
+    ///     Verifies that the explicit-bound overload escapes exactly as the default does: only the bound moves.
+    /// </summary>
+    [TestMethod]
+    public void Describe_WithExplicitBound_EscapesLikeTheDefault()
+    {
+        const string value = "line\nbreak 'quoted' \u202e";
+        Assert.AreEqual(UntrustedJsonValue.Describe(value), UntrustedJsonValue.Describe(value, 256));
+    }
+
+    /// <summary>
+    ///     Verifies that a bound too small to keep a surrogate pair whole is rejected.
+    /// </summary>
+    [TestMethod]
+    public void Describe_WithBoundBelowTwo_Throws()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => UntrustedJsonValue.Describe("x", 1));
+    }
 }
