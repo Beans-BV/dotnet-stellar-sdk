@@ -151,7 +151,8 @@ public class QuoteService : IDisposable
     /// <param name="httpRequestHeaders">
     ///     Optional headers added to every request. A content header (<c>Content-Language</c>, for example) is sent
     ///     only with <c>POST /quote</c>; the other requests have no body to carry it, so it is dropped from them. A
-    ///     <c>Content-Type</c> header is ignored: <c>POST /quote</c> always sends <c>application/json</c>.
+    ///     <c>Content-Type</c> header is ignored: <c>POST /quote</c> always sends <c>application/json</c>. An
+    ///     <c>Accept</c> header is ignored too: every request asks for <c>application/json</c>.
     /// </param>
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="serviceAddress" /> is empty, is not an absolute URL, carries a query,
@@ -210,7 +211,9 @@ public class QuoteService : IDisposable
     /// <param name="httpClient">Optional HTTP client to use; it remains owned by the caller.</param>
     /// <param name="httpRequestHeaders">
     ///     Optional headers added to the stellar.toml fetch and every request. A content header is sent only with
-    ///     <c>POST /quote</c>, the one request with a body, and a <c>Content-Type</c> header is ignored.
+    ///     <c>POST /quote</c>, the one request with a body, and a <c>Content-Type</c> header is ignored. An
+    ///     <c>Accept</c> header reaches the stellar.toml fetch only: requests to the quote server always ask for
+    ///     <c>application/json</c>.
     /// </param>
     /// <param name="cancellationToken">Token to cancel the stellar.toml fetch.</param>
     /// <returns>A client for the anchor's quote server.</returns>
@@ -601,6 +604,13 @@ public class QuoteService : IDisposable
         {
             foreach (var header in _httpRequestHeaders)
             {
+                // Accept is set below; a configured value would go out next to it ("text/html, application/json"),
+                // and an anchor may then answer with something other than JSON.
+                if (string.Equals(header.Key, "Accept", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 // A content header the body already carries (its Content-Type) is not added again: a second value
                 // would make the header malformed ("application/json; charset=utf-8, text/plain").
                 if (!request.Headers.TryAddWithoutValidation(header.Key, header.Value) && content != null &&

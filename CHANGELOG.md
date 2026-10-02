@@ -144,7 +144,8 @@ All notable changes to this project are documented here. The format is based on
     property set to an empty or whitespace value instead of `null`, or a JWT that is not printable
     ASCII without whitespace (`ArgumentException`). Their `ToString` redacts the JWT. Custom headers with
     an invalid name, a `Content-Length` or `Transfer-Encoding` name, or a value outside printable ASCII
-    are rejected when the service is created, which takes a copy of them.
+    are rejected when the service is created, which takes a copy of them. A custom `Content-Type` or
+    `Accept` header is ignored: requests to the quote server ask for, and send, `application/json`.
   - The response converters `ExactDecimalJsonConverter`, `UtcDateTimeOffsetJsonConverter` and
     `NonNullElementListJsonConverter<T>` (namespace `StellarDotnetSdk.Converters`) are public, so a
     consumer's source-generated `JsonSerializerContext` over the SEP-38 response types reads amounts and

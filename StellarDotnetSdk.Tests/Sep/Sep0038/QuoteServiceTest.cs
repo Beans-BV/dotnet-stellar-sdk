@@ -243,6 +243,21 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
+    [DataRow("Accept")]
+    [DataRow("accept")]
+    public async Task InfoAsync_WithCustomAcceptHeader_AsksForJsonOnly(string name)
+    {
+        var headers = new Dictionary<string, string> { [name] = "text/html" };
+        var (service, handler) = CreateService(ReadTestData("info-response.json"), headers: headers);
+
+        await service.InfoAsync();
+
+        // One value, not "text/html, application/json", which an anchor may answer with HTML.
+        CollectionAssert.AreEqual(new[] { "application/json" },
+            handler.Requests.Single().Headers.GetValues("Accept").ToArray());
+    }
+
+    [TestMethod]
     public async Task InfoAsync_JwtArgument_OverridesAConfiguredAuthorizationHeader()
     {
         var headers = new Dictionary<string, string> { ["Authorization"] = "Bearer configured" };
