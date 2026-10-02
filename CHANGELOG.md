@@ -102,9 +102,11 @@ All notable changes to this project are documented here. The format is based on
   and names, verification codes, file references and callback-URL secrets, but prints identifiers (customer
   ID, account, memo, memo type, type, transaction ID, language, file ID, content type) with control and
   format characters replaced. The SEP-12 converters are public and attached to the response properties, so a
-  consumer's source-generated `JsonSerializerContext` can use the response types with the same checks, including
-  the rejection of a `null` entry in `fields` or `provided_fields`. `KycCallbackSignature` verifies the
-  `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
+  consumer's source-generated `JsonSerializerContext` can use the response types with the same converter checks,
+  including the rejection of a `null` entry in `fields` or `provided_fields`. Duplicate-property rejection and the
+  nullable-annotation checks come from `JsonOptions.DefaultOptions` instead: a consumer's own options need
+  `AllowDuplicateProperties = false` and `RespectNullableAnnotations = true` for those.
+  `KycCallbackSignature` verifies the `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
   `<timestamp>.<host>.<body>`, with a freshness window, over the body as a string or raw bytes), and
   `GetSignedHost` derives the host string the anchor signs (`host:port` when the callback URL names a port);
   `GetCustomerInfoResponse.FromJson` parses the callback payload. Compatibility matrix:

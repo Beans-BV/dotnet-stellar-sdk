@@ -868,6 +868,7 @@ public class ClientWebAuthContractTest
     [TestMethod]
     public async Task SendSignedChallenge_SkipsUtf8ByteOrderMark()
     {
+        // The token response goes through the same size-bounded reader as the challenge, so it skips a BOM too.
         var serverKp = KeyPair.Random();
         var handler = new Mock<HttpMessageHandler>();
         handler.Protected()
@@ -885,11 +886,6 @@ public class ClientWebAuthContractTest
         var token = await auth.SendSignedChallengeAsync("aGVsbG8=");
 
         Assert.AreEqual("abc.def.ghi", token);
-    }
-
-    private static byte[] WithBom(string text)
-    {
-        return new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(text)).ToArray();
     }
 
     [TestMethod]
@@ -1222,6 +1218,11 @@ public class ClientWebAuthContractTest
                 Content = new StringContent(tomlBody, Encoding.UTF8, "text/plain"),
             });
         return handler;
+    }
+
+    private static byte[] WithBom(string text)
+    {
+        return new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(text)).ToArray();
     }
 
     [TestMethod]

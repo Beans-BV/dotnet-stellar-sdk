@@ -43,10 +43,10 @@ namespace StellarDotnetSdk.Sep.Sep0012;
 ///         malfunctioning server cannot exhaust memory by streaming an unbounded body, and the whole exchange —
 ///         headers and body — is bounded by the <see cref="HttpClient.Timeout" /> of the client in use (and, for the
 ///         internal client, by <see cref="HttpResilienceOptions.RequestTimeout" />), so it cannot stall the caller
-///         either. Bodies are decoded as strict UTF-8, so malformed bytes are rejected rather than replaced, and are
-///         parsed with <see cref="JsonOptions.DefaultOptions" /> — duplicate properties are rejected, including in
-///         error bodies — and statuses and field types are matched against the exact literal sets SEP-0012
-///         defines. A success response that fails any of this raises
+///         either. A success body must be strict UTF-8, so malformed bytes are rejected rather than replaced; an
+///         error body is decoded leniently. Bodies are parsed with <see cref="JsonOptions.DefaultOptions" /> —
+///         duplicate properties are rejected, including in error bodies — and statuses and field types are matched
+///         against the exact literal sets SEP-0012 defines. A success response that fails any of this raises
 ///         <see cref="InvalidKycResponseException" />. Error statuses raise <see cref="AuthenticationRequiredException" />
 ///         (401, or 403 <c>authentication_required</c>), <see cref="CustomerNotFoundException" /> (404 from
 ///         <c>GET</c>/<c>PUT /customer</c>, <c>PUT /customer/verification</c>, <c>PUT /customer/callback</c> or
@@ -95,9 +95,8 @@ public class KycService : IDisposable
     private const string FileIdSuffix = "_file_id";
     private static readonly string[] MemoTypes = { "text", "id", "hash" };
 
-    // Validates a success body before it is parsed from its bytes: System.Text.Json does not check the bytes of a
-    // value it skips, and a replacing decoder would turn corrupt bytes into U+FFFD. An error body stays lenient, so
-    // its "type" still selects the exception.
+    // Validates a success body before it is parsed from its bytes, because System.Text.Json does not check the bytes
+    // of a value it skips. An error body is decoded leniently instead, so its "type" still selects the exception.
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
 
     private readonly HttpClient _httpClient;

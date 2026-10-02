@@ -64,8 +64,9 @@ public static class RetryAfterParser
     ///     <see cref="MaxRepresentableDelay" />), or null if it is absent, unparseable, in the past, or non-positive.
     ///     The typed <see cref="HttpResponseHeaders.RetryAfter" /> is null for a value .NET cannot read, such as an
     ///     ISO 8601 date, a leading <c>+</c> or delta-seconds beyond <see cref="int.MaxValue" />, so the first raw
-    ///     value is parsed with <see cref="Parse" /> instead. Every reader of the header uses this, so the same
-    ///     header yields the same delay everywhere.
+    ///     value is parsed with <see cref="Parse" /> instead. <c>KycService</c> and
+    ///     <see cref="RetryingHttpMessageHandler" /> both read the header through this method, so they report the same
+    ///     delay.
     /// </summary>
     internal static TimeSpan? FromHeaders(HttpResponseHeaders headers)
     {
