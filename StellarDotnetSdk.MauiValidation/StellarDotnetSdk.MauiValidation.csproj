@@ -29,10 +29,13 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
-    <!-- The desktop console baseline (Desktop/) is a separate project that compiles ValidationRunner.cs itself. -->
+    <!--
+        The desktop console baseline (Desktop/) and the unit tests (Tests/) are separate projects that compile the
+        files they need from here themselves.
+    -->
     <ItemGroup>
-        <Compile Remove="Desktop/**" />
-        <None Remove="Desktop/**" />
+        <Compile Remove="Desktop/**;Tests/**" />
+        <None Remove="Desktop/**;Tests/**" />
     </ItemGroup>
 
     <!--

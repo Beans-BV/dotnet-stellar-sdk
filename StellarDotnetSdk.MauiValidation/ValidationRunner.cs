@@ -147,22 +147,11 @@ public sealed class ValidationRunner
             using var responseLifetime = response;
             await using var streamLifetime = stream;
             var headersMs = sw.ElapsedMilliseconds;
-            var buffer = new byte[4096];
-            var text = new System.Text.StringBuilder();
             long firstBytesMs = -1;
-            int read;
-            while ((read = await stream.ReadAsync(buffer, cts.Token)) > 0)
+            if (await StreamSearch.ReadUntilAsync(stream, "\nid: ", () => firstBytesMs = sw.ElapsedMilliseconds, cts.Token))
             {
-                if (firstBytesMs < 0)
-                {
-                    firstBytesMs = sw.ElapsedMilliseconds;
-                }
-                text.Append(System.Text.Encoding.UTF8.GetString(buffer, 0, read));
-                if (text.ToString().Contains("\nid: "))
-                {
-                    return $"headers {headersMs} ms, first bytes {firstBytesMs} ms, first ledger event {sw.ElapsedMilliseconds} ms " +
-                           $"(content-encoding: {string.Join(",", response.Content.Headers.ContentEncoding)})";
-                }
+                return $"headers {headersMs} ms, first bytes {firstBytesMs} ms, first ledger event {sw.ElapsedMilliseconds} ms " +
+                       $"(content-encoding: {string.Join(",", response.Content.Headers.ContentEncoding)})";
             }
             return $"stream ended after {sw.ElapsedMilliseconds} ms without a ledger event";
         }
@@ -548,18 +537,9 @@ public sealed class ValidationRunner
                 }
                 return "never (stream ended)";
             }
-            var buffer = new byte[4096];
-            var text = new System.Text.StringBuilder();
-            int read;
-            while ((read = await stream.ReadAsync(buffer, ct)) > 0)
-            {
-                text.Append(System.Text.Encoding.UTF8.GetString(buffer, 0, read));
-                if (text.ToString().Contains(needle))
-                {
-                    return $"at {sw.ElapsedMilliseconds} ms";
-                }
-            }
-            return "never (stream ended)";
+            return await StreamSearch.ReadUntilAsync(stream, needle, null, ct)
+                ? $"at {sw.ElapsedMilliseconds} ms"
+                : "never (stream ended)";
         }
         catch (OperationCanceledException)
         {

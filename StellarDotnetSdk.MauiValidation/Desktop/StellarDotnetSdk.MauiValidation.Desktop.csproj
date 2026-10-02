@@ -19,6 +19,7 @@
 
     <ItemGroup>
         <Compile Include="..\ValidationRunner.cs" />
+        <Compile Include="..\StreamSearch.cs" />
     </ItemGroup>
 
     <ItemGroup>

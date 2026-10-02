@@ -48,3 +48,5 @@ jobs:
         run: dotnet test StellarDotnetSdk.Tests/StellarDotnetSdk.Tests.csproj --configuration Release --no-build --framework net8.0
       - name: Run unit tests (netstandard2.1 via net8.0 host)
         run: dotnet test StellarDotnetSdk.NetStandard21.Tests/StellarDotnetSdk.NetStandard21.Tests.csproj --configuration Release --no-build
+      - name: Run MAUI validation unit tests
+        run: dotnet test StellarDotnetSdk.MauiValidation/Tests/StellarDotnetSdk.MauiValidation.Tests.csproj --configuration Release
