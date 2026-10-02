@@ -119,7 +119,14 @@ done
 # during a long run cannot push out the first results. Best effort: some devices refuse to resize it, and on some
 # the new size stays until reboot.
 "${adb[@]}" logcat -G 8M > /dev/null 2>&1 || echo "note: could not enlarge the logcat buffer" >&2
-"${adb[@]}" shell monkey -p "$app_id" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
+# monkey counts a launch that threw (a SecurityException on a device that blocks it, for example) as an injected event
+# and exits 0, so its error lines are checked as well.
+if ! launch="$("${adb[@]}" shell monkey -p "$app_id" -c android.intent.category.LAUNCHER 1 2>&1)" \
+    || [[ "$launch" != *"Events injected: 1"* || "$launch" == *"** Error"* ]]; then
+    echo "Could not launch $app_id:" >&2
+    echo "$launch" >&2
+    exit 1
+fi
 
 # Wait for DONE. A crash shows up as a Java FATAL EXCEPTION ("Process: <app>, PID"), a native crash tombstone
 # (">>> <app> <<<"), or ActivityManager reporting the process died.
