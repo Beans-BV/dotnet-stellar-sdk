@@ -12,4 +12,4 @@ network.
 
 On `netstandard2.1`, SEP-0009 date properties are `string?` (ISO `yyyy-MM-dd`); on `net8.0` / `net10.0` they are `DateOnly?`.
 
-.NET MAUI: validated on an Android emulator; iOS is not validated yet. See [MAUI compatibility](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/main/docs/maui-compatibility.md) for results, workarounds and known limitations.
+.NET MAUI: validated on an Android emulator and four physical Android devices; iOS is not validated yet. See [MAUI compatibility](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/main/docs/maui-compatibility.md) for results, workarounds and known limitations.

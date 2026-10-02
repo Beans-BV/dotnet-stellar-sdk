@@ -1,6 +1,6 @@
 # .NET MAUI compatibility
 
-Validation of the SDK in .NET MAUI apps (SCF Q3 2026 deliverable 2, "MAUI Validation"). Validated against `main` @ `f3375ed8` on 2026-09-30, and against the published NuGet package 15.1.0.
+Validation of the SDK in .NET MAUI apps (SCF Q3 2026 deliverable 2, "MAUI Validation"). Validated against `main` @ `83303a27` on 2026-10-02, on an Android emulator, four physical Android devices and a Linux desktop, and against the published NuGet package 15.1.0.
 
 The multi-target build of `main` is **not published yet**. The newest release on nuget.org, 15.1.0, targets only `net8.0`, and it does not work on Android without the workaround below (§1). §5 lists what the SCF deliverable asked for and what was not done.
 
@@ -10,7 +10,7 @@ The multi-target build of `main` is **not published yet**. The newest release on
 |----------|--------|
 | Android, x86_64 emulator (API 28), SDK built from `main` | **Works**, with one limitation: with the default HTTP handler, SSE streaming events arrive about 50 s late and can be lost if the connection drops. A small consumer-side workaround fixes both on Android (§3.3). §3.3 also describes a loss case that applies to every platform. Crypto, Horizon queries, transaction submit and Soroban simulate pass in a trimmed Release build. |
 | Android, x86_64 emulator (API 28), NuGet package 15.1.0 | **Fails** at the first crypto call with `PlatformNotSupportedException`. Works with an added `NSec.Cryptography` 26.4.0 reference (§1). |
-| Android, arm64 physical device | **Not exercised.** The arm64 libsodium binary ships in the APK but was not run (§4). |
+| Android, arm64 physical devices (API 29, 35, 36), SDK built from `main` | **Works**, with the same SSE limitation and workaround as the emulator. Four devices from three vendors, under `TrimMode=full` with the workaround, and one of them also under the MAUI default `TrimMode=partial`: crypto, Horizon queries, transaction submit and Soroban simulate pass; the SDK's default SSE stream is 46–48 s late (50.7 s in the `partial` run), and the `SocketsHttpHandler` stream delivers in 2–4 s (§3.1). |
 | iOS device (AOT-only) | **Not exercised.** No macOS host was available. The desk check says it should work (§1); it is unverified (§4). |
 | iOS Simulator | **Not exercised; expected not to work**: libsodium has no simulator build (desk check, §1). |
 | Mac Catalyst | Not exercised; expected to work (§1). |
@@ -72,7 +72,7 @@ Details checked on the binaries themselves:
 
 The premise that neither backend ships native libsodium for the mobile RIDs does not hold for the dependency set on `main`. It still holds for the published 15.1.0 package and for the `net8.0` path (item 4):
 
-1. **Android, MAUI 10, SDK built from `main`: expected to work unchanged.** NSec 26.4.0 with libsodium 1.0.22 ships `android-arm64` and `android-x64` binaries, and they are 16 KB page aligned. This is verified on an emulator in section 3.
+1. **Android, MAUI 10, SDK built from `main`: expected to work unchanged.** NSec 26.4.0 with libsodium 1.0.22 ships `android-arm64` and `android-x64` binaries, and they are 16 KB page aligned. This is verified on an emulator and on four physical arm64 devices in section 3.1.
 2. **iOS device, MAUI 10: expected to work unchanged.** NSec ships iOS-specific assemblies that bind to `__Internal`, and libsodium ships a device static library. This relies on the .NET for iOS build statically linking `runtimes/ios-arm64/native/libsodium.a` from the package. It needs a macOS host and a physical device to confirm (see section 4).
 3. **iOS Simulator: expected not to work (not run).** There is no simulator slice. NuGet resolves `iossimulator-arm64` to the device library through RID fallback (`runtimes/ios-arm64/native/libsodium.a`), which the linker should reject because it is built for iOS, not the simulator. `iossimulator-x64` resolves no native library at all, so the `__Internal` symbols would be missing at run time. This affects development and CI only, not shipped apps. Mac Catalyst is covered.
 4. **Android with the `net8.0` assembly does not work: MAUI 9 with `main`, and every MAUI version with the published 15.1.0.** That path pins libsodium 1.0.20.1, which has no Android binaries. NuGet falls back from the `android-*` RIDs to `linux-*` and packs the glibc builds of `libsodium.so`, which Android cannot load. The first crypto call throws `PlatformNotSupportedException` ("Could not initialize platform-specific components") with an inner `DllNotFoundException: libsodium`. Verified on the emulator with 15.1.0 (§3.1). The `net9.0-android` workload is already out of support in the .NET 10 SDK (warning NETSDK1202).
@@ -146,7 +146,7 @@ cd StellarDotnetSdk.MauiValidation
 dotnet run --project Desktop
 ```
 
-`sdkmanager` installs the newest `platform-tools` and `emulator`; the versions used here are in the table above. On a physical device, enable USB debugging and pass its serial: `ADB_SERIAL=<serial> ./run-android.sh partial` (`adb devices` lists it). On macOS the script also works: it builds only the Android target, so the iOS workloads are not needed.
+`sdkmanager` installs the newest `platform-tools` and `emulator`; the versions used here are in the table above. On a physical device, enable USB debugging and pass its serial: `ADB_SERIAL=<serial> ./run-android.sh partial` (`adb devices` lists it). Keep the device awake and unlocked for the whole run (for example Developer options → Stay awake): if the screen is off when the app launches, Doze blocks its network although the device is online: the first network check fails with `EAI_NODATA` ("No address associated with hostname"), and the checks that depend on it fail after it. On macOS the script also works: it builds only the Android target, so the iOS workloads are not needed.
 
 `run-android.sh` cleans the app's Release output (switching trim modes over an incremental build reuses stale linked assemblies, which then crash inside MAUI at startup). It then publishes the APK, waits for the device, installs the APK, enlarges the device's logcat buffer to 8 MB (so that a long run cannot push out its first results; on some devices the setting stays until reboot), launches it, and prints every logcat line that carries the `STELLAR-MAUI-VALIDATION` prefix (the logcat tag is `DOTNET`). It stops with an error if no booted device appears within `BOOT_TIMEOUT_SECONDS` (default 300), if the app crashes (Java exception or native crash), or if it does not finish within `TIMEOUT_SECONDS` (default 1200). `./run-android.sh --help` prints the usage.
 
@@ -176,23 +176,25 @@ It is referenced by project, not by package, and is deliberately **not** in `ste
 ./run-android.sh partial -p:StellarDotnetSdkPackageVersion=15.1.0 -p:NSecPackageVersion=26.4.0  # workaround
 ```
 
-The same checks also run as a desktop console app, `StellarDotnetSdk.MauiValidation/Desktop` (`dotnet run --project Desktop` from `StellarDotnetSdk.MauiValidation/`; exit code 0 only if every check passed), as a baseline. On linux-x64: 6/6 pass, and both SSE streams deliver about 2 s after the submit.
+The same checks also run as a desktop console app, `StellarDotnetSdk.MauiValidation/Desktop` (`dotnet run --project Desktop` from `StellarDotnetSdk.MauiValidation/`; exit code 0 only if every check passed), as a baseline. On linux-x64: 6/6 pass, and both SSE streams deliver about 1 s after the submit.
 
-### 3.1 Android: results (x86_64 emulator, API 28, Mono runtime, Release)
+### 3.1 Android: results (Mono runtime, Release)
 
-From the final runs of `run-android.sh`. SSE times are after the submit returned.
+#### Emulator (x86_64, API 28)
+
+One run of each configuration of `run-android.sh`. SSE times are after the submit returned.
 
 | Check | `TrimMode=partial` (MAUI default) | `TrimMode=full` + workaround | `TrimMode=full`, no workaround |
 |-------|:---:|:---:|:---:|
 | `crypto.rfc8032` | pass | pass | pass |
 | `crypto.random-keypair` | pass | pass | pass |
 | `horizon.friendbot-and-account` | pass | pass | **fail**: `TypeInitializationException` in `JsonOptions` |
-| `horizon.submit-and-sse-stream` | submit pass; **SSE late** (51 s), known failure | submit pass; **SSE late** (47 s), known failure | **fail**: no funded account |
-| `horizon.sse-stream-sockets-handler` | pass (2.7 s) | pass (3.5 s) | **fail**: no measurement |
+| `horizon.submit-and-sse-stream` | submit pass; **SSE late** (47 s), known failure | submit pass; **SSE late** (47 s), known failure | **fail**: no funded account |
+| `horizon.sse-stream-sockets-handler` | pass (3.8 s) | pass (3.5 s) | **fail**: no measurement |
 | `soroban.simulate` | pass | pass | **fail**: no funded account |
 | `run-android.sh` exit code | 0 | 0 | 1 |
 | Unique IL2xxx warnings (see §3.2 for how they are counted) | 0 | 124 | 99 |
-| APK size (arm64-v8a + x86_64) | 32.9 MB | 29.2 MB | 28.0 MB |
+| APK size (arm64-v8a + x86_64) | 32.9 MB | 29.3 MB | 28.1 MB |
 
 The APK contains `lib/arm64-v8a/libsodium.so` and `lib/x86_64/libsodium.so` from the libsodium 1.0.22 package. The x86_64 one is the binary the emulator runs.
 
@@ -204,11 +206,31 @@ With the published package instead of `main` (`TrimMode=partial`, `-p:StellarDot
 | `crypto.random-keypair` | **fail**: same | pass |
 | `horizon.friendbot-and-account` | **fail**: same (from `KeyPair.Random`) | pass |
 | `horizon.submit-and-sse-stream` | **fail**: no funded account | submit pass; **SSE late** (47 s), known failure |
-| `horizon.sse-stream-sockets-handler` | **fail**: no measurement | pass (3.3 s) |
+| `horizon.sse-stream-sockets-handler` | **fail**: no measurement | pass (3.5 s) |
 | `soroban.simulate` | **fail**: no funded account | pass |
 | `run-android.sh` exit code | 1 | 0 |
 
 With 15.1.0 the APK contains the `linux-arm64` and `linux-x64` glibc builds of libsodium 1.0.20.1 under `lib/arm64-v8a` and `lib/x86_64` (NuGet's RID fallback), which Android cannot load. The app's `INFO assemblies` line shows which SDK and NSec builds ran (NSec 25.4.0 vs 26.4.0 here).
+
+#### Physical devices (arm64, Mono runtime, Release, 2026-10-02)
+
+One run per device of `ADB_SERIAL=<serial> ./run-android.sh full` (full trimming with the §3.2 workaround), with the SDK built from `main` @ `83303a27`. These runs execute the `lib/arm64-v8a/libsodium.so` binary that the emulator never ran. All four devices use 4 KB memory pages; no 16 KB page-size device was available (§4). SSE times are after the submit returned.
+
+| Device | Pixel XL | Galaxy S21 Ultra (`SM-G998B`) | Find X9 Pro (`CPH2791`) | Galaxy S23 Ultra (`SM-S918B`) |
+|--------|:---:|:---:|:---:|:---:|
+| Android version (API) | 10 (29) | 15 (35) | 16 (36) | 16 (36) |
+| SoC | Snapdragon 821 | Exynos 2100 | MediaTek MT6993 | Snapdragon 8 Gen 2 (SM8550) |
+| `crypto.rfc8032` | pass | pass | pass | pass |
+| `crypto.random-keypair` | pass | pass | pass | pass |
+| `horizon.friendbot-and-account` | pass | pass | pass | pass |
+| `horizon.submit-and-sse-stream` | submit pass; **SSE late** (47.4 s), known failure | submit pass; **SSE late** (47.6 s), known failure | submit pass; **SSE late** (46.0 s), known failure | submit pass; **SSE late** (46.2 s), known failure |
+| `horizon.sse-stream-sockets-handler` | pass (2.0 s) | pass (4.0 s) | pass (3.5 s) | pass (2.6 s) |
+| `soroban.simulate` | pass | pass | pass | pass |
+| App result | `RESULT FAIL 5/6` | `RESULT FAIL 5/6` | `RESULT FAIL 5/6` | `RESULT FAIL 5/6` |
+
+The results match the emulator's: the only failure is the known SSE delay (§3.3), on Android 10 as on Android 16 and on Qualcomm, Exynos and MediaTek hardware. The trim warnings were the same 124 as in §3.2.
+
+The MAUI default, `TrimMode=partial` (`./run-android.sh partial`), was also run on the Galaxy S21 Ultra. The result is the same: every check passes except the known SSE failure (`RESULT FAIL 5/6`). The SDK's default stream delivered the payment 50.7 s after the submit, the `SocketsHttpHandler` stream after 2.0 s, and the build raised no trim warnings, as on the emulator.
 
 ### 3.2 Trimming
 
@@ -259,17 +281,27 @@ The durable fix is SDK-side: a source-generated `JsonSerializerContext` for the 
 
 ### 3.3 SSE streaming on Android: the default HTTP handler holds events back
 
-With the SDK's default setup, `Stream(...)` on Android hands an event to the listener only when more data arrives on the connection after it: the next event, or Horizon closing the connection. Horizon closes an SSE connection after 10 events or about 55 s, whichever comes first (`event: close`, `data: "byebye"`). On a quiet stream, such as the payments of one account, the event is therefore about 50 s late. Measured on the emulator in every configuration and run: the payment appeared 46–52 s after the submit.
+With the SDK's default setup, `Stream(...)` on Android hands an event to the listener only when more data arrives on the connection after it: the next event, or Horizon closing the connection. Horizon closes an SSE connection after 10 events or about 55 s, whichever comes first (`event: close`, `data: "byebye"`). On a quiet stream, such as the payments of one account, the event is therefore about 50 s late. Measured on the emulator in every configuration that reaches the stream: the payment appeared 46.7–47.1 s after the submit. On the four physical devices (§3.1) it appeared 46–48 s after the submit.
 
 The check reads the same payments URL five ways in one run. The check prints stopwatch times; the table subtracts its `submit done` time, so these are times after the submit returned, from one run (`TrimMode=partial`):
 
 | Reader | HTTP handler | Android emulator | Linux desktop, same code |
 |--------|--------------|:---:|:---:|
-| SDK `Stream(...)` (LaunchDarkly.EventSource 3.3.2) | platform default | 51.0 s | 1.8 s |
-| SDK `Stream(...)` | `SocketsHttpHandler` | 2.7 s | 1.8 s |
-| `HttpClient` + `Stream.ReadAsync` | platform default | 1.6 s | 1.8 s |
-| `HttpClient` + `StreamReader.ReadLineAsync` | platform default | `id:` line 1.6 s, `data:` line 51.6 s | 1.8 s |
-| `HttpClient` + `StreamReader.ReadLineAsync` | `SocketsHttpHandler` | 2.5 s | 1.6 s |
+| SDK `Stream(...)` (LaunchDarkly.EventSource 3.3.2) | platform default | 47.1 s | 1.1 s |
+| SDK `Stream(...)` | `SocketsHttpHandler` | 3.8 s | 0.9 s |
+| `HttpClient` + `Stream.ReadAsync` | platform default | 2.6 s | 0.8 s |
+| `HttpClient` + `StreamReader.ReadLineAsync` | platform default | `id:` line 2.6 s, `data:` line 47.6 s | 1.1 s |
+| `HttpClient` + `StreamReader.ReadLineAsync` | `SocketsHttpHandler` | 3.6 s | 1.1 s |
+
+The physical devices show the same pattern. Ranges over the four `TrimMode=full` runs, one per device:
+
+| Reader | HTTP handler | Physical devices |
+|--------|--------------|:---:|
+| SDK `Stream(...)` | platform default | 46.0–47.6 s |
+| SDK `Stream(...)` | `SocketsHttpHandler` | 2.0–4.0 s |
+| `HttpClient` + `Stream.ReadAsync` | platform default | 1.9–3.5 s |
+| `HttpClient` + `StreamReader.ReadLineAsync` | platform default | `id:` line 1.9–3.5 s, `data:` line 46.9–48.6 s |
+| `HttpClient` + `StreamReader.ReadLineAsync` | `SocketsHttpHandler` | 1.3–3.9 s |
 
 The delay needs both `StreamReader` and the platform default handler (`AndroidMessageHandler` in a MAUI app). Raw `ReadAsync` over that handler gets the whole event at once, and so does `StreamReader` over `SocketsHttpHandler`. `StreamReader` over the default handler returns the event's short `id:` line promptly, then holds the long `data:` line (about 1.5 KB for an operation) until more bytes arrive. LaunchDarkly.EventSource 3.3.2 reads with `StreamReader.ReadLineAsync` (`EventSourceStreamReader`) through `new HttpClient()`, i.e. the platform default handler, unless it is given a handler. Horizon sends no `Content-Encoding`. The cause below `StreamReader` was not isolated further.
 
@@ -288,18 +320,18 @@ var stream = payments.Stream((_, payment) => HandlePayment(payment));
 var running = stream.Connect(); // completes after stream.Shutdown(), possibly after a reconnect wait
 ```
 
-`SocketsHttpHandler` is .NET's managed HTTP stack, not Android's, so settings that only the Android handler applies do not carry over. It was validated here only against Horizon testnet on the emulator.
+`SocketsHttpHandler` is .NET's managed HTTP stack, not Android's, so settings that only the Android handler applies do not carry over. It was validated here only against Horizon testnet, on the emulator and the four physical devices (§3.1).
 
 #### Events can be lost
 
 The SDK does not reconnect from its own cursor. `Stream(...)` updates the builder's cursor and `EventSource.Url` on every event (`RequestBuilderStreamable`), but the LaunchDarkly connection never reads that URL again. A reconnect resumes only through the `Last-Event-ID` header, which LaunchDarkly takes from the last `id:` line it parsed and which Horizon honours. That has two consequences:
 
-- **Android, default handler: a dropped connection loses the event being held.** LaunchDarkly records the id as soon as it parses the `id:` line (`EventSource.ProcessField`), and on Android that line arrives about 50 s before the event's data (table above). If the connection drops in between, for example on a network change, the reconnect asks for the events after the held one, and the held one is never delivered. Reproduced on the emulator by cutting the first connection 8 s after the submit: the payment was not delivered within 150 s, although Horizon lists it. With `SocketsHttpHandler` the event had already arrived (after 1.3 s) when the connection was cut, and without a cut it arrived after 51 s.
+- **Android, default handler: a dropped connection loses the event being held.** LaunchDarkly records the id as soon as it parses the `id:` line (`EventSource.ProcessField`), and on Android that line arrives about 45 s before the event's data (tables above). If the connection drops in between, for example on a network change, the reconnect asks for the events after the held one, and the held one is never delivered. Reproduced on the emulator by cutting the first connection 8 s after the submit: the payment was not delivered within 150 s, although Horizon lists it. With `SocketsHttpHandler` the event had already arrived (after 1.3 s) when the connection was cut, and without a cut it arrived after 51 s.
 - **All platforms: a stream opened with `Cursor("now")` that has not received an event yet** reconnects with `cursor=now` and no `Last-Event-ID`, so payments that land between Horizon closing the stream and the reconnect are skipped. On desktop, 4 of 4 payments submitted in reconnect gaps never reached a `now` stream, while a stream opened at an earlier cursor delivered all 4.
 
 Reconnects also slow down over time. LaunchDarkly resets its backoff only after a connection that lasted at least a minute, and Horizon closes connections sooner, so the wait before each reconnect grows up to 30 s (measured on desktop). An event that lands during a wait arrives with the next connection, and on Android with the default handler that connection holds it back again, so the worst-case delay is above 55 s.
 
-The connection-cut and reconnect-gap measurements come from one-off probes that are not part of the validation app.
+The connection-cut and reconnect-gap measurements come from one-off probes that are not part of the validation app. They ran on 2026-09-30 against `main` @ `f3375ed8`, before the response-parsing changes that `83303a27` adds; the streaming code they exercise (`EventSources/`, `RequestBuilderStreamable`) is the same in both.
 
 Consequences and options:
 
@@ -311,10 +343,10 @@ Starting an SDK stream (`Connect()`) from the UI thread works; the check asserts
 ## 4. Residual risk: what was not validated
 
 - **iOS was not exercised at all.** There was no macOS host, so no simulator, no device and no Mac Catalyst run. The iOS conclusion in §1 comes from package inspection only. In particular it is **unverified** that the .NET for iOS build statically links `runtimes/ios-arm64/native/libsodium.a` from the libsodium package, and that the `__Internal` P/Invokes of NSec's iOS assembly resolve under full AOT. Even a simulator run would not cover AOT-only behaviour, and the simulator cannot run the crypto at all (§1). **A physical iOS device run is needed** before claiming iOS support.
-- **No physical Android device.** Only the x86_64 emulator ran; the arm64-v8a build was packaged but never executed. The emulator image is API 28; current Android versions (API 35/36, including 16 KB page-size devices) were not run. The binaries are 16 KB aligned (§1), but that was checked statically only.
+- **Physical Android coverage is four devices, one full-trimming run each.** The arm64-v8a build ran on API 29, 35 and 36 (§3.1) with full trimming, and with `TrimMode=partial` on one device (API 35) only; the published 15.1.0 package ran on the emulator only. No 16 KB page-size device was run: all four use 4 KB pages, so the 16 KB alignment of the binaries (§1) was checked statically only.
 - **Mono only.** The CoreCLR runtime for Android (opt-in in .NET 10) was not tested.
 - **The iOS and Mac Catalyst project files have never been built.** Their `Info.plist`, entitlements and platform floors (iOS 15, Mac Catalyst 15) are untested. NSec's iOS and Mac Catalyst assemblies declare `SupportedOSPlatform` iOS 18.0 / Mac Catalyst 18.0; what that means for devices on iOS 15 to 17 is unverified.
-- **The `SocketsHttpHandler` workaround (§3.3)** was validated only against Horizon testnet on the emulator.
+- **The `SocketsHttpHandler` workaround (§3.3)** was validated only against Horizon testnet, on the emulator and the four physical devices.
 - **Scope of the checks.** Only the listed flows ran. Other Horizon endpoints and response types, SEP-1/6/9/10/24/45 flows, federation (Nett TOML parsing) and Soroban transaction submission were not exercised on a device. Under `TrimMode=full` they depend entirely on the descriptor in §3.2, and their trim warnings are listed there but unverified at runtime.
 - **MAUI 9 on Android** was not built. The same `net8.0` dependency path was run on the emulator through the published 15.1.0 package on `net10.0-android`, with and without the NSec workaround (§3.1).
 - **Secure memory.** NSec keeps signing keys in libsodium secure memory (`mlock`). On Android, `mlock` limits were not measured; libsodium degrades silently if locking fails.
@@ -325,15 +357,15 @@ What the deliverable committed to, and what this report covers. Items not delive
 
 | Commitment | Status |
 |------------|--------|
-| Desk check: do NSec and Sodium.Core load on iOS and Android; pick a fallback | Done (§1), on 2026-09-30 together with the validation, not in the first week of July as planned. Decision: no fallback needed for the dependency set on `main`. |
+| Desk check: do NSec and Sodium.Core load on iOS and Android; pick a fallback | Done (§1), on 2026-09-30, not in the first week of July as planned. Decision: no fallback needed for the dependency set on `main`. |
 | Environment: Android SDK, emulator image, MAUI workloads, pinned versions, reproducible | Done for Android on a Linux host (§2), with one emulator image (API 28). |
 | Environment: macOS host with Xcode and iOS simulators | **Not done.** No macOS host was available. |
 | Environment: signing and provisioning configuration | **Not done** for iOS. Android uses the default debug signing. |
 | Minimal MAUI validation app, Release builds with trimming | Done: `StellarDotnetSdk.MauiValidation/`, with partial and full trimming. |
-| Core flows: key pair generation and signing, Horizon query, transaction submit, Soroban simulate | Done on the Android emulator (§3.1). |
-| Ed25519 native library loading, HTTP/SSE behaviour, trimming compatibility | Done on the Android emulator (§3.1–3.3). The SSE validation found an SDK limitation, with a workaround. |
+| Core flows: key pair generation and signing, Horizon query, transaction submit, Soroban simulate | Done on the Android emulator and four physical Android devices (§3.1). |
+| Ed25519 native library loading, HTTP/SSE behaviour, trimming compatibility | Done on the Android emulator (§3.1–3.3), and on four physical devices: all four with full trimming, one also with partial trimming (§3.1). The SSE validation found an SDK limitation, with a workaround. |
 | Android emulator | Done (x86_64, API 28). |
-| At least one physical Android device | **Not done.** |
+| At least one physical Android device | Done: four arm64 devices, API 29, 35 and 36 (§3.1), on 2026-10-02. |
 | iOS simulator | **Not done.** Expected not to work with the current libsodium package (§1). |
 | iOS device smoke test, if provisioning allows | **Not done.** Physical-iOS behaviour, where AOT is enforced and there is no JIT, remains unvalidated risk (§4). |
 | Validation after the multi-target package is published | The multi-target build is not published yet. `main` was validated, and so was the published 15.1.0 package (§3.1). |
