@@ -190,19 +190,23 @@ public sealed class ValidationRunner
         return $"{name} {version ?? assembly?.GetName().Version?.ToString() ?? "not loaded"}";
     }
 
+    /// <summary>
+    ///     Writes one line, with its line breaks replaced by spaces: logcat stores each line of a multi-line message as
+    ///     its own entry, and only prefixed entries are collected by run-android.sh.
+    /// </summary>
     private void Log(string line)
     {
-        Console.WriteLine($"{LogPrefix} {line}");
-        _onLine(line);
+        var singleLine = line.ReplaceLineEndings(" ");
+        Console.WriteLine($"{LogPrefix} {singleLine}");
+        _onLine(singleLine);
     }
 
     /// <summary>
-    ///     Logs a FAIL line and then the full exception, one prefixed line per line of text: logcat stores each line
-    ///     of a multi-line message as its own entry, and only prefixed entries are collected by run-android.sh.
+    ///     Logs a FAIL line and then the full exception, one prefixed line per line of text (see <see cref="Log" />).
     /// </summary>
     private void LogFailure(string name, long elapsedMs, Exception ex)
     {
-        Log($"FAIL {name} ({elapsedMs} ms): {ex.GetType().FullName}: {ex.Message.ReplaceLineEndings(" ")}");
+        Log($"FAIL {name} ({elapsedMs} ms): {ex.GetType().FullName}: {ex.Message}");
         foreach (var line in ex.ToString().ReplaceLineEndings("\n").Split('\n'))
         {
             Console.WriteLine($"{LogPrefix} DETAIL {name}: {line}");
@@ -294,7 +298,7 @@ public sealed class ValidationRunner
         }
         catch (InconclusiveException ex)
         {
-            Log($"INFO horizon.submit-and-sse-stream measuring again: {ex.Message.ReplaceLineEndings(" ")}");
+            Log($"INFO horizon.submit-and-sse-stream measuring again: {ex.Message}");
             _socketsTiming = null;
             return await CheckSubmitAndStreamAsync();
         }
