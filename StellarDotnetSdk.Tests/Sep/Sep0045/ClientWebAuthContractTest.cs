@@ -331,6 +331,30 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task GetChallengeAsync_SkipsUtf8ByteOrderMark()
+    {
+        // HttpContent.ReadAsStringAsync skips a byte order mark; the size-bounded body reader must do the same, or
+        // System.Text.Json rejects the leading U+FEFF as an invalid start of a value.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(WithBom("{\"authorization_entries\":\"aGk=\"}")),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var result = await auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId);
+
+        Assert.AreEqual("aGk=", result.AuthorizationEntries);
+    }
+
+    [TestMethod]
     public void ValidateChallenge_Passes_WhenValid()
     {
         var result = TestChallengeBuilder.Build();
@@ -839,6 +863,33 @@ public class ClientWebAuthContractTest
         Assert.AreEqual("abc.def.ghi", token);
         Assert.AreEqual("application/x-www-form-urlencoded", capturedContentType);
         StringAssert.Contains(capturedBody!, "authorization_entries=");
+    }
+
+    [TestMethod]
+    public async Task SendSignedChallenge_SkipsUtf8ByteOrderMark()
+    {
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(WithBom("{\"token\":\"abc.def.ghi\"}")),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var token = await auth.SendSignedChallengeAsync("aGVsbG8=");
+
+        Assert.AreEqual("abc.def.ghi", token);
+    }
+
+    private static byte[] WithBom(string text)
+    {
+        return new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(text)).ToArray();
     }
 
     [TestMethod]
