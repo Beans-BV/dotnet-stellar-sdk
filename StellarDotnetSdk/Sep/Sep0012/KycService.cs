@@ -949,9 +949,25 @@ public class KycService : IDisposable
         return new KycServiceException(message, status, errorText, parseFailure, retryAfterDelay);
     }
 
+    /// <summary>
+    ///     Parses a customer response with <see cref="GetCustomerInfoResponse.FromJson" />, the parser the callback path
+    ///     uses, so a rule added there applies to both. Its <see cref="JsonException" /> is already sanitized.
+    /// </summary>
     private static GetCustomerInfoResponse ParseCustomerInfo(string? body, int status)
     {
-        return Parse<GetCustomerInfoResponse>(body, status);
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            throw new InvalidKycResponseException("SEP-0012 response contains no content.", status);
+        }
+
+        try
+        {
+            return GetCustomerInfoResponse.FromJson(body!);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidKycResponseException($"Invalid SEP-0012 customer response: {ex.Message}", status, ex);
+        }
     }
 
     private static T Parse<T>(string? body, int status) where T : class
