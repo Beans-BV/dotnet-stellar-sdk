@@ -583,6 +583,10 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- A `getLedgerEntries` response whose `entries` array holds a `null` element now fails to deserialize with
+  `JsonException` (via the new `LedgerEntryResultsArrayJsonConverter`), as the `simulateTransaction` arrays do.
+  Before, `GetLedgerEntries` returned a response whose `LedgerEntries` and `LedgerKeys` getters threw
+  `NullReferenceException`, and `GetAccount` threw it directly.
 - `StellarRpcServer` now surfaces JSON-RPC error responses instead of discarding them
   ([#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197)). Stellar RPC reports request-scoped
   failures — an out-of-range `startLedger`, a TTL ledger key queried directly, malformed parameters — as a

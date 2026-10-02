@@ -1067,11 +1067,12 @@ public class Protocol28Test
     }
 
     /// <summary>
-    ///     A null element in <c>entries</c> is a non-conforming answer, reported as
-    ///     <see cref="ClientProtocolException" /> rather than as a raw <see cref="NullReferenceException" />.
+    ///     A null element in <c>entries</c> does not match the response schema, so the response fails to deserialize
+    ///     with <see cref="System.Text.Json.JsonException" />, as for every other <c>getLedgerEntries</c> caller,
+    ///     rather than surfacing as a raw <see cref="NullReferenceException" />.
     /// </summary>
     [TestMethod]
-    public async Task GetExternalRefWasmHash_NullEntryElement_ThrowsClientProtocolException()
+    public async Task GetExternalRefWasmHash_NullEntryElement_ThrowsJsonException()
     {
         // Arrange
         const string json =
@@ -1085,7 +1086,7 @@ public class Protocol28Test
         using var server = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() =>
+        await Assert.ThrowsExceptionAsync<System.Text.Json.JsonException>(() =>
             server.GetExternalRefWasmHash(new ContractExecutableExternalRef(new ScContractId(Owner), TextTag)));
     }
 

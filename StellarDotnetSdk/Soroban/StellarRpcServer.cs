@@ -530,8 +530,7 @@ public class StellarRpcServer : IDisposable
         {
             entries = response.LedgerEntries;
         }
-        // A null element in "entries" surfaces as a NullReferenceException from the response's getter.
-        catch (Exception ex) when (ex is NullReferenceException || XdrDecodeFailure.IsDecodeFailure(ex))
+        catch (Exception ex) when (XdrDecodeFailure.IsDecodeFailure(ex))
         {
             throw new ClientProtocolException(
                 $"The server returned a ledger entry for the external executable tag on {owner.InnerValue} that could not be decoded: {ex.Message}",

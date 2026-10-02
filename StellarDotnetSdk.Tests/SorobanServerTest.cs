@@ -836,6 +836,55 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that a <c>getLedgerEntries</c> response holding a null element in <c>entries</c> fails at
+    ///     deserialization with <see cref="JsonException" />, as the <c>simulateTransaction</c> arrays do, instead of
+    ///     handing back a response whose <c>LedgerEntries</c> getter throws <see cref="NullReferenceException" />.
+    /// </summary>
+    [TestMethod]
+    public async Task GetLedgerEntries_WithNullEntryElement_ThrowsJsonException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": { "entries": [null], "latestLedger": 458234 }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+        var key = new LedgerKeyAccount("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB");
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<JsonException>(() =>
+            sorobanServer.GetLedgerEntries([key]));
+        StringAssert.Contains(exception.Message, "null element at index 0");
+    }
+
+    /// <summary>
+    ///     Verifies that StellarRpcServer.GetAccount reports a null element in <c>entries</c> as a malformed response
+    ///     (<see cref="JsonException" />) rather than as a raw <see cref="NullReferenceException" />.
+    /// </summary>
+    [TestMethod]
+    public async Task GetAccount_WithNullEntryElement_ThrowsJsonException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": { "entries": [null], "latestLedger": 458234 }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<JsonException>(() =>
+            sorobanServer.GetAccount("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB"));
+    }
+
+    /// <summary>
     ///     Verifies that StellarRpcServer.GetAccount returns account with correct properties.
     /// </summary>
     [TestMethod]
