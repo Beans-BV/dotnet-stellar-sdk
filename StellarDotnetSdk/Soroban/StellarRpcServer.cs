@@ -514,14 +514,8 @@ public class StellarRpcServer : IDisposable
         {
             throw new ArgumentNullException(nameof(externalRef));
         }
-        // Only a contract can hold the persistent tag entry that names the Wasm, so any other owner is
-        // unresolvable; fail before spending a request on it.
-        if (externalRef.ExecutableOwner is not ScContractId owner)
-        {
-            throw new ArgumentException(
-                "The external executable owner must be a contract address, since only a contract can hold the tag entry that names the Wasm.",
-                nameof(externalRef));
-        }
+        // An owner that is not a contract is unresolvable; fail before spending a request on it.
+        var owner = ContractExecutableExternalRef.RequireContractOwner(externalRef.ExecutableOwner, nameof(externalRef));
 
         // The tag is an unbounded byte string and may be binary, so its bytes are reused as-is rather than
         // decoded; a lenient decode would build the key of a different entry.

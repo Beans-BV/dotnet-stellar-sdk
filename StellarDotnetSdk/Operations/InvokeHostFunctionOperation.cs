@@ -220,12 +220,13 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         IAccountId? sourceAccount = null
     )
     {
+        // Checked here as well as in the constructor, so a null tag is reported before the owner.
         if (tag == null)
         {
             throw new ArgumentNullException(nameof(tag));
         }
-        return FromExternalRef(ownerContractId, Util.EncodeUtf8Strict(tag, nameof(tag)), accountId, arguments, salt,
-            sourceAccount);
+        return FromExternalRef(new ContractExecutableExternalRef(ParseExternalRefOwner(ownerContractId), tag),
+            accountId, arguments, salt, sourceAccount);
     }
 
     /// <summary>
@@ -264,23 +265,38 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         IAccountId? sourceAccount = null
     )
     {
+        // Checked here as well as in the constructor, so a null tag is reported before the owner.
         if (tag == null)
         {
             throw new ArgumentNullException(nameof(tag));
         }
-        // Only a contract can hold the persistent tag entry that names the Wasm, so any other owner is
-        // unresolvable and the deployment would fail on-chain.
-        if (ownerContractId == null || !StrKey.IsValidContractId(ownerContractId))
-        {
-            throw new ArgumentException(
-                "The external executable owner must be a contract address (C...), since only a contract can hold the tag entry that names the Wasm.",
-                nameof(ownerContractId));
-        }
+        return FromExternalRef(new ContractExecutableExternalRef(ParseExternalRefOwner(ownerContractId), tag),
+            accountId, arguments, salt, sourceAccount);
+    }
 
+    // A string that is not a contract ID fails the same owner rule, with the same message, that
+    // StellarRpcServer.GetExternalRefWasmHash applies to a reference.
+    private static ScContractId ParseExternalRefOwner(string? ownerContractId)
+    {
+        return ContractExecutableExternalRef.RequireContractOwner(
+            ownerContractId != null && StrKey.IsValidContractId(ownerContractId)
+                ? new ScContractId(ownerContractId)
+                : null,
+            nameof(ownerContractId));
+    }
+
+    private static CreateContractOperation FromExternalRef(
+        ContractExecutableExternalRef externalRef,
+        string accountId,
+        SCVal[]? arguments,
+        byte[]? salt,
+        IAccountId? sourceAccount
+    )
+    {
         return new CreateContractOperation(
             new CreateContractV2HostFunction(
                 new ContractIdAddressPreimage(accountId, salt),
-                new ContractExecutableExternalRef(new ScContractId(ownerContractId), tag),
+                externalRef,
                 arguments ?? []
             ),
             sourceAccount);

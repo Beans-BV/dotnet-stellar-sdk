@@ -888,6 +888,28 @@ public class Protocol28Test
     }
 
     /// <summary>
+    ///     Deploying from a reference and resolving one apply a single owner rule, so a non-contract owner fails with the
+    ///     same message on both paths, and a later change to the rule cannot reach one path and miss the other.
+    /// </summary>
+    [TestMethod]
+    public async Task FromExternalRefAndGetExternalRefWasmHash_NonContractOwner_ThrowSameMessage()
+    {
+        // Arrange
+        using var server = Utils.CreateTestStellarRpcServerWithContent("{}");
+
+        // Act
+        var deploying = Assert.ThrowsException<ArgumentException>(() =>
+            CreateContractOperation.FromExternalRef(Deployer, TextTag, Deployer));
+        var resolving = await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            server.GetExternalRefWasmHash(new ContractExecutableExternalRef(new ScAccountId(Deployer), TextTag)));
+
+        // Assert
+        Assert.AreEqual("ownerContractId", deploying.ParamName);
+        Assert.AreEqual("externalRef", resolving.ParamName);
+        Assert.AreEqual(deploying.Message.Replace("'ownerContractId'", "'externalRef'"), resolving.Message);
+    }
+
+    /// <summary>
     ///     A null reference is rejected.
     /// </summary>
     [TestMethod]

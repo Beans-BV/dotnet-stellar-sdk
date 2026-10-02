@@ -2193,6 +2193,22 @@ public class ContractExecutableExternalRef : ContractExecutable
     }
 
     /// <summary>
+    ///     Returns <paramref name="owner" /> as a contract, the only kind of address that can hold the tag entry that
+    ///     names the Wasm: a reference with any other owner can never resolve, and a deployment from one fails
+    ///     on-chain. Every entry point that needs a resolvable owner applies this one rule.
+    /// </summary>
+    /// <param name="owner">The owner to check; <see langword="null" /> is rejected like any other non-contract.</param>
+    /// <param name="paramName">The name of the caller's parameter, reported when the owner is rejected.</param>
+    /// <returns>The owner as a <see cref="ScContractId" />.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="owner" /> is not a contract address.</exception>
+    internal static ScContractId RequireContractOwner(ScAddress? owner, string paramName)
+    {
+        return owner as ScContractId ?? throw new ArgumentException(
+            "The external executable owner must be a contract address (C...), since only a contract can hold the tag entry that names the Wasm.",
+            paramName);
+    }
+
+    /// <summary>
     ///     Creates a new <see cref="ContractExecutableExternalRef" /> from an XDR <see cref="Xdr.ContractExecutable" />
     ///     object, keeping the raw tag bytes.
     /// </summary>
