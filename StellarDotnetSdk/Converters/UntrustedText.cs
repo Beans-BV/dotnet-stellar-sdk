@@ -2,13 +2,15 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 
-namespace StellarDotnetSdk.Sep.Sep0012;
+namespace StellarDotnetSdk.Converters;
 
 /// <summary>
-///     Makes server-supplied text safe to embed in an exception message, which routinely ends up in logs and
-///     terminals.
+///     Makes server-supplied free text, such as an anchor's <c>error</c> message or a <see cref="JsonException" />
+///     message that quotes payload keys, safe to embed in an exception message, which routinely ends up in logs and
+///     terminals. Unlike <see cref="UntrustedJsonValue.Describe" />, which escapes everything outside printable ASCII
+///     so that a rejected wire literal is reported exactly, it keeps legitimate text in any script readable.
 /// </summary>
-internal static class KycUntrustedText
+internal static class UntrustedText
 {
     /// <summary>
     ///     Longest run of server-influenced text copied into an exception message.

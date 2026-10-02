@@ -3,7 +3,8 @@ using System.Text;
 namespace StellarDotnetSdk.Converters;
 
 /// <summary>
-///     Renders a server-supplied JSON value for inclusion in an exception message.
+///     Renders a server-supplied JSON value for inclusion in an exception message. For free text, such as an anchor's
+///     <c>error</c> message, use <see cref="UntrustedText.Sanitize(string, int)" />, which keeps non-ASCII text readable.
 /// </summary>
 /// <remarks>
 ///     <para>
