@@ -21,7 +21,13 @@
         <LangVersion>12</LangVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <WarningsAsErrors>CS1591</WarningsAsErrors>
+        <!-- The XML docs ship in the package (IntelliSense, docfx), so every XML doc comment warning fails the build:
+             CS0419 ambiguous cref; CS1570 malformed XML; CS1571 duplicate param tag; CS1572 param tag without a
+             parameter; CS1573 parameter without a param tag; CS1574, CS1580, CS1581 and CS1584 unresolved or invalid
+             cref; CS1587 misplaced doc comment; CS1589, CS1590 and CS1592 bad include; CS1591 missing doc comment;
+             CS1658 cref syntax; CS1710, CS1711 and CS1712 typeparam tags; CS1723 cref to a type parameter; CS1734
+             and CS1735 paramref or typeparamref without a parameter. -->
+        <WarningsAsErrors>CS0419;CS1570;CS1571;CS1572;CS1573;CS1574;CS1580;CS1581;CS1584;CS1587;CS1589;CS1590;CS1591;CS1592;CS1658;CS1710;CS1711;CS1712;CS1723;CS1734;CS1735</WarningsAsErrors>
     </PropertyGroup>
     <PropertyGroup>
         <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>
