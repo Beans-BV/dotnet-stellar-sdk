@@ -319,7 +319,7 @@ public class KycService : IDisposable
         AddIfPresent(query, "lang", request.Lang);
 
         var (body, status) = await SendAsync(HttpMethod.Get, BuildUrl("customer", query), null, request.Jwt,
-            true, true, cancellationToken).ConfigureAwait(false);
+            customerEndpoint: true, readSuccessBody: true, cancellationToken).ConfigureAwait(false);
         return ParseCustomerInfo(body, status);
     }
 
@@ -399,8 +399,8 @@ public class KycService : IDisposable
         ValidateTransactionType(Get(fields, "transaction_id"), Get(fields, "type"));
 
         var content = BuildMultipart(fields, files);
-        var (body, status) = await SendAsync(HttpMethod.Put, BuildUrl("customer"), content, request.Jwt, true,
-            true, cancellationToken).ConfigureAwait(false);
+        var (body, status) = await SendAsync(HttpMethod.Put, BuildUrl("customer"), content, request.Jwt,
+            customerEndpoint: true, readSuccessBody: true, cancellationToken).ConfigureAwait(false);
         return Parse<PutCustomerInfoResponse>(body, status);
     }
 
@@ -446,7 +446,7 @@ public class KycService : IDisposable
 
         var content = BuildMultipart(fields, null);
         var (body, status) = await SendAsync(HttpMethod.Put, BuildUrl("customer/verification"), content,
-            request.Jwt, true, true, cancellationToken).ConfigureAwait(false);
+            request.Jwt, customerEndpoint: true, readSuccessBody: true, cancellationToken).ConfigureAwait(false);
         return ParseCustomerInfo(body, status);
     }
 
@@ -499,8 +499,8 @@ public class KycService : IDisposable
         AddIfPresent(fields, "memo_type", request.MemoType);
 
         var content = BuildMultipart(fields, null);
-        await SendAsync(HttpMethod.Put, BuildUrl("customer/callback"), content, request.Jwt, true, false,
-            cancellationToken).ConfigureAwait(false);
+        await SendAsync(HttpMethod.Put, BuildUrl("customer/callback"), content, request.Jwt,
+            customerEndpoint: true, readSuccessBody: false, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -547,7 +547,7 @@ public class KycService : IDisposable
 
         var content = fields.Count > 0 ? BuildMultipart(fields, null) : null;
         await SendAsync(HttpMethod.Delete, BuildUrl("customer/" + Uri.EscapeDataString(request.Account)), content,
-            request.Jwt, true, false, cancellationToken).ConfigureAwait(false);
+            request.Jwt, customerEndpoint: true, readSuccessBody: false, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -602,7 +602,7 @@ public class KycService : IDisposable
         var content = new MultipartFormDataContent { filePart };
 
         var (body, status) = await SendAsync(HttpMethod.Post, BuildUrl("customer/files"), content, request.Jwt,
-            false, true, cancellationToken).ConfigureAwait(false);
+            customerEndpoint: false, readSuccessBody: true, cancellationToken).ConfigureAwait(false);
         return Parse<CustomerFileResponse>(body, status);
     }
 
@@ -639,7 +639,7 @@ public class KycService : IDisposable
         AddIfPresent(query, "customer_id", request.CustomerId);
 
         var (body, status) = await SendAsync(HttpMethod.Get, BuildUrl("customer/files", query), null, request.Jwt,
-            false, true, cancellationToken).ConfigureAwait(false);
+            customerEndpoint: false, readSuccessBody: true, cancellationToken).ConfigureAwait(false);
         return Parse<GetCustomerFilesResponse>(body, status);
     }
 
