@@ -236,3 +236,17 @@ public sealed class SorobanAuthArrayJsonConverter : NonNullElementArrayJsonConve
     {
     }
 }
+
+/// <summary>
+///     Rejects a <c>null</c> element in the <c>entries</c> array of <see cref="GetLedgerEntriesResponse" />, from
+///     which <see cref="GetLedgerEntriesResponse.LedgerEntries" /> and <see cref="GetLedgerEntriesResponse.LedgerKeys" />
+///     are read.
+/// </summary>
+public sealed class LedgerEntryResultsArrayJsonConverter
+    : NonNullElementArrayJsonConverter<GetLedgerEntriesResponse.LedgerEntryResult>
+{
+    /// <summary>Creates the converter.</summary>
+    public LedgerEntryResultsArrayJsonConverter() : base("entries")
+    {
+    }
+}

@@ -4,7 +4,7 @@
 **Horizon Source:** [v28.0.1](https://github.com/stellar/stellar-horizon/releases/tag/v28.0.1)  
 **SDK:** `StellarDotnetSdk`  
 **SDK Version:** 16.0.0  
-**Updated:** 2026-09-30
+**Updated:** 2026-10-01
 
 **Public API Endpoints (in matrix):** 50
 

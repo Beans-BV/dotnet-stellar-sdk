@@ -103,6 +103,62 @@ public static async Task<string> CreateContract(IAccountId keyPair, string wasmI
 
 This creates a contract instance that you can interact with. The contract ID is the unique identifier for this instance.
 
+### Creating a Contract from an External Executable Reference (Protocol 28)
+
+[CAP-85](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md) lets a contract follow the Wasm that another contract (the *owner*) names under a *tag*, instead of carrying its own Wasm hash. The owner builds the tag's storage key with the `create_executable_tag` host function and stores the Wasm hash under it as a persistent contract data entry (`put_contract_data`), so by overwriting that entry it can upgrade every contract that references the tag at once.
+
+> ⚠️ **Trust**: the owner can replace the referenced Wasm at any time, so it has full control over every contract created this way. Only reference an owner you trust as much as the contract's own admin.
+
+```csharp
+public static async Task<string> CreateContractFromExternalRef(IAccountId keyPair, string ownerContractId, string tag)
+{
+    StellarRpcServer server = new(TestNetSorobanUrl);
+    var account = await server.GetAccount(keyPair.AccountId);
+
+    // The tag is encoded as UTF-8. Use the byte[] overload for a tag that is not text.
+    var operation = CreateContractOperation.FromExternalRef(ownerContractId, tag, account.AccountId);
+
+    var tx = new TransactionBuilder(account).AddOperation(operation).Build();
+    await SimulateAndUpdateTransaction(tx, keyPair);
+    var sendResponse = await server.SendTransaction(tx);
+    var response = await PollTransaction(sendResponse.Hash);
+    return response.CreatedContractId;
+}
+```
+
+To find out which Wasm such a contract currently runs, read its instance and resolve the reference. `GetExternalRefWasmHash` reads the owner's tag entry with one `getLedgerEntries` call and returns the hex-encoded Wasm hash. It throws `ExternalRefNotFoundException` when the entry is missing, or archived (`IsArchived`); an archived entry must be restored before the reference resolves again.
+
+`ContractDataDurability` lives in `StellarDotnetSdk.Xdr`, which also defines XDR types named `SCContractInstance` and `ContractExecutableExternalRef`. Alias the SDK types so that the names are not ambiguous:
+
+```csharp
+using StellarDotnetSdk.LedgerEntries;
+using StellarDotnetSdk.LedgerKeys;
+using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Xdr;
+using ContractExecutableExternalRef = StellarDotnetSdk.Soroban.ContractExecutableExternalRef;
+using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
+```
+
+```csharp
+public static async Task<string?> GetCurrentWasmHash(string contractId)
+{
+    StellarRpcServer server = new(TestNetSorobanUrl);
+    var instanceKey = new LedgerKeyContractData(
+        new ScContractId(contractId),
+        new SCLedgerKeyContractInstance(),
+        ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
+    var response = await server.GetLedgerEntries([instanceKey]);
+    var instance = (SCContractInstance)((LedgerEntryContractData)response.LedgerEntries![0]).Value;
+
+    return instance.Executable switch
+    {
+        ContractExecutableWasm wasm => wasm.WasmHash,
+        ContractExecutableExternalRef externalRef => await server.GetExternalRefWasmHash(externalRef),
+        _ => null, // the built-in Stellar Asset Contract has no Wasm
+    };
+}
+```
+
 ## Invoking a Contract
 
 Once you have a contract instance, you can call its functions:

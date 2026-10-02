@@ -14,6 +14,8 @@ namespace StellarDotnetSdk.Xdr;
 //      Hash wasm_hash;
 //  case CONTRACT_EXECUTABLE_STELLAR_ASSET:
 //      void;
+//  case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+//      ContractExecutableExternalRef external_ref;
 //  };
 
 //  ===========================================================================
@@ -22,6 +24,7 @@ public class ContractExecutable
     public ContractExecutableType Discriminant { get; set; } = new();
 
     public Hash WasmHash { get; set; }
+    public ContractExecutableExternalRef ExternalRef { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ContractExecutable encodedContractExecutable)
     {
@@ -32,6 +35,9 @@ public class ContractExecutable
                 Hash.Encode(stream, encodedContractExecutable.WasmHash);
                 break;
             case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET:
+                break;
+            case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF:
+                ContractExecutableExternalRef.Encode(stream, encodedContractExecutable.ExternalRef);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedContractExecutable.Discriminant.InnerValue);
@@ -52,6 +58,9 @@ public class ContractExecutable
                 decodedContractExecutable.WasmHash = Hash.Decode(stream, maxDepth);
                 break;
             case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET:
+                break;
+            case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF:
+                decodedContractExecutable.ExternalRef = ContractExecutableExternalRef.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

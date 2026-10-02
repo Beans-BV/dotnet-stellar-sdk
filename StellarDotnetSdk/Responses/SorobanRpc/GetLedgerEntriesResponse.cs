@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
 
@@ -8,11 +9,14 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// <summary>
 ///     Represents the response from the Soroban RPC <c>getLedgerEntries</c> method.
 ///     Contains the requested ledger entries and the latest ledger sequence number.
+///     A <c>null</c> element in the <c>entries</c> array fails deserialization with
+///     <see cref="System.Text.Json.JsonException" />.
 /// </summary>
 public class GetLedgerEntriesResponse
 {
     [JsonInclude]
     [JsonPropertyName("entries")]
+    [JsonConverter(typeof(LedgerEntryResultsArrayJsonConverter))]
     private LedgerEntryResult[]? EntryResults { get; init; }
 
     /// <summary>

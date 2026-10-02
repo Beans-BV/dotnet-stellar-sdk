@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Xdr;
 //  enum ContractExecutableType
 //  {
 //      CONTRACT_EXECUTABLE_WASM = 0,
-//      CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
+//      CONTRACT_EXECUTABLE_STELLAR_ASSET = 1,
+//      CONTRACT_EXECUTABLE_EXTERNAL_REF = 2
 //  };
 
 //  ===========================================================================
@@ -21,6 +22,7 @@ public class ContractExecutableType
     {
         CONTRACT_EXECUTABLE_WASM = 0,
         CONTRACT_EXECUTABLE_STELLAR_ASSET = 1,
+        CONTRACT_EXECUTABLE_EXTERNAL_REF = 2,
     }
 
     public ContractExecutableTypeEnum InnerValue { get; set; }
@@ -42,6 +44,7 @@ public class ContractExecutableType
         {
             case 0: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM);
             case 1: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET);
+            case 2: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

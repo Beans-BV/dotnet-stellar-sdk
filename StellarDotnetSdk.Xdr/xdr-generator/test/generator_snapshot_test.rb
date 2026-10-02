@@ -4,6 +4,7 @@ require "tmpdir"
 
 require "xdrgen"
 require_relative "../generator/generator"
+require_relative "../generator/preprocessor_check"
 
 # Match the 4-space indentation used in C# files
 Xdrgen::OutputFile.send(:remove_const, :SPACES_PER_INDENT)
@@ -12,6 +13,7 @@ Xdrgen::OutputFile.const_set(:SPACES_PER_INDENT, 4)
 class GeneratorSnapshotTest < Minitest::Test
   FIXTURES_DIR = File.expand_path("fixtures/xdrgen", __dir__)
   SNAPSHOTS_DIR = File.expand_path("snapshots", __dir__)
+  SCHEMES_DIR = File.expand_path("../../schemes", __dir__)
   UPDATE_SNAPSHOTS = ENV["UPDATE_SNAPSHOTS"] == "1"
 
   def test_fixture_snapshots
@@ -20,6 +22,64 @@ class GeneratorSnapshotTest < Minitest::Test
 
     fixtures.each do |fixture_path|
       assert_fixture_snapshot(fixture_path)
+    end
+  end
+
+  def test_schemes_have_no_preprocessor_directives
+    schemes = Dir[File.join(SCHEMES_DIR, "*.x")]
+    refute_empty schemes, "No schema files were found in #{SCHEMES_DIR}"
+
+    directives = PreprocessorCheck.find_directives(schemes)
+    assert_empty directives, <<~MSG
+      xdrgen has no preprocessor and cannot parse these feature-gated blocks.
+      Strip them by hand (see README.md, "Updating XDR schemas"):
+      #{directives.join("\n")}
+    MSG
+  end
+
+  def test_preprocessor_check_detects_gated_blocks
+    Dir.mktmpdir("xdrgen-preprocessor-") do |tmp_dir|
+      path = File.join(tmp_dir, "gated.x")
+      File.write(path, <<~XDR)
+        %#include "xdr/Stellar-types.h"
+        enum E
+        {
+            A = 0
+        #ifdef CAP_0084_MUXED_CONTRACT
+            ,
+            B = 1
+        #elif defined(TEST_FEATURE)
+            ,
+            C = 2
+          # endif
+        };
+      XDR
+
+      assert_equal ["#{path}:5: #ifdef CAP_0084_MUXED_CONTRACT", "#{path}:8: #elif defined(TEST_FEATURE)",
+                    "#{path}:11: # endif"],
+                   PreprocessorCheck.find_directives([path])
+    end
+  end
+
+  # xdrgen chokes on any directive, not only the conditional ones; a %-prefixed
+  # line is passed through to the output and is not a directive.
+  def test_preprocessor_check_detects_any_directive_name
+    Dir.mktmpdir("xdrgen-preprocessor-") do |tmp_dir|
+      path = File.join(tmp_dir, "directives.x")
+      File.write(path, <<~XDR)
+        %#include "xdr/Stellar-types.h"
+        #include "xdr/Stellar-ledger.h"
+        #pragma once
+        #error unsupported
+        #line 7
+        #elifdef CAP_0084_MUXED_CONTRACT
+        typedef int Foo;
+      XDR
+
+      assert_equal ["#{path}:2: #include \"xdr/Stellar-ledger.h\"", "#{path}:3: #pragma once",
+                    "#{path}:4: #error unsupported", "#{path}:5: #line 7",
+                    "#{path}:6: #elifdef CAP_0084_MUXED_CONTRACT"],
+                   PreprocessorCheck.find_directives([path])
     end
   end
 

@@ -22,11 +22,27 @@ public class String64
         InnerValue = value;
     }
 
-    public string InnerValue { get; set; }
+    /// <summary>
+    ///     The raw bytes of the string exactly as they appear on the wire. They are not
+    ///     guaranteed to be valid UTF-8 and are encoded and decoded verbatim.
+    /// </summary>
+    public byte[] InnerBytes { get; set; }
+
+    /// <summary>
+    ///     A UTF-8 view of <see cref="InnerBytes" />. The getter replaces invalid UTF-8 with
+    ///     U+FFFD, so it is lossy for non-UTF-8 bytes, and decodes again on every read; the setter
+    ///     replaces <see cref="InnerBytes" /> with the UTF-8 encoding of the value, in which an
+    ///     unpaired surrogate becomes U+FFFD.
+    /// </summary>
+    public string InnerValue
+    {
+        get => InnerBytes == null ? null : System.Text.Encoding.UTF8.GetString(InnerBytes);
+        set => InnerBytes = value == null ? null : System.Text.Encoding.UTF8.GetBytes(value);
+    }
 
     public static void Encode(XdrDataOutputStream stream, String64 encodedString64)
     {
-        stream.WriteString(encodedString64.InnerValue);
+        stream.WriteStringBytes(encodedString64.InnerBytes, 64);
     }
 
     public static String64 Decode(XdrDataInputStream stream, int maxDepth)
@@ -35,7 +51,7 @@ public class String64
             throw new InvalidDataException("Maximum decoding depth reached while decoding String64");
         maxDepth -= 1;
         var decodedString64 = new String64();
-        decodedString64.InnerValue = stream.ReadString();
+        decodedString64.InnerBytes = stream.ReadStringBytes(64);
         return decodedString64;
     }
 

@@ -462,6 +462,125 @@ public class StellarRpcServer : IDisposable
     }
 
     /// <summary>
+    ///     Resolves a <see href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</see>
+    ///     external executable reference to the Wasm hash it currently names.
+    ///     <para>
+    ///         A contract created from an external reference carries no Wasm hash of its own. The reference names an
+    ///         owner contract and a tag, and the owner holds a persistent contract data entry keyed by
+    ///         <see cref="SCExecutableTag" />(tag) whose value is the 32-byte hash of an uploaded Wasm. This reads that
+    ///         entry with a single <c>getLedgerEntries</c> call; the owner contract is not invoked.
+    ///     </para>
+    /// </summary>
+    /// <param name="externalRef">
+    ///     The reference to resolve, for example the <see cref="SCContractInstance.Executable" /> of a contract
+    ///     instance. Its tag bytes are used verbatim to build the ledger key.
+    /// </param>
+    /// <returns>
+    ///     The hex-encoded 32-byte Wasm hash the reference resolves to, in the same form as
+    ///     <see cref="ContractExecutableWasm.WasmHash" /> and the <c>wasmHash</c> parameters that accept it.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="externalRef" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown, before any request is sent, when the owner is not a contract address and so cannot hold the tag
+    ///     entry.
+    /// </exception>
+    /// <exception cref="ExternalRefNotFoundException">
+    ///     Thrown when the tag entry does not exist, or exists but is archived for every transaction submitted now
+    ///     (its <c>liveUntilLedgerSeq</c> is at or below the server's latest ledger);
+    ///     <see cref="ExternalRefNotFoundException.IsArchived" /> tells the two apart.
+    /// </exception>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null. Also thrown when the result
+    ///     does not answer the request as a conforming server would: its entry XDR cannot be decoded (the decode
+    ///     failure is the inner exception), it returns anything other than exactly the requested persistent tag
+    ///     entry, it returns that entry without a positive <c>latestLedger</c>, or the entry does not hold a 32-byte
+    ///     hash.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
+    /// </exception>
+    public async Task<string> GetExternalRefWasmHash(ContractExecutableExternalRef externalRef)
+    {
+        if (externalRef == null)
+        {
+            throw new ArgumentNullException(nameof(externalRef));
+        }
+        // An owner that is not a contract is unresolvable; fail before spending a request on it.
+        var owner = ContractExecutableExternalRef.RequireContractOwner(externalRef.ExecutableOwner, nameof(externalRef));
+
+        // The tag is an unbounded byte string and may be binary, so its bytes are reused as-is rather than
+        // decoded; a lenient decode would build the key of a different entry.
+        var tag = externalRef.Tag;
+        var key = new LedgerKeyContractData(
+            owner,
+            new SCExecutableTag(tag),
+            Xdr.ContractDataDurability.Create(Xdr.ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
+        var response = await GetLedgerEntry(key);
+        LedgerEntry[]? entries;
+        try
+        {
+            entries = response.LedgerEntries;
+        }
+        catch (Exception ex) when (XdrDecodeFailure.IsDecodeFailure(ex))
+        {
+            throw new ClientProtocolException(
+                $"The server returned a ledger entry for the external executable tag on {owner.InnerValue} that could not be decoded: {ex.Message}",
+                ex);
+        }
+        if (entries == null || entries.Length == 0)
+        {
+            throw new ExternalRefNotFoundException(owner.InnerValue, tag, false);
+        }
+        // Only one key was requested, so anything other than exactly that entry is a non-conforming answer; its
+        // value must not be reported as the hash this reference resolves to.
+        if (entries.Length != 1 ||
+            entries[0] is not LedgerEntryContractData
+            {
+                Contract: ScContractId entryOwner,
+                Key: SCExecutableTag entryTag,
+            } entry ||
+            !StrKey.DecodeContractId(entryOwner.InnerValue).AsSpan()
+                .SequenceEqual(StrKey.DecodeContractId(owner.InnerValue)) ||
+            !entryTag.InnerValue.AsSpan().SequenceEqual(tag) ||
+            entry.Durability.InnerValue != Xdr.ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT)
+        {
+            throw new ClientProtocolException(
+                $"The server did not return the requested external executable tag entry on {owner.InnerValue}.");
+        }
+        // getLedgerEntries also returns archived persistent entries (Stellar RPC reports an evicted one with a
+        // placeholder liveUntilLedgerSeq of 0, see stellar-rpc internal/ledgerentries; an absent field also reads
+        // as 0). latestLedger is the last closed ledger, and core treats an entry as live only
+        // while liveUntilLedgerSeq >= the ledger being applied, so an entry whose TTL ends at latestLedger can no
+        // longer be read by any transaction submitted now.
+        if (response.LatestLedger is not { } latestLedger || latestLedger <= 0)
+        {
+            throw new ClientProtocolException(
+                "The getLedgerEntries response has no valid latestLedger, so the tag entry's liveness cannot be determined.");
+        }
+        // LiveUntilLedger is nullable on LedgerEntry; the response always sets it, but an unknown TTL must fail
+        // closed like an absent one (a lifted null comparison would read as live).
+        if (entry.LiveUntilLedger is not { } liveUntil || liveUntil <= latestLedger)
+        {
+            throw new ExternalRefNotFoundException(owner.InnerValue, tag, true);
+        }
+        if (entry.Value is not SCBytes { InnerValue.Length: 32 } wasmHash)
+        {
+            throw new ClientProtocolException(
+                $"The external executable tag entry on {owner.InnerValue} does not hold a 32-byte Wasm hash.");
+        }
+        return Util.BytesToHex(wasmHash.InnerValue);
+    }
+
+    /// <summary>
     ///     Submit a trial contract invocation to simulate how it would be executed by the network. This endpoint calculates
     ///     the effective transaction data, required authorizations, and minimal resource fee. It provides a way to test and
     ///     analyze the potential outcomes of a transaction without actually submitting it to the network.

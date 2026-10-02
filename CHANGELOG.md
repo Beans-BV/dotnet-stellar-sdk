@@ -10,6 +10,45 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Protocol 28 support** (implements [#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207), [#252](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/252)):
+  - XDR regenerated from stellar-xdr `v28.0` (`9c9c145`, the XDR that Protocol 28 on Mainnet was built from):
+    CAP-85 `SCV_EXECUTABLE_TAG` and `CONTRACT_EXECUTABLE_EXTERNAL_REF` (`ContractExecutableExternalRef`), and
+    CAP-83 `STELLAR_VALUE_EMPTY_TX_SET`. Ledger entries, transaction metas, events and simulation results that
+    contain the new arms previously failed to decode. The feature-gated CAP-84 (muxed contract addresses) and
+    `TEST_FEATURE` blocks are not part of Protocol 28 and are left out; the XDR generator now names every
+    leftover `#ifdef` block by file and line instead of failing with xdrgen's bare parse error.
+  - Generated XDR string typedefs (`StellarDotnetSdk.Xdr`'s `SCString`, `SCSymbol`, `String32`, `String64`) keep
+    the raw wire bytes in a new `InnerBytes` property and round-trip them verbatim. `InnerValue` remains as a
+    UTF-8 view of those bytes: the getter replaces invalid UTF-8 with U+FFFD, the setter encodes. Previously a
+    non-UTF-8 string was decoded lossily and re-encoded as different bytes, which for a CAP-85 tag is the key of
+    a different ledger entry. The SDK-layer wrappers built on them (`Soroban.SCString` and `Soroban.SCSymbol`,
+    and data entry names read through `String64.InnerValue`) still decode lossily; that is tracked in
+    [#246](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/246).
+  - `SCExecutableTag` (the `SCVal` for `SCV_EXECUTABLE_TAG`, raw bytes in `InnerValue`) and
+    `ContractExecutableExternalRef` (a `ContractExecutable`, raw bytes in `Tag`), each with a strict UTF-8
+    accessor (`TryGetUtf8String` / `TryGetTagUtf8String`) that fails on invalid UTF-8 instead of decoding it
+    lossily. The constructors copy the tag bytes they are given, and the `InnerValue` / `Tag` getters and
+    `ToXdr()` return a new copy on each call, so neither the caller's array, a returned array, nor the returned
+    XDR object aliases the tag.
+  - `CreateContractOperation.FromExternalRef` deploys a contract from an external executable reference, with
+    `string` and `byte[]` tag overloads; binary tags pass through undecoded, and a non-contract owner is rejected
+    up front. Every `string` tag overload encodes strict UTF-8 and throws `ArgumentException` for an unpaired
+    surrogate, rather than silently naming a different tag.
+  - `StellarRpcServer.GetExternalRefWasmHash` resolves a reference to its hex-encoded Wasm hash (the form
+    `ContractExecutableWasm.WasmHash` and `FromAddress` use) with a single `getLedgerEntries` call. It throws the
+    new `ExternalRefNotFoundException` when the tag entry is missing or archived (`IsArchived` tells the two
+    apart). An entry whose `liveUntilLedgerSeq` is at or below `latestLedger` counts as archived, because no
+    transaction submitted now can read it. A response that carries undecodable entry XDR, is not exactly the
+    requested persistent entry, or returns that entry without a positive `latestLedger` throws
+    `ClientProtocolException`, which gains a `(message, innerException)` constructor for the first case.
+    `ExternalRefNotFoundException` shows a tag, and its owner, as quoted text only when it is printable ASCII
+    other than `"` and `\`, and as hex otherwise, so a tag read from the chain cannot forge or hide message
+    content. Both are cut to 64 bytes plus their length. Its `OwnerContractId` and `Tag` are null only when the
+    exception is constructed without them, never when the SDK throws it.
+  - Encodings are verified byte-for-byte against `@stellar/stellar-sdk@17.2.0` via the known-answer vectors in
+    `StellarDotnetSdk.Tests/TestData/generate-p28-kat.mjs`. New Testnet integration tests check that Stellar
+    RPC parses the SDK's tag ledger key and that the host decodes an external-reference deployment; the exact
+    key bytes are pinned by the known-answer vectors.
 - `GetLatestLedgerResponse` now exposes the remaining `getLatestLedger` fields served by Stellar RPC:
   `CloseTime` (`long?`, unix timestamp in seconds), `HeaderXdr`, and `MetadataXdr`. `GetHealthResponse` gains the
   RPC v27.1.0 fields `LatestLedgerCloseTime` and `OldestLedgerCloseTime` (`long?`, unix seconds). The three close
@@ -230,6 +269,21 @@ All notable changes to this project are documented here. The format is based on
     legacy credentials, and later disables the flag altogether (planned for protocol 30). Stellar Testnet was
     already on protocol 29 with RPC 29.0.0 in September 2026 and still defaulted to v1, so the protocol numbers
     are not firm.
+- **Breaking (behavioral):** Protocol 28 XDR ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207), [#252](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/252)).
+  `SCValType`, `ContractExecutableType` and `StellarValueType` gain members (`SCV_EXECUTABLE_TAG`,
+  `CONTRACT_EXECUTABLE_EXTERNAL_REF`, `STELLAR_VALUE_EMPTY_TX_SET`), so values that used to fail to decode with
+  `InvalidDataException` now decode, and code that switches over these enums or over `SCVal` /
+  `ContractExecutable` subclasses meets cases it has not seen. The generated `StellarDotnetSdk.Xdr` string
+  typedefs' `InnerValue` is now a view over `InnerBytes`: unchanged for valid UTF-8, but a decoded non-UTF-8
+  string now re-encodes to its original bytes instead of to the U+FFFD replacement. Because the text is now
+  stored as UTF-8, a string with an unpaired surrogate no longer reads back as set: its wire bytes are unchanged
+  (U+FFFD), but `InnerValue` now returns U+FFFD in its place, and each read decodes a new string. The bounded
+  string typedefs (`SCSymbol` and `String32` at 32 bytes, `String64` at 64) now also enforce their declared
+  maximum length, as every bounded opaque and array already did: encoding a longer value throws
+  `ArgumentException` instead of producing XDR the network rejects, and decoding a longer length prefix throws
+  `InvalidDataException`. The SDK-layer checks count characters (`ManageDataOperation` names, `SetOptions` home
+  domains) or nothing (`Soroban.SCSymbol`), so a multi-byte value that passed them now fails when it is encoded.
+  Source and binary compatible.
 - **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
   `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
   integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`
@@ -529,6 +583,10 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- A `getLedgerEntries` response whose `entries` array holds a `null` element now fails to deserialize with
+  `JsonException` (via the new `LedgerEntryResultsArrayJsonConverter`), as the `simulateTransaction` arrays do.
+  Before, `GetLedgerEntries` returned a response whose `LedgerEntries` and `LedgerKeys` getters threw
+  `NullReferenceException`, and `GetAccount` threw it directly.
 - `StellarRpcServer` now surfaces JSON-RPC error responses instead of discarding them
   ([#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197)). Stellar RPC reports request-scoped
   failures — an out-of-range `startLedger`, a TTL ledger key queried directly, malformed parameters — as a

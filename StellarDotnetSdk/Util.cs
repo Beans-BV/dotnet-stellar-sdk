@@ -14,6 +14,10 @@ public static class Util
 {
     private static readonly char[] HexArray = "0123456789ABCDEF".ToCharArray();
 
+    // Throws on malformed input instead of substituting U+FFFD, so distinct byte strings never
+    // decode to the same text.
+    private static readonly UTF8Encoding StrictUtf8 = new(false, true);
+
     /// <summary>
     ///     Converts a byte array to its uppercase hexadecimal string representation.
     /// </summary>
@@ -150,6 +154,58 @@ public static class Util
         }
 
         return result;
+    }
+
+    /// <summary>
+    ///     Decodes <paramref name="bytes" /> as strict UTF-8. Unlike <see cref="Encoding.UTF8" />, this never
+    ///     replaces malformed input with U+FFFD, so it fails rather than returning text that no longer identifies
+    ///     the original bytes.
+    /// </summary>
+    /// <param name="bytes">The bytes to decode.</param>
+    /// <param name="value">The decoded text, or <see langword="null" /> when the bytes are not valid UTF-8.</param>
+    /// <returns><see langword="true" /> when the bytes are valid UTF-8.</returns>
+    internal static bool TryDecodeUtf8(byte[] bytes, out string? value)
+    {
+#if NET8_0_OR_GREATER
+        // Rejects the same malformed input as StrictUtf8 without throwing, so a binary tag costs no exception.
+        if (!System.Text.Unicode.Utf8.IsValid(bytes))
+        {
+            value = null;
+            return false;
+        }
+#endif
+        try
+        {
+            value = StrictUtf8.GetString(bytes);
+            return true;
+        }
+        catch (DecoderFallbackException)
+        {
+            value = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    ///     Encodes <paramref name="value" /> as strict UTF-8. Unlike <see cref="Encoding.UTF8" />, this never replaces
+    ///     an unpaired surrogate with U+FFFD, so two different strings never encode to the same bytes.
+    /// </summary>
+    /// <param name="value">The text to encode.</param>
+    /// <param name="paramName">The name of the caller's parameter, reported when the text is rejected.</param>
+    /// <returns>The UTF-8 bytes of <paramref name="value" />.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> contains an unpaired surrogate.</exception>
+    internal static byte[] EncodeUtf8Strict(string value, string paramName)
+    {
+        try
+        {
+            return StrictUtf8.GetBytes(value);
+        }
+        catch (EncoderFallbackException ex)
+        {
+            throw new ArgumentException(
+                "The text contains an unpaired surrogate, which has no UTF-8 encoding; pass the bytes instead.",
+                paramName, ex);
+        }
     }
 
     /// <summary>

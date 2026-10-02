@@ -6,6 +6,7 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using ContractExecutable = StellarDotnetSdk.Soroban.ContractExecutable;
+using ContractExecutableExternalRef = StellarDotnetSdk.Soroban.ContractExecutableExternalRef;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using FunctionType = StellarDotnetSdk.Xdr.SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum;
@@ -143,8 +144,8 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
 
 /// <summary>
 ///     Operation that invokes a Soroban host function to deploy a new smart contract on the Stellar network.
-///     Supports creating contracts from a Wasm hash with an address-derived contract ID, or deploying
-///     the builtin Soroban Asset Contract from a Stellar asset.
+///     Supports creating contracts from a Wasm hash or a CAP-85 external executable reference with an
+///     address-derived contract ID, or deploying the builtin Soroban Asset Contract from a Stellar asset.
 /// </summary>
 public class CreateContractOperation : InvokeHostFunctionOperation
 {
@@ -169,7 +170,10 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// </param>
     /// <param name="accountId">The address to use to derive the contract ID.</param>
     /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
-    /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static CreateContractOperation FromAddress(
         string wasmHash,
@@ -183,6 +187,122 @@ public class CreateContractOperation : InvokeHostFunctionOperation
             new CreateContractV2HostFunction(
                 new ContractIdAddressPreimage(accountId, salt),
                 new ContractExecutableWasm(wasmHash),
+                arguments ?? []
+            ),
+            sourceAccount);
+    }
+
+    /// <summary>
+    ///     Creates a new <c>CreateContractOperation</c> that deploys a contract from a
+    ///     <see href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</see> external
+    ///     executable reference instead of from an uploaded Wasm hash (requires protocol 28).
+    /// </summary>
+    /// <param name="ownerContractId">
+    ///     The contract (C...) that owns the executable and stores its Wasm hash under <paramref name="tag" />. The
+    ///     created contract follows that hash, so the owner can upgrade it (and every other contract referencing the
+    ///     tag) at any time: only use an owner you trust as much as the contract's own admin.
+    /// </param>
+    /// <param name="tag">The owner-scoped tag naming the executable, encoded as UTF-8.</param>
+    /// <param name="accountId">The address to use to derive the contract ID.</param>
+    /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="tag" /> contains an unpaired surrogate, which has no UTF-8 encoding (use the
+    ///     <c>byte[]</c> overload for a tag that is not text); when <paramref name="ownerContractId" /> is null or not
+    ///     a contract address, which could never hold the tag entry; when <paramref name="accountId" /> is not a
+    ///     valid account ID (G...); or when <paramref name="salt" /> is not 32 bytes.
+    /// </exception>
+    public static CreateContractOperation FromExternalRef(
+        string ownerContractId,
+        string tag,
+        string accountId,
+        SCVal[]? arguments = null,
+        byte[]? salt = null,
+        IAccountId? sourceAccount = null
+    )
+    {
+        // Checked here as well as in the constructor, so a null tag is reported before the owner.
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+        return FromExternalRef(new ContractExecutableExternalRef(ParseExternalRefOwner(ownerContractId), tag),
+            accountId, arguments, salt, sourceAccount);
+    }
+
+    /// <summary>
+    ///     Creates a new <c>CreateContractOperation</c> that deploys a contract from a
+    ///     <see href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</see> external
+    ///     executable reference instead of from an uploaded Wasm hash (requires protocol 28).
+    /// </summary>
+    /// <param name="ownerContractId">
+    ///     The contract (C...) that owns the executable and stores its Wasm hash under <paramref name="tag" />. The
+    ///     created contract follows that hash, so the owner can upgrade it (and every other contract referencing the
+    ///     tag) at any time: only use an owner you trust as much as the contract's own admin.
+    /// </param>
+    /// <param name="tag">
+    ///     The owner-scoped tag naming the executable. A tag is a byte string that need not be valid UTF-8; the bytes
+    ///     are passed through undecoded and copied.
+    /// </param>
+    /// <param name="accountId">The address to use to derive the contract ID.</param>
+    /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="ownerContractId" /> is null or not a contract address, which could never hold
+    ///     the tag entry; when <paramref name="accountId" /> is not a valid account ID (G...); or when
+    ///     <paramref name="salt" /> is not 32 bytes.
+    /// </exception>
+    public static CreateContractOperation FromExternalRef(
+        string ownerContractId,
+        byte[] tag,
+        string accountId,
+        SCVal[]? arguments = null,
+        byte[]? salt = null,
+        IAccountId? sourceAccount = null
+    )
+    {
+        // Checked here as well as in the constructor, so a null tag is reported before the owner.
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+        return FromExternalRef(new ContractExecutableExternalRef(ParseExternalRefOwner(ownerContractId), tag),
+            accountId, arguments, salt, sourceAccount);
+    }
+
+    // A string that is not a contract ID fails the same owner rule, with the same message, that
+    // StellarRpcServer.GetExternalRefWasmHash applies to a reference.
+    private static ScContractId ParseExternalRefOwner(string? ownerContractId)
+    {
+        return ContractExecutableExternalRef.RequireContractOwner(
+            ownerContractId != null && StrKey.IsValidContractId(ownerContractId)
+                ? new ScContractId(ownerContractId)
+                : null,
+            nameof(ownerContractId));
+    }
+
+    private static CreateContractOperation FromExternalRef(
+        ContractExecutableExternalRef externalRef,
+        string accountId,
+        SCVal[]? arguments,
+        byte[]? salt,
+        IAccountId? sourceAccount
+    )
+    {
+        return new CreateContractOperation(
+            new CreateContractV2HostFunction(
+                new ContractIdAddressPreimage(accountId, salt),
+                externalRef,
                 arguments ?? []
             ),
             sourceAccount);
@@ -406,7 +526,7 @@ public class CreateContractHostFunction : HostFunction
     ///     Constructs a new <see cref="CreateContractHostFunction" />.
     /// </summary>
     /// <param name="contractIdPreimage">The preimage used to derive the contract ID.</param>
-    /// <param name="executable">The contract executable (Wasm reference or builtin Stellar asset contract).</param>
+    /// <param name="executable">The contract executable (Wasm reference, builtin Stellar asset contract, or CAP-85 external reference).</param>
     public CreateContractHostFunction(
         ContractIdPreimage contractIdPreimage,
         ContractExecutable executable
@@ -434,7 +554,7 @@ public class CreateContractHostFunction : HostFunction
     public ContractIdPreimage ContractIdPreimage { get; }
 
     /// <summary>
-    ///     The contract executable (Wasm reference or builtin Stellar asset contract).
+    ///     The contract executable (Wasm reference, builtin Stellar asset contract, or CAP-85 external reference).
     /// </summary>
     public ContractExecutable Executable { get; }
 
@@ -476,7 +596,7 @@ public class CreateContractV2HostFunction : HostFunction
     ///     Constructs a new <see cref="CreateContractV2HostFunction" />.
     /// </summary>
     /// <param name="contractIdPreimage">The preimage used to derive the contract ID.</param>
-    /// <param name="executable">The contract executable (Wasm reference or builtin Stellar asset contract).</param>
+    /// <param name="executable">The contract executable (Wasm reference, builtin Stellar asset contract, or CAP-85 external reference).</param>
     /// <param name="arguments">The arguments to pass to the contract constructor during deployment.</param>
     public CreateContractV2HostFunction(
         ContractIdPreimage contractIdPreimage,
@@ -514,7 +634,7 @@ public class CreateContractV2HostFunction : HostFunction
     public ContractIdPreimage ContractIdPreimage { get; }
 
     /// <summary>
-    ///     The contract executable (Wasm reference or builtin Stellar asset contract).
+    ///     The contract executable (Wasm reference, builtin Stellar asset contract, or CAP-85 external reference).
     /// </summary>
     public ContractExecutable Executable { get; }
 

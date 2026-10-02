@@ -12,4 +12,10 @@ public class ClientProtocolException : Exception
         : base(message)
     {
     }
+
+    /// <inheritdoc />
+    public ClientProtocolException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
 }

@@ -256,7 +256,11 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
     out.puts '}'
     out.puts
-    out.puts "public #{decl_string typedef.declaration} InnerValue { get; set; }"
+    if typedef.declaration.is_a?(AST::Declarations::String)
+      render_string_typedef_properties out
+    else
+      out.puts "public #{decl_string typedef.declaration} InnerValue { get; set; }"
+    end
     out.puts
 
     out.puts "public static void Encode(XdrDataOutputStream stream, #{name typedef} encoded#{name typedef})"
@@ -288,6 +292,33 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.puts '{'
     out.indent do
       out.puts "return Decode(stream, XdrDataInputStream.DefaultMaxDepth);"
+    end
+    out.puts '}'
+  end
+
+  # XDR strings are byte strings with no encoding guarantee, so a string typedef
+  # keeps the raw bytes as its source of truth and round-trips them verbatim
+  # (see the String branches of encode_innervalue_body and decode_innervalue_body).
+  # InnerValue is a UTF-8 view over those bytes, kept for source compatibility;
+  # its getter decodes leniently and must not be used to rebuild the bytes.
+  def render_string_typedef_properties(out)
+    out.puts '/// <summary>'
+    out.puts '///     The raw bytes of the string exactly as they appear on the wire. They are not'
+    out.puts '///     guaranteed to be valid UTF-8 and are encoded and decoded verbatim.'
+    out.puts '/// </summary>'
+    out.puts 'public byte[] InnerBytes { get; set; }'
+    out.puts
+    out.puts '/// <summary>'
+    out.puts "///     A UTF-8 view of <see cref=\"InnerBytes\" />. The getter replaces invalid UTF-8 with"
+    out.puts '///     U+FFFD, so it is lossy for non-UTF-8 bytes, and decodes again on every read; the setter'
+    out.puts "///     replaces <see cref=\"InnerBytes\" /> with the UTF-8 encoding of the value, in which an"
+    out.puts '///     unpaired surrogate becomes U+FFFD.'
+    out.puts '/// </summary>'
+    out.puts 'public string InnerValue'
+    out.puts '{'
+    out.indent do
+      out.puts 'get => InnerBytes == null ? null : System.Text.Encoding.UTF8.GetString(InnerBytes);'
+      out.puts 'set => InnerBytes = value == null ? null : System.Text.Encoding.UTF8.GetBytes(value);'
     end
     out.puts '}'
   end
@@ -491,6 +522,13 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def encode_innervalue_body(value, member, out)
     case member.declaration
+    when AST::Declarations::String
+      max_size = member.declaration.resolved_size
+      if max_size
+        out.puts "stream.WriteStringBytes(#{value}.InnerBytes, #{convert_constant max_size});"
+      else
+        out.puts "stream.WriteStringBytes(#{value}.InnerBytes);"
+      end
     when AST::Declarations::Opaque
       out.puts "var #{member.name.camelize(:lower)}Size = #{value}.InnerValue.Length;"
       if member.declaration.fixed?
@@ -670,6 +708,13 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def decode_innervalue_body(value, member, out, depth_var)
     case member.declaration
+    when AST::Declarations::String
+      max_size = member.declaration.resolved_size
+      if max_size
+        out.puts "#{value}.InnerBytes = stream.ReadStringBytes(#{convert_constant max_size});"
+      else
+        out.puts "#{value}.InnerBytes = stream.ReadStringBytes();"
+      end
     when AST::Declarations::Opaque
       if member.declaration.fixed?
         out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"

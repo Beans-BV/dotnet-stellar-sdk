@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Xdr;
 //  enum StellarValueType
 //  {
 //      STELLAR_VALUE_BASIC = 0,
-//      STELLAR_VALUE_SIGNED = 1
+//      STELLAR_VALUE_SIGNED = 1,
+//      STELLAR_VALUE_EMPTY_TX_SET = 2
 //  };
 
 //  ===========================================================================
@@ -21,6 +22,7 @@ public class StellarValueType
     {
         STELLAR_VALUE_BASIC = 0,
         STELLAR_VALUE_SIGNED = 1,
+        STELLAR_VALUE_EMPTY_TX_SET = 2,
     }
 
     public StellarValueTypeEnum InnerValue { get; set; }
@@ -42,6 +44,7 @@ public class StellarValueType
         {
             case 0: return Create(StellarValueTypeEnum.STELLAR_VALUE_BASIC);
             case 1: return Create(StellarValueTypeEnum.STELLAR_VALUE_SIGNED);
+            case 2: return Create(StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

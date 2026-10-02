@@ -134,20 +134,24 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    ///     Verifies that FromXdrBase64 throws ArgumentException when account entry has home domain exceeding 32 characters.
+    ///     Verifies that FromXdr throws ArgumentException when account entry has home domain exceeding 32 characters.
+    ///     The XDR layer bounds <c>string32</c>, so such an entry cannot be encoded, and base-64 XDR holding one fails to
+    ///     decode; the entry is built in memory to reach the SDK's own check.
     /// </summary>
     [TestMethod]
-    public void FromXdrBase64_AccountWithTooLongHomeDomain_ThrowsArgumentException()
+    public void FromXdr_AccountWithTooLongHomeDomain_ThrowsArgumentException()
     {
         // Arrange
-        var xdrLedgerEntry = InitBasicAccountEntry();
-        xdrLedgerEntry.Account.HomeDomain = new String32("123456789012345678901234567890123456");
-        var os = new XdrDataOutputStream();
-        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
-        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+        var xdrLedgerEntry = new StellarDotnetSdk.Xdr.LedgerEntry
+        {
+            LastModifiedLedgerSeq = new Uint32(1),
+            Ext = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryExt { Discriminant = 0 },
+            Data = InitBasicAccountEntry(),
+        };
+        xdrLedgerEntry.Data.Account.HomeDomain = new String32("123456789012345678901234567890123456");
 
         // Act & Assert
-        var ex = Assert.ThrowsException<ArgumentException>(() => LedgerEntry.FromXdrBase64(entryXdrBase64));
+        var ex = Assert.ThrowsException<ArgumentException>(() => LedgerEntry.FromXdr(xdrLedgerEntry));
         Assert.IsTrue(ex.Message.Contains("Home domain cannot exceed 32 characters"));
     }
 
