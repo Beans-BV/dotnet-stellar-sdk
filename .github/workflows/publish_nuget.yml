@@ -35,7 +35,7 @@ jobs:
             exit 1
           }
           echo "VERSION=$version" >> $env:GITHUB_ENV
-      - run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}} -p:PackageVersion=${{env.VERSION}}
+      - run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}} -p:Version=${{env.VERSION}}
       - uses: actions/upload-artifact@v4
         with:
           name: nuget

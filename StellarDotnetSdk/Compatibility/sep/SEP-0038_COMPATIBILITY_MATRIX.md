@@ -2,7 +2,7 @@
 
 **Updated:** 2026-09-30  
 **SDK:** StellarDotnetSdk  
-**SDK Version:** 12.0.0  
+**SDK Version:** 16.0.0  
 **SEP Version:** 2.5.0  
 **SEP Status:** Draft  
 **SEP URL:** https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md

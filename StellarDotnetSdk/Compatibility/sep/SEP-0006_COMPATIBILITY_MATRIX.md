@@ -2,7 +2,7 @@
 
 **Updated:** 2026-06-17  
 **SDK:** StellarDotnetSdk  
-**SDK Version:** 12.0.0  
+**SDK Version:** 16.0.0  
 **SEP Version:** 4.3.0  
 **SEP Status:** Active (Interactive components are deprecated in favor of SEP-24)  
 **SEP URL:** https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md
