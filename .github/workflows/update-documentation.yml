@@ -2,6 +2,11 @@ name: Update Documentation
 on:
   release:
     types: [ published ]
+  # Lets the site be rebuilt from main without cutting a release.
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -18,27 +23,33 @@ jobs:
           ref: gh-pages
           path: docs/_site
 
+      # DocFX loads the projects through MSBuild from this SDK. The former nunit/docfx-action container
+      # ran its own .NET, which could not satisfy global.json, so every release since 15.0.0 failed
+      # with "Failed to find all versions of .NET Core MSBuild".
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          global-json-file: global.json
+
+      - name: Install DocFX
+        run: dotnet tool install --global docfx --version 2.81.0
 
       - name: Build Documentation Metadata
-        uses: nunit/docfx-action@v4.0.0
-        with:
-          args: metadata ./docs/docfx.json
+        run: docfx metadata docs/docfx.json
 
       - name: Build Documentation
-        uses: nunit/docfx-action@v4.0.0
-        with:
-          args: build ./docs/docfx.json
+        run: docfx build docs/docfx.json
 
       - name: Publish docs to GH Pages
         run: |
-          TAG=`git describe --tags`
+          TAG=$(git describe --tags)
           cd docs/_site/
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m $TAG
+          if git diff --cached --quiet; then
+            echo "No documentation changes to publish."
+            exit 0
+          fi
+          git commit -m "$TAG"
           git push origin gh-pages
