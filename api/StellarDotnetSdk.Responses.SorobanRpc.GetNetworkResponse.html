@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetNetworkResponse ">
       
-      <meta name="description" content="General information about the currently configured network. This response will contain all the information needed to successfully submit transactions to the network this node serves. See https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork">
+      <meta name="description" content="General information about the currently configured network. This response will contain all the information needed to successfully submit transactions to the network this node serves. See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -95,7 +95,7 @@ Class GetNetworkResponse
 
   <div class="markdown summary"><p>General information about the currently configured network. This response will contain all the information needed
 to successfully submit transactions to the network this node serves.
-See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork</a></p>
+See <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork">https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -147,45 +147,6 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetNetworkResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetNetworkResponse.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetNetworkResponse__ctor_System_String_System_String_System_Int32_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetNetworkResponse.#ctor(System.String,System.String,System.Int32)">
-  GetNetworkResponse(string, string, int)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetNetworkResponse(string friendbotUrl, string passphrase, int protocolVersion)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>friendbotUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>passphrase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>protocolVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -202,7 +163,7 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string FriendbotUrl { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string FriendbotUrl { get; init; }</code></pre>
   </div>
 
 
@@ -229,12 +190,12 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Network passphrase configured for this Soroban RPC node.</p>
+  <div class="markdown level1 summary"><p>Network passphrase configured for this Stellar RPC node.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Passphrase { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Passphrase { get; init; }</code></pre>
   </div>
 
 
@@ -266,7 +227,7 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int ProtocolVersion { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int ProtocolVersion { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AssetTypeNative ">
       
-      
+      <meta name="description" content="Represents the native Stellar asset (XLM/Lumens). This is the built-in currency of the Stellar network.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class AssetTypeNative
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the native Stellar asset (XLM/Lumens). This is the built-in currency of the Stellar network.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -168,7 +169,8 @@ Class AssetTypeNative
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The Horizon REST API type identifier for the native asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,7 +206,12 @@ Class AssetTypeNative
   </h3>
 
   <div class="markdown level1 summary"><p>Returns asset type. Possible types:</p>
-<ul><li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li><li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li><li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li><li>liquidity_pool_shares</li></ul>
+<ul>
+    <li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li>
+    <li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li>
+    <li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li>
+    <li>liquidity_pool_shares</li>
+</ul>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -272,7 +279,9 @@ Class AssetTypeNative
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this asset to another <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a> for ordering.
+Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -282,13 +291,15 @@ Class AssetTypeNative
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value if this asset is less than, equal to, or greater than <code class="paramref">asset</code>.</p>
+</dd>
   </dl>
 
 
@@ -308,7 +319,8 @@ Class AssetTypeNative
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -318,13 +330,15 @@ Class AssetTypeNative
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
   </dl>
 
 
@@ -344,7 +358,8 @@ Class AssetTypeNative
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -355,7 +370,8 @@ Class AssetTypeNative
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A hash code for the current object.</p>
+</dd>
   </dl>
 
 

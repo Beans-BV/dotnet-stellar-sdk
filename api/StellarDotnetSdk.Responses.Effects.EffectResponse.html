@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class EffectResponse ">
       
-      <meta name="description" content="Base class for effect responses. See: All effects">
+      <meta name="description" content="Base class for all effect responses. Effects represent changes that occur in the ledger as a result of operations. See: All effects">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,8 +93,11 @@ Class EffectResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Base class for effect responses.
-See: <a href="https://developers.stellar.org/network/horizon/resources/list-all-effects">All effects</a><a class="xref" href="StellarDotnetSdk.Requests.EffectsRequestBuilder.html">EffectsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Base class for all effect responses.
+Effects represent changes that occur in the ledger as a result of operations.
+See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-effects">All effects</a>
+<a class="xref" href="StellarDotnetSdk.Requests.EffectsRequestBuilder.html">EffectsRequestBuilder</a>
+<a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -229,12 +232,13 @@ public abstract class EffectResponse : Response, IPagingToken</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that was affected.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account&quot;)]
-public string Account { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account&quot;)]
+public required string Account { get; init; }</code></pre>
   </div>
 
 
@@ -261,12 +265,13 @@ public string Account { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the affected account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed&quot;)]
-public string AccountMuxed { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_muxed&quot;)]
+public string? AccountMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -293,12 +298,13 @@ public string AccountMuxed { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the affected account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed_id&quot;)]
-public ulong? AccountMuxedId { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_muxed_id&quot;)]
+public ulong? AccountMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -325,12 +331,13 @@ public ulong? AccountMuxedId { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The time when the effect was created.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;created_at&quot;)]
-public DateTime CreatedAt { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_at&quot;)]
+public required DateTimeOffset CreatedAt { get; init; }</code></pre>
   </div>
 
 
@@ -339,7 +346,7 @@ public DateTime CreatedAt { get; protected set; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -357,12 +364,13 @@ public DateTime CreatedAt { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier of the effect.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
-public string Id { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required string Id { get; init; }</code></pre>
   </div>
 
 
@@ -389,12 +397,13 @@ public string Id { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Links to related resources.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public EffectResponse.EffectsResponseLinks Links { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required EffectResponse.EffectsResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -421,12 +430,13 @@ public EffectResponse.EffectsResponseLinks Links { get; protected set; }</code><
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 
@@ -453,12 +463,13 @@ public string PagingToken { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type name of the effect (e.g., &quot;account_created&quot;, &quot;trade&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type&quot;)]
-public string Type { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+public required string Type { get; init; }</code></pre>
   </div>
 
 
@@ -485,12 +496,13 @@ public string Type { get; protected set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric type identifier of the effect.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type_i&quot;)]
-public virtual int TypeId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type_i&quot;)]
+public abstract int TypeId { get; }</code></pre>
   </div>
 
 

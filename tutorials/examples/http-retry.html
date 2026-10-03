@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>HTTP Resilience Configuration </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="HTTP Resilience Configuration ">
+      
+      
+      <link rel="icon" href="../../favicon">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="http-resilience-configuration">HTTP Resilience Configuration</h1>
+
+<p>This guide explains how to configure optional HTTP retry, circuit breaker, and timeout behavior in the SDK.</p>
+<blockquote>
+<p><strong>Note:</strong> Retries are <strong>disabled by default</strong> (matching the Java SDK's approach). Nothing is retried until you opt in by passing an <code>HttpResilienceOptions</code> instance (or a preset). When enabled, the SDK retries connection-level failures (network errors, DNS failures) and — if you configure them — the transient HTTP status codes you list in <code>RetryHttpStatusCodes</code>.</p>
+</blockquote>
+<h2 id="overview">Overview</h2>
+<p>The SDK provides an opt-in resilience pipeline (built on <a href="https://www.pollydocs.org/">Polly</a>) for transient failures:</p>
+<ul>
+<li><strong>Connection failures</strong> — <code>HttpRequestException</code> and timeout-shaped exceptions thrown inside the handler chain, similar to OkHttp's <code>retryOnConnectionFailure(true)</code>. These retries apply to <strong>all</strong> HTTP methods. A <code>TaskCanceledException</code> caused by <code>HttpClient.Timeout</code> firing is <strong>not</strong> retried (see <a href="#what-gets-retried">What Gets Retried</a>).</li>
+<li><strong>HTTP status codes</strong> — only the codes you add to <code>RetryHttpStatusCodes</code> (empty by default), and only for safe methods unless you opt in to unsafe ones.</li>
+</ul>
+<h3 id="default-behavior">Default Behavior</h3>
+<p>When using the SDK without any configuration, <strong>no retries are performed</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max Retry Count</td>
+<td>0 (disabled)</td>
+</tr>
+<tr>
+<td>Base Delay</td>
+<td>200ms</td>
+</tr>
+<tr>
+<td>Max Delay</td>
+<td>5000ms</td>
+</tr>
+<tr>
+<td>Jitter</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Status-code retries</td>
+<td>None (<code>RetryHttpStatusCodes</code> empty)</td>
+</tr>
+<tr>
+<td>Retry HTTP methods</td>
+<td>Safe only (<code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>)</td>
+</tr>
+<tr>
+<td>Respect <code>Retry-After</code></td>
+<td>Enabled (<code>true</code>)</td>
+</tr>
+<tr>
+<td>Max <code>Retry-After</code> delay</td>
+<td>1 minute</td>
+</tr>
+<tr>
+<td>Circuit Breaker</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>Request Timeout</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-gets-retried">What Gets Retried</h3>
+<p>When retries are enabled (<code>MaxRetryCount &gt; 0</code>):</p>
+<p><strong>Connection failures (exceptions) are retried — for every HTTP method, including POST:</strong></p>
+<ul>
+<li><code>HttpRequestException</code> — network errors, DNS failures</li>
+<li><code>TimeoutException</code> — timeouts surfaced by custom/inner handlers</li>
+<li><code>TaskCanceledException</code> — only when the request's <code>CancellationToken</code> is <strong>not</strong> signaled (e.g. thrown by a custom inner handler)</li>
+</ul>
+<blockquote>
+<p><strong><code>HttpClient.Timeout</code> and <code>RequestTimeout</code> are not retried</strong> — in contrast to a <code>TimeoutException</code> thrown
+by a custom inner handler (listed above), which is. When <code>HttpClient.Timeout</code> fires, it cancels the token
+that flows through the handler chain, so the resulting <code>TaskCanceledException</code> is treated exactly like user
+cancellation and propagates immediately. Likewise <code>RequestTimeout</code> (below) is the outermost strategy, so its
+<code>TimeoutRejectedException</code> is never seen by the retry strategy. There is no per-attempt retried timeout;
+use <code>RequestTimeout</code> or <code>HttpClient.Timeout</code> to bound the whole operation.</p>
+</blockquote>
+<p>Because connection failures are retried for all methods, a request whose response was lost mid-flight (e.g.
+a connection reset after the server already processed it) can be re-executed. For Horizon and Stellar RPC
+this is safe (see the idempotency notes below); for strictly one-shot endpoints, see the SEP warning further
+down.</p>
+<p><strong>HTTP status codes are retried only when you opt in</strong> by adding them to <code>RetryHttpStatusCodes</code>. By default the set is empty, so no status code is retried. Status-code retries are additionally gated by HTTP method (see <a href="#controlling-which-http-methods-retry">Controlling which HTTP methods retry</a>): by default only safe methods (<code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>) are retried.</p>
+<h2 id="quick-start-with-presets">Quick Start with Presets</h2>
+<p>The SDK provides preset configurations for common use cases:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Requests;
+
+// No retries (same as new HttpResilienceOptions())
+var defaultOptions = HttpResilienceOptionsPresets.Default();
+
+// Horizon clients: retries 408/429/5xx on every call including SubmitTransaction(), honors Retry-After
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
+
+// Stellar RPC (Soroban): all RPC calls are POST; status-code retries + higher budget and longer delays
+var sorobanOptions = HttpResilienceOptionsPresets.ForSoroban();
+
+// Connection failures only (no status-code retries; RetryHttpMethods stays at GET/HEAD/OPTIONS)
+var connectionOnly = HttpResilienceOptionsPresets.WithConnectionRetries();
+
+// Low latency: fast failure for trading bots (connection failures only)
+var tradingOptions = HttpResilienceOptionsPresets.LowLatency();
+</code></pre>
+<h3 id="preset-details">Preset Details</h3>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Max Retries</th>
+<th>Base Delay</th>
+<th>Max Delay</th>
+<th>Status-code retries</th>
+<th><code>RetryHttpMethods</code></th>
+<th><code>Retry-After</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Default()</code> / <code>NoRetry()</code></td>
+<td>0</td>
+<td>—</td>
+<td>—</td>
+<td>none</td>
+<td>safe (GET/HEAD/OPTIONS)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>WithConnectionRetries()</code></td>
+<td>3</td>
+<td>200ms</td>
+<td>5s</td>
+<td>none (connection failures only)</td>
+<td>safe (GET/HEAD/OPTIONS)</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>ForHorizon()</code></td>
+<td>3</td>
+<td>200ms</td>
+<td>5s</td>
+<td>408, 429, 500, 502, 503, 504</td>
+<td>safe <strong>+ POST</strong></td>
+<td>honored</td>
+</tr>
+<tr>
+<td><code>ForSoroban()</code></td>
+<td>5</td>
+<td>500ms</td>
+<td>15s</td>
+<td>408, 429, 500, 502, 503, 504</td>
+<td>safe <strong>+ POST</strong></td>
+<td>honored</td>
+</tr>
+<tr>
+<td><code>LowLatency()</code></td>
+<td>1</td>
+<td>50ms</td>
+<td>200ms</td>
+<td>none (connection failures only)</td>
+<td>safe (GET/HEAD/OPTIONS)</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+<p>All retrying presets use exponential backoff with jitter enabled.</p>
+<p><code>ForHorizon()</code> and <code>ForSoroban()</code> add <code>POST</code> to the retry-method whitelist because the Stellar wire layer is idempotent for both: Horizon queries are pure reads; <code>SubmitTransaction()</code> is keyed by transaction hash + source-account sequence number, so a resubmit either returns the cached server result or fails with <code>tx_bad_seq</code> — there is no double-spend window. The same applies to every Soroban RPC method (all POST). <code>PATCH</code>/<code>PUT</code>/<code>DELETE</code> are <em>not</em> in either preset, so future SDK methods that use them are not silently retried.</p>
+<h2 id="using-the-sdk-without-retries-default">Using the SDK Without Retries (Default)</h2>
+<p>By default, the SDK does not retry any requests:</p>
+<pre><code class="lang-csharp">// No retries - requests fail immediately on connection errors,
+// and HTTP error responses are surfaced immediately.
+var server = new Server(&quot;https://horizon-testnet.stellar.org&quot;);
+var sorobanServer = new StellarRpcServer(&quot;https://soroban-testnet.stellar.org&quot;);
+</code></pre>
+<h2 id="enabling-retries">Enabling Retries</h2>
+<p>To enable retries, pass <code>HttpResilienceOptions</code> (or a preset) with <code>MaxRetryCount &gt; 0</code>:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Requests;
+
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+var server = new Server(&quot;https://horizon-testnet.stellar.org&quot;, httpClient);
+</code></pre>
+<h2 id="retrying-http-status-codes">Retrying HTTP Status Codes</h2>
+<p>To retry HTTP error status codes, set <code>MaxRetryCount &gt; 0</code> <strong>and</strong> add the codes to <code>RetryHttpStatusCodes</code>. (Setting status codes without a positive <code>MaxRetryCount</code> has no effect — there is no retry loop to enter.)</p>
+<pre><code class="lang-csharp">using System.Net;
+using StellarDotnetSdk.Requests;
+
+var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+    RespectRetryAfter = true, // honor Retry-After on retried responses (default true)
+};
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);   // 429
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable); // 503
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+var server = new Server(&quot;https://horizon-testnet.stellar.org&quot;, httpClient);
+</code></pre>
+<p>The retry pipeline observes responses <strong>inside</strong> the HTTP handler chain, so it triggers <em>before</em> a status code is translated into a typed exception such as <code>TooManyRequestsException</code> or <code>ServiceUnavailableException</code>. If all retries are exhausted, the last response is surfaced as the usual typed exception.</p>
+<p>A retried request is re-sent with the <strong>same</strong> <code>HttpRequestMessage</code> instance, so its body must be re-readable, buffered content (<code>StringContent</code>, <code>ByteArrayContent</code>, <code>FormUrlEncodedContent</code> — all of the SDK's own requests qualify). A non-seekable <code>StreamContent</code> fails on the second attempt with <code>InvalidOperationException: &quot;The stream was already consumed. It cannot be read again.&quot;</code>.</p>
+<h3 id="controlling-which-http-methods-retry">Controlling which HTTP methods retry</h3>
+<p>Status-code retries are gated by <code>RetryHttpMethods</code> — an explicit <code>ISet&lt;HttpMethod&gt;</code> that defaults to the RFC-safe methods (<code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>). Other methods are never retried on a status code unless you add them to the set.</p>
+<p><code>ForHorizon()</code> and <code>ForSoroban()</code> add <code>POST</code> to the set because the Stellar wire layer is idempotent for both Horizon's <code>SubmitTransaction()</code> (tx hash + source sequence → no double-spend; resubmit yields the cached result or <code>tx_bad_seq</code>) and every Soroban JSON-RPC method.</p>
+<p>If you're building options manually and need POST retried on Horizon or Soroban (e.g. you're using <code>WithConnectionRetries()</code> as a base and want to add status-code retries for <code>SubmitTransaction()</code>), add the method explicitly:</p>
+<pre><code class="lang-csharp">var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+};
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
+</code></pre>
+<blockquote>
+<p><strong>⚠️ SEP services are not blanket-safe to retry.</strong> Specific SEP POST endpoints are non-idempotent
+by spec:</p>
+<ul>
+<li><strong>SEP-10 <code>POST /auth</code></strong> — per spec: <em>&quot;The Server should not provide more than one JWT for a
+specific challenge transaction.&quot;</em> On transient failure, fetch a <strong>fresh</strong> challenge with
+<code>GET /auth</code> and submit that — do not retry the same body.</li>
+<li><strong>SEP-24 <code>POST /transactions/{deposit,withdraw}/interactive</code></strong> — each call mints a fresh
+<code>transaction_id</code>; retrying creates duplicate transaction records. No idempotency-key mechanism
+is defined.</li>
+<li><strong>SEP-6 <code>PATCH /transactions/{id}</code></strong> — not in the SEP-6 master spec; anchor-vendor extension
+that mutates KYC state.</li>
+<li><strong>SEP-7 callback <code>POST</code></strong> (<code>UriScheme</code>) — the spec says nothing about idempotency; the POST
+delivers a signed transaction to a URL the requester chose, and a retry delivers it again. Use
+<code>NoRetry()</code> (the default) for <code>UriScheme</code>: even transport retries replay it.</li>
+<li><strong>SEP-12 <code>POST /customer/files</code></strong> — each call stores the upload under a fresh <code>file_id</code>;
+retrying after the anchor already stored it leaves an orphaned duplicate file.</li>
+<li><strong>SEP-38 <code>POST /quote</code></strong> — each call creates a new firm quote that the anchor holds in reserve
+until it expires; a retry after a 408, 429, 500, 502, 503 or 504 reserves a second quote.</li>
+</ul>
+<p>Do NOT wire <code>ForHorizon()</code> or <code>ForSoroban()</code> into a <code>ClientWebAuth</code> / <code>InteractiveService</code> /
+<code>TransferServerService</code> / <code>KycService</code> / <code>UriScheme</code> / <code>QuoteService</code> HttpClient. For the other SEP
+HttpClients, use <code>WithConnectionRetries()</code> (transport failures only) or build a custom
+<code>HttpResilienceOptions</code> whose <code>RetryHttpMethods</code> contains only the safe defaults.</p>
+<p>Be aware that connection-failure retries apply to <strong>all</strong> HTTP methods: a POST whose response was
+lost may already have been processed by the server, so even <code>WithConnectionRetries()</code> carries a
+small replay window on these endpoints. If that window is unacceptable, use <code>NoRetry()</code> for the
+SEP client and recover at the application level (e.g. request a fresh SEP-10 challenge).</p>
+</blockquote>
+<h3 id="honoring-retry-after">Honoring <code>Retry-After</code></h3>
+<p>When <code>RespectRetryAfter</code> is <code>true</code> (the default) and a retried response carries a <code>Retry-After</code> header, the SDK uses that value as the next delay, <strong>capped by <code>MaxRetryAfterDelay</code></strong> (default 1 minute) — a ceiling that is deliberately separate from the exponential-backoff <code>MaxDelay</code>, so a server asking for tens of seconds on a 429 is honored rather than truncated to the (typically small) backoff cap. Both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) are supported. If no <code>Retry-After</code> header is present, the SDK falls back to exponential backoff.</p>
+<p>The <code>TooManyRequestsException</code> and <code>ServiceUnavailableException</code> types also expose the value directly for manual handling:</p>
+<pre><code class="lang-csharp">try
+{
+    var account = await server.Accounts.Account(accountId);
+}
+catch (TooManyRequestsException ex)
+{
+    // RetryAfter is whole seconds (int?); RetryAfterDelay is a TimeSpan? parsed from
+    // the raw header at full precision and supports the HTTP-date form too.
+    var delay = ex.RetryAfterDelay ?? TimeSpan.FromSeconds(5);
+    await Task.Delay(delay);
+}
+</code></pre>
+<p><strong>A note on <code>Retry-After</code> for Stellar services.</strong> Horizon sends <code>Retry-After</code> only on HTTP 429 (always as an integer number of seconds); on HTTP 503 it relies on the client's configured backoff. Stellar RPC (Soroban) does not send <code>Retry-After</code> at all — overload is reported via HTTP 503/504 or JSON-RPC error bodies, so the pipeline falls back to exponential backoff. The parser still accepts the RFC 7231 HTTP-date form because upstream proxies and CDNs (Cloudflare, nginx, API gateways) may rewrite the header.</p>
+<h2 id="custom-retry-configuration">Custom Retry Configuration</h2>
+<pre><code class="lang-csharp">var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 5,                           // Retry up to 5 times
+    BaseDelay = TimeSpan.FromMilliseconds(500),  // Start with 500ms delay
+    MaxDelay = TimeSpan.FromSeconds(10),         // Cap delay at 10 seconds
+    UseJitter = true,                            // Add randomness to prevent thundering herd
+};
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+var server = new Server(&quot;https://horizon-testnet.stellar.org&quot;, httpClient);
+</code></pre>
+<h3 id="adding-custom-retriable-exception-types">Adding Custom Retriable Exception Types</h3>
+<p>You can add additional exception types that should trigger retries (in addition to the defaults):</p>
+<pre><code class="lang-csharp">var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+};
+resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+</code></pre>
+<blockquote>
+<p><strong>Scope:</strong> <code>AdditionalRetriableExceptionTypes</code> applies only to exceptions thrown from within the HTTP handler chain (<code>HttpClient.SendAsync</code>). It does <strong>not</strong> apply to typed exceptions thrown after a response is received (<code>TooManyRequestsException</code>, <code>ServiceUnavailableException</code>, <code>HttpResponseException</code>). To retry those, use <code>RetryHttpStatusCodes</code> instead. <code>SorobanRpcException</code> is out of reach of both knobs: Stellar RPC reports JSON-RPC errors with HTTP status 200, so neither the handler chain nor a status-code rule ever sees a failure. Handle it at the call site.</p>
+</blockquote>
+<h2 id="circuit-breaker-advanced">Circuit Breaker (Advanced)</h2>
+<p>The circuit breaker prevents cascading failures by temporarily blocking requests to an unhealthy service. It's <strong>disabled by default</strong>.</p>
+<blockquote>
+<p><strong>Warning:</strong> When the circuit is open, requests throw <code>BrokenCircuitException</code> instead of the underlying HTTP error. The circuit breaker counts connection failures and any configured <code>RetryHttpStatusCodes</code> as failures — for <strong>every</strong> HTTP method (<code>RetryHttpMethods</code> limits which requests are <em>retried</em>, not which failures are <em>counted</em>), and even when <code>MaxRetryCount</code> is 0. Failures are sampled per logical request: when retries are enabled, one fully-exhausted request sequence counts once, so with the default <code>MinimumThroughput</code> of 10 the breaker needs ten failed <em>requests</em> (not ten failed attempts) inside <code>SamplingDuration</code> before it can open.</p>
+</blockquote>
+<pre><code class="lang-csharp">var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+    EnableCircuitBreaker = true,
+    FailureRatio = 0.5,           // Open circuit when 50% of requests fail
+    MinimumThroughput = 10,        // Require at least 10 requests before evaluating
+    SamplingDuration = TimeSpan.FromSeconds(30),
+    BreakDuration = TimeSpan.FromSeconds(30),
+};
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+</code></pre>
+<h2 id="request-timeout-advanced">Request Timeout (Advanced)</h2>
+<p>You can set an overall timeout for the whole operation. It is applied as the outermost strategy, so it covers
+all retry attempts and their backoff delays — not each attempt individually:</p>
+<pre><code class="lang-csharp">var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+    RequestTimeout = TimeSpan.FromSeconds(10),  // The whole operation (all retries) must finish within 10s
+};
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+</code></pre>
+<blockquote>
+<p><strong>What the caller sees:</strong> when <code>RequestTimeout</code> elapses, the operation throws
+<code>Polly.Timeout.TimeoutRejectedException</code> — <strong>not</strong> a <code>TaskCanceledException</code> or <code>HttpRequestException</code>, so
+catch that type explicitly if you bound operations with <code>RequestTimeout</code>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note:</strong> <code>HttpClient.Timeout</code> (default 100 seconds) independently caps the whole operation too — all
+attempts plus their backoff and <code>Retry-After</code> waits — and surfaces as a <strong>non-retried</strong>
+<code>TaskCanceledException</code>. Two honored 60-second <code>Retry-After</code> waits under <code>ForHorizon()</code> would exceed the
+default; raise <code>HttpClient.Timeout</code> (or lower <code>MaxRetryAfterDelay</code>) if you expect long server-directed
+waits. Neither timeout is retried: timeout exhaustion is terminal by design.</p>
+</blockquote>
+<h2 id="exponential-backoff">Exponential Backoff</h2>
+<p>When retries are enabled and no <code>Retry-After</code> header applies, the SDK uses exponential backoff:</p>
+<pre><code>delay = min(BaseDelay * 2^attempt, MaxDelay)
+</code></pre>
+<p>With jitter enabled (default), the actual delay is randomized to avoid synchronized retries (thundering herd).</p>
+<h3 id="example-delays-withconnectionretries--forhorizon-preset">Example Delays (WithConnectionRetries / ForHorizon preset)</h3>
+<table>
+<thead>
+<tr>
+<th>Attempt</th>
+<th>Base Delay</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>~200ms</td>
+</tr>
+<tr>
+<td>2</td>
+<td>~400ms</td>
+</tr>
+<tr>
+<td>3</td>
+<td>~800ms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-prefer-a-preset">1. Prefer a preset</h3>
+<pre><code class="lang-csharp">// Horizon clients (queries + SubmitTransaction)
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
+
+// Stellar RPC (Soroban) — long-running polling
+var soroban = HttpResilienceOptionsPresets.ForSoroban();
+
+// Latency-sensitive (trading bots)
+var lowLatency = HttpResilienceOptionsPresets.LowLatency();
+</code></pre>
+<h3 id="2-handle-tx_bad_seq-after-a-retried-submission">2. Handle <code>tx_bad_seq</code> after a retried submission</h3>
+<p>If a transaction was already accepted on the original attempt and the retry surfaces <code>tx_bad_seq</code>, look up the transaction by its hash to recover the original server result instead of assuming the submission failed.</p>
+<h3 id="3-keep-jitter-enabled">3. Keep jitter enabled</h3>
+<p>Always keep jitter enabled to prevent synchronized retries from multiple clients (thundering herd problem).</p>
+<h2 id="complete-example">Complete Example</h2>
+<pre><code class="lang-csharp">using System;
+using System.Threading.Tasks;
+using StellarDotnetSdk;
+using StellarDotnetSdk.Exceptions;
+using StellarDotnetSdk.Requests;
+
+// Production-ready resilience for Horizon clients
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
+
+var httpClient = new DefaultStellarSdkHttpClient(
+    bearerToken: &quot;your-api-token&quot;,  // Optional
+    resilienceOptions: resilienceOptions
+);
+
+var horizonServer = new Server(&quot;https://horizon.stellar.org&quot;, httpClient);
+
+try
+{
+    var account = await horizonServer.Accounts.Account(&quot;GABC...&quot;);
+    Console.WriteLine($&quot;Account balance: {account.Balances[0].BalanceString}&quot;);
+}
+catch (TooManyRequestsException ex)
+{
+    // Surfaced only after retries are exhausted (or when 429 is not in RetryHttpStatusCodes)
+    var delay = ex.RetryAfterDelay ?? TimeSpan.FromSeconds(5);
+    Console.WriteLine($&quot;Rate limited. Suggested wait: {delay}.&quot;);
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($&quot;Connection failed after all retries: {ex.Message}&quot;);
+}
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="http-status-codes-are-not-being-retried">HTTP status codes are not being retried</h3>
+<p>Check that <strong>all three</strong> conditions hold: <code>MaxRetryCount &gt; 0</code>, the status code is in <code>RetryHttpStatusCodes</code>, and the request's HTTP method is in <code>RetryHttpMethods</code> (which defaults to <code>GET</code>/<code>HEAD</code>/<code>OPTIONS</code>). Also note that the options are snapshotted when the handler/client is constructed — changes made to the options instance afterwards have no effect.</p>
+<h3 id="requests-time-out-instead-of-retrying">Requests time out instead of retrying</h3>
+<p>That is by design: <code>HttpClient.Timeout</code> and <code>RequestTimeout</code> failures are terminal, not retried (see <a href="#what-gets-retried">What Gets Retried</a>). They surface differently to the caller: <code>HttpClient.Timeout</code> throws <code>TaskCanceledException</code>, while <code>RequestTimeout</code> throws <code>Polly.Timeout.TimeoutRejectedException</code>. If slow individual attempts are eating your budget, lower the per-call latency at the server selection level or bound the operation with <code>RequestTimeout</code> and surface the failure.</p>
+<h3 id="retries-take-longer-than-expected">Retries take longer than expected</h3>
+<p>A retried response with a large <code>Retry-After</code> value will delay the next attempt (capped by <code>MaxRetryAfterDelay</code>, default 1 minute). Lower <code>MaxRetryAfterDelay</code> or set <code>RespectRetryAfter = false</code> if you prefer pure exponential backoff.</p>
+<h3 id="rate-limiting">Rate limiting</h3>
+<ol>
+<li>Use a preset that retries 429 (<code>ForHorizon()</code> / <code>ForSoroban()</code>), or add <code>HttpStatusCode.TooManyRequests</code> to <code>RetryHttpStatusCodes</code>.</li>
+<li>Inspect <code>TooManyRequestsException.RetryAfterDelay</code> for manual handling.</li>
+<li>Reduce request frequency.</li>
+</ol>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://github.com/lightsail-network/java-stellar-sdk">Java SDK</a></li>
+<li><a href="https://www.pollydocs.org/">Polly resilience library</a></li>
+<li><a href="https://status.stellar.org/">Stellar Network Status</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/horizon">Horizon API Documentation</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/rpc">Stellar RPC Documentation</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

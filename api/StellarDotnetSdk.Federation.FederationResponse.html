@@ -158,11 +158,12 @@ See
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the Stellar account ID (G...) associated with the federation address.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_id&quot;)]
 public string AccountId { get; init; }</code></pre>
   </div>
 
@@ -190,11 +191,12 @@ public string AccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the memo value required for transactions to this account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;memo&quot;)]
 public string Memo { get; init; }</code></pre>
   </div>
 
@@ -222,11 +224,12 @@ public string Memo { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the memo type required for transactions to this account (e.g., &quot;text&quot;, &quot;id&quot;, &quot;hash&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo_type&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;memo_type&quot;)]
 public string MemoType { get; init; }</code></pre>
   </div>
 
@@ -254,11 +257,12 @@ public string MemoType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the Stellar address (e.g., <code>bob*stellar.org</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;stellar_address&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;stellar_address&quot;)]
 public string StellarAddress { get; init; }</code></pre>
   </div>
 

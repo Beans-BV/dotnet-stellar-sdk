@@ -274,7 +274,8 @@ sponsorship modified.</p>
     <dd><p>Key pair of an account to be revoked.</p>
 </dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -314,7 +315,8 @@ sponsorship modified.</p>
     <dd><p>Hex-encoded ID (0000...) of the claimable balance entry to be revoked.</p>
 </dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -357,7 +359,8 @@ sponsorship modified.</p>
     <dd><p>Name of the data entry.</p>
 </dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -400,7 +403,8 @@ sponsorship modified.</p>
     <dd><p>Id of the offer.</p>
 </dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -440,9 +444,11 @@ sponsorship modified.</p>
     <dd><p>Id of the account that owns the trustline that being sponsored.</p>
 </dd>
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>Asset of the trustline.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -468,7 +474,7 @@ sponsorship modified.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -480,7 +486,7 @@ sponsorship modified.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

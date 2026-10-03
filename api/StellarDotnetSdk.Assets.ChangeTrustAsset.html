@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ChangeTrustAsset ">
       
-      
+      <meta name="description" content="Represents an asset that can be used in a ChangeTrust operation. This includes standard Stellar assets (native, credit_alphanum4, credit_alphanum12) and liquidity pool shares.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ChangeTrustAsset
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an asset that can be used in a ChangeTrust operation.
+This includes standard Stellar assets (native, credit_alphanum4, credit_alphanum12) and liquidity pool shares.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -159,7 +161,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the asset type string (e.g., <code>&quot;native&quot;</code>, <code>&quot;credit_alphanum4&quot;</code>, <code>&quot;credit_alphanum12&quot;</code>, or <code>&quot;pool_share&quot;</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +197,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this change trust asset to another for ordering.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,13 +208,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>The change trust asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value for ordering.</p>
+</dd>
   </dl>
 
 
@@ -230,7 +236,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> by wrapping an existing <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -240,13 +247,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to wrap.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> wrapping the given asset.</p>
+</dd>
   </dl>
 
 
@@ -266,7 +275,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a> from a pair of assets and a fee.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -276,17 +286,21 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>assetA</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The first asset in the pool.</p>
+</dd>
     <dt><code>assetB</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The second asset in the pool.</p>
+</dd>
     <dt><code>feeBp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The pool fee in basis points.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a> for the given pool parameters.</p>
+</dd>
   </dl>
 
 
@@ -306,7 +320,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> from a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.Wrapper.html">TrustlineAsset.Wrapper</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -316,13 +331,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>wrapper</code> <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a>.<a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.Wrapper.html">Wrapper</a></dt>
-    <dd></dd>
+    <dd><p>The trustline asset wrapper containing the underlying asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> wrapping the underlying asset.</p>
+</dd>
   </dl>
 
 
@@ -342,7 +359,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a> from liquidity pool parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -352,13 +370,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters.html">LiquidityPoolParameters</a></dt>
-    <dd></dd>
+    <dd><p>The liquidity pool parameters.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a> for the given pool.</p>
+</dd>
   </dl>
 
 
@@ -378,7 +398,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> from its canonical string form.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -388,13 +409,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>canonicalForm</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The canonical asset string (e.g., <code>&quot;native&quot;</code> or <code>&quot;USD:GABC...&quot;</code>).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> wrapping the parsed asset.</p>
+</dd>
   </dl>
 
 
@@ -414,7 +437,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> from an asset type, code, and issuer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -424,17 +448,21 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset type (e.g., <code>&quot;native&quot;</code>).</p>
+</dd>
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset code.</p>
+</dd>
     <dt><code>issuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The issuer account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> wrapping the created asset.</p>
+</dd>
   </dl>
 
 
@@ -454,7 +482,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> for a non-native credit asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -464,15 +493,18 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset code.</p>
+</dd>
     <dt><code>issuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The issuer account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> wrapping the credit asset.</p>
+</dd>
   </dl>
 
 
@@ -528,7 +560,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a> from an XDR <code>ChangeTrustAsset</code> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -538,13 +571,15 @@ Class ChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>changeTrustXdr</code> <span class="xref">ChangeTrustAsset</span></dt>
-    <dd></dd>
+    <dd><p>The XDR change trust asset to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>The deserialized <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a>.</p>
+</dd>
   </dl>
 
 
@@ -554,6 +589,12 @@ Class ChangeTrustAsset
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the asset type is unknown.</p>
+</dd>
+  </dl>
 
 
 
@@ -564,7 +605,8 @@ Class ChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this change trust asset to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -575,7 +617,8 @@ Class ChangeTrustAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ChangeTrustAsset</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <code>ChangeTrustAsset</code> object.</p>
+</dd>
   </dl>
 
 

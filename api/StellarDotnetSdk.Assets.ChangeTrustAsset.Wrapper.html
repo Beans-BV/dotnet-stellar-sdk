@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ChangeTrustAsset.Wrapper ">
       
-      
+      <meta name="description" content="Wraps a standard  instance as a , enabling non-pool-share assets to be used in change trust operations.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ChangeTrustAsset.Wrapper
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Wraps a standard <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.html#StellarDotnetSdk_Assets_ChangeTrustAsset_Wrapper_Asset">Asset</a> instance as a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a>,
+enabling non-pool-share assets to be used in change trust operations.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -145,9 +147,6 @@ Class ChangeTrustAsset.Wrapper
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
@@ -177,7 +176,8 @@ Class ChangeTrustAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.html">ChangeTrustAsset.Wrapper</a> around the specified asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -187,7 +187,8 @@ Class ChangeTrustAsset.Wrapper
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to wrap. Must not be null.</p>
+</dd>
   </dl>
 
 
@@ -198,6 +199,12 @@ Class ChangeTrustAsset.Wrapper
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">asset</code> is null.</p>
+</dd>
+  </dl>
 
 
 
@@ -212,7 +219,8 @@ Class ChangeTrustAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the underlying <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -243,7 +251,8 @@ Class ChangeTrustAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the asset type string (e.g., <code>&quot;native&quot;</code>, <code>&quot;credit_alphanum4&quot;</code>, <code>&quot;credit_alphanum12&quot;</code>, or <code>&quot;pool_share&quot;</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +287,8 @@ Class ChangeTrustAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this change trust asset to another for ordering.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -288,13 +298,15 @@ Class ChangeTrustAsset.Wrapper
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>The change trust asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value for ordering.</p>
+</dd>
   </dl>
 
 
@@ -343,6 +355,39 @@ Class ChangeTrustAsset.Wrapper
 
 
 
+  <a id="StellarDotnetSdk_Assets_ChangeTrustAsset_Wrapper_GetHashCode_" data-uid="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.GetHashCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Assets_ChangeTrustAsset_Wrapper_GetHashCode" data-uid="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.GetHashCode">
+  GetHashCode()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Assets_ChangeTrustAsset_Wrapper_ToXdr_" data-uid="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.ToXdr*"></a>
 
   <h3 id="StellarDotnetSdk_Assets_ChangeTrustAsset_Wrapper_ToXdr" data-uid="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.ToXdr">
@@ -350,7 +395,8 @@ Class ChangeTrustAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this change trust asset to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -361,7 +407,8 @@ Class ChangeTrustAsset.Wrapper
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ChangeTrustAsset</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <code>ChangeTrustAsset</code> object.</p>
+</dd>
   </dl>
 
 

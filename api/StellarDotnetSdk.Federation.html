@@ -92,11 +92,15 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.ConnectionErrorException.html">ConnectionErrorException</a></dt>
-      <dd></dd>
+      <dd><p>Thrown when a connection error occurs while communicating with a federation server.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.Federation.html">Federation</a></dt>
-      <dd></dd>
+      <dd><p>Provides a helper for resolving Stellar federation addresses (e.g., <code>bob*stellar.org</code>)
+to account IDs via the Stellar federation protocol.
+See <a href="https://developers.stellar.org/docs/learn/encyclopedia/federation">Federation</a>.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.FederationResponse.html">FederationResponse</a></dt>
@@ -117,24 +121,29 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.FederationServerInvalidException.html">FederationServerInvalidException</a></dt>
-      <dd><p>Federation server is invalid (malformed URL, not HTTPS, etc.)</p>
+      <dd><p>Represents errors that occur during application execution.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.MalformedAddressException.html">MalformedAddressException</a></dt>
-      <dd></dd>
+      <dd><p>Thrown when a Stellar federation address is not in the expected format (e.g., &quot;name*domain&quot;).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.NotFoundException.html">NotFoundException</a></dt>
-      <dd></dd>
+      <dd><p>Thrown when a federation server returns a 404 response, indicating the requested address was not found.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.ServerErrorException.html">ServerErrorException</a></dt>
-      <dd></dd>
+      <dd><p>Thrown when a federation server returns a non-404 HTTP error response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Federation.StellarTomlNotFoundInvalidException.html">StellarTomlNotFoundInvalidException</a></dt>
-      <dd></dd>
+      <dd><p>Thrown when the stellar.toml file could not be found or returned a non-success HTTP status
+at the well-known URL (<code>https://{domain}/.well-known/stellar.toml</code>).</p>
+</dd>
     </dl>
 
 

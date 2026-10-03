@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPool ">
       
-      
+      <meta name="description" content="Represents a Stellar liquidity pool, which holds reserves of two assets and allows decentralized trading based on an automated market maker (AMM) algorithm.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPool
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Stellar liquidity pool, which holds reserves of two assets and allows
+decentralized trading based on an automated market maker (AMM) algorithm.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +157,8 @@ Class LiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LiquidityPool</code> with the specified parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,17 +168,23 @@ Class LiquidityPool
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>id</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the liquidity pool.</p>
+</dd>
     <dt><code>feeBp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The fee charged per trade in basis points.</p>
+</dd>
     <dt><code>type</code> <span class="xref">LiquidityPoolType</span>.<span class="xref">LiquidityPoolTypeEnum</span></dt>
-    <dd></dd>
+    <dd><p>The type of the liquidity pool (e.g., constant product).</p>
+</dd>
     <dt><code>totalTrustlines</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The number of accounts that have trustlines to this pool.</p>
+</dd>
     <dt><code>totalShares</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The total number of pool shares outstanding.</p>
+</dd>
     <dt><code>reserves</code> <a class="xref" href="StellarDotnetSdk.Assets.AssetAmount.html">AssetAmount</a>[]</dt>
-    <dd></dd>
+    <dd><p>The current reserves held by the pool for each asset.</p>
+</dd>
   </dl>
 
 
@@ -200,11 +209,12 @@ Class LiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The fee charged per trade in basis points (1 bp = 0.01%). Currently fixed at 30 bp (0.3%).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_bp&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_bp&quot;)]
 public int FeeBp { get; }</code></pre>
   </div>
 
@@ -232,11 +242,12 @@ public int FeeBp { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier of the liquidity pool, derived from the SHA-256 hash of its parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
 public LiquidityPoolId Id { get; }</code></pre>
   </div>
 
@@ -264,11 +275,12 @@ public LiquidityPoolId Id { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The current reserve amounts held by the pool for each of its two assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;reserves&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;reserves&quot;)]
 public AssetAmount[] Reserves { get; }</code></pre>
   </div>
 
@@ -296,11 +308,12 @@ public AssetAmount[] Reserves { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total number of pool shares outstanding, represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;total_shares&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;total_shares&quot;)]
 public string TotalShares { get; }</code></pre>
   </div>
 
@@ -328,11 +341,12 @@ public string TotalShares { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of accounts that have trustlines to this pool's share asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;total_trustlines&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;total_trustlines&quot;)]
 public int TotalTrustlines { get; }</code></pre>
   </div>
 
@@ -360,12 +374,12 @@ public int TotalTrustlines { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of the liquidity pool (currently only constant product is supported).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
-[JsonProperty(PropertyName = &quot;type&quot;)]
 public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; }</code></pre>
   </div>
 

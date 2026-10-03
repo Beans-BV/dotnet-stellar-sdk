@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SimulateTransactionResponse.SimulateInvokeHostFunctionResult ">
       
-      <meta name="description" content="Used as a part of simulate transaction. See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction">
+      <meta name="description" content="Used as a part of simulate transaction. See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,7 +94,7 @@ Class SimulateTransactionResponse.SimulateInvokeHostFunctionResult
   </div>
 
   <div class="markdown summary"><p>Used as a part of simulate transaction.
-See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction</a></p>
+See <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction">https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -146,43 +146,6 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SimulateInvokeHostFunctionResult__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.SimulateInvokeHostFunctionResult.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SimulateInvokeHostFunctionResult__ctor_System_String___System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.SimulateInvokeHostFunctionResult.#ctor(System.String[],System.String)">
-  SimulateInvokeHostFunctionResult(string[]?, string?)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SimulateInvokeHostFunctionResult(string[]? auth, string? xdr)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>auth</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
-    <dt><code>xdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -199,7 +162,8 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[]? Auth { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SorobanAuthArrayJsonConverter))]
+public string[]? Auth { get; init; }</code></pre>
   </div>
 
 
@@ -215,7 +179,24 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SimulateInvokeHostFunctionResult_Auth_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A <code>null</code> element is rejected, for the reason given on
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_StateChanges">StateChanges</a>. Without the guard a null element was only
+<em>incidentally</em> contained: <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SorobanAuthorization">SorobanAuthorization</a>
+fed it to the base64 decoder, whose <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a> the decode-failure filter
+happened to catch and report as a malformed XDR blob — which is not what went wrong, and is not a
+guarantee for a caller reading <code>Results[i].Auth</code> directly.</p>
+</div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a></dt>
+    <dd><p>Thrown during deserialization when the array contains a <code>null</code> element.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a <code>null</code> element is assigned from C# rather than read from JSON.</p>
+</dd>
+  </dl>
 
 
 
@@ -231,7 +212,7 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? Xdr { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Xdr { get; init; }</code></pre>
   </div>
 
 

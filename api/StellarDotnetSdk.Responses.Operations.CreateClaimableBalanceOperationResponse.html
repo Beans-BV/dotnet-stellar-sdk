@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class CreateClaimableBalanceOperationResponse ">
       
-      <meta name="description" content="Represents AccountMerge operation response.">
+      <meta name="description" content="Represents a create_claimable_balance operation response. Creates a claimable balance that can be claimed by one or more claimants according to specified predicates. The balance is held by the network and can be claimed when the predicate conditions are met.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class CreateClaimableBalanceOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents AccountMerge operation response.</p>
+  <div class="markdown summary"><p>Represents a create_claimable_balance operation response.
+Creates a claimable balance that can be claimed by one or more claimants according to specified predicates.
+The balance is held by the network and can be claimed when the predicate conditions are met.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -209,12 +211,13 @@ Class CreateClaimableBalanceOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the asset held in the claimable balance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -241,12 +244,15 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset held in the claimable balance.
+For native XLM, this will be &quot;native&quot;.
+For issued assets, this will be in the format &quot;CODE:ISSUER&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset&quot;)]
-public string Asset { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset&quot;)]
+public required string Asset { get; init; }</code></pre>
   </div>
 
 
@@ -273,12 +279,14 @@ public string Asset { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The list of claimants who can claim this balance and their predicates.
+Each claimant has a destination account and a predicate that must be satisfied to claim the balance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;claimants&quot;)]
-public Claimant[] Claimants { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;claimants&quot;)]
+public required Claimant[] Claimants { get; init; }</code></pre>
   </div>
 
 
@@ -305,12 +313,13 @@ public Claimant[] Claimants { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that sponsored the creation of the claimable balance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sponsor&quot;)]
-public string Sponsor { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sponsor&quot;)]
+public required string Sponsor { get; init; }</code></pre>
   </div>
 
 
@@ -337,7 +346,8 @@ public string Sponsor { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

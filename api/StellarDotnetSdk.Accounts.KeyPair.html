@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class KeyPair ">
       
-      <meta name="description" content="represents public (and secret) keys of the account. Currently  only supports ed25519 but in a future this class can be abstraction layer for other public-key signature systems.">
+      <meta name="description" content="Represents the public (and optionally secret) keys of a Stellar account, providing methods for signing data, verifying signatures, and encoding/decoding account identifiers.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,14 +93,14 @@ Class KeyPair
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> represents public (and secret) keys of the account.
-Currently <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> only supports ed25519 but in a future this class can be abstraction layer for
-other public-key signature systems.</p>
+  <div class="markdown summary"><p>Represents the public (and optionally secret) keys of a Stellar account, providing methods
+for signing data, verifying signatures, and encoding/decoding account identifiers.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class KeyPair : IAccountId, IEquatable&lt;KeyPair&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(KeyPairJsonConverter))]
+public class KeyPair : IAccountId, IEquatable&lt;KeyPair&gt;, IDisposable</code></pre>
   </div>
 
 
@@ -119,6 +119,7 @@ other public-key signature systems.</p>
     <dd>
       <div><a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
     </dd>
   </dl>
 
@@ -152,6 +153,20 @@ other public-key signature systems.</p>
 
 
 
+  <h2 id="StellarDotnetSdk_Accounts_KeyPair_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Currently only supports Ed25519 keys, but is designed to serve as an abstraction layer for
+other public-key signature systems in the future. Use factory methods such as
+<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_FromSecretSeed_System_String_">FromSecretSeed(string)</a>, <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_FromAccountId_System_String_">FromAccountId(string)</a>, or <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Random">Random()</a>
+to create instances.
+Signing caches expanded key material (libsodium secure memory on net8.0/net10.0) for the
+lifetime of the instance; call <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Dispose">Dispose()</a> on signing keypairs to release it
+deterministically. Disposal releases signing resources only — it does not erase the stored
+seed (<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SecretSeed">SecretSeed</a>, <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SeedBytes">SeedBytes</a>, <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_PrivateKey">PrivateKey</a> remain
+readable). Disposal is optional: an undisposed NSec key is released when its handle is
+finalized, while on netstandard2.1 an undisposed expanded-key copy is reclaimed by the GC
+without being zeroed. Keypairs that never signed hold no cached material, though disposal
+still disables <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Sign_System_Byte___">Sign(byte[])</a>.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -176,7 +191,8 @@ other public-key signature systems.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The 32-byte ed25519 public key.</p>
+</dd>
   </dl>
 
 
@@ -187,6 +203,15 @@ other public-key signature systems.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code> is not exactly 32 bytes long.</p>
+</dd>
+  </dl>
 
 
 
@@ -209,11 +234,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The 32-byte ed25519 public key.</p>
+</dd>
     <dt><code>privateKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The optional 32-byte raw private key; enables signing when provided.</p>
+</dd>
     <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The optional 32-byte secret seed, exposed via <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SeedBytes">SeedBytes</a> and <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SecretSeed">SecretSeed</a>
+.</p>
+</dd>
   </dl>
 
 
@@ -224,6 +253,16 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code>, <code class="paramref">privateKey</code> or <code class="paramref">seed</code>
+is not exactly 32 bytes long.</p>
+</dd>
+  </dl>
 
 
 
@@ -302,7 +341,10 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this account is a muxed (multiplexed) account.
+Always returns <code>false</code> for <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>; muxed accounts are represented
+by <a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html">MuxedAccountMed25519</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -525,12 +567,14 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The signing key.</p>
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> used for signing transactions. For a standard (non-muxed) account,
+this returns the current instance itself, since the key pair is its own signing key.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public KeyPair SigningKey { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public KeyPair SigningKey { get; }</code></pre>
   </div>
 
 
@@ -650,6 +694,74 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Dispose_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Dispose" data-uid="StellarDotnetSdk.Accounts.KeyPair.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Releases the cached Ed25519 signing handle created by <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Sign_System_Byte___">Sign(byte[])</a>: the libsodium
+secure-memory key is freed on net8.0/net10.0 and the expanded private key copy is zeroed on
+netstandard2.1. Subsequent <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Sign_System_Byte___">Sign(byte[])</a>/<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SignDecorated_System_Byte___">SignDecorated(byte[])</a>/
+<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SignPayloadDecorated_System_Byte___">SignPayloadDecorated(byte[])</a> calls throw <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a>;
+public-key members (<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Verify_System_Byte___System_Byte___">Verify(byte[], byte[])</a>, <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_AccountId">AccountId</a>, equality)
+and the stored seed (<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SecretSeed">SecretSeed</a>, <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_SeedBytes">SeedBytes</a>) remain usable —
+disposal releases signing resources, it does not erase the seed. Safe to call multiple times
+and on keypairs that never signed. Safe to call concurrently with <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Sign_System_Byte___">Sign(byte[])</a>: an
+in-flight signature completes normally and any signing call that starts after disposal throws.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Dispose_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Dispose_System_Boolean_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Dispose(System.Boolean)">
+  Dispose(bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Releases the cached Ed25519 signing handle. See <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Dispose">Dispose()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void Dispose(bool disposing)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>disposing</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True when called from <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html#StellarDotnetSdk_Accounts_KeyPair_Dispose">Dispose()</a>, false from a finalizer.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Accounts_KeyPair_Equals_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Equals*"></a>
 
   <h3 id="StellarDotnetSdk_Accounts_KeyPair_Equals_StellarDotnetSdk_Accounts_KeyPair_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Equals(StellarDotnetSdk.Accounts.KeyPair)">
@@ -657,7 +769,10 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether the specified <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> is equal to this instance.
+Two key pairs are considered equal if they share the same public key and both either
+contain or lack a secret seed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -667,13 +782,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>other</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> to compare with this instance.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if the key pairs are equal; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 
@@ -732,7 +849,9 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Derives a Stellar <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> from a BIP-39 mnemonic seed using the
+standard Stellar derivation path (<code>m/44'/148'/{accountIndex}'</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -742,15 +861,18 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seedBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The raw BIP-39 seed bytes.</p>
+</dd>
     <dt><code>accountIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The account index in the derivation path.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> derived from the given seed and account index.</p>
+</dd>
   </dl>
 
 
@@ -770,7 +892,9 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Derives a Stellar <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> from a BIP-39 mnemonic seed using the
+standard Stellar derivation path (<code>m/44'/148'/{accountIndex}'</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -780,15 +904,18 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The hex-encoded BIP-39 seed.</p>
+</dd>
     <dt><code>accountIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The account index in the derivation path.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> derived from the given seed and account index.</p>
+</dd>
   </dl>
 
 
@@ -837,6 +964,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">publicKey</code> is not exactly 32 bytes long.</p>
+</dd>
+  </dl>
 
 
 
@@ -876,6 +1012,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">seed</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">seed</code> is not exactly 32 bytes long.</p>
+</dd>
+  </dl>
 
 
 
@@ -1052,7 +1197,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd><p>signed bytes, null if the private key for this keypair is null.</p>
+    <dd><p>The signed bytes.</p>
 </dd>
   </dl>
 
@@ -1063,6 +1208,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this keypair has been disposed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when this keypair does not contain a private key.</p>
+</dd>
+  </dl>
 
 
 
@@ -1084,7 +1238,8 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The message to sign.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1101,6 +1256,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this keypair has been disposed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when this keypair does not contain a private key.</p>
+</dd>
+  </dl>
 
 
 
@@ -1122,7 +1286,8 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>signerPayload</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The payload to sign.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1139,6 +1304,15 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this keypair has been disposed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when this keypair does not contain a private key.</p>
+</dd>
+  </dl>
 
 
 

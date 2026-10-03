@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AccountResponse ">
       
-      
+      <meta name="description" content="Represents an account on the Stellar network. Contains account balances, signers, thresholds, and other account state.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class AccountResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an account on the Stellar network.
+Contains account balances, signers, thresholds, and other account state.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AccountResponse : Response, ITransactionBuilderAccount</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AccountResponse : Response, ITransactionBuilderAccount, IPagingToken</code></pre>
   </div>
 
 
@@ -116,6 +118,7 @@ Class AccountResponse
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="StellarDotnetSdk.Accounts.ITransactionBuilderAccount.html">ITransactionBuilderAccount</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.IPagingToken.html">IPagingToken</a></div>
     </dd>
   </dl>
 
@@ -123,15 +126,6 @@ Class AccountResponse
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
     <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
@@ -146,9 +140,6 @@ Class AccountResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -174,12 +165,13 @@ Class AccountResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The public key of this account (G...).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_id&quot;)]
-public string AccountId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_id&quot;)]
+public required string AccountId { get; init; }</code></pre>
   </div>
 
 
@@ -206,12 +198,13 @@ public string AccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The balances held by this account, one for each trusted asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;balances&quot;)]
-public Balance[] Balances { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;balances&quot;)]
+public required Balance[] Balances { get; init; }</code></pre>
   </div>
 
 
@@ -238,12 +231,14 @@ public Balance[] Balances { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Key-value data entries attached to this account.
+Values are base64-encoded.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Data&quot;)]
-public Dictionary&lt;string, string&gt; Data { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;data&quot;)]
+public required Dictionary&lt;string, string&gt; Data { get; init; }</code></pre>
   </div>
 
 
@@ -270,12 +265,13 @@ public Dictionary&lt;string, string&gt; Data { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The authorization flags set on this account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;flags&quot;)]
-public Flags Flags { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;flags&quot;)]
+public required Flags Flags { get; init; }</code></pre>
   </div>
 
 
@@ -302,12 +298,46 @@ public Flags Flags { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The domain that hosts this account's stellar.toml file.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;home_domain&quot;)]
-public string HomeDomain { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;home_domain&quot;)]
+public string? HomeDomain { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_AccountResponse_Id_" data-uid="StellarDotnetSdk.Responses.AccountResponse.Id*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_Id" data-uid="StellarDotnetSdk.Responses.AccountResponse.Id">
+  Id
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A unique identifier for this account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required string Id { get; init; }</code></pre>
   </div>
 
 
@@ -334,7 +364,7 @@ public string HomeDomain { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns sequence number incremented by one, but does not increment internal counter.</p>
+  <div class="markdown level1 summary"><p>The next sequence number to use for a transaction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -366,12 +396,14 @@ public string HomeDomain { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID where inflation payouts are sent.
+Note: Inflation is no longer active on the network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;inflation_destination&quot;)]
-public string InflationDestination { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;inflation_destination&quot;)]
+public string? InflationDestination { get; init; }</code></pre>
   </div>
 
 
@@ -398,7 +430,8 @@ public string InflationDestination { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The KeyPair for this account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -422,19 +455,20 @@ public string InflationDestination { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_AccountResponse_Links_" data-uid="StellarDotnetSdk.Responses.AccountResponse.Links*"></a>
+  <a id="StellarDotnetSdk_Responses_AccountResponse_LastModifiedLedger_" data-uid="StellarDotnetSdk.Responses.AccountResponse.LastModifiedLedger*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_AccountResponse_Links" data-uid="StellarDotnetSdk.Responses.AccountResponse.Links">
-  Links
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_LastModifiedLedger" data-uid="StellarDotnetSdk.Responses.AccountResponse.LastModifiedLedger">
+  LastModifiedLedger
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the last ledger in which this account was modified.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public AccountResponse.AccountResponseLinks Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_modified_ledger&quot;)]
+public required long LastModifiedLedger { get; init; }</code></pre>
   </div>
 
 
@@ -443,7 +477,73 @@ public AccountResponse.AccountResponseLinks Links { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponse.html">AccountResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.AccountResponse.AccountResponseLinks.html">AccountResponseLinks</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_AccountResponse_LastModifiedTime_" data-uid="StellarDotnetSdk.Responses.AccountResponse.LastModifiedTime*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_LastModifiedTime" data-uid="StellarDotnetSdk.Responses.AccountResponse.LastModifiedTime">
+  LastModifiedTime
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The time this account was last modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_modified_time&quot;)]
+public required DateTimeOffset LastModifiedTime { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_AccountResponse_Links_" data-uid="StellarDotnetSdk.Responses.AccountResponse.Links*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_Links" data-uid="StellarDotnetSdk.Responses.AccountResponse.Links">
+  Links
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Links to related resources for this account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required AccountResponseLinks Links { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponseLinks.html">AccountResponseLinks</a></dt>
     <dd></dd>
   </dl>
 
@@ -461,7 +561,8 @@ public AccountResponse.AccountResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account identifier for transaction building.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -485,6 +586,106 @@ public AccountResponse.AccountResponseLinks Links { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_AccountResponse_NumberSponsored_" data-uid="StellarDotnetSdk.Responses.AccountResponse.NumberSponsored*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_NumberSponsored" data-uid="StellarDotnetSdk.Responses.AccountResponse.NumberSponsored">
+  NumberSponsored
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The number of reserves sponsored for this account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;num_sponsored&quot;)]
+public required int NumberSponsored { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_AccountResponse_NumberSponsoring_" data-uid="StellarDotnetSdk.Responses.AccountResponse.NumberSponsoring*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_NumberSponsoring" data-uid="StellarDotnetSdk.Responses.AccountResponse.NumberSponsoring">
+  NumberSponsoring
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The number of reserves sponsored by this account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;num_sponsoring&quot;)]
+public required int NumberSponsoring { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_AccountResponse_PagingToken_" data-uid="StellarDotnetSdk.Responses.AccountResponse.PagingToken*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_AccountResponse_PagingToken" data-uid="StellarDotnetSdk.Responses.AccountResponse.PagingToken">
+  PagingToken
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.
+This token can be used to retrieve the next or previous page of results.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_AccountResponse_SequenceNumber_" data-uid="StellarDotnetSdk.Responses.AccountResponse.SequenceNumber*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_AccountResponse_SequenceNumber" data-uid="StellarDotnetSdk.Responses.AccountResponse.SequenceNumber">
@@ -492,12 +693,14 @@ public AccountResponse.AccountResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The current sequence number for this account.
+Each transaction must use a sequence number one higher than the last.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sequence&quot;)]
-public long SequenceNumber { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sequence&quot;)]
+public required long SequenceNumber { get; set; }</code></pre>
   </div>
 
 
@@ -524,11 +727,12 @@ public long SequenceNumber { get; set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unsigned 32-bit ledger number of the sequence number's age.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sequence_ledger&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sequence_ledger&quot;)]
 public long? SequenceUpdatedAtLedger { get; init; }</code></pre>
   </div>
 
@@ -556,11 +760,12 @@ public long? SequenceUpdatedAtLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unsigned 64-bit UNIX timestamp of the sequence number's age.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sequence_time&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sequence_time&quot;)]
 public long? SequenceUpdatedAtTime { get; init; }</code></pre>
   </div>
 
@@ -588,12 +793,13 @@ public long? SequenceUpdatedAtTime { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The signers authorized to sign transactions for this account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signers&quot;)]
-public AccountResponse.Signer[] Signers { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signers&quot;)]
+public required AccountResponse.Signer[] Signers { get; init; }</code></pre>
   </div>
 
 
@@ -620,12 +826,14 @@ public AccountResponse.Signer[] Signers { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of subentries (trustlines, offers, signers, data entries) on this account.
+Each subentry increases the account's minimum balance requirement.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;subentry_count&quot;)]
-public int SubentryCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;subentry_count&quot;)]
+public required int SubentryCount { get; init; }</code></pre>
   </div>
 
 
@@ -652,12 +860,13 @@ public int SubentryCount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The thresholds required for different operation types.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;thresholds&quot;)]
-public Thresholds Thresholds { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;thresholds&quot;)]
+public required Thresholds Thresholds { get; init; }</code></pre>
   </div>
 
 
@@ -688,7 +897,7 @@ public Thresholds Thresholds { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Increments sequence number in this object by one.</p>
+  <div class="markdown level1 summary"><p>Increments the sequence number. Called after building a transaction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

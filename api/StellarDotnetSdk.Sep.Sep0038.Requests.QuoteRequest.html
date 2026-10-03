@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class QuoteRequest </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class QuoteRequest ">
+      
+      <meta name="description" content="Body of SEP-38 POST /quote, which requests a firm quote. Requires a SEP-10 or SEP-45 JWT.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest" class="text-break">
+Class QuoteRequest  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.html">Sep0038</a>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.html">Requests</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Body of SEP-38 <code>POST /quote</code>, which requests a firm quote. Requires a SEP-10 or SEP-45 JWT.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record QuoteRequest : IEquatable&lt;QuoteRequest&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">QuoteRequest</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html">QuoteRequest</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    Provide exactly one of <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAmount">SellAmount</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAmount">BuyAmount</a>, and at most one of
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellDeliveryMethod">SellDeliveryMethod</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyDeliveryMethod">BuyDeliveryMethod</a>. Both rules are checked before the
+    request is sent.
+</p>
+<p>
+    Unless <code>GET /info</code> lists no delivery methods (or only one) for the off-chain asset, the anchor also
+    requires the delivery method for that asset. That depends on the anchor's <code>GET /info</code> response, so it
+    is left to the anchor to enforce.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAmount_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyAmount*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAmount" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyAmount">
+  BuyAmount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The amount of <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAsset">BuyAsset</a> to receive. Mutually exclusive with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAmount">SellAmount</a>. Must
+be greater than zero.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public decimal? BuyAmount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAsset_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyAsset*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAsset" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyAsset">
+  BuyAsset
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The asset the client would like to receive for <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAsset">SellAsset</a>, in the SEP-38 Asset
+Identification Format.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string BuyAsset { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyDeliveryMethod_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyDeliveryMethod*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyDeliveryMethod" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.BuyDeliveryMethod">
+  BuyDeliveryMethod
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>One of the <code>buy_delivery_methods</code> names from <code>GET /info</code>, when the user will receive an
+off-chain asset from the anchor. Mutually exclusive with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellDeliveryMethod">SellDeliveryMethod</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? BuyDeliveryMethod { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_Context_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.Context*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_Context" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.Context">
+  Context
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>What the quote will be used for: SEP-6, SEP-24 or SEP-31.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required QuoteContext Context { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteContext.html">QuoteContext</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_CountryCode_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.CountryCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_CountryCode" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.CountryCode">
+  CountryCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Optional ISO 3166-2 or ISO 3166-1 alpha-2 code of the user's current address. Should be provided when
+<code>GET /info</code> lists more than one country code for the asset.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CountryCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_ExpireAfter_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.ExpireAfter*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_ExpireAfter" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.ExpireAfter">
+  ExpireAfter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Optional: the desired expiry of the quote. The anchor may choose a later <code>expires_at</code>, and should
+answer <code>400 Bad Request</code> if it cannot offer an expiry on or after this time. Sent as UTC, rounded up
+to the whole second so that an anchor storing whole seconds can honor it exactly; a quote expiring before
+the sent time is rejected.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset? ExpireAfter { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_Jwt_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.Jwt*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_Jwt" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.Jwt">
+  Jwt
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The SEP-10 or SEP-45 JWT authenticating the request, for example from
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0010.ClientWebAuth.html#StellarDotnetSdk_Sep_Sep0010_ClientWebAuth_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_Nullable_System_UInt64__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0010_ClientDomainSigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, ulong?, string?, string?, KeyPair?, ClientDomainSigningDelegate?)</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string Jwt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAmount_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellAmount*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAmount" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellAmount">
+  SellAmount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The amount of <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAsset">SellAsset</a> to exchange. Mutually exclusive with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyAmount">BuyAmount</a>. Must
+be greater than zero.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public decimal? SellAmount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAsset_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellAsset*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellAsset" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellAsset">
+  SellAsset
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The asset the client would like to sell, in the SEP-38 Asset Identification Format (see
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.AssetIdentifier.html">AssetIdentifier</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string SellAsset { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellDeliveryMethod_" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellDeliveryMethod*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_SellDeliveryMethod" data-uid="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.SellDeliveryMethod">
+  SellDeliveryMethod
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>One of the <code>sell_delivery_methods</code> names from <code>GET /info</code>, when the user will deliver an
+off-chain asset to the anchor. Mutually exclusive with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_BuyDeliveryMethod">BuyDeliveryMethod</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? SellDeliveryMethod { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

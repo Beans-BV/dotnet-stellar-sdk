@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OrderBookResponse ">
       
-      
+      <meta name="description" content="Represents an order book for a trading pair on the Stellar decentralized exchange. Contains both buy orders (bids) and sell orders (asks).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class OrderBookResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an order book for a trading pair on the Stellar decentralized exchange.
+Contains both buy orders (bids) and sell orders (asks).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class OrderBookResponse</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class OrderBookResponse : Response</code></pre>
   </div>
 
 
@@ -107,6 +109,7 @@ Class OrderBookResponse
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Response.html">Response</a></div>
       <div><span class="xref">OrderBookResponse</span></div>
     </dd>
   </dl>
@@ -116,6 +119,9 @@ Class OrderBookResponse
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
@@ -127,9 +133,6 @@ Class OrderBookResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -155,12 +158,13 @@ Class OrderBookResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The prices and amounts for the sellside of the asset pair.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asks&quot;)]
-public OrderBookResponse.Row[] Asks { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asks&quot;)]
+public required OrderBookResponse.Row[] Asks { get; init; }</code></pre>
   </div>
 
 
@@ -187,12 +191,13 @@ public OrderBookResponse.Row[] Asks { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The prices and amounts for the buyside of the asset pair.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bids&quot;)]
-public OrderBookResponse.Row[] Bids { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bids&quot;)]
+public required OrderBookResponse.Row[] Bids { get; init; }</code></pre>
   </div>
 
 
@@ -219,13 +224,14 @@ public OrderBookResponse.Row[] Bids { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The counter asset for this order book (the asset being bought in asks, sold in bids).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;counter&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;counter&quot;)]
 [JsonConverter(typeof(AssetJsonConverter))]
-public Asset Counter { get; init; }</code></pre>
+public required Asset Counter { get; init; }</code></pre>
   </div>
 
 
@@ -252,13 +258,14 @@ public Asset Counter { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base asset for this order book (the asset being sold in asks, bought in bids).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base&quot;)]
 [JsonConverter(typeof(AssetJsonConverter))]
-public Asset OrderBookBase { get; init; }</code></pre>
+public required Asset OrderBookBase { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ContractCreditedEffectResponse ">
       
-      
+      <meta name="description" content="Represents the contract_credited effect response. This effect occurs when a smart contract receives some currency from SAC events involving transfers, mints, and burns.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,14 @@ Class ContractCreditedEffectResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the contract_credited effect response.
+This effect occurs when a smart contract receives some
+currency from SAC events involving transfers, mints, and burns.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ContractCreditedEffectResponse : EffectResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class ContractCreditedEffectResponse : EffectResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -140,9 +143,6 @@ Class ContractCreditedEffectResponse
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_Type">EffectResponse.Type</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_TypeId">EffectResponse.TypeId</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_Links">EffectResponse.Links</a>
     </div>
     <div>
@@ -150,15 +150,6 @@ Class ContractCreditedEffectResponse
     </div>
     <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_PagingToken">EffectResponse.PagingToken</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
     </div>
     <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
@@ -174,9 +165,6 @@ Class ContractCreditedEffectResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -202,12 +190,13 @@ Class ContractCreditedEffectResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount credited to the contract.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -227,6 +216,39 @@ public string Amount { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_Asset_" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.Asset*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_Asset" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.Asset">
+  Asset
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The credited asset.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset Asset { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_AssetCode_" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.AssetCode*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_AssetCode" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.AssetCode">
@@ -234,12 +256,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The code of the credited asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public string? AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -266,12 +289,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The issuer of the credited asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public string? AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -298,12 +322,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of asset credited: &quot;native&quot;, &quot;credit_alphanum4&quot;, or &quot;credit_alphanum12&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -330,12 +355,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The contract address that was credited.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;contract&quot;)]
-public string Contract { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;contract&quot;)]
+public required string Contract { get; init; }</code></pre>
   </div>
 
 
@@ -345,6 +371,38 @@ public string Contract { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_TypeId_" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.TypeId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_TypeId" data-uid="StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.TypeId">
+  TypeId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The numeric type identifier of the effect.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int TypeId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
   </dl>
 

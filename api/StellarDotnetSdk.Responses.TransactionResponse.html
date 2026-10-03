@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TransactionResponse ">
       
-      
+      <meta name="description" content="Represents a transaction on the Stellar network. Contains transaction metadata, results, and links to related resources.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class TransactionResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a transaction on the Stellar network.
+Contains transaction metadata, results, and links to related resources.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TransactionResponse : Response, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TransactionResponse : Response, IPagingToken</code></pre>
   </div>
 
 
@@ -124,15 +126,6 @@ Class TransactionResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -146,9 +139,6 @@ Class TransactionResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -174,11 +164,12 @@ Class TransactionResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the source account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_muxed&quot;)]
 public string? AccountMuxed { get; init; }</code></pre>
   </div>
 
@@ -206,11 +197,12 @@ public string? AccountMuxed { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the source account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed_id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_muxed_id&quot;)]
 public ulong? AccountMuxedId { get; init; }</code></pre>
   </div>
 
@@ -238,12 +230,13 @@ public ulong? AccountMuxedId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>An ISO 8601 formatted string of when the transaction was created.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;created_at&quot;)]
-public DateTime CreatedAt { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_at&quot;)]
+public required DateTimeOffset CreatedAt { get; init; }</code></pre>
   </div>
 
 
@@ -252,7 +245,7 @@ public DateTime CreatedAt { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -270,12 +263,13 @@ public DateTime CreatedAt { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The XDR-encoded transaction envelope.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;envelope_xdr&quot;)]
-public string EnvelopeXdr { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;envelope_xdr&quot;)]
+public required string EnvelopeXdr { get; init; }</code></pre>
   </div>
 
 
@@ -302,12 +296,14 @@ public string EnvelopeXdr { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that paid the transaction fee.
+For fee bump transactions, this differs from the source account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account&quot;)]
-public string FeeAccount { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_account&quot;)]
+public required string FeeAccount { get; init; }</code></pre>
   </div>
 
 
@@ -334,12 +330,13 @@ public string FeeAccount { get; set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the fee account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account_muxed&quot;)]
-public string FeeAccountMuxed { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_account_muxed&quot;)]
+public string? FeeAccountMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -366,12 +363,13 @@ public string FeeAccountMuxed { get; set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the fee account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account_muxed_id&quot;)]
-public ulong? FeeAccountMuxedId { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_account_muxed_id&quot;)]
+public ulong? FeeAccountMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -398,12 +396,13 @@ public ulong? FeeAccountMuxedId { get; set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The fee bump transaction details, if this transaction was fee bumped.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_bump_transaction&quot;)]
-public TransactionResponse.FeeBumpTransaction FeeBumpTx { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_bump_transaction&quot;)]
+public TransactionResponse.FeeBumpTransaction? FeeBumpTx { get; init; }</code></pre>
   </div>
 
 
@@ -430,12 +429,13 @@ public TransactionResponse.FeeBumpTransaction FeeBumpTx { get; set; }</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The actual fee paid for the transaction in stroops.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_charged&quot;)]
-public long FeeCharged { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_charged&quot;)]
+public required long FeeCharged { get; init; }</code></pre>
   </div>
 
 
@@ -455,6 +455,40 @@ public long FeeCharged { get; set; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeMetaXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeMetaXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeMetaXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeMetaXdr">
+  FeeMetaXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A base64 encoded string of the raw LedgerEntryChanges XDR struct
+produced by taking fees for this transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_meta_xdr&quot;)]
+public required string FeeMetaXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_TransactionResponse_Hash_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Hash*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Hash" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Hash">
@@ -462,12 +496,46 @@ public long FeeCharged { get; set; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hash of the transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
-public string Hash { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hash&quot;)]
+public required string Hash { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Id_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Id*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Id" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Id">
+  Id
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A unique identifier for this transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required string Id { get; init; }</code></pre>
   </div>
 
 
@@ -494,12 +562,13 @@ public string Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The inner transaction details, if this is a fee bump transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;inner_transaction&quot;)]
-public TransactionResponse.InnerTransaction InnerTx { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;inner_transaction&quot;)]
+public TransactionResponse.InnerTransaction? InnerTx { get; init; }</code></pre>
   </div>
 
 
@@ -526,12 +595,13 @@ public TransactionResponse.InnerTransaction InnerTx { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The ledger sequence number in which this transaction was included.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;ledger&quot;)]
-public uint Ledger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ledger&quot;)]
+public required long Ledger { get; init; }</code></pre>
   </div>
 
 
@@ -540,7 +610,7 @@ public uint Ledger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -558,12 +628,13 @@ public uint Ledger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Links to related resources for this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public TransactionResponseLinks Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required TransactionResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -590,12 +661,13 @@ public TransactionResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum fee the source account was willing to pay in stroops.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max_fee&quot;)]
-public long MaxFee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_fee&quot;)]
+public required long MaxFee { get; init; }</code></pre>
   </div>
 
 
@@ -622,11 +694,13 @@ public long MaxFee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The parsed memo object for this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Memo Memo { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Memo Memo { get; init; }</code></pre>
   </div>
 
 
@@ -653,11 +727,13 @@ public long MaxFee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The raw bytes of the memo, base64-encoded.
+Present for text memos to preserve exact byte content.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo_bytes&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;memo_bytes&quot;)]
 public string? MemoBytes { get; init; }</code></pre>
   </div>
 
@@ -685,12 +761,13 @@ public string? MemoBytes { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of memo attached to this transaction: &quot;none&quot;, &quot;text&quot;, &quot;id&quot;, &quot;hash&quot;, or &quot;return&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo_type&quot;)]
-public string MemoType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;memo_type&quot;)]
+public required string MemoType { get; init; }</code></pre>
   </div>
 
 
@@ -717,11 +794,15 @@ public string MemoType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The memo value attached to this transaction.
+For text memos, this is the text content.
+For id memos, this is the numeric ID as a string.
+For hash/return memos, this is the base64-encoded hash.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;memo&quot;)]
 public string? MemoValue { get; init; }</code></pre>
   </div>
 
@@ -749,12 +830,13 @@ public string? MemoValue { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of operations in this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;operation_count&quot;)]
-public int OperationCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;operation_count&quot;)]
+public required int OperationCount { get; init; }</code></pre>
   </div>
 
 
@@ -781,12 +863,13 @@ public int OperationCount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 
@@ -806,6 +889,39 @@ public string PagingToken { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Preconditions_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Preconditions*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Preconditions" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Preconditions">
+  Preconditions
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A set of transaction preconditions affecting the validity of this transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;preconditions&quot;)]
+public TransactionResponsePreconditions? Preconditions { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponsePreconditions.html">TransactionResponsePreconditions</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_TransactionResponse_Result_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Result*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Result" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Result">
@@ -813,7 +929,8 @@ public string PagingToken { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The parsed transaction result.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -837,38 +954,6 @@ public string PagingToken { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_TransactionResponse_ResultMetaXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultMetaXdr*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_ResultMetaXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultMetaXdr">
-  ResultMetaXdr
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;result_meta_xdr&quot;)]
-public string ResultMetaXdr { get; init; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="StellarDotnetSdk_Responses_TransactionResponse_ResultXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultXdr*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_TransactionResponse_ResultXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultXdr">
@@ -876,12 +961,13 @@ public string ResultMetaXdr { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The XDR-encoded transaction result.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;result_xdr&quot;)]
-public string ResultXdr { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;result_xdr&quot;)]
+public required string ResultXdr { get; init; }</code></pre>
   </div>
 
 
@@ -908,12 +994,13 @@ public string ResultXdr { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base64-encoded signatures applied to this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signatures&quot;)]
-public List&lt;string&gt; Signatures { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signatures&quot;)]
+public required List&lt;string&gt; Signatures { get; init; }</code></pre>
   </div>
 
 
@@ -940,12 +1027,13 @@ public List&lt;string&gt; Signatures { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that originated this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account&quot;)]
-public string SourceAccount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_account&quot;)]
+public required string SourceAccount { get; init; }</code></pre>
   </div>
 
 
@@ -972,12 +1060,13 @@ public string SourceAccount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the source account when the transaction was submitted.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_sequence&quot;)]
-public long SourceAccountSequence { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_account_sequence&quot;)]
+public required long SourceAccountSequence { get; init; }</code></pre>
   </div>
 
 
@@ -1004,12 +1093,13 @@ public long SourceAccountSequence { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Whether the transaction was successful.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;successful&quot;, DefaultValueHandling = DefaultValueHandling.Populate)]
-public bool Successful { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;successful&quot;)]
+public required bool Successful { get; init; }</code></pre>
   </div>
 
 

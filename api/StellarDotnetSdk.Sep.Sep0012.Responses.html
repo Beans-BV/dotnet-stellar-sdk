@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0012.Responses </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0012.Responses ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.Responses">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_Responses" data-uid="StellarDotnetSdk.Sep.Sep0012.Responses" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0012.Responses</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.ChoicesJsonConverter.html">ChoicesJsonConverter</a></dt>
+      <dd><p>Reads a field's <code>choices</code> array. SEP-0012 types it only as &quot;an array of valid values&quot;, and a field of type
+<code>number</code> may list numbers, so a number element is kept as its JSON text (<code>[1, 2.5]</code> reads as
+<code>&quot;1&quot;</code>, <code>&quot;2.5&quot;</code>). A <code>null</code>, boolean, object or array element fails the parse.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerFieldsJsonConverter.html">CustomerFieldsJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> entry in the <code>fields</code> object of a customer response.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerFileResponse.html">CustomerFileResponse</a></dt>
+      <dd><p>Metadata of a file uploaded with <code>POST /customer/files</code>. Returned by that endpoint and, as list items, by
+<code>GET /customer/files</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerFilesJsonConverter.html">CustomerFilesJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in the <code>files</code> array of <code>GET /customer/files</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerProvidedFieldsJsonConverter.html">CustomerProvidedFieldsJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> entry in the <code>provided_fields</code> object of a customer response.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerStatusJsonConverter.html">CustomerStatusJsonConverter</a></dt>
+      <dd><p>Wire-literal converter for <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerStatus.html">CustomerStatus</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.FieldTypeJsonConverter.html">FieldTypeJsonConverter</a></dt>
+      <dd><p>Wire-literal converter for <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.FieldType.html">FieldType</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerFilesResponse.html">GetCustomerFilesResponse</a></dt>
+      <dd><p>Response of <code>GET /customer/files</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoField.html">GetCustomerInfoField</a></dt>
+      <dd><p>A piece of information the anchor has not yet received for a customer, as listed under <code>fields</code> in the
+<code>GET /customer</code> response. The dictionary key it is stored under is the field name, normally a SEP-0009
+field such as <code>first_name</code> or <code>photo_id_front</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoProvidedField.html">GetCustomerInfoProvidedField</a></dt>
+      <dd><p>A piece of information the anchor has already received for a customer, as listed under
+<code>provided_fields</code> in the <code>GET /customer</code> response. Carries the same description as
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoField.html">GetCustomerInfoField</a> plus the validation state of the submitted value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoResponse.html">GetCustomerInfoResponse</a></dt>
+      <dd><p>Status of a customer's KYC process and the fields the anchor still needs or has received. Returned by
+<code>GET /customer</code> and by the deprecated <code>PUT /customer/verification</code>, and posted by the anchor to the
+URL registered with <code>PUT /customer/callback</code> (parse that payload with <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoResponse.html#StellarDotnetSdk_Sep_Sep0012_Responses_GetCustomerInfoResponse_FromJson_System_String_">FromJson(string)</a>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.OptionalFlagJsonConverter.html">OptionalFlagJsonConverter</a></dt>
+      <dd><p>Reads a field's <code>optional</code> flag. SEP-0012 defines an absent flag as <code>false</code>, and an explicit
+<code>null</code> reads the same way, since anchors whose serializers write out null properties send it for &quot;not
+set&quot;. Any other non-boolean value fails the parse.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatusJsonConverter.html">ProvidedFieldStatusJsonConverter</a></dt>
+      <dd><p>Wire-literal converter for <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatus.html">ProvidedFieldStatus</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.PutCustomerInfoResponse.html">PutCustomerInfoResponse</a></dt>
+      <dd><p>Response of <code>PUT /customer</code>: the identifier of the created or updated customer.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.Sep12EnumJsonConverter-1.html">Sep12EnumJsonConverter&lt;TEnum&gt;</a></dt>
+      <dd><p>Maps a SEP-0012 enum to and from the exact set of wire literals the specification defines.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerStatus.html">CustomerStatus</a></dt>
+      <dd><p>Status of a customer's KYC process, as returned in the <code>status</code> field of <code>GET /customer</code>, of
+<code>PUT /customer/verification</code> and of the callback payload. Wire values are the exact literals SEP-0012
+defines; any other value is rejected when the response is parsed.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.FieldType.html">FieldType</a></dt>
+      <dd><p>Data type of a KYC field value, as returned in the <code>type</code> property of
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoField.html">GetCustomerInfoField</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoProvidedField.html">GetCustomerInfoProvidedField</a>. Wire values are the exact
+lowercase literals SEP-0012 defines; any other value is rejected when the response is parsed.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatus.html">ProvidedFieldStatus</a></dt>
+      <dd><p>Status of a single field the anchor has already received, as returned in
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoProvidedField.html#StellarDotnetSdk_Sep_Sep0012_Responses_GetCustomerInfoProvidedField_Status">Status</a>. Wire values are the exact literals SEP-0012 defines; any
+other value is rejected when the response is parsed.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

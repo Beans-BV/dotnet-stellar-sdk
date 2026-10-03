@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Flags ">
       
-      <meta name="description" content="Represents account flags.">
+      <meta name="description" content="Represents account authorization flags that control how an issuing account manages trust and authorization for its issued assets.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class Flags
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents account flags.</p>
+  <div class="markdown summary"><p>Represents account authorization flags that control how an issuing account
+manages trust and authorization for its issued assets.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Flags</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class Flags</code></pre>
   </div>
 
 
@@ -130,9 +131,6 @@ Class Flags
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -156,13 +154,15 @@ Class Flags
   
   </h3>
 
-  <div class="markdown level1 summary"><p>This account can unilaterally take away any portion of its issued asset(s) from any asset holders.</p>
+  <div class="markdown level1 summary"><p>When true, the issuer can claw back (take away) any portion of their issued asset(s)
+from any asset holder. This allows issuers to recover assets in case of theft,
+regulatory requirements, or other exceptional circumstances.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;auth_clawback_enabled&quot;)]
-public bool AuthClawback { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;auth_clawback_enabled&quot;)]
+public required bool AuthClawback { get; init; }</code></pre>
   </div>
 
 
@@ -189,13 +189,15 @@ public bool AuthClawback { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>This account cannot change any of the authorization flags.</p>
+  <div class="markdown level1 summary"><p>When true, the authorization flags (AuthRequired and AuthRevocable) cannot be changed.
+This is used to signal to potential holders that the flags will never change,
+providing certainty about the asset's authorization behavior.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;auth_immutable&quot;)]
-public bool AuthImmutable { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;auth_immutable&quot;)]
+public required bool AuthImmutable { get; init; }</code></pre>
   </div>
 
 
@@ -222,13 +224,15 @@ public bool AuthImmutable { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>This account must approve anyone who wants to hold its asset.</p>
+  <div class="markdown level1 summary"><p>When true, an issuer must approve holders before they can hold the issuer's asset.
+This allows issuers to verify a holder's identity or other requirements
+before the holder can hold the asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;auth_required&quot;)]
-public bool AuthRequired { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;auth_required&quot;)]
+public required bool AuthRequired { get; init; }</code></pre>
   </div>
 
 
@@ -255,13 +259,15 @@ public bool AuthRequired { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>This account can set the authorize flag of an existing trustline to freeze the assets held by an asset holder.</p>
+  <div class="markdown level1 summary"><p>When true, an issuer can set the authorize flag of an existing trustline
+to freeze or unfreeze the assets held by an asset holder.
+This allows issuers to freeze assets in case of theft or regulatory requirements.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;auth_revocable&quot;)]
-public bool AuthRevocable { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;auth_revocable&quot;)]
+public required bool AuthRevocable { get; init; }</code></pre>
   </div>
 
 

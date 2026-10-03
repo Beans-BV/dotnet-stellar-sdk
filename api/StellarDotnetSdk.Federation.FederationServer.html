@@ -167,7 +167,8 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Federation.FederationServer.html">FederationServer</a> with the given server URI string and domain.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -177,9 +178,11 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The URI string of the federation server (must be HTTPS).</p>
+</dd>
     <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The internet domain associated with this federation server.</p>
+</dd>
   </dl>
 
 
@@ -200,7 +203,9 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Federation.FederationServer.html">FederationServer</a> with the given server URI and domain.
+The URI must use HTTPS.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -210,9 +215,11 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The URI of the federation server (must be HTTPS).</p>
+</dd>
     <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The internet domain associated with this federation server.</p>
+</dd>
   </dl>
 
 
@@ -237,7 +244,8 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the internet domain associated with this federation server.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -268,7 +276,8 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> used for making requests to the federation server.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -299,7 +308,8 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the URI of the federation server.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -334,7 +344,7 @@ See Federation docs: <a href="https://www.stellar.org/developers/learn/concepts/
   
   </h3>
 
-  <div class="markdown level1 summary"><p>reates a <a class="xref" href="StellarDotnetSdk.Federation.FederationServer.html">FederationServer</a> instance for a given domain.
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Federation.FederationServer.html">FederationServer</a> instance for a given domain.
 It tries to find a federation server URL in stellar.toml file.
 See: <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.html">https://www.stellar.org/developers/learn/concepts/stellar-toml.html</a></p>
 </div>
@@ -375,7 +385,8 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Releases the resources used by the underlying <a class="xref" href="StellarDotnetSdk.Federation.FederationServer.html#StellarDotnetSdk_Federation_FederationServer_HttpClient">HttpClient</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -401,7 +412,8 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Resolves a Stellar federation address (e.g., <code>bob*stellar.org</code>) to a <a class="xref" href="StellarDotnetSdk.Federation.FederationResponse.html">FederationResponse</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -411,13 +423,15 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.htm
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>address</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Stellar federation address to resolve.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Federation.FederationResponse.html">FederationResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Federation.FederationResponse.html">FederationResponse</a> containing the resolved account information.</p>
+</dd>
   </dl>
 
 
@@ -427,6 +441,15 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.htm
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Federation.ConnectionErrorException.html">ConnectionErrorException</a></dt>
+    <dd><p>Thrown when the request fails, and when the response body is empty or holds the JSON literal
+<code>null</code> and so deserializes to no object. This method wraps every failure other than an
+HTTP error status, so the underlying <a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a> surfaces here rather
+than on its own; its text is carried in <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Message</a>.</p>
+</dd>
+  </dl>
 
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ChangeTrustOperationResponse ">
       
-      <meta name="description" content="Represents ChangeTrust operation response.">
+      <meta name="description" content="Represents a change_trust operation response. Creates, updates, or deletes a trustline between accounts.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class ChangeTrustOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents ChangeTrust operation response.</p>
+  <div class="markdown summary"><p>Represents a change_trust operation response.
+Creates, updates, or deletes a trustline between accounts.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -209,11 +210,12 @@ Class ChangeTrustOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset for which the trustline is being modified.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AssetTypeCreditAlphaNum Asset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Asset? Asset { get; }</code></pre>
   </div>
 
 
@@ -222,7 +224,7 @@ Class ChangeTrustOperationResponse
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum.html">AssetTypeCreditAlphaNum</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
     <dd></dd>
   </dl>
 
@@ -240,12 +242,13 @@ Class ChangeTrustOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset code. Only present for credit assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public string? AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -272,12 +275,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that issued the asset. Only present for credit assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public string? AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -304,12 +308,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of asset (e.g., &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;, &quot;liquidity_pool_shares&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -336,12 +341,46 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The limit for the trustline. A limit of &quot;0&quot; deletes the trustline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;limit&quot;)]
-public string Limit { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;limit&quot;)]
+public required string Limit { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_LiquidityPoolId_" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.LiquidityPoolId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_LiquidityPoolId" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.LiquidityPoolId">
+  LiquidityPoolId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The unique identifier of the liquidity pool. Only present for liquidity_pool_shares asset type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;liquidity_pool_id&quot;)]
+public string? LiquidityPoolId { get; init; }</code></pre>
   </div>
 
 
@@ -368,12 +407,13 @@ public string Limit { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account being trusted (the asset issuer). Only present for credit assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustee&quot;)]
-public string Trustee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustee&quot;)]
+public string? Trustee { get; init; }</code></pre>
   </div>
 
 
@@ -400,12 +440,13 @@ public string Trustee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account creating or modifying the trustline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustor&quot;)]
-public string Trustor { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustor&quot;)]
+public required string Trustor { get; init; }</code></pre>
   </div>
 
 
@@ -432,12 +473,13 @@ public string Trustor { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the trustor, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustor_muxed&quot;)]
-public string TrustorMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustor_muxed&quot;)]
+public string? TrustorMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -457,19 +499,20 @@ public string TrustorMuxed { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_TrustorMuxedID_" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.TrustorMuxedID*"></a>
+  <a id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_TrustorMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.TrustorMuxedId*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_TrustorMuxedID" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.TrustorMuxedID">
-  TrustorMuxedID
+  <h3 id="StellarDotnetSdk_Responses_Operations_ChangeTrustOperationResponse_TrustorMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.TrustorMuxedId">
+  TrustorMuxedId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the trustor, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustor_muxed_id&quot;)]
-public ulong? TrustorMuxedID { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustor_muxed_id&quot;)]
+public ulong? TrustorMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -496,7 +539,8 @@ public ulong? TrustorMuxedID { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

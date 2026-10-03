@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolClaimableAssetAmount ">
       
-      
+      <meta name="description" content="Represents an asset amount with an optional claimable balance ID. Used in liquidity pool revocation effects.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class LiquidityPoolClaimableAssetAmount
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an asset amount with an optional claimable balance ID.
+Used in liquidity pool revocation effects.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(LiquidityPoolClaimableAssetAmountJsonConverter))]
-public class LiquidityPoolClaimableAssetAmount</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class LiquidityPoolClaimableAssetAmount</code></pre>
   </div>
 
 
@@ -130,9 +131,6 @@ public class LiquidityPoolClaimableAssetAmount</code></pre>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -156,12 +154,13 @@ public class LiquidityPoolClaimableAssetAmount</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -188,12 +187,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset&quot;)]
-public Asset Asset { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset&quot;)]
+public required Asset Asset { get; init; }</code></pre>
   </div>
 
 
@@ -220,12 +220,13 @@ public Asset Asset { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The claimable balance ID if the revoked amount was placed in a claimable balance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;claimable_balance_id&quot;)]
-public string ClaimableBalanceId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;claimable_balance_id&quot;)]
+public string? ClaimableBalanceId { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class FeeStatsRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests to the Horizon /fee_stats endpoint, which provides information about per-operation fee statistics over the last 5 ledgers.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class FeeStatsRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests to the Horizon <code>/fee_stats</code> endpoint, which provides information about
+per-operation fee statistics over the last 5 ledgers.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -189,7 +191,8 @@ Class FeeStatsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.FeeStatsRequestBuilder.html">FeeStatsRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -199,9 +202,11 @@ Class FeeStatsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -226,7 +231,8 @@ Class FeeStatsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Executes the request to <code>GET /fee_stats</code> and returns the fee statistics response.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -237,7 +243,8 @@ Class FeeStatsRequestBuilder
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.FeeStatsResponse.html">FeeStatsResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.FeeStatsResponse.html">FeeStatsResponse</a> containing fee statistics.</p>
+</dd>
   </dl>
 
 

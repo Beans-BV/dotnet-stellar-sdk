@@ -92,11 +92,13 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractEvent.html">ContractEvent</a></dt>
-      <dd></dd>
+      <dd><p>Represents an event emitted by a Soroban smart contract during execution.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractEventV0.html">ContractEventV0</a></dt>
-      <dd></dd>
+      <dd><p>Represents the version 0 body of a Soroban contract event, containing topics and data.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutable.html">ContractExecutable</a></dt>
@@ -104,16 +106,29 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableExternalRef.html">ContractExecutableExternalRef</a></dt>
+      <dd><p>Represents a <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</a>
+external executable reference (<code>CONTRACT_EXECUTABLE_EXTERNAL_REF</code>). Instead of carrying its own Wasm
+hash, the contract follows the Wasm hash that <a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableExternalRef.html#StellarDotnetSdk_Soroban_ContractExecutableExternalRef_ExecutableOwner">ExecutableOwner</a> stores in a persistent contract
+data entry keyed by <a class="xref" href="StellarDotnetSdk.Soroban.SCExecutableTag.html">SCExecutableTag</a>(<a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableExternalRef.html#StellarDotnetSdk_Soroban_ContractExecutableExternalRef_Tag">Tag</a>), so the owner can upgrade every
+contract that references the tag at once.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableStellarAsset.html">ContractExecutableStellarAsset</a></dt>
-      <dd></dd>
+      <dd><p>Represents a contract executable for a built-in Stellar Asset Contract (SAC).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableWasm.html">ContractExecutableWasm</a></dt>
-      <dd></dd>
+      <dd><p>Represents a contract executable backed by a WebAssembly (Wasm) module, identified by its hash.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.DiagnosticEvent.html">DiagnosticEvent</a></dt>
-      <dd></dd>
+      <dd><p>Represents a diagnostic event emitted during Soroban smart contract execution,
+including whether it occurred within a successful contract call.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ExtensionPoint.html">ExtensionPoint</a></dt>
@@ -122,7 +137,8 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ExtensionPointZero.html">ExtensionPointZero</a></dt>
-      <dd></dd>
+      <dd><p>Represents the default (zero-discriminant) extension point, indicating no additional extensions are present.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.LedgerFootprint.html">LedgerFootprint</a></dt>
@@ -134,119 +150,157 @@ Footprint
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.OperationMetaV2.html">OperationMetaV2</a></dt>
-      <dd></dd>
+      <dd><p>Represents version 2 operation metadata containing ledger entry changes and contract events
+produced by a Soroban operation.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCAuthError.html">SCAuthError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban authentication error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCBool.html">SCBool</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban boolean value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCBudgetError.html">SCBudgetError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban budget error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCBytes.html">SCBytes</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban byte array value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCContextError.html">SCContextError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban context error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCContractError.html">SCContractError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban contract error, containing a contract-defined error code.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCContractInstance.html">SCContractInstance</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban contract instance, containing the executable and optional instance storage.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCCryptoError.html">SCCryptoError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban cryptography error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCDuration.html">SCDuration</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban duration value (a time span as an unsigned 64-bit integer).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCError.html">SCError</a></dt>
-      <dd></dd>
+      <dd><p>Base class for Soroban runtime errors, discriminated by <span class="xref">StellarDotnetSdk.Xdr.SCErrorType</span>.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCEventsError.html">SCEventsError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban events error.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCExecutableTag.html">SCExecutableTag</a></dt>
+      <dd><p>Represents a <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</a>
+executable tag (<code>SCV_EXECUTABLE_TAG</code>): the owner-scoped name of an executable. Used as the key of a
+persistent contract data entry on the owner contract, it names the entry that holds the Wasm hash a
+<a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutableExternalRef.html">ContractExecutableExternalRef</a> currently resolves to.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCInt128.html">SCInt128</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban signed 128-bit integer value, stored as high and low 64-bit parts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCInt256.html">SCInt256</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban signed 256-bit integer value, stored as four 64-bit parts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCInt32.html">SCInt32</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban signed 32-bit integer value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCInt64.html">SCInt64</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban signed 64-bit integer value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCLedgerKeyContractInstance.html">SCLedgerKeyContractInstance</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban ledger key that refers to a contract instance entry.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban map (key-value collection) of <a class="xref" href="StellarDotnetSdk.Soroban.SCMapEntry.html">SCMapEntry</a> elements.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCMapEntry.html">SCMapEntry</a></dt>
-      <dd></dd>
+      <dd><p>Represents a single key-value entry in a Soroban map.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCNonceKey.html">SCNonceKey</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban nonce key used for authorization nonce tracking.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCObjectError.html">SCObjectError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban object error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCStorageError.html">SCStorageError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban storage error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCString.html">SCString</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban string value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCSymbol.html">SCSymbol</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban symbol value, a short identifier string used for function names and map keys.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCTimePoint.html">SCTimePoint</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban time point value (a UNIX timestamp as an unsigned 64-bit integer).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCUint128.html">SCUint128</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban unsigned 128-bit integer value, stored as high and low 64-bit parts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCUint256.html">SCUint256</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban unsigned 256-bit integer value, stored as four 64-bit parts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCUint32.html">SCUint32</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban unsigned 32-bit integer value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCUint64.html">SCUint64</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban unsigned 64-bit integer value.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a></dt>
@@ -256,23 +310,28 @@ Footprint
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCValueError.html">SCValueError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban value error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCVec.html">SCVec</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban vector (ordered collection) of <a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a> elements.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCVoid.html">SCVoid</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban void value, carrying no data.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCWasmVmError.html">SCWasmVmError</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban WebAssembly VM error.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScAccountId.html">ScAccountId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban address wrapping a Stellar account ID (Ed25519 public key).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
@@ -285,38 +344,45 @@ of an event, never an input to a smart contract).</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScClaimableBalanceId.html">ScClaimableBalanceId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban address wrapping a claimable balance ID.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScContractId.html">ScContractId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban address wrapping a smart contract ID.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScLiquidityPoolId.html">ScLiquidityPoolId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban address wrapping a liquidity pool ID.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScMuxedAccountId.html">ScMuxedAccountId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Soroban address wrapping a muxed account ID (M... address).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html">SorobanResourceExtensionV0</a></dt>
-      <dd></dd>
+      <dd><p>Represents the version 0 extension for Soroban resources, containing references to archived Soroban ledger entries.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanResources.html">SorobanResources</a></dt>
-      <dd></dd>
+      <dd><p>Represents the resource limits for a Soroban transaction, including the ledger footprint,
+CPU instructions, and I/O byte limits.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanServer.html">SorobanServer</a></dt>
-      <dd><p>This class helps you to connect to a local or remote Soroban RPC server
-and send requests to the server. It parses the results and provides
-corresponding response objects.</p>
+      <dd><p>Deprecated. Use <a class="xref" href="StellarDotnetSdk.Soroban.StellarRpcServer.html">StellarRpcServer</a> instead.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionData.html">SorobanTransactionData</a></dt>
-      <dd></dd>
+      <dd><p>Represents Soroban-specific transaction data, including resource allocation, resource fees,
+and optional resource extensions. This is attached to transactions that invoke Soroban smart contracts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionMeta.html">SorobanTransactionMeta</a></dt>
@@ -325,7 +391,9 @@ corresponding response objects.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionMetaExtensionV1.html">SorobanTransactionMetaExtensionV1</a></dt>
-      <dd></dd>
+      <dd><p>Represents version 1 extension metadata for a Soroban transaction, containing fee breakdowns
+for non-refundable resources, refundable resources, and rent charges.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionMetaV2.html">SorobanTransactionMetaV2</a></dt>
@@ -333,8 +401,17 @@ corresponding response objects.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Soroban.StellarRpcServer.html">StellarRpcServer</a></dt>
+      <dd><p>This class helps you to connect to a local or remote Stellar RPC server
+and send requests to the server. It parses the results and provides
+corresponding response objects.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionEvent.html">TransactionEvent</a></dt>
-      <dd></dd>
+      <dd><p>Represents an event emitted during a Soroban transaction, including the stage at which the event occurred
+and the underlying contract event data.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMeta.html">TransactionMeta</a></dt>
@@ -344,7 +421,8 @@ corresponding response objects.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMetaV3.html">TransactionMetaV3</a></dt>
       <dd><p>Transaction metadata V3.
-See: <a href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/events#transactionmetav3">TransactionMetaV3</a></p>
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/events#transactionmetav3">TransactionMetaV3</a></p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -357,7 +435,8 @@ Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html">AuthMode</a></dt>
-      <dd></dd>
+      <dd><p>Specifies the authorization mode used when simulating or submitting Soroban transactions.</p>
+</dd>
     </dl>
 
 

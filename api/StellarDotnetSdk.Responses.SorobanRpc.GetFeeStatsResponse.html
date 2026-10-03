@@ -148,45 +148,6 @@ prioritize transactions during network traffic surge.</p>
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetFeeStatsResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetFeeStatsResponse.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetFeeStatsResponse__ctor_StellarDotnetSdk_Responses_SorobanRpc_InclusionFee_StellarDotnetSdk_Responses_SorobanRpc_InclusionFee_System_Int64_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetFeeStatsResponse.#ctor(StellarDotnetSdk.Responses.SorobanRpc.InclusionFee,StellarDotnetSdk.Responses.SorobanRpc.InclusionFee,System.Int64)">
-  GetFeeStatsResponse(InclusionFee?, InclusionFee?, long)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetFeeStatsResponse(InclusionFee? sorobanInclusionFee, InclusionFee? inclusionFee, long latestLedger)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>sorobanInclusionFee</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.InclusionFee.html">InclusionFee</a></dt>
-    <dd></dd>
-    <dt><code>inclusionFee</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.InclusionFee.html">InclusionFee</a></dt>
-    <dd></dd>
-    <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -203,7 +164,7 @@ prioritize transactions during network traffic surge.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InclusionFee? InclusionFee { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public InclusionFee? InclusionFee { get; init; }</code></pre>
   </div>
 
 
@@ -230,12 +191,12 @@ prioritize transactions during network traffic surge.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -267,7 +228,7 @@ prioritize transactions during network traffic surge.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InclusionFee? SorobanInclusionFee { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public InclusionFee? SorobanInclusionFee { get; init; }</code></pre>
   </div>
 
 

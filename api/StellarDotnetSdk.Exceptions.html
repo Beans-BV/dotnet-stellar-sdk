@@ -103,49 +103,85 @@ See SEP0029: <a href="https://github.com/stellar/stellar-protocol/blob/master/ec
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Exceptions.AssetCodeLengthInvalidException.html">AssetCodeLengthInvalidException</a></dt>
+      <dd><p>The exception that is thrown when a Stellar asset code exceeds the allowed length
+(1-4 characters for AlphaNum4 or 5-12 characters for AlphaNum12).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when an HTTP client protocol error occurs while communicating with a Stellar server.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ExternalRefNotFoundException.html">ExternalRefNotFoundException</a></dt>
+      <dd><p>Thrown when the <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</a>
+executable tag entry that an external executable reference points at cannot be used: it does not exist, or it
+has been archived and must be restored before the reference resolves again.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.FormatException.html">FormatException</a></dt>
-      <dd></dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
-      <dd><p>Exception thrown when WebAuthentication verification fails.</p>
+      <dd><p>The exception that is thrown when the format of a Stellar SDK value (such as a key, address, or encoded data) is
+invalid.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.MemoTooLongException.html">MemoTooLongException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when a transaction memo exceeds the maximum allowed length
+(28 bytes for text memos, 32 bytes for hash and return memos).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.NoNetworkSelectedException.html">NoNetworkSelectedException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when an operation requiring a Stellar network (such as signing a transaction)
+is attempted before a network (e.g., public or testnet) has been configured via <code>Network.Use</code>.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.NotEnoughSignaturesException.html">NotEnoughSignaturesException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when a Stellar transaction has no signatures
+and at least one is required to produce a valid transaction envelope.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ServiceUnavailableException.html">ServiceUnavailableException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when the Stellar Horizon server returns an HTTP 503 Service Unavailable response,
+indicating the server is temporarily overloaded or undergoing maintenance.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Exceptions.SorobanRpcException.html">SorobanRpcException</a></dt>
+      <dd><p>The exception that is thrown when the Stellar RPC server answers a request with a JSON-RPC error
+object (JSON-RPC 2.0 §5.1) instead of a result. Such a response carries no <code>result</code> member and
+normally arrives with HTTP status 200, so it is distinct from the HTTP-level failures reported by
+<a class="xref" href="StellarDotnetSdk.Exceptions.ServiceUnavailableException.html">ServiceUnavailableException</a>, <a class="xref" href="StellarDotnetSdk.Exceptions.TooManyRequestsException.html">TooManyRequestsException</a>, and
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResponseException.html">HttpResponseException</a>.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.SubmitTransactionTimeoutResponseException.html">SubmitTransactionTimeoutResponseException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when the Stellar Horizon server returns an HTTP 504 Gateway Timeout
+response to a transaction submission, indicating the upstream Stellar Core node did not respond in time.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.SubmitTransactionUnknownResponseException.html">SubmitTransactionUnknownResponseException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when the Stellar Horizon server returns an unexpected or unrecognized
+HTTP status code in response to a transaction submission.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.TooManyRequestsException.html">TooManyRequestsException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when the Stellar Horizon server returns an HTTP 429 Too Many Requests response,
+indicating the client has exceeded the rate limit for its IP address.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Exceptions.TooManySignaturesException.html">TooManySignaturesException</a></dt>
-      <dd></dd>
+      <dd><p>The exception that is thrown when attempting to create an unsigned transaction envelope
+from a transaction that already has signatures.</p>
+</dd>
     </dl>
 
 

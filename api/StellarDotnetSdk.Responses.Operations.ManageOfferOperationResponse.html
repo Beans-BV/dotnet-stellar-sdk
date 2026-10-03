@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ManageOfferOperationResponse ">
       
-      <meta name="description" content="Represents ManageOffer operation response.">
+      <meta name="description" content="Represents a manage_offer operation response. Creates, updates, or deletes an offer to buy or sell assets on the Stellar decentralized exchange. This is the base class for both manage_sell_offer and manage_buy_offer operations.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,14 @@ Class ManageOfferOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents ManageOffer operation response.</p>
+  <div class="markdown summary"><p>Represents a manage_offer operation response.
+Creates, updates, or deletes an offer to buy or sell assets on the Stellar decentralized exchange.
+This is the base class for both manage_sell_offer and manage_buy_offer operations.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ManageOfferOperationResponse : OperationResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class ManageOfferOperationResponse : OperationResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -219,12 +221,14 @@ Class ManageOfferOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the selling asset to be sold (for manage_sell_offer) or the amount of buying asset to be bought (for
+manage_buy_offer).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -251,11 +255,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset being bought in this offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset BuyingAsset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset BuyingAsset { get; }</code></pre>
   </div>
 
 
@@ -282,12 +288,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset code of the asset being bought (e.g., &quot;USD&quot;, &quot;BTC&quot;). Only present for non-native assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;buying_asset_code&quot;)]
-public string BuyingAssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;buying_asset_code&quot;)]
+public string? BuyingAssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -314,12 +321,13 @@ public string BuyingAssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account address that issued the asset being bought. Only present for non-native assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;buying_asset_issuer&quot;)]
-public string BuyingAssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;buying_asset_issuer&quot;)]
+public string? BuyingAssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -346,12 +354,13 @@ public string BuyingAssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of asset being bought (e.g., &quot;native&quot;, &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;buying_asset_type&quot;)]
-public string BuyingAssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;buying_asset_type&quot;)]
+public required string BuyingAssetType { get; init; }</code></pre>
   </div>
 
 
@@ -378,12 +387,13 @@ public string BuyingAssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier for the offer. A value of &quot;0&quot; indicates the offer was deleted.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;offer_id&quot;)]
-public string OfferId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;offer_id&quot;)]
+public required string OfferId { get; init; }</code></pre>
   </div>
 
 
@@ -410,13 +420,13 @@ public string OfferId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The ask/bid price.</p>
+  <div class="markdown level1 summary"><p>The decimal representation of the price indicating how many units of selling asset equals one unit of buying asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;price&quot;)]
-public string Price { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;price&quot;)]
+public required string Price { get; init; }</code></pre>
   </div>
 
 
@@ -443,13 +453,13 @@ public string Price { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The ask/bid price as a ratio.</p>
+  <div class="markdown level1 summary"><p>The price ratio as a fraction representing the number of units of selling asset per unit of buying asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;price_r&quot;)]
-public Price PriceRatio { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;price_r&quot;)]
+public required Price PriceRatio { get; init; }</code></pre>
   </div>
 
 
@@ -458,7 +468,7 @@ public Price PriceRatio { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
     <dd></dd>
   </dl>
 
@@ -476,11 +486,13 @@ public Price PriceRatio { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset being sold in this offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset SellingAsset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset SellingAsset { get; }</code></pre>
   </div>
 
 
@@ -507,12 +519,13 @@ public Price PriceRatio { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset code of the asset being sold (e.g., &quot;USD&quot;, &quot;BTC&quot;). Only present for non-native assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;selling_asset_code&quot;)]
-public string SellingAssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;selling_asset_code&quot;)]
+public string? SellingAssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -539,12 +552,13 @@ public string SellingAssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account address that issued the asset being sold. Only present for non-native assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;selling_asset_issuer&quot;)]
-public string SellingAssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;selling_asset_issuer&quot;)]
+public string? SellingAssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -571,12 +585,13 @@ public string SellingAssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of asset being sold (e.g., &quot;native&quot;, &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;selling_asset_type&quot;)]
-public string SellingAssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;selling_asset_type&quot;)]
+public required string SellingAssetType { get; init; }</code></pre>
   </div>
 
 

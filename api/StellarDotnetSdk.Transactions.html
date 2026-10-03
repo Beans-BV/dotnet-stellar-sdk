@@ -92,7 +92,9 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-      <dd></dd>
+      <dd><p>Represents a fee bump transaction that wraps an inner transaction with a higher fee to prioritize inclusion in a
+ledger.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.LedgerBounds.html">LedgerBounds</a></dt>
@@ -106,7 +108,9 @@ bounds
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.SubmitTransactionOptions.html">SubmitTransactionOptions</a></dt>
-      <dd></dd>
+      <dd><p>Options for controlling transaction submission behavior, such as skipping SEP-0029 memo checks or ensuring success
+status codes.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.TimeBounds.html">TimeBounds</a></dt>
@@ -119,15 +123,21 @@ bounds
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Stellar transaction containing one or more operations, a source account, memo, and optional
+preconditions.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
-      <dd></dd>
+      <dd><p>Base class for all Stellar transaction types (<a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> and <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a>),
+providing common signing and envelope serialization functionality.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBuilder.html">TransactionBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds Stellar transactions by accumulating operations, preconditions, and memo before creating a signed-ready
+<a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> object.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionPreconditions.html">TransactionPreconditions</a></dt>
@@ -136,10 +146,10 @@ bounds
     All preconditions are optional. Time bounds are encouraged, but the other preconditions are used in more
     specialized circumstances. You can set multiple preconditions as long as the combination is logically sound.
 </p>
-See:
+<p>See:
 <a href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/operations-and-transactions#preconditions-optional">
-    Preconditions
-</a>
+Preconditions
+</a></p>
 </dd>
     </dl>
     <h3 id="enums">

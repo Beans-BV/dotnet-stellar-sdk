@@ -92,182 +92,242 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountDataResponse.html">AccountDataResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a single data entry attached to an account.
+Account data entries are key-value pairs that can store arbitrary data on an account.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponse.html">AccountResponse</a></dt>
-      <dd></dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponse.AccountResponseLinks.html">AccountResponse.AccountResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Represents an account on the Stellar network.
+Contains account balances, signers, thresholds, and other account state.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponse.Signer.html">AccountResponse.Signer</a></dt>
-      <dd><p>Represents account signers.</p>
+      <dd><p>Represents a signer authorized to sign transactions for an account.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.AccountResponseLinks.html">AccountResponseLinks</a></dt>
+      <dd><p>Links to related resources for an account.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.html">AssetResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents asset information from the Horizon API.
+Contains statistics about the asset including holder counts, balances, and authorization flags.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.AssetAccounts.html">AssetResponse.AssetAccounts</a></dt>
-      <dd><p>Describe asset accounts</p>
+      <dd><p>Statistics about accounts holding the asset, categorized by authorization status.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.AssetBalances.html">AssetResponse.AssetBalances</a></dt>
-      <dd><p>Describe asset balances</p>
+      <dd><p>Total balances of the asset, categorized by authorization status.</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.AssetResponseFlags.html">AssetResponse.AssetResponseFlags</a></dt>
-      <dd></dd>
-    </dl>
-    <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.AssetResponseLinks.html">AssetResponse.AssetResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links associated with the asset response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Balance.html">Balance</a></dt>
-      <dd><p>Represents account balance.</p>
+      <dd><p>Represents an account's balance in a specific asset or liquidity pool shares.
+An account can hold multiple balances, one for each trusted asset.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.ClaimableBalanceResponse.html">ClaimableBalanceResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a claimable balance on the Stellar network.
+A claimable balance is an amount of an asset that has been transferred from one account
+to be claimed by one or more potential claimants based on specified conditions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.ClaimableBalanceResponse.ClaimableBalanceFlags.html">ClaimableBalanceResponse.ClaimableBalanceFlags</a></dt>
+      <dd><p>Represents claimable balance flags.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.ClaimableBalanceResponse.ClaimableBalanceResponseLinks.html">ClaimableBalanceResponse.ClaimableBalanceResponseLinks</a></dt>
+      <dd><p>Links to related resources for a claimable balance.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Claimant.html">Claimant</a></dt>
-      <dd></dd>
+      <dd><p>Represents a claimant in Horizon API responses.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.FeeStatsResponse.html">FeeStatsResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents fee statistics for the Stellar network.
+Provides information about transaction fees across recent ledgers to help with fee estimation.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.FeeStatsResponse.FeeStatsResponseData.html">FeeStatsResponse.FeeStatsResponseData</a></dt>
-      <dd></dd>
+      <dd><p>Contains statistical data about fees including minimum, maximum, mode, and percentiles.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Flags.html">Flags</a></dt>
-      <dd><p>Represents account flags.</p>
+      <dd><p>Represents account authorization flags that control how an issuing account
+manages trust and authorization for its issued assets.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.FriendBotResponse.html">FriendBotResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents the response from the Friendbot service on testnet.
+Friendbot is a service that funds accounts with test XLM on the Stellar testnet.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.FriendBotResponse.FriendBotResponseLinks.html">FriendBotResponse.FriendBotResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links associated with the Friendbot response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Responses.JsonSingleton.html">JsonSingleton</a></dt>
-      <dd></dd>
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.HealthResponse.html">HealthResponse</a></dt>
+      <dd><p>Represents the health check response from a Horizon server.
+Provides information about the operational status of the Horizon instance.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.LedgerBounds.html">LedgerBounds</a></dt>
+      <dd><p>The ledger range for which this transaction is valid, as unsigned 32-bit integers.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.LedgerResponse.html">LedgerResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a ledger from the Stellar network.
+A ledger is equivalent to a block in other blockchain systems and contains all transactions
+that were applied during that consensus round.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.LedgerResponse.LedgerResponseLinks.html">LedgerResponse.LedgerResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links to related resources for a ledger.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Link.html">Link</a></dt>
-      <dd></dd>
+      <dd><p>Represents a HAL hypermedia link.
+Links provide navigation to related resources in the Horizon API.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Link-1.html">Link&lt;TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Represents a typed HAL hypermedia link that can be followed to retrieve a resource.
+Supports both direct links and URI templates.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a liquidity pool on the Stellar network.
+Liquidity pools enable automated market making (AMM) for trading asset pairs.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.LiquidityPoolResponseLinks.html">LiquidityPoolResponse.LiquidityPoolResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links to related resources for a liquidity pool.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.OfferResponse.html">OfferResponse</a></dt>
-      <dd><p>Represents offer response.</p>
+      <dd><p>Represents an offer on the Stellar decentralized exchange.
+An offer is a bid or ask to exchange one asset for another at a specified price.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.OfferResponse.OfferResponseLinks.html">OfferResponse.OfferResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links to related resources for an offer.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.OrderBookResponse.html">OrderBookResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents an order book for a trading pair on the Stellar decentralized exchange.
+Contains both buy orders (bids) and sell orders (asks).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.OrderBookResponse.Row.html">OrderBookResponse.Row</a></dt>
-      <dd></dd>
+      <dd><p>Represents a single row in the order book (either an ask or a bid).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Page-1.html">Page&lt;T&gt;</a></dt>
-      <dd><p>Represents page of objects.</p>
+      <dd><p>Represents a paginated page of objects from the Horizon API.
+Used to navigate through large result sets using cursor-based pagination.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Page-1.EmbeddedRecords.html">Page&lt;T&gt;.EmbeddedRecords</a></dt>
-      <dd></dd>
+      <dd><p>Container for embedded records in HAL JSON format.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Page-1.PageLinks-1.html">Page&lt;T&gt;.PageLinks&lt;T&gt;</a></dt>
-      <dd><p>Links connected to page response.</p>
+      <dd><p>Navigation links for paginated responses.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.PathResponse.html">PathResponse</a></dt>
-      <dd></dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Responses.PathResponse.PathResponseLinks.html">PathResponse.PathResponseLinks</a></dt>
-      <dd></dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Responses.Predicate.html">Predicate</a></dt>
-      <dd></dd>
+      <dd><p>Represents a payment path found by the path finding algorithm.
+A path is a sequence of assets that can be used to convert from a source asset
+to a destination asset through the Stellar decentralized exchange.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
-      <dd><p>Represents prices response.</p>
+      <dd><p>Represents a price ratio in Horizon API responses.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a></dt>
-      <dd></dd>
+      <dd><p>Represents a reserve in a liquidity pool, containing an asset and its amount.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Response.html">Response</a></dt>
-      <dd></dd>
+      <dd><p>Abstract base class for all Horizon API responses.
+Provides common functionality for handling rate limit headers.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.RootResponse.html">RootResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents the root endpoint response from a Horizon server.
+Contains version and network information about the Horizon instance.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.RootResponseLinks.html">RootResponseLinks</a></dt>
+      <dd><p>Contains the navigational links returned by the Horizon root endpoint, providing URIs for all available API resources.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionAsyncResponse.html">SubmitTransactionAsyncResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents the response from an asynchronous transaction submission.
+Async submission is faster but requires polling for the final status.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionResponse.html">SubmitTransactionResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents the response from a synchronous transaction submission to Horizon.
+Contains the result of the transaction execution including success/failure status.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionResponse.Extras.html">SubmitTransactionResponse.Extras</a></dt>
-      <dd><p>Additional information returned by a server.</p>
+      <dd><p>Additional information returned by the server, typically on failure.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionResponse.Extras.ResultCodes.html">SubmitTransactionResponse.Extras.ResultCodes</a></dt>
       <dd><p>Contains result codes for this transaction.
-see
+See
 <a href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go" target="_blank">
 Possible values
 </a></p>
@@ -275,55 +335,81 @@ Possible values
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TemplatedLink-1.html">TemplatedLink&lt;TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Represents a templated HAL hypermedia link that requires variable substitution.
+URI templates follow RFC 6570.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Thresholds.html">Thresholds</a></dt>
-      <dd><p>Represents account thresholds.</p>
+      <dd><p>Operations have varying levels of access. This field specifies thresholds
+for different access levels, as well as the weight of the master key.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.TimeBounds.html">TimeBounds</a></dt>
+      <dd><p>The time range for which this transaction is valid, with bounds as unsigned 64-bit UNIX timestamps.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TradeAggregationResponse.html">TradeAggregationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents aggregated trade data for a specific time period.
+Trade aggregations provide OHLC (Open, High, Low, Close) candlestick data
+for trading pairs on the Stellar DEX.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TradeResponse.html">TradeResponse</a></dt>
-      <dd><p>Represents trades response.</p>
+      <dd><p>Represents a trade that was executed on the Stellar decentralized exchange.
+A trade occurs when offers are matched or when interacting with a liquidity pool.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TradeResponse.TradeResponseLinks.html">TradeResponse.TradeResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links to related resources for a trade.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a transaction on the Stellar network.
+Contains transaction metadata, results, and links to related resources.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.FeeBumpTransaction.html">TransactionResponse.FeeBumpTransaction</a></dt>
-      <dd></dd>
+      <dd><p>Represents the fee bump transaction wrapper for a fee-bumped transaction.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.InnerTransaction.html">TransactionResponse.InnerTransaction</a></dt>
-      <dd></dd>
+      <dd><p>Represents the inner transaction within a fee bump transaction.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponseLinks.html">TransactionResponseLinks</a></dt>
-      <dd></dd>
+      <dd><p>Links to related resources for a transaction.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponsePreconditions.html">TransactionResponsePreconditions</a></dt>
+      <dd><p>A set of transaction preconditions affecting its validity.</p>
+</dd>
     </dl>
     <h3 id="interfaces">
 Interfaces
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.IPagingToken.html">IPagingToken</a></dt>
-      <dd></dd>
+      <dd><p>Interface for responses that support pagination.
+Responses implementing this interface can be used with Horizon's cursor-based pagination.</p>
+</dd>
     </dl>
     <h3 id="enums">
 Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionAsyncResponse.TransactionStatus.html">SubmitTransactionAsyncResponse.TransactionStatus</a></dt>
-      <dd></dd>
+      <dd><p>Possible statuses for an asynchronously submitted transaction.</p>
+</dd>
     </dl>
 
 

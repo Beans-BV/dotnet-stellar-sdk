@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SorobanTransactionData ">
       
-      
+      <meta name="description" content="Represents Soroban-specific transaction data, including resource allocation, resource fees, and optional resource extensions. This is attached to transactions that invoke Soroban smart contracts.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class SorobanTransactionData
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents Soroban-specific transaction data, including resource allocation, resource fees,
+and optional resource extensions. This is attached to transactions that invoke Soroban smart contracts.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -157,7 +159,9 @@ Class SorobanTransactionData
 
   <div class="markdown level1 summary"><p>A shortcut to create a <code>SorobanTransactionData</code> object containing a <code>LedgerKey</code> of an entry to be
 restored.
-<a class="xref" href="StellarDotnetSdk.Operations.RestoreFootprintOperation.html">RestoreFootprintOperation</a><param name="key"><param name="toExtend">True: To be used in an RestoreTtl operation. False: To be used in a ExtendTtl operation.</p>
+<a class="xref" href="StellarDotnetSdk.Operations.RestoreFootprintOperation.html">RestoreFootprintOperation</a></p>
+<param name="key">
+<param name="toExtend">True: To be used in an RestoreTtl operation. False: To be used in a ExtendTtl operation.
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -191,7 +195,8 @@ restored.
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionData.html">SorobanTransactionData</a> with the specified resources, fee, and optional extension.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -201,11 +206,14 @@ restored.
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>resources</code> <a class="xref" href="StellarDotnetSdk.Soroban.SorobanResources.html">SorobanResources</a></dt>
-    <dd></dd>
+    <dd><p>The Soroban resource allocation for this transaction.</p>
+</dd>
     <dt><code>resourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The resource fee in stroops to be charged for this transaction.</p>
+</dd>
     <dt><code>extension</code> <a class="xref" href="StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html">SorobanResourceExtensionV0</a></dt>
-    <dd></dd>
+    <dd><p>Optional extension data for archived Soroban entries.</p>
+</dd>
   </dl>
 
 
@@ -230,7 +238,8 @@ restored.
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Optional extension data containing references to archived Soroban ledger entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -261,7 +270,8 @@ restored.
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The resource fee in stroops to be charged for this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -292,7 +302,8 @@ restored.
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The Soroban resource allocation for this transaction (footprint, instructions, I/O limits).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -406,7 +417,8 @@ restored.
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -417,7 +429,8 @@ restored.
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SorobanTransactionData</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.SorobanTransactionData</span> XDR object.</p>
+</dd>
   </dl>
 
 

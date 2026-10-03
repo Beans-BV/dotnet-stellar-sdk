@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>SEP-0038: Anchor RFQ (quotes) </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="SEP-0038: Anchor RFQ (quotes) ">
+      
+      
+      <link rel="icon" href="../../favicon">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="sep-0038-anchor-rfq-quotes">SEP-0038: Anchor RFQ (quotes)</h1>
+
+<p>This guide shows how to get prices and firm quotes from an anchor with the SEP-0038 client in <code>StellarDotnetSdk.Sep.Sep0038</code>. A firm quote's <code>Id</code> is what you pass as <code>quote_id</code> to a SEP-6, SEP-24 or SEP-31 transaction when the user exchanges one asset for another (for example USD cash for USDC).</p>
+<p>The examples run against the Stellar test anchor, <code>testanchor.stellar.org</code>, which exchanges <code>iso4217:USD</code> (delivered by <code>WIRE</code>, country <code>US</code>) for testnet USDC.</p>
+<h2 id="connecting-to-the-quote-server">Connecting to the quote server</h2>
+<p>The anchor declares its quote server as <code>ANCHOR_QUOTE_SERVER</code> in its stellar.toml:</p>
+<pre><code class="lang-csharp">using System.Net.Http;
+using StellarDotnetSdk.Sep.Sep0038;
+
+// Reuse one HttpClient across the application; its Timeout bounds every quote call, body included.
+var httpClient = new HttpClient();
+var quotes = await QuoteService.FromDomainAsync(&quot;testanchor.stellar.org&quot;, httpClient: httpClient);
+</code></pre>
+<p><code>FromDomainAsync</code> throws <code>NoAnchorQuoteServerFoundException</code> when the anchor does not advertise SEP-38, or advertises an address the client refuses (anything but <code>https</code>, or a URL with a query, fragment or user information).</p>
+<h2 id="authenticating">Authenticating</h2>
+<p><code>GET /info</code>, <code>GET /prices</code> and <code>GET /price</code> work without a token; the anchor may personalize them when one is sent. <code>POST /quote</code> and <code>GET /quote/:id</code> require one. Use the JWT from SEP-10 (classic <code>G...</code>/<code>M...</code> accounts) or SEP-45 (contract accounts):</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk;
+using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Sep.Sep0010;
+
+var userKeyPair = KeyPair.FromSecretSeed(userSecretSeed);
+var webAuth = await ClientWebAuth.FromDomainAsync(&quot;testanchor.stellar.org&quot;, Network.Test(), httpClient: httpClient);
+var jwt = await webAuth.JwtTokenAsync(userKeyPair.AccountId, new[] { userKeyPair });
+</code></pre>
+<h2 id="assets">Assets</h2>
+<p>SEP-38 identifies assets as <code>stellar:CODE:ISSUER</code> (or <code>stellar:native</code>) and <code>iso4217:CODE</code>. <code>AssetIdentifier</code> builds, validates and parses these, and converts implicitly to the <code>string</code> the request types take:</p>
+<pre><code class="lang-csharp">var usdc = AssetIdentifier.Stellar(&quot;USDC&quot;, &quot;GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&quot;);
+var usd = AssetIdentifier.Iso4217(&quot;USD&quot;);
+
+var parsed = AssetIdentifier.Parse(&quot;stellar:USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5&quot;);
+var sdkAsset = parsed.ToAsset();
+</code></pre>
+<h2 id="what-the-anchor-offers">What the anchor offers</h2>
+<pre><code class="lang-csharp">var info = await quotes.InfoAsync();
+foreach (var asset in info.Assets)
+{
+    Console.WriteLine(asset.Asset);
+    foreach (var method in asset.SellDeliveryMethods ?? [])
+    {
+        Console.WriteLine($&quot;  deliver via {method.Name}: {method.Description}&quot;);
+    }
+}
+</code></pre>
+<h2 id="indicative-prices">Indicative prices</h2>
+<p><code>GET /prices</code> lists prices for every asset exchangeable for one asset. Give either the sell side or the buy side, not both; the response carries <code>BuyAssets</code> for a sell-side request and <code>SellAssets</code> for a buy-side one:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Sep.Sep0038.Requests;
+
+var prices = await quotes.PricesAsync(new PricesRequest
+{
+    SellAsset = usd,
+    SellAmount = 100m,
+    SellDeliveryMethod = &quot;WIRE&quot;,
+    CountryCode = &quot;US&quot;,
+});
+
+foreach (var offer in prices.BuyAssets!)
+{
+    // The price of one unit of offer.Asset, in USD.
+    Console.WriteLine($&quot;{offer.Asset}: {offer.Price} ({offer.Decimals} decimals)&quot;);
+}
+</code></pre>
+<p><code>GET /price</code> prices one pair, including the fee. Give exactly one of <code>SellAmount</code> or <code>BuyAmount</code>; the context is <code>Sep6</code> or <code>Sep31</code>:</p>
+<pre><code class="lang-csharp">var price = await quotes.PriceAsync(new PriceRequest
+{
+    Context = QuoteContext.Sep6,
+    SellAsset = usd,
+    BuyAsset = usdc,
+    SellAmount = 100m,
+    SellDeliveryMethod = &quot;WIRE&quot;,
+    CountryCode = &quot;US&quot;,
+});
+
+Console.WriteLine(
+    $&quot;{price.SellAmount} USD -&gt; {price.BuyAmount} USDC at {price.TotalPrice} (fee {price.Fee.Total} {price.Fee.Asset})&quot;);
+</code></pre>
+<h2 id="firm-quotes">Firm quotes</h2>
+<p>When <code>GET /info</code> lists more than one delivery method for the off-chain asset, SEP-38 requires the client to name the one the user chose; the anchor enforces it, so pass it:</p>
+<pre><code class="lang-csharp">var quote = await quotes.PostQuoteAsync(new QuoteRequest
+{
+    Context = QuoteContext.Sep6,
+    SellAsset = usd,
+    BuyAsset = usdc,
+    SellAmount = 100m,
+    SellDeliveryMethod = &quot;WIRE&quot;,
+    CountryCode = &quot;US&quot;,
+    ExpireAfter = DateTimeOffset.UtcNow.AddMinutes(10),
+    Jwt = jwt,
+});
+
+Console.WriteLine($&quot;Quote {quote.Id} expires at {quote.ExpiresAt:u}&quot;);
+
+// Later, for example to show the user what they agreed to:
+var sameQuote = await quotes.GetQuoteAsync(quote.Id, jwt);
+</code></pre>
+<p>Pass <code>quote.Id</code> as <code>QuoteId</code> of a SEP-24 <code>DepositRequest</code> or <code>WithdrawRequest</code>, or of a SEP-6 <code>DepositExchangeRequest</code> or <code>WithdrawExchangeRequest</code>.</p>
+<p><code>POST /quote</code> is not idempotent: each call reserves a new firm quote. Do not configure the service with <code>HttpResilienceOptionsPresets.ForHorizon()</code> or <code>ForSoroban()</code>, which retry <code>POST</code> on a 408, 429, 500, 502, 503 or 504 answer; see <a href="http-retry.html">HTTP retries</a>.</p>
+<h2 id="amounts-and-errors">Amounts and errors</h2>
+<p>Amounts and prices are <code>decimal</code>. They are sent as invariant-culture strings and read exactly: a value that <code>decimal</code> cannot represent without rounding fails with <code>UnexpectedResponseException</code> instead of being approximated.</p>
+<p>Request rules the specification states (one amount, one <code>GET /prices</code> side, at most one delivery method on <code>POST /quote</code>), a zero or negative amount, a string property set to an empty or whitespace value (leave it <code>null</code> instead), and a JWT that is not printable ASCII throw <code>ArgumentException</code> before anything is sent. Anchor errors map to exceptions derived from <code>QuoteServerException</code>, and so does an answer that does not match the request (a quote for another asset pair, or a zero price); transport failures surface as <code>HttpRequestException</code>, and timeouts as <code>TaskCanceledException</code>:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Sep.Sep0038.Exceptions;
+
+try
+{
+    await quotes.GetQuoteAsync(quote.Id, jwt);
+}
+catch (QuoteServerNotFoundException)
+{
+    // 404: no such quote for this account (anchors also answer 404 for an unknown asset on GET /price).
+}
+catch (QuoteServerException ex)
+{
+    // BadRequestException (400), PermissionDeniedException (403), UnexpectedResponseException (anything else).
+    // ex.Error is the anchor's message, exactly as sent: escape it before logging or display. ex.Message carries
+    // an escaped, length-bounded copy. ex.RetryAfterDelay is the anchor's Retry-After (typically on 429 or 503).
+    Console.WriteLine($&quot;{ex.StatusCode}: {ex.Message}&quot;);
+}
+</code></pre>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

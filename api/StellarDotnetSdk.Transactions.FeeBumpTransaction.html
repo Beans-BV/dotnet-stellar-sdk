@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class FeeBumpTransaction ">
       
-      
+      <meta name="description" content="Represents a fee bump transaction that wraps an inner transaction with a higher fee to prioritize inclusion in a ledger.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class FeeBumpTransaction
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a fee bump transaction that wraps an inner transaction with a higher fee to prioritize inclusion in a
+ledger.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -186,7 +188,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the total fee (in stroops) for the fee bump transaction, covering all operations in the inner transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -217,7 +220,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the account that pays the fee for this fee bump transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -248,7 +252,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the original inner transaction being wrapped by this fee bump.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -283,7 +288,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a> from a <span class="xref">StellarDotnetSdk.Xdr.TransactionEnvelope</span> XDR object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -293,13 +299,15 @@ Class FeeBumpTransaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <span class="xref">TransactionEnvelope</span></dt>
-    <dd></dd>
+    <dd><p>The XDR transaction envelope (must be <code>ENVELOPE_TYPE_TX_FEE_BUMP</code>).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a> with its signatures.</p>
+</dd>
   </dl>
 
 
@@ -309,6 +317,12 @@ Class FeeBumpTransaction
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the envelope type is not a fee bump.</p>
+</dd>
+  </dl>
 
 
 
@@ -319,7 +333,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a> from a base64-encoded transaction envelope XDR string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -329,13 +344,15 @@ Class FeeBumpTransaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The base64-encoded XDR transaction envelope.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a>.</p>
+</dd>
   </dl>
 
 
@@ -469,7 +486,8 @@ Class FeeBumpTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this fee bump transaction to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -480,7 +498,8 @@ Class FeeBumpTransaction
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">FeeBumpTransaction</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <span class="xref">StellarDotnetSdk.Xdr.FeeBumpTransaction</span> object.</p>
+</dd>
   </dl>
 
 

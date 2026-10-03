@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class UploadContractOperation ">
       
-      
+      <meta name="description" content="Operation that invokes a Soroban host function to upload compiled smart contract Wasm bytecode to the Stellar network. The uploaded Wasm can subsequently be used to create contract instances via .">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class UploadContractOperation
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Operation that invokes a Soroban host function to upload compiled smart contract Wasm bytecode
+to the Stellar network. The uploaded Wasm can subsequently be used to create contract instances
+via <a class="xref" href="StellarDotnetSdk.Operations.CreateContractOperation.html">CreateContractOperation</a>.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -221,7 +224,8 @@ Class UploadContractOperation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The host function that holds the compiled Wasm bytecode to be uploaded.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -288,7 +292,8 @@ Class UploadContractOperation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Operations.UploadContractOperation.html">UploadContractOperation</a> from the given XDR <span class="xref">StellarDotnetSdk.Xdr.InvokeHostFunctionOp</span>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -298,13 +303,15 @@ Class UploadContractOperation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>invokeHostFunctionOp</code> <span class="xref">InvokeHostFunctionOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR object to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.UploadContractOperation.html">UploadContractOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.UploadContractOperation.html">UploadContractOperation</a> instance.</p>
+</dd>
   </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum AuthMode ">
       
-      
+      <meta name="description" content="Specifies the authorization mode used when simulating or submitting Soroban transactions.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,11 +94,13 @@ Enum AuthMode
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Specifies the authorization mode used when simulating or submitting Soroban transactions.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum AuthMode</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonStringEnumConverter&lt;AuthMode&gt;))]
+public enum AuthMode</code></pre>
   </div>
 
 
@@ -112,15 +114,57 @@ Enum AuthMode
   <h2 id="fields">Fields
 </h2>
   <dl class="parameters">
-    <dt id="StellarDotnetSdk_Soroban_AuthMode_ENFORCE"><code>ENFORCE = 0</code></dt>
-    <dd></dd>
-    <dt id="StellarDotnetSdk_Soroban_AuthMode_RECORD"><code>RECORD = 1</code></dt>
-    <dd></dd>
-    <dt id="StellarDotnetSdk_Soroban_AuthMode_RECORD_ALLOW_NONROOT"><code>RECORD_ALLOW_NONROOT = 2</code></dt>
-    <dd></dd>
+    <dt id="StellarDotnetSdk_Soroban_AuthMode_ENFORCE"><code>[JsonStringEnumMemberName(&quot;enforce&quot;)]
+ENFORCE = 0</code></dt>
+  
+  <dd><p>Enforces all authorization entries, requiring them to be valid and present.</p>
+</dd>
+    <dt id="StellarDotnetSdk_Soroban_AuthMode_RECORD"><code>[JsonStringEnumMemberName(&quot;record&quot;)]
+RECORD = 1</code></dt>
+  
+  <dd><p>Records authorization entries during simulation, automatically capturing required authorizations.</p>
+</dd>
+    <dt id="StellarDotnetSdk_Soroban_AuthMode_RECORD_ALLOW_NONROOT"><code>[JsonStringEnumMemberName(&quot;record_allow_nonroot&quot;)]
+RECORD_ALLOW_NONROOT = 2</code></dt>
+  
+  <dd><p>Records authorization entries during simulation, including non-root authorization.</p>
+</dd>
   </dl>
 
 
+  <h2 id="StellarDotnetSdk_Soroban_AuthMode_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Stellar RPC names these modes <code>enforce</code>, <code>record</code> and <code>record_allow_nonroot</code>, and matches
+the <code>authMode</code> request field against those literals case-sensitively. The wire spelling is therefore
+pinned on the members themselves rather than left to whatever enum naming a serializer happens to apply.</p>
+<p>
+    Two mechanisms carry that spelling, because neither covers every path on its own.
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenummembernameattribute">JsonStringEnumMemberNameAttribute</a> only takes effect through a
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter">JsonStringEnumConverter</a>, so it needs one to be in play; the type-level
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> supplies one for callers whose
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a> registers none. Between them, every ordinary
+    serialization of an <a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html">AuthMode</a> emits the RPC literal — for
+    <code>JsonOptions.DefaultOptions</code>, a bare options instance, and the parameterless
+    <code>JsonSerializer.Serialize</code> overload alike, each covered by <code>AuthModeTest</code>.
+</p>
+<p>
+    Note which of the two actually runs, because it is not the intuitive one. System.Text.Json resolves a
+    converter in a fixed order — a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> on the <em>property</em> first,
+    then the options' <code>Converters</code> collection (the first entry whose <code>CanConvert</code> matches),
+    then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> on the <em>type</em>. A type-level attribute is thus the
+    weakest of the three, not an override: under <code>JsonOptions.DefaultOptions</code>, whose collection
+    includes a catch-all <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter">JsonStringEnumConverter</a>, that global converter resolves this enum
+    and the attribute below is never consulted. The two agree only because
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter">JsonStringEnumConverter</a> honours the member-name attributes. A consumer who registers
+    their own <a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html">AuthMode</a> converter likewise outranks the attribute below — harmless here,
+    since <code>AuthModeExtensions.ToRequestValue</code> and not the serializer is what puts the value
+    in the <code>authMode</code> request field.
+</p>
+<p>
+    What broke releases 15.0.0 through 16.0.0-beta was not the global registration itself but the absence
+    of any member-name mapping to go with it: a bare <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter">JsonStringEnumConverter</a> falls back to
+    the C# member name, so the boxed enum went out as <code>RECORD_ALLOW_NONROOT</code>.
+</p>
+</div>
 
 </article>
 

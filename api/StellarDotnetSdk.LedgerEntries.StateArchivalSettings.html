@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class StateArchivalSettings ">
       
-      
+      <meta name="description" content="Represents the network configuration settings for Soroban state archival, including TTL limits, rent rates, and eviction parameters.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class StateArchivalSettings
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the network configuration settings for Soroban state archival, including TTL limits, rent rates, and
+eviction parameters.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -175,7 +177,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Maximum number of bytes that are scanned for eviction per ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -206,7 +209,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>How often to sample the live Soroban state size for the average, in ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -237,7 +241,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Number of snapshots to use when calculating average live Soroban state size.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -268,7 +273,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Maximum number of entries that emit archival meta in a single ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -299,7 +305,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Maximum time-to-live (TTL) in ledgers for any ledger entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -330,7 +337,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Minimum TTL in ledgers for persistent ledger entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -361,7 +369,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Minimum TTL in ledgers for temporary ledger entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -392,7 +401,9 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Denominator for computing the persistent entry rent fee. Rent fee equals
+<code>writeFeeRateAverage / persistentRentRateDenominator</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -423,7 +434,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Lowest BucketList level to be scanned to evict entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -454,7 +466,9 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Denominator for computing the temporary entry rent fee. Rent fee equals
+<code>writeFeeRateAverage / tempRentRateDenominator</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -489,7 +503,8 @@ Class StateArchivalSettings
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.LedgerEntries.StateArchivalSettings.html">StateArchivalSettings</a> from an XDR <span class="xref">StellarDotnetSdk.Xdr.StateArchivalSettings</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -499,13 +514,15 @@ Class StateArchivalSettings
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrConfig</code> <span class="xref">StateArchivalSettings</span></dt>
-    <dd></dd>
+    <dd><p>The XDR config setting object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.LedgerEntries.StateArchivalSettings.html">StateArchivalSettings</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.LedgerEntries.StateArchivalSettings.html">StateArchivalSettings</a> instance.</p>
+</dd>
   </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OperationsRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests connected to operations. Provides access to the Horizon /operations endpoint for retrieving details about individual operations and streaming operation events.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class OperationsRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests connected to operations. Provides access to the Horizon <code>/operations</code> endpoint
+for retrieving details about individual operations and streaming operation events.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -435,7 +437,11 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Set <pre><code class="lang-csharp">include_failed</code></pre> flag to include operations of failed transactions.
+  <div class="markdown level1 summary"><pre><code>   Set 
+
+   &lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;include_failed&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>flag to include operations of failed transactions.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -541,6 +547,13 @@ This method is helpful for getting the links.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 

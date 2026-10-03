@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AssetResponse ">
       
-      
+      <meta name="description" content="Represents asset information from the Horizon API. Contains statistics about the asset including holder counts, balances, and authorization flags.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class AssetResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents asset information from the Horizon API.
+Contains statistics about the asset including holder counts, balances, and authorization flags.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AssetResponse : Response, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AssetResponse : Response, IPagingToken</code></pre>
   </div>
 
 
@@ -124,15 +126,6 @@ Class AssetResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -146,9 +139,6 @@ Class AssetResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -174,12 +164,13 @@ Class AssetResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Statistics about accounts holding this asset, categorized by authorization status.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;accounts&quot;)]
-public AssetResponse.AssetAccounts Accounts { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;accounts&quot;)]
+public required AssetResponse.AssetAccounts Accounts { get; init; }</code></pre>
   </div>
 
 
@@ -206,7 +197,8 @@ public AssetResponse.AssetAccounts Accounts { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset object representing this response.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -237,12 +229,13 @@ public AssetResponse.AssetAccounts Accounts { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 4 or 12 character asset code. Empty for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public string? AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -269,12 +262,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID of the asset issuer. Empty for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public string? AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -301,12 +295,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of asset: &quot;native&quot;, &quot;credit_alphanum4&quot;, or &quot;credit_alphanum12&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -333,12 +328,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Total balances of this asset, categorized by authorization status.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;balances&quot;)]
-public AssetResponse.AssetBalances Balances { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;balances&quot;)]
+public required AssetResponse.AssetBalances Balances { get; init; }</code></pre>
   </div>
 
 
@@ -365,12 +361,14 @@ public AssetResponse.AssetBalances Balances { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total amount of this asset in claimable balances.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;claimable_balances_amount&quot;)]
-public string ClaimableBalancesAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;claimable_balances_amount&quot;)]
+public required string ClaimableBalancesAmount { get; init; }</code></pre>
   </div>
 
 
@@ -397,13 +395,13 @@ public string ClaimableBalancesAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The quantity of contracts that hold this asset</p>
+  <div class="markdown level1 summary"><p>The number of Soroban contracts that hold this asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;num_contracts&quot;)]
-public uint ContractsQuantity { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;num_contracts&quot;)]
+public required uint ContractsQuantity { get; init; }</code></pre>
   </div>
 
 
@@ -430,13 +428,13 @@ public uint ContractsQuantity { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The total units of this asset held by contracts</p>
+  <div class="markdown level1 summary"><p>The number of units for this asset held by all Soroban contracts.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;contracts_amount&quot;)]
-public double ContractsTotalAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;contracts_amount&quot;)]
+public required string ContractsTotalAmount { get; init; }</code></pre>
   </div>
 
 
@@ -445,7 +443,7 @@ public double ContractsTotalAmount { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -463,12 +461,13 @@ public double ContractsTotalAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The authorization flags set on this asset's issuing account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;flags&quot;)]
-public AssetResponse.AssetResponseFlags Flags { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;flags&quot;)]
+public required Flags Flags { get; init; }</code></pre>
   </div>
 
 
@@ -477,7 +476,7 @@ public AssetResponse.AssetResponseFlags Flags { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.html">AssetResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.AssetResponse.AssetResponseFlags.html">AssetResponseFlags</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Flags.html">Flags</a></dt>
     <dd></dd>
   </dl>
 
@@ -495,12 +494,13 @@ public AssetResponse.AssetResponseFlags Flags { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Links related to this asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public AssetResponse.AssetResponseLinks Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required AssetResponse.AssetResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -527,13 +527,14 @@ public AssetResponse.AssetResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The amount of this asset held in liquidity pools</p>
+  <div class="markdown level1 summary"><p>The amount of this asset held in liquidity pools.
+Represented as a string to preserve precision.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;liquidity_pools_amount&quot;)]
-public string LiquidityPoolsAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;liquidity_pools_amount&quot;)]
+public required string LiquidityPoolsAmount { get; init; }</code></pre>
   </div>
 
 
@@ -560,12 +561,13 @@ public string LiquidityPoolsAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of claimable balances containing this asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;num_claimable_balances&quot;)]
-public int NumClaimableBalances { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;num_claimable_balances&quot;)]
+public required int NumClaimableBalances { get; init; }</code></pre>
   </div>
 
 
@@ -592,13 +594,13 @@ public int NumClaimableBalances { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The number of liquidity pools trading this asset</p>
+  <div class="markdown level1 summary"><p>The number of liquidity pools trading this asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;num_liquidity_pools&quot;)]
-public int NumLiquidityPools { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;num_liquidity_pools&quot;)]
+public required int NumLiquidityPools { get; init; }</code></pre>
   </div>
 
 
@@ -625,12 +627,14 @@ public int NumLiquidityPools { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.
+This token can be used to retrieve the next or previous page of results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolId ">
       
-      
+      <meta name="description" content="Represents the unique identifier of a Stellar liquidity pool, derived from the SHA-256 hash of the pool&#39;s parameters (type, assets, and fee).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class LiquidityPoolId
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the unique identifier of a Stellar liquidity pool, derived from
+the SHA-256 hash of the pool's parameters (type, assets, and fee).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(LiquidityPoolIdJsonConverter))]
-public class LiquidityPoolId</code></pre>
+    <pre><code class="lang-csharp hljs">public class LiquidityPoolId</code></pre>
   </div>
 
 
@@ -147,7 +148,8 @@ public class LiquidityPoolId</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LiquidityPoolId</code> by computing the SHA-256 hash of the XDR-encoded pool parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -157,13 +159,17 @@ public class LiquidityPoolId</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>type</code> <span class="xref">LiquidityPoolType</span>.<span class="xref">LiquidityPoolTypeEnum</span></dt>
-    <dd></dd>
+    <dd><p>The type of the liquidity pool.</p>
+</dd>
     <dt><code>assetA</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The first asset in the pool (must be lexicographically less than assetB).</p>
+</dd>
     <dt><code>assetB</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The second asset in the pool.</p>
+</dd>
     <dt><code>fee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The fee charged per trade in basis points.</p>
+</dd>
   </dl>
 
 
@@ -184,7 +190,8 @@ public class LiquidityPoolId</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LiquidityPoolId</code> from a raw 32-byte hash.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +201,8 @@ public class LiquidityPoolId</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>hash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The 32-byte pool ID hash.</p>
+</dd>
   </dl>
 
 
@@ -215,7 +223,8 @@ public class LiquidityPoolId</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LiquidityPoolId</code> from a hex-encoded pool ID string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -226,7 +235,8 @@ public LiquidityPoolId(string hex)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>hex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A hex-encoded string representing the 32-byte pool ID hash.</p>
+</dd>
   </dl>
 
 
@@ -251,7 +261,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 32-byte SHA-256 hash that uniquely identifies the liquidity pool.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -286,7 +297,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -296,13 +308,15 @@ public LiquidityPoolId(string hex)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
   </dl>
 
 
@@ -322,7 +336,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a> from its XDR <span class="xref">StellarDotnetSdk.Xdr.PoolID</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -332,7 +347,8 @@ public LiquidityPoolId(string hex)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>poolIdXdr</code> <span class="xref">PoolID</span></dt>
-    <dd></dd>
+    <dd><p>The XDR pool ID object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -358,7 +374,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -369,7 +386,8 @@ public LiquidityPoolId(string hex)</code></pre>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A hash code for the current object.</p>
+</dd>
   </dl>
 
 
@@ -389,7 +407,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns the lowercase hex string representation of the pool ID hash.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -420,7 +439,8 @@ public LiquidityPoolId(string hex)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this liquidity pool ID to its XDR <span class="xref">StellarDotnetSdk.Xdr.PoolID</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -431,7 +451,8 @@ public LiquidityPoolId(string hex)</code></pre>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">PoolID</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.PoolID</span> XDR object containing the pool hash.</p>
+</dd>
   </dl>
 
 

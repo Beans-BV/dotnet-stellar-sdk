@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum StrKey.VersionByte ">
       
-      
+      <meta name="description" content="Specifies the type of Stellar key, encoded as the first byte of a StrKey-encoded string. Each version byte determines the prefix character of the encoded key (e.g., &#39;G&#39; for accounts, &#39;S&#39; for seeds, &#39;C&#39; for contracts).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,7 +94,10 @@ Enum StrKey.VersionByte
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Specifies the type of Stellar key, encoded as the first byte of a StrKey-encoded string.
+Each version byte determines the prefix character of the encoded key
+(e.g., 'G' for accounts, 'S' for seeds, 'C' for contracts).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -113,23 +116,41 @@ Enum StrKey.VersionByte
 </h2>
   <dl class="parameters">
     <dt id="StellarDotnetSdk_StrKey_VersionByte_ACCOUNT_ID"><code>ACCOUNT_ID = 48</code></dt>
-    <dd></dd>
+  
+  <dd><p>Ed25519 public key (encoded with 'G' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_CLAIMABLE_BALANCE"><code>CLAIMABLE_BALANCE = 8</code></dt>
-    <dd></dd>
+  
+  <dd><p>Claimable balance ID (encoded with 'B' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_CONTRACT"><code>CONTRACT = 16</code></dt>
-    <dd></dd>
+  
+  <dd><p>Soroban smart contract ID (encoded with 'C' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_LIQUIDITY_POOL"><code>LIQUIDITY_POOL = 88</code></dt>
-    <dd></dd>
+  
+  <dd><p>Liquidity pool ID (encoded with 'L' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_MUXED_ED25519"><code>MUXED_ED25519 = 96</code></dt>
-    <dd></dd>
+  
+  <dd><p>Muxed Ed25519 account (encoded with 'M' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_PRE_AUTH_TX"><code>PRE_AUTH_TX = 152</code></dt>
-    <dd></dd>
+  
+  <dd><p>Pre-authorized transaction hash (encoded with 'T' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_SEED"><code>SEED = 144</code></dt>
-    <dd></dd>
+  
+  <dd><p>Ed25519 secret seed (encoded with 'S' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_SHA256_HASH"><code>SHA256_HASH = 184</code></dt>
-    <dd></dd>
+  
+  <dd><p>SHA-256 hash (encoded with 'X' prefix).</p>
+</dd>
     <dt id="StellarDotnetSdk_StrKey_VersionByte_SIGNED_PAYLOAD"><code>SIGNED_PAYLOAD = 120</code></dt>
-    <dd></dd>
+  
+  <dd><p>Ed25519 signed payload signer (encoded with 'P' prefix).</p>
+</dd>
   </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LedgerKeyOffer ">
       
-      
+      <meta name="description" content="Represents a ledger key for an offer entry on the Stellar decentralized exchange. Used to look up offer data from the ledger, identified by the seller and offer ID.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LedgerKeyOffer
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a ledger key for an offer entry on the Stellar decentralized exchange.
+Used to look up offer data from the ledger, identified by the seller and offer ID.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -195,7 +197,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyOffer</code> from a key pair and offer ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -205,9 +208,11 @@ Class LedgerKeyOffer
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seller</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The key pair of the account that created the offer.</p>
+</dd>
     <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the offer.</p>
+</dd>
   </dl>
 
 
@@ -228,7 +233,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyOffer</code> from a Stellar account ID string and offer ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -238,9 +244,11 @@ Class LedgerKeyOffer
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>sellId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Stellar account ID (G... public key) of the seller.</p>
+</dd>
     <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the offer.</p>
+</dd>
   </dl>
 
 
@@ -265,7 +273,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier of the offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -296,7 +305,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The key pair of the account that created the offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -331,7 +341,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKeyOffer.html">LedgerKeyOffer</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -341,7 +352,8 @@ Class LedgerKeyOffer
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdr</code> <span class="xref">LedgerKey</span>.<span class="xref">LedgerKeyOffer</span></dt>
-    <dd></dd>
+    <dd><p>The XDR ledger key offer object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -367,7 +379,8 @@ Class LedgerKeyOffer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this ledger key to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

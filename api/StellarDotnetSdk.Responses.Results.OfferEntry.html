@@ -158,7 +158,8 @@ For example an Offer is selling 10A where 1A is priced at 1.5B</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -168,19 +169,26 @@ For example an Offer is selling 10A where 1A is priced at 1.5B</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seller</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The account that created the offer.</p>
+</dd>
     <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the offer.</p>
+</dd>
     <dt><code>selling</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset being sold.</p>
+</dd>
     <dt><code>buying</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset being bought.</p>
+</dd>
     <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The amount of the selling asset.</p>
+</dd>
     <dt><code>price</code> <a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
-    <dd></dd>
+    <dd><p>The price of selling in terms of buying.</p>
+</dd>
     <dt><code>flags</code> <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a>.<a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.OfferEntryFlags.html">OfferEntryFlags</a></dt>
-    <dd></dd>
+    <dd><p>The flags set on the offer.</p>
+</dd>
   </dl>
 
 
@@ -435,7 +443,8 @@ Price = AmountBuying / AmountSelling</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts a raw XDR flags value to the corresponding <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.OfferEntryFlags.html">OfferEntry.OfferEntryFlags</a> enum.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -445,13 +454,15 @@ Price = AmountBuying / AmountSelling</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>flags</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The raw XDR flags value.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a>.<a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.OfferEntryFlags.html">OfferEntryFlags</a></dt>
-    <dd></dd>
+    <dd><p>The corresponding <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.OfferEntryFlags.html">OfferEntry.OfferEntryFlags</a> value.</p>
+</dd>
   </dl>
 
 
@@ -471,7 +482,8 @@ Price = AmountBuying / AmountSelling</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a> from the given XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -481,13 +493,15 @@ Price = AmountBuying / AmountSelling</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>entry</code> <span class="xref">OfferEntry</span></dt>
-    <dd></dd>
+    <dd><p>The XDR offer entry.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Responses.Results.OfferEntry.html">OfferEntry</a> instance.</p>
+</dd>
   </dl>
 
 

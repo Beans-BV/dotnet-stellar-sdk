@@ -1,0 +1,2582 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NaturalPersonKycFields </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NaturalPersonKycFields ">
+      
+      <meta name="description" content="KYC fields for natural persons (individuals). Contains personal identification information for individual customers. Fields follow international standards (ISO 3166, ISO 639, E.164) where applicable. See SEP-0009">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields" class="text-break">
+Class NaturalPersonKycFields  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0009.html">Sep0009</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>KYC fields for natural persons (individuals).
+Contains personal identification information for individual customers.
+Fields follow international standards (ISO 3166, ISO 639, E.164) where applicable.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0009.md">SEP-0009</a></p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record NaturalPersonKycFields : IEquatable&lt;NaturalPersonKycFields&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">NaturalPersonKycFields</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.html">NaturalPersonKycFields</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    This record contains <code>byte[]</code> properties for file attachments (e.g., <a class="xref" href="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.html#StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdFront">PhotoIdFront</a>,
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.html#StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdBack">PhotoIdBack</a>, etc.). Note that record equality for <code>byte[]</code> properties compares
+    by reference, not by content. Two instances with identical file content but different array references
+    will not be considered equal. This is standard C# behavior for array equality.
+</p>
+<p>
+    If content-based equality is required for file attachments, consider overriding <code>Equals</code> and
+    <code>GetHashCode</code>, or use <code>ImmutableArray&lt;byte&gt;</code> instead of <code>byte[]</code>.
+</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AdditionalNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AdditionalNameFieldKey">
+  AdditionalNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>additional_name</code> field (middle name or other additional name) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AdditionalNameFieldKey = &quot;additional_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AddressCountryCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AddressCountryCodeFieldKey">
+  AddressCountryCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>address_country_code</code> field (ISO 3166-1 alpha-3 country code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AddressCountryCodeFieldKey = &quot;address_country_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AddressFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AddressFieldKey">
+  AddressFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>address</code> field (full address as multi-line string) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AddressFieldKey = &quot;address&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthCountryCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthCountryCodeFieldKey">
+  BirthCountryCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>birth_country_code</code> field (ISO 3166-1 alpha-3 code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BirthCountryCodeFieldKey = &quot;birth_country_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthDateFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthDateFieldKey">
+  BirthDateFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>birth_date</code> field (date of birth in YYYY-MM-DD format) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BirthDateFieldKey = &quot;birth_date&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthPlaceFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthPlaceFieldKey">
+  BirthPlaceFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>birth_place</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BirthPlaceFieldKey = &quot;birth_place&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_CityFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.CityFieldKey">
+  CityFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>city</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CityFieldKey = &quot;city&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmailAddressFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmailAddressFieldKey">
+  EmailAddressFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>email_address</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EmailAddressFieldKey = &quot;email_address&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerAddressFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerAddressFieldKey">
+  EmployerAddressFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>employer_address</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EmployerAddressFieldKey = &quot;employer_address&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerNameFieldKey">
+  EmployerNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>employer_name</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EmployerNameFieldKey = &quot;employer_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FamilyNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FamilyNameFieldKey">
+  FamilyNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>family_name</code> field as defined in SEP-0009. Alias for <a class="xref" href="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.html#StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LastNameFieldKey">LastNameFieldKey</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string FamilyNameFieldKey = &quot;family_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FirstNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FirstNameFieldKey">
+  FirstNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>first_name</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string FirstNameFieldKey = &quot;first_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_GivenNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.GivenNameFieldKey">
+  GivenNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>given_name</code> field as defined in SEP-0009. Alias for <a class="xref" href="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.html#StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FirstNameFieldKey">FirstNameFieldKey</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GivenNameFieldKey = &quot;given_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdCountryCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdCountryCodeFieldKey">
+  IdCountryCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>id_country_code</code> field (ISO 3166-1 alpha-3 code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IdCountryCodeFieldKey = &quot;id_country_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdExpirationDateFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdExpirationDateFieldKey">
+  IdExpirationDateFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>id_expiration_date</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IdExpirationDateFieldKey = &quot;id_expiration_date&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdIssueDateFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdIssueDateFieldKey">
+  IdIssueDateFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>id_issue_date</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IdIssueDateFieldKey = &quot;id_issue_date&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdNumberFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdNumberFieldKey">
+  IdNumberFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>id_number</code> field (passport or ID number) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IdNumberFieldKey = &quot;id_number&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdTypeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdTypeFieldKey">
+  IdTypeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>id_type</code> field (e.g., passport, drivers_license) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IdTypeFieldKey = &quot;id_type&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IpAddressFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IpAddressFieldKey">
+  IpAddressFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>ip_address</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string IpAddressFieldKey = &quot;ip_address&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LanguageCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LanguageCodeFieldKey">
+  LanguageCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>language_code</code> field (ISO 639-1 code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string LanguageCodeFieldKey = &quot;language_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LastNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LastNameFieldKey">
+  LastNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>last_name</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string LastNameFieldKey = &quot;last_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumberFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumberFieldKey">
+  MobileNumberFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>mobile_number</code> field (E.164 format) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MobileNumberFieldKey = &quot;mobile_number&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumberFormatFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumberFormatFieldKey">
+  MobileNumberFormatFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>mobile_number_format</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MobileNumberFormatFieldKey = &quot;mobile_number_format&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_NotaryApprovalOfPhotoIdFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.NotaryApprovalOfPhotoIdFileKey">
+  NotaryApprovalOfPhotoIdFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>notary_approval_of_photo_id</code> attachment as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NotaryApprovalOfPhotoIdFileKey = &quot;notary_approval_of_photo_id&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_OccupationFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.OccupationFieldKey">
+  OccupationFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>occupation</code> field (ISCO code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string OccupationFieldKey = &quot;occupation&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdBackFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdBackFileKey">
+  PhotoIdBackFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>photo_id_back</code> attachment (back of photo ID or passport) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PhotoIdBackFileKey = &quot;photo_id_back&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdFrontFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdFrontFileKey">
+  PhotoIdFrontFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>photo_id_front</code> attachment (front of photo ID or passport) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PhotoIdFrontFileKey = &quot;photo_id_front&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoProofResidenceFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoProofResidenceFileKey">
+  PhotoProofResidenceFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>photo_proof_residence</code> attachment (utility bill or bank statement) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PhotoProofResidenceFileKey = &quot;photo_proof_residence&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PostalCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PostalCodeFieldKey">
+  PostalCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>postal_code</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PostalCodeFieldKey = &quot;postal_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfIncomeFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfIncomeFileKey">
+  ProofOfIncomeFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>proof_of_income</code> attachment as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ProofOfIncomeFileKey = &quot;proof_of_income&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfLivenessFileKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfLivenessFileKey">
+  ProofOfLivenessFileKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>File key for the <code>proof_of_liveness</code> attachment (video or image liveness proof) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ProofOfLivenessFileKey = &quot;proof_of_liveness&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ReferralIdFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ReferralIdFieldKey">
+  ReferralIdFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>referral_id</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ReferralIdFieldKey = &quot;referral_id&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_SexFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.SexFieldKey">
+  SexFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>sex</code> field (male, female, or other) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SexFieldKey = &quot;sex&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_StateOrProvinceFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.StateOrProvinceFieldKey">
+  StateOrProvinceFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>state_or_province</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string StateOrProvinceFieldKey = &quot;state_or_province&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxIdFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxIdFieldKey">
+  TaxIdFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>tax_id</code> field (e.g., SSN in the US) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TaxIdFieldKey = &quot;tax_id&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxIdNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxIdNameFieldKey">
+  TaxIdNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>tax_id_name</code> field (e.g., SSN or ITIN in the US) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TaxIdNameFieldKey = &quot;tax_id_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AdditionalName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AdditionalName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AdditionalName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AdditionalName">
+  AdditionalName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Middle name or other additional name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? AdditionalName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Address_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Address*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Address" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Address">
+  Address
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Entire address (country, state, postal code, street address, etc...) as a multi-line string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Address { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AddressCountryCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AddressCountryCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_AddressCountryCode" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.AddressCountryCode">
+  AddressCountryCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Country code for current address</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? AddressCountryCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthCountryCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthCountryCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthCountryCode" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthCountryCode">
+  BirthCountryCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>ISO Code of country of birth ISO 3166-1 alpha-3</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? BirthCountryCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthDate_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthDate*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthDate" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthDate">
+  BirthDate
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Date of birth, e.g. 1976-07-04</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(NullableDateOnlyJsonConverter))]
+public DateOnly? BirthDate { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable">Nullable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthDate_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Uses <code>DateOnly?</code> on net8.0/net10.0 and ISO date string (<code>yyyy-MM-dd</code>) on
+netstandard2.1.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthPlace_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthPlace*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_BirthPlace" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.BirthPlace">
+  BirthPlace
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Place of birth (city, state, country; as on passport)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? BirthPlace { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Card_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Card*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Card" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Card">
+  Card
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Card Fields</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CardKycFields? Card { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0009.CardKycFields.html">CardKycFields</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_City_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.City*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_City" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.City">
+  City
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of city/town</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? City { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmailAddress_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmailAddress*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmailAddress" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmailAddress">
+  EmailAddress
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Email address</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? EmailAddress { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerAddress_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerAddress*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerAddress" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerAddress">
+  EmployerAddress
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Address of employer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? EmployerAddress { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_EmployerName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.EmployerName">
+  EmployerName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of employer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? EmployerName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FamilyName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FamilyName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FamilyName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FamilyName">
+  FamilyName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Family name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? FamilyName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FinancialAccount_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FinancialAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FinancialAccount" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FinancialAccount">
+  FinancialAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Financial Account Fields</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FinancialAccountKycFields? FinancialAccount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0009.FinancialAccountKycFields.html">FinancialAccountKycFields</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FirstName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FirstName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_FirstName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.FirstName">
+  FirstName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>First name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? FirstName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_GivenName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.GivenName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_GivenName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.GivenName">
+  GivenName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Given name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? GivenName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdCountryCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdCountryCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdCountryCode" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdCountryCode">
+  IdCountryCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Country issuing passport or photo ID as ISO 3166-1 alpha-3 code</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? IdCountryCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdExpirationDate_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdExpirationDate*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdExpirationDate" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdExpirationDate">
+  IdExpirationDate
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>ID expiration date</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(NullableDateOnlyJsonConverter))]
+public DateOnly? IdExpirationDate { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable">Nullable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdExpirationDate_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Uses <code>DateOnly?</code> on net8.0/net10.0 and ISO date string (<code>yyyy-MM-dd</code>) on
+netstandard2.1.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdIssueDate_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdIssueDate*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdIssueDate" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdIssueDate">
+  IdIssueDate
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>ID issue date</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(NullableDateOnlyJsonConverter))]
+public DateOnly? IdIssueDate { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable">Nullable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdIssueDate_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Uses <code>DateOnly?</code> on net8.0/net10.0 and ISO date string (<code>yyyy-MM-dd</code>) on
+netstandard2.1.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdNumber_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdNumber*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdNumber" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdNumber">
+  IdNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Passport or ID number</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? IdNumber { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdType_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdType*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IdType" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IdType">
+  IdType
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>passport, drivers_license, id_card, etc...</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? IdType { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IpAddress_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IpAddress*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_IpAddress" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.IpAddress">
+  IpAddress
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>IP address of customer's computer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? IpAddress { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LanguageCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LanguageCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LanguageCode" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LanguageCode">
+  LanguageCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Primary language ISO 639-1</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? LanguageCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LastName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LastName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_LastName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.LastName">
+  LastName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Last name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? LastName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumber_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumber*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumber" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumber">
+  MobileNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Mobile phone number with country code, in E.164 format</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? MobileNumber { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumberFormat_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumberFormat*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_MobileNumberFormat" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.MobileNumberFormat">
+  MobileNumberFormat
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Expected format of the mobile_number field. E.g.: E.164, hash, etc...
+In case this field is not specified, receiver will assume it's in E.164 format</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? MobileNumberFormat { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_NotaryApprovalOfPhotoId_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.NotaryApprovalOfPhotoId*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_NotaryApprovalOfPhotoId" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.NotaryApprovalOfPhotoId">
+  NotaryApprovalOfPhotoId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Image of notary's approval of photo ID or passport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? NotaryApprovalOfPhotoId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Occupation_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Occupation*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Occupation" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Occupation">
+  Occupation
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Occupation ISCO code</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? Occupation { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdBack_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdBack*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdBack" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdBack">
+  PhotoIdBack
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Image of back of user's photo ID or passport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? PhotoIdBack { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdFront_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdFront*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoIdFront" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoIdFront">
+  PhotoIdFront
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Image of front of user's photo ID or passport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? PhotoIdFront { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoProofResidence_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoProofResidence*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PhotoProofResidence" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PhotoProofResidence">
+  PhotoProofResidence
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Image of a utility bill, bank statement or similar with the user's name and address</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? PhotoProofResidence { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PostalCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PostalCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_PostalCode" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.PostalCode">
+  PostalCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Postal or other code identifying user's locale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? PostalCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfIncome_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfIncome*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfIncome" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfIncome">
+  ProofOfIncome
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Image of user's proof of income document</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? ProofOfIncome { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfLiveness_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfLiveness*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ProofOfLiveness" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ProofOfLiveness">
+  ProofOfLiveness
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Video or image file of user as a liveness proof</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? ProofOfLiveness { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ReferralId_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ReferralId*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_ReferralId" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.ReferralId">
+  ReferralId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>User's origin (such as an id in another application) or a referral code</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ReferralId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Sex_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Sex*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_Sex" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.Sex">
+  Sex
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>male, female, or other</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Sex { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_StateOrProvince_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.StateOrProvince*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_StateOrProvince" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.StateOrProvince">
+  StateOrProvince
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of state/province/region/prefecture</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? StateOrProvince { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxId_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxId*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxId" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxId">
+  TaxId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Tax identifier of user in their country (social security number in US)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? TaxId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxIdName_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxIdName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_TaxIdName" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.TaxIdName">
+  TaxIdName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of the tax ID (SSN or ITIN in the US)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? TaxIdName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_GetFiles_" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.GetFiles*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_NaturalPersonKycFields_GetFiles" data-uid="StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.GetFiles">
+  GetFiles()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts all natural person KYC file attachments to a map for SEP-9 submission.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;string, byte[]&gt; GetFiles()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]&gt;</dt>
+    <dd><p>Dictionary containing all non-null file values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

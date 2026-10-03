@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class CardKycFields </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class CardKycFields ">
+      
+      <meta name="description" content="Payment card information for KYC verification. Contains credit or debit card details for payment processing. All field keys are prefixed with &amp;quot;card.&amp;quot; See SEP-0009">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields" class="text-break">
+Class CardKycFields  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0009.html">Sep0009</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Payment card information for KYC verification.
+Contains credit or debit card details for payment processing.
+All field keys are prefixed with &quot;card.&quot;
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0009.md">SEP-0009</a></p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record CardKycFields : IEquatable&lt;CardKycFields&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">CardKycFields</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0009.CardKycFields.html">CardKycFields</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_AddressFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.AddressFieldKey">
+  AddressFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.address</code> field (full billing address) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AddressFieldKey = &quot;card.address&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_CityFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.CityFieldKey">
+  CityFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.city</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CityFieldKey = &quot;card.city&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_CountryCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.CountryCodeFieldKey">
+  CountryCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.country_code</code> field (ISO 3166-1 alpha-2 code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CountryCodeFieldKey = &quot;card.country_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_CvcFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.CvcFieldKey">
+  CvcFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.cvc</code> field (digits on the back of the card) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CvcFieldKey = &quot;card.cvc&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_ExpirationDateFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.ExpirationDateFieldKey">
+  ExpirationDateFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.expiration_date</code> field (YY-MM format) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ExpirationDateFieldKey = &quot;card.expiration_date&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_HolderNameFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.HolderNameFieldKey">
+  HolderNameFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.holder_name</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string HolderNameFieldKey = &quot;card.holder_name&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_KeyPrefix" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.KeyPrefix">
+  KeyPrefix
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Key prefix for all card fields (<code>&quot;card.&quot;</code>) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string KeyPrefix = &quot;card.&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_NetworkFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.NetworkFieldKey">
+  NetworkFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.network</code> field (e.g., Visa, Mastercard) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NetworkFieldKey = &quot;card.network&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_NumberFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.NumberFieldKey">
+  NumberFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.number</code> field as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NumberFieldKey = &quot;card.number&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_PostalCodeFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.PostalCodeFieldKey">
+  PostalCodeFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.postal_code</code> field (billing address postal code) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PostalCodeFieldKey = &quot;card.postal_code&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_StateOrProvinceFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.StateOrProvinceFieldKey">
+  StateOrProvinceFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.state_or_province</code> field (ISO 3166-2 format) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string StateOrProvinceFieldKey = &quot;card.state_or_province&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_TokenFieldKey" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.TokenFieldKey">
+  TokenFieldKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field key for the <code>card.token</code> field (external payment system token) as defined in SEP-0009.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TokenFieldKey = &quot;card.token&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Address_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Address*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Address" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Address">
+  Address
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Entire address (country, state, postal code, street address, etc...) as a multi-line string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Address { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_City_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.City*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_City" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.City">
+  City
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of city/town</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? City { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_CountryCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.CountryCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_CountryCode" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.CountryCode">
+  CountryCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Billing address country code in ISO 3166-1 alpha-2 code (e.g. US)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CountryCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Cvc_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Cvc*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Cvc" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Cvc">
+  Cvc
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>CVC number (Digits on the back of the card)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Cvc { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_ExpirationDate_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.ExpirationDate*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_ExpirationDate" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.ExpirationDate">
+  ExpirationDate
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Expiration month and year in YY-MM format (e.g. 29-11, November 2029)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ExpirationDate { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_HolderName_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.HolderName*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_HolderName" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.HolderName">
+  HolderName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of the card holder</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? HolderName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Network_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Network*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Network" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Network">
+  Network
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Brand of the card/network it operates within (e.g. Visa, Mastercard, AmEx, etc.)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Network { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Number_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Number*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Number" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Number">
+  Number
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Card number</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Number { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_PostalCode_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.PostalCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_PostalCode" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.PostalCode">
+  PostalCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Billing address postal code</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? PostalCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_StateOrProvince_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.StateOrProvince*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_StateOrProvince" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.StateOrProvince">
+  StateOrProvince
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of state/province/region/prefecture in ISO 3166-2 format</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? StateOrProvince { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Token_" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Token*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0009_CardKycFields_Token" data-uid="StellarDotnetSdk.Sep.Sep0009.CardKycFields.Token">
+  Token
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Token representation of the card in some external payment system (e.g. Stripe)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Token { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

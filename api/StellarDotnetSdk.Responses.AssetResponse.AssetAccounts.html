@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AssetResponse.AssetAccounts ">
       
-      <meta name="description" content="Describe asset accounts">
+      <meta name="description" content="Statistics about accounts holding the asset, categorized by authorization status.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,12 @@ Class AssetResponse.AssetAccounts
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Describe asset accounts</p>
+  <div class="markdown summary"><p>Statistics about accounts holding the asset, categorized by authorization status.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AssetResponse.AssetAccounts</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AssetResponse.AssetAccounts</code></pre>
   </div>
 
 
@@ -130,54 +130,12 @@ Class AssetResponse.AssetAccounts
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
     </div>
   </dd></dl>
-
-
-
-
-
-
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_AssetResponse_AssetAccounts__ctor_" data-uid="StellarDotnetSdk.Responses.AssetResponse.AssetAccounts.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_AssetResponse_AssetAccounts__ctor_System_Int32_System_Int32_System_Int32_" data-uid="StellarDotnetSdk.Responses.AssetResponse.AssetAccounts.#ctor(System.Int32,System.Int32,System.Int32)">
-  AssetAccounts(int, int, int)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AssetAccounts(int authorized, int authorizedToMaintainLiabilities, int unauthorized)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>authorized</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-    <dt><code>authorizedToMaintainLiabilities</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-    <dt><code>unauthorized</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
 
 
 
@@ -195,12 +153,13 @@ Class AssetResponse.AssetAccounts
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of accounts fully authorized to hold and transact with this asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;authorized&quot;)]
-public int Authorized { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorized&quot;)]
+public required int Authorized { get; init; }</code></pre>
   </div>
 
 
@@ -227,12 +186,13 @@ public int Authorized { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of accounts authorized only to maintain liabilities (can hold but not transact).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;authorized_to_maintain_liabilities&quot;)]
-public int AuthorizedToMaintainLiabilities { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorized_to_maintain_liabilities&quot;)]
+public required int AuthorizedToMaintainLiabilities { get; init; }</code></pre>
   </div>
 
 
@@ -259,12 +219,13 @@ public int AuthorizedToMaintainLiabilities { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of unauthorized accounts with a trustline to this asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;unauthorized&quot;)]
-public int Unauthorized { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;unauthorized&quot;)]
+public required int Unauthorized { get; init; }</code></pre>
   </div>
 
 

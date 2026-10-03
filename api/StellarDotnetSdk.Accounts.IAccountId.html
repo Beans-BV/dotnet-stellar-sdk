@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IAccountId ">
       
-      
+      <meta name="description" content="Represents a Stellar account identifier, providing access to the account&#39;s public key, address, and signing key. Implemented by both standard  and  accounts.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Interface IAccountId
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Stellar account identifier, providing access to the account's public key,
+address, and signing key. Implemented by both standard <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> and
+<a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html">MuxedAccountMed25519</a> accounts.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -123,7 +126,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the StrKey-encoded account ID (G... for standard accounts, M... for muxed accounts).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -154,7 +158,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the StrKey-encoded address (G... for standard accounts, M... for muxed accounts).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -185,7 +190,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this is a muxed (multiplexed) account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -216,7 +222,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the XDR muxed account representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -247,7 +254,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the raw Ed25519 public key bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +286,8 @@ Interface IAccountId
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> used for signing transactions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

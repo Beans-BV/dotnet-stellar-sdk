@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SimulateTransactionResponse.LedgerEntryChange ">
       
-      
+      <meta name="description" content="Represents a change to a ledger entry that would result from executing the simulated transaction, including the entry&#39;s state before and after the change.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class SimulateTransactionResponse.LedgerEntryChange
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a change to a ledger entry that would result from executing the simulated transaction,
+including the entry's state before and after the change.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,47 +146,6 @@ Class SimulateTransactionResponse.LedgerEntryChange
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange__ctor_System_String_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.#ctor(System.String,System.String,System.String,System.String)">
-  LedgerEntryChange(string, string, string?, string?)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerEntryChange(string type, string key, string? before, string? after)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>before</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>after</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -196,11 +157,12 @@ Class SimulateTransactionResponse.LedgerEntryChange
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base64-encoded XDR of the ledger entry after the change, or null for deleted entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? After { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? After { get; init; }</code></pre>
   </div>
 
 
@@ -227,11 +189,12 @@ Class SimulateTransactionResponse.LedgerEntryChange
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base64-encoded XDR of the ledger entry before the change, or null for created entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? Before { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Before { get; init; }</code></pre>
   </div>
 
 
@@ -258,11 +221,24 @@ Class SimulateTransactionResponse.LedgerEntryChange
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base64-encoded XDR key of the affected ledger entry.</p>
+<p>
+    (optional) Stellar RPC tags this field <code>omitempty</code>, so it is absent whenever the key is
+    empty. That is not hypothetical: v23.0.0 and v23.0.1 shipped pre-allocated no-op state changes
+    with no key at all — the same entries whose <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Type">Type</a> marshalled to <code>""</code> — fixed
+    in v23.0.2 (stellar/stellar-rpc#506). It is also absent when the entry's key travels in the
+    JSON-XDR <code>keyJson</code> field instead, though this SDK never requests that format.
+</p>
+<p>
+    A missing property does not violate a non-nullable annotation the way an explicit <code>null</code>
+    does, so before this was widened the property advertised a guarantee the wire did not honour and
+    the compiler suppressed exactly the null checks that would have caught it.
+</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Key { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Key { get; init; }</code></pre>
   </div>
 
 
@@ -289,11 +265,24 @@ Class SimulateTransactionResponse.LedgerEntryChange
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of ledger entry change: <code>&quot;created&quot;</code>, <code>&quot;updated&quot;</code> or <code>&quot;deleted&quot;</code>.</p>
+<p>
+    Non-nullable, unlike <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Key">Key</a>: Stellar RPC tags this field neither <code>omitempty</code> nor
+    optional and its <code>MarshalJSON</code> always writes a string, so a conforming server always sends
+    it.
+</p>
+<p>
+    An empty string is possible and is not one of the three documented types: Stellar RPC v23.0.0 and
+    v23.0.1 emitted pre-allocated no-op state changes whose <code>type</code> marshalled to <code>""</code>
+    (fixed in v23.0.2, stellar/stellar-rpc#506) — the same entries that omitted <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Key">Key</a>.
+    Compare against the three literals rather than assuming a non-empty value.
+</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Type { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonRequired]
+public required string Type { get; init; }</code></pre>
   </div>
 
 
@@ -309,6 +298,26 @@ Class SimulateTransactionResponse.LedgerEntryChange
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Type_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a> makes "a conforming server always sends it" a contract the
+    deserializer enforces, matching <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_Hash">Hash</a>. Without it the
+    non-nullable annotation was unenforced in exactly the direction that matters:
+    <code>RespectNullableAnnotations</code> rejects an explicit <code>null</code> but not an <em>absent</em>
+    property, so an entry with no <code>type</code> left this <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> holding
+    <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> and every <code>Type == "created"</code> comparison silently returned false.
+    Requiring it rejects nothing a conforming server sends. Note this enforces presence, not
+    membership: the empty string described above still deserializes.
+</p>
+<p>
+    <code>required</code> carries the same guarantee to the other entry point. The attribute only binds
+    the deserializer, so without it <code>new LedgerEntryChange { Before = "…" }</code> still compiled
+    and still left a non-nullable <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> holding <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> — the very
+    state the attribute was added to make unreachable, one entry point over. This matches how the
+    array properties on this type guard both paths, and how <code>Claimant</code> and
+    <code>ClaimableBalanceResponse</code> already declare their always-present fields.
+</p>
+</div>
 
 
 

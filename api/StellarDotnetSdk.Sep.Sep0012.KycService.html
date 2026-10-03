@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class KycService </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class KycService ">
+      
+      <meta name="description" content="Implements the client side of SEP-0012 v1.15.0 - KYC API. SEP-0012 is how a wallet uploads KYC (or other) customer information to an anchor once and reuses it across services: it supplies the customer data that SEP-6, SEP-24 and SEP-31 anchor flows ask for, checks its review status, and lets the customer erase it. See SEP-0012.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.KycService">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_KycService" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService" class="text-break">
+Class KycService  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.html">Sep0012</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Implements the client side of SEP-0012 v1.15.0 - KYC API. SEP-0012 is how a wallet uploads KYC (or other)
+customer information to an anchor once and reuses it across services: it supplies the customer data that
+SEP-6, SEP-24 and SEP-31 anchor flows ask for, checks its review status, and lets the customer erase it.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md">SEP-0012</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class KycService : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">KycService</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0012_KycService_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    <b>Discovery and authentication.</b> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html#StellarDotnetSdk_Sep_Sep0012_KycService_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_">FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)</a> reads the anchor's stellar.toml and uses
+    <code>KYC_SERVER</code>, falling back to <code>TRANSFER_SERVER</code> as SEP-0012 prescribes. Every endpoint requires a
+    JWT obtained from the same anchor through SEP-10 (<a class="xref" href="StellarDotnetSdk.Sep.Sep0010.ClientWebAuth.html">ClientWebAuth</a>, for <code>G...</code> and
+    <code>M...</code> accounts) or SEP-45 (<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html">ClientWebAuthContract</a>, for <code>C...</code> contract
+    accounts); each request type carries it in its <code>Jwt</code> property. Because every request carries that JWT
+    and customer data, the KYC server must use <code>https</code>; plain <code>http</code> is accepted only for
+    <code>localhost</code> or a loopback IP address in its standard form (such as <code>127.0.0.1</code> or <code>[::1]</code>).
+    The same rule applies to a callback URL registered with <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html#StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerCallbackAsync_StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerCallbackRequest_System_Threading_CancellationToken_">PutCustomerCallbackAsync(PutCustomerCallbackRequest, CancellationToken)</a>.
+</p>
+<p>
+    <b>Response handling.</b> Response bodies are read with a hard size limit of 1 MiB, so a hostile or
+    malfunctioning server cannot exhaust memory by streaming an unbounded body, and the whole exchange —
+    headers and body — is bounded by the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a> of the client in use (and, for the
+    internal client, by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout">RequestTimeout</a>), so it cannot stall the caller
+    either. A success body must be strict UTF-8, so malformed bytes are rejected rather than replaced; an
+    error body is decoded leniently. Bodies are parsed with <a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html#StellarDotnetSdk_Converters_JsonOptions_DefaultOptions">DefaultOptions</a> —
+    duplicate properties are rejected, including in error bodies — and statuses and field types are matched
+    against the exact literal sets SEP-0012 defines. A success response that fails any of this raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a>. Error statuses raise <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a>
+    (401, or 403 <code>authentication_required</code>), <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a> (404 from
+    <code>GET</code>/<code>PUT /customer</code>, <code>PUT /customer/verification</code>, <code>PUT /customer/callback</code> or
+    <code>DELETE /customer</code>), <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.PayloadTooLargeException.html">PayloadTooLargeException</a> (413) or <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a>
+    (anything else, including a 404 from the <code>/customer/files</code> endpoints); each carries the anchor's
+    <code>error</code> text when the error body holds one.
+</p>
+<p>
+    <b>Transport failures</b> surface as <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a> (including a connection that drops
+    while a success body is being read) or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> (cancellation, or a timeout, in
+    which case its inner exception is a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>). A call on a disposed service throws
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a> once its arguments have passed validation. On .NET 8, a request
+    whose URL exceeds the runtime's length limit (an identifier tens of kilobytes long) raises
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a>.
+</p>
+<p>
+    <b>Redirects.</b> The internal client does not follow redirects, so a 3xx answer raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a> and the request body is never replayed to another host. An external
+    client follows redirects if its handler does; the service then rejects any response that comes from a
+    different origin than <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html#StellarDotnetSdk_Sep_Sep0012_KycService_ServiceAddress">ServiceAddress</a>, but by that point the request, including its customer
+    data, has already been sent there. It also rejects a response to a request the handler resent with a
+    different method (a <code>POST</code> after a 301, 302 or 303, or a <code>PUT</code> or <code>DELETE</code> after a 303,
+    is resent as <code>GET</code>), whatever its status: a success would not show the change was applied, and an
+    error would answer a request the caller never made, so both raise a plain
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a>. Only the final location is visible, so a chain that leaves the origin
+    and returns to it is not detected at all. Disable <code>AllowAutoRedirect</code> on an external client's handler
+    to avoid both.
+</p>
+<p>
+    <b>HttpClient ownership.</b> Pass a shared, long-lived <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> in production. When none is
+    given, the service creates an internal one (honouring <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>) and disposes it
+    in <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html#StellarDotnetSdk_Sep_Sep0012_KycService_Dispose">Dispose()</a>; an external client is never disposed by this service.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService__ctor_System_String_System_Net_Http_HttpClient_StellarDotnetSdk_Requests_HttpResilienceOptions_System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.#ctor(System.String,System.Net.Http.HttpClient,StellarDotnetSdk.Requests.HttpResilienceOptions,System.Collections.Generic.Dictionary{System.String,System.String})">
+  KycService(string, HttpClient?, HttpResilienceOptions?, Dictionary&lt;string, string&gt;?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html">KycService</a> class for an explicit KYC server URL. Use
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html#StellarDotnetSdk_Sep_Sep0012_KycService_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_">FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)</a> to discover the URL from the anchor's stellar.toml instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KycService(string serviceAddress, HttpClient? httpClient = null, HttpResilienceOptions? resilienceOptions = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>serviceAddress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The absolute <code>https</code> URL of the anchor's KYC server (its <code>KYC_SERVER</code>), without a query, fragment
+or user info. Plain <code>http</code> is accepted only for <code>localhost</code> or a loopback IP address in its
+standard form, for local testing.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional shared HTTP client. If <code>null</code>, an internal client is created and disposed with this instance.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry/timeout options for the internal client. Ignored when <code class="paramref">httpClient</code> is given.
+Do not pass options that retry <code>POST</code> requests on a status code, such as
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForHorizon">ForHorizon()</a> or <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForSoroban">ForSoroban()</a>:
+<code>POST /customer/files</code> creates a new file on every attempt, so a retry after the anchor already stored
+the upload leaves a duplicate behind. Connection-failure retries apply to every method (see
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_WithConnectionRetries">WithConnectionRetries()</a>), so they carry the same risk when a
+connection drops after the upload was received.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers added to every request. A header the service sets itself (<code>Authorization</code>, and
+the <code>Content-Type</code> of a request body) is never overridden by it, and a name that is not a valid HTTP
+header name is ignored. Do not pass <code>Content-Length</code>: the body's length is computed per request.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">serviceAddress</code> is empty, is not an absolute http(s) URL, uses <code>http</code>
+for a host other than <code>localhost</code> or a standard-form loopback IP address, or contains a query,
+fragment or user info.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_ServiceAddress_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.ServiceAddress*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_ServiceAddress" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.ServiceAddress">
+  ServiceAddress
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the base URL of the KYC server, without a trailing slash.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ServiceAddress { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_DeleteCustomerAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.DeleteCustomerAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_DeleteCustomerAsync_StellarDotnetSdk_Sep_Sep0012_Requests_DeleteCustomerRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.DeleteCustomerAsync(StellarDotnetSdk.Sep.Sep0012.Requests.DeleteCustomerRequest,System.Threading.CancellationToken)">
+  DeleteCustomerAsync(DeleteCustomerRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>DELETE /customer/[account]</code>: deletes all personal information the anchor stores about the customer.
+The memo parameters, when set, are sent in a <code>multipart/form-data</code> body. The response body is not read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteCustomerAsync(DeleteCustomerRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.DeleteCustomerRequest.html">DeleteCustomerRequest</a></dt>
+    <dd><p>The account, optional memo and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, the account is empty or is a <code>.</code> or <code>..</code>
+path segment, a memo is given for a <code>C...</code> account, or <code>MemoType</code> is not <code>text</code>, <code>id</code>
+or <code>hash</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected (HTTP 401, or 403 with type <code>authentication_required</code>).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></dt>
+    <dd><p>Thrown when the anchor has no information on the customer (HTTP 404).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_Dispose" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes the internal <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> if this instance created it. An externally supplied client
+is left untouched. Any later call on this instance whose arguments pass validation throws
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.FromDomainAsync(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html">KycService</a> for an anchor by reading its stellar.toml (SEP-1): the
+<code>KYC_SERVER</code> if declared, otherwise the <code>TRANSFER_SERVER</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;KycService&gt; FromDomainAsync(string domain, HttpResilienceOptions? resilienceOptions = null, string? bearerToken = null, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The anchor's home domain, for example <code>testanchor.stellar.org</code>.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry/timeout options, used for the stellar.toml fetch and for the service's internal client —
+both only when no <code class="paramref">httpClient</code> is given. See the constructor for why options that retry
+<code>POST</code> requests should not be used here.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional bearer token for the stellar.toml fetch only, and only when no <code class="paramref">httpClient</code> is
+given (an external client's own headers are used as they are).</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional shared HTTP client, used for the stellar.toml fetch and every SEP-0012 request. If <code>null</code>, the
+returned instance creates and owns an internal one.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers for the stellar.toml fetch and every SEP-0012 request.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token for the stellar.toml fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycService.html">KycService</a>&gt;</dt>
+    <dd><p>A service bound to the anchor's KYC server.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown when the stellar.toml declares neither <code>KYC_SERVER</code> nor <code>TRANSFER_SERVER</code>, or declares one
+that is not an acceptable service address: an absolute <code>https</code> URL (even for a loopback host) without
+a query, fragment or user info.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">domain</code> is empty.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the stellar.toml cannot be fetched or parsed.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_GetCustomerFilesAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.GetCustomerFilesAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_GetCustomerFilesAsync_StellarDotnetSdk_Sep_Sep0012_Requests_GetCustomerFilesRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.GetCustomerFilesAsync(StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerFilesRequest,System.Threading.CancellationToken)">
+  GetCustomerFilesAsync(GetCustomerFilesRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /customer/files</code>: fetches metadata of files uploaded with <code>POST /customer/files</code>, by file ID
+or by customer ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetCustomerFilesResponse&gt; GetCustomerFilesAsync(GetCustomerFilesRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerFilesRequest.html">GetCustomerFilesRequest</a></dt>
+    <dd><p>The file or customer ID, and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerFilesResponse.html">GetCustomerFilesResponse</a>&gt;</dt>
+    <dd><p>The matching files; an empty list when none match.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, or neither a file ID nor a customer ID is given.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></dt>
+    <dd><p>Thrown when the response body is not a valid SEP-0012 response.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_GetCustomerInfoAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.GetCustomerInfoAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_GetCustomerInfoAsync_StellarDotnetSdk_Sep_Sep0012_Requests_GetCustomerInfoRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.GetCustomerInfoAsync(StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerInfoRequest,System.Threading.CancellationToken)">
+  GetCustomerInfoAsync(GetCustomerInfoRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /customer</code>: fetches the fields the anchor requires to register a customer, or the KYC status of a
+customer that may already be registered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetCustomerInfoResponse&gt; GetCustomerInfoAsync(GetCustomerInfoRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerInfoRequest.html">GetCustomerInfoRequest</a></dt>
+    <dd><p>The request parameters and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoResponse.html">GetCustomerInfoResponse</a>&gt;</dt>
+    <dd><p>The customer's status, the fields still needed, and the fields already provided.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, <code>TransactionId</code> is set without <code>Type</code>, a
+memo is given for a <code>C...</code> account, or <code>MemoType</code> is not <code>text</code>, <code>id</code> or <code>hash</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></dt>
+    <dd><p>Thrown when the customer <code>id</code> is unknown (HTTP 404).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></dt>
+    <dd><p>Thrown when the response body is not a valid SEP-0012 response.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_PostCustomerFileAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PostCustomerFileAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_PostCustomerFileAsync_StellarDotnetSdk_Sep_Sep0012_Requests_PostCustomerFileRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PostCustomerFileAsync(StellarDotnetSdk.Sep.Sep0012.Requests.PostCustomerFileRequest,System.Threading.CancellationToken)">
+  PostCustomerFileAsync(PostCustomerFileRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /customer/files</code>: uploads a single binary file, whose returned <code>file_id</code> can then be
+referenced from <code>PUT /customer</code> through <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerInfoRequest_FileReferences">FileReferences</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;CustomerFileResponse&gt; PostCustomerFileAsync(PostCustomerFileRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PostCustomerFileRequest.html">PostCustomerFileRequest</a></dt>
+    <dd><p>The file content, optional file name and content type, and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.CustomerFileResponse.html">CustomerFileResponse</a>&gt;</dt>
+    <dd><p>The uploaded file's metadata.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, the file is <code>null</code>, or the content type is not a
+valid media type.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.PayloadTooLargeException.html">PayloadTooLargeException</a></dt>
+    <dd><p>Thrown when the file exceeds the server's limit (HTTP 413).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></dt>
+    <dd><p>Thrown when the response body is not a valid SEP-0012 response.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerCallbackAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerCallbackAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerCallbackAsync_StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerCallbackRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerCallbackAsync(StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerCallbackRequest,System.Threading.CancellationToken)">
+  PutCustomerCallbackAsync(PutCustomerCallbackRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>PUT /customer/callback</code>: registers the URL the anchor POSTs to whenever the customer's status changes,
+replacing any previously registered URL. The response body is not read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task PutCustomerCallbackAsync(PutCustomerCallbackRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerCallbackRequest.html">PutCustomerCallbackRequest</a></dt>
+    <dd><p>The callback URL, customer identification and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, the URL is not an absolute http(s) URL or uses
+<code>http</code> for a host other than <code>localhost</code> or a standard-form loopback IP address, a memo is given for a <code>C...</code>
+account, or <code>MemoType</code> is not <code>text</code>, <code>id</code> or <code>hash</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></dt>
+    <dd><p>Thrown when the anchor has no information on the customer (HTTP 404).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerInfoAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerInfoAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerInfoAsync_StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerInfoRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerInfoAsync(StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest,System.Threading.CancellationToken)">
+  PutCustomerInfoAsync(PutCustomerInfoRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>PUT /customer</code>: idempotently uploads customer information — SEP-0009 fields, custom fields, binary
+files, verification codes and references to previously uploaded files — as <code>multipart/form-data</code>, with
+every binary part after all text parts.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;PutCustomerInfoResponse&gt; PutCustomerInfoAsync(PutCustomerInfoRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html">PutCustomerInfoRequest</a></dt>
+    <dd><p>The customer data and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.PutCustomerInfoResponse.html">PutCustomerInfoResponse</a>&gt;</dt>
+    <dd><p>The ID of the created or updated customer.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT is empty or is not printable ASCII, a field value is <code>null</code>, a field name is empty
+or is not printable ASCII free of quotes and backslashes, a verification or file-reference key is only its
+suffix, a name is used by both a text field and a file, <code>TransactionId</code> is set without <code>Type</code>, a
+memo is given for a <code>C...</code> account, or <code>MemoType</code> is not <code>text</code>, <code>id</code> or <code>hash</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></dt>
+    <dd><p>Thrown when the customer <code>id</code> is unknown or belongs to another account (HTTP 404).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.PayloadTooLargeException.html">PayloadTooLargeException</a></dt>
+    <dd><p>Thrown when an uploaded file exceeds the server's limit (HTTP 413).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></dt>
+    <dd><p>Thrown when the response body is not a valid SEP-0012 response.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerVerificationAsync_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerVerificationAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycService_PutCustomerVerificationAsync_StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerVerificationRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycService.PutCustomerVerificationAsync(StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerVerificationRequest,System.Threading.CancellationToken)">
+  PutCustomerVerificationAsync(PutCustomerVerificationRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>PUT /customer/verification</code> (<b>deprecated</b> since SEP-0012 v1.12.0): submits verification values,
+such as confirmation codes, for fields in the <code>VERIFICATION_REQUIRED</code> status.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;PUT /customer/verification is deprecated since SEP-0012 v1.12.0. Use PutCustomerInfoAsync with PutCustomerInfoRequest.VerificationFields instead.&quot;)]
+public Task&lt;GetCustomerInfoResponse&gt; PutCustomerVerificationAsync(PutCustomerVerificationRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerVerificationRequest.html">PutCustomerVerificationRequest</a></dt>
+    <dd><p>The customer ID, verification values and JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoResponse.html">GetCustomerInfoResponse</a>&gt;</dt>
+    <dd><p>The customer's updated status, in the <code>GET /customer</code> response format.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the JWT or ID is empty, the JWT is not printable ASCII, no verification value is given, or a
+field name is invalid.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when the JWT is rejected.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></dt>
+    <dd><p>Thrown when the customer <code>id</code> is unknown (HTTP 404).</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></dt>
+    <dd><p>Thrown when the response body is not a valid SEP-0012 response.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a></dt>
+    <dd><p>Thrown for any other error response.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

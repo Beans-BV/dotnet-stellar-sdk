@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class RequestBuilderStreamable&lt;T, TResponse&gt; ">
       
-      
+      <meta name="description" content="Base class for request builders that support both paginated execution and Server-Sent Events (SSE) streaming.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Base class for request builders that support both paginated execution and Server-Sent Events (SSE) streaming.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -105,9 +106,11 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The concrete request builder type (for fluent chaining).</p>
+</dd>
     <dt><code>TResponse</code></dt>
-    <dd></dd>
+    <dd><p>The response element type for both paged results and streamed events.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -213,7 +216,8 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html">RequestBuilderStreamable&lt;T, TResponse&gt;</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -223,11 +227,14 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>defaultSegment</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The default URL path segment for this endpoint.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -248,7 +255,8 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html">RequestBuilderStreamable&lt;T, TResponse&gt;</a> class with a custom event source.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -258,13 +266,17 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>defaultSegment</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The default URL path segment for this endpoint.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
     <dt><code>eventSource</code> <a class="xref" href="StellarDotnetSdk.EventSources.IEventSource.html">IEventSource</a></dt>
-    <dd></dd>
+    <dd><p>A custom SSE event source implementation.</p>
+</dd>
   </dl>
 
 
@@ -289,7 +301,8 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the SSE event source used for streaming. If null, a default one is created on first stream.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -341,7 +354,10 @@ Class RequestBuilderStreamable&lt;T, TResponse&gt;
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.EventSources.IEventSource.html">IEventSource</a></dt>
-    <dd><p>EventSource object, so you can <pre><code class="lang-csharp">close()</code></pre> connection when not needed anymore
+    <dd><p>EventSource object, so you can</p>
+<pre><code>&lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;close()&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>connection when not needed anymore</p>
 </dd>
   </dl>
 

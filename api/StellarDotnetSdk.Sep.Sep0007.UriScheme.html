@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class UriScheme </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class UriScheme ">
+      
+      <meta name="description" content="SEP-7 (URI Scheme to facilitate delegated signing): builds, parses, validates, signs and verifies web+stellar: request URIs, and hands the signed transaction of a tx request on to its callback or to Horizon.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0007_UriScheme" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme" class="text-break">
+Class UriScheme  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.html">Sep0007</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>SEP-7 (URI Scheme to facilitate delegated signing): builds, parses, validates, signs and verifies
+<code>web+stellar:</code> request URIs, and hands the signed transaction of a <code>tx</code> request on to its
+callback or to Horizon.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class UriScheme : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">UriScheme</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    The static members work offline. The instance members fetch the origin domain's stellar.toml or POST to
+    a callback with the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> given to the constructor; submitting to Horizon goes
+    through the <a class="xref" href="StellarDotnetSdk.Server.html">Server</a> passed in, with that server's own client.
+</p>
+<p>
+    Request signatures cover the URI string exactly as sent (minus the <code>signature</code> parameter), so
+    verification works on the received string and never re-encodes it.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme__ctor_System_Net_Http_HttpClient_StellarDotnetSdk_Requests_HttpResilienceOptions_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.#ctor(System.Net.Http.HttpClient,StellarDotnetSdk.Requests.HttpResilienceOptions)">
+  UriScheme(HttpClient?, HttpResilienceOptions?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public UriScheme(HttpClient? httpClient = null, HttpResilienceOptions? resilienceOptions = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>
+    Optional HTTP client to reuse for stellar.toml fetches and callback POSTs. Credentials placed in its
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.defaultrequestheaders">DefaultRequestHeaders</a> are sent to every origin domain and
+    callback URL a request names, which are chosen by whoever built the request; do not put secrets there.
+</p>
+<p>
+    Give it a handler with automatic redirects turned off (<code>AllowAutoRedirect = false</code>), as the
+    client the SDK creates has; a default <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> and
+    <a class="xref" href="StellarDotnetSdk.Requests.DefaultStellarSdkHttpClient.html">DefaultStellarSdkHttpClient</a> follow redirects. A client that follows redirects on its
+    own turns a callback POST answered with 301/302/303 into a GET, or re-POSTs the signed transaction to
+    wherever a 307/308 points, before this class can intervene. <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken_">SubmitToCallbackAsync(string, string, CancellationToken)</a>
+    detects that afterwards on a best-effort basis and throws, and for the stellar.toml fetch the
+    client's own redirect limits apply instead of this class's (5 hops, https only, each to a fully
+    qualified domain name on the default port without user info).
+</p>
+<p>
+    Where requests come from untrusted sources and this runs on a server, supply a client whose handler
+    refuses loopback, private and link-local addresses (for example with
+    <code>SocketsHttpHandler.ConnectCallback</code>). This class only limits where redirects may point; the
+    origin domain itself, and any domain a redirect names, can still resolve to such an address.
+</p>
+<p>
+    Its <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a> bounds each stellar.toml fetch and callback POST
+    as a whole, including reading the response body.
+</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry/timeout options for the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> the SDK creates. Ignored when
+<code class="paramref">httpClient</code> is supplied — that client is used as-is. Retries apply to the callback
+POST too: with <code>MaxRetryCount</code> above zero a signed transaction is sent again after a connection
+failure (and after any status listed in <code>RetryHttpStatusCodes</code> whose method gate admits POST), so a
+callback may receive it more than once. Leave retries off here unless every callback you POST to is
+idempotent.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_CallbackUrlPrefix" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.CallbackUrlPrefix">
+  CallbackUrlPrefix
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The prefix of the <code>callback</code> parameter; the only callback type SEP-7 defines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CallbackUrlPrefix = &quot;url:&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_MaxChainNestingLevels" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.MaxChainNestingLevels">
+  MaxChainNestingLevels
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The deepest nesting of <code>chain</code> parameters SEP-7 allows.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxChainNestingLevels = 7</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_MaxMessageLength" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.MaxMessageLength">
+  MaxMessageLength
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The longest <code>msg</code> SEP-7 allows, in characters before URL-encoding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxMessageLength = 300</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_OperationPay" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.OperationPay">
+  OperationPay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The operation name of a request to make a payment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string OperationPay = &quot;pay&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_OperationTx" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.OperationTx">
+  OperationTx
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The operation name of a request to sign a transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string OperationTx = &quot;tx&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplaceHintDelimiter" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ReplaceHintDelimiter">
+  ReplaceHintDelimiter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Separates the fields section of a <code>replace</code> value from its hints section.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char ReplaceHintDelimiter = &#39;;&#39;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">char</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplaceIdDelimiter" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ReplaceIdDelimiter">
+  ReplaceIdDelimiter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Separates a path from its identifier, and an identifier from its hint, in a <code>replace</code> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char ReplaceIdDelimiter = &#39;:&#39;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">char</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplaceListDelimiter" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ReplaceListDelimiter">
+  ReplaceListDelimiter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Separates the entries within each section of a <code>replace</code> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char ReplaceListDelimiter = &#39;,&#39;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">char</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SchemePrefix" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SchemePrefix">
+  SchemePrefix
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The scheme every SEP-7 URI starts with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SchemePrefix = &quot;web+stellar:&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignaturePayloadPrefix" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SignaturePayloadPrefix">
+  SignaturePayloadPrefix
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The text prepended to the URI when building the request-signature payload.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SignaturePayloadPrefix = &quot;stellar.sep.7 - URI Scheme&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_Dispose" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes the internal HttpClient if it was created by this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_Dispose_System_Boolean_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.Dispose(System.Boolean)">
+  Dispose(bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes this instance and optionally the internally-owned HttpClient.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void Dispose(bool disposing)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>disposing</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when called from <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_Dispose">Dispose()</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GeneratePayOperationUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GeneratePayOperationUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GeneratePayOperationUri_System_String_System_String_System_String_System_String_StellarDotnetSdk_Memos_Memo_System_String_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GeneratePayOperationUri(System.String,System.String,System.String,System.String,StellarDotnetSdk.Memos.Memo,System.String,System.String,System.String,System.String)">
+  GeneratePayOperationUri(string, string?, string?, string?, Memo?, string?, string?, string?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a <code>web+stellar:pay</code> URI asking a wallet to make a payment. Parameters are emitted in the
+order SEP-7 lists them and URL-encoded. Sign the result with <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SignUri_System_String_StellarDotnetSdk_Accounts_KeyPair_">SignUri(string, KeyPair)</a> when it carries an
+<code class="paramref">originDomain</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GeneratePayOperationUri(string destination, string? amount = null, string? assetCode = null, string? assetIssuer = null, Memo? memo = null, string? callback = null, string? message = null, string? networkPassphrase = null, string? originDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>destination</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The account id (G...), muxed account (M...), contract id (C...) or federation address (<code>name*domain</code>)
+to pay.</p>
+</dd>
+    <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The amount, e.g. <code>&quot;120.1234567&quot;</code>; the wallet asks the user when omitted. Null or empty leaves it out.</p>
+</dd>
+    <dt><code>assetCode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The asset code; omit together with <code class="paramref">assetIssuer</code> for XLM. Null or empty leaves it out.</p>
+</dd>
+    <dt><code>assetIssuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The asset issuer; omit together with <code class="paramref">assetCode</code> for XLM. Null or empty leaves it out.</p>
+</dd>
+    <dt><code>memo</code> <a class="xref" href="StellarDotnetSdk.Memos.Memo.html">Memo</a></dt>
+    <dd><p>The memo. Encoded as SEP-7 specifies: text as-is, ids in decimal, hash and return-hash memos as base64
+of their 32 bytes, with the matching <code>memo_type</code>. A <a class="xref" href="StellarDotnetSdk.Memos.MemoNone.html">MemoNone</a> is omitted; an empty
+text memo cannot be expressed and is rejected.</p>
+</dd>
+    <dt><code>callback</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URL the wallet should POST the signed transaction to; <code>url:</code> is added when missing. Null leaves it out, empty is rejected.</p>
+</dd>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A message for the user, at most 300 characters (<code>msg</code>); null or empty leaves it out.</p>
+</dd>
+    <dt><code>networkPassphrase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The network passphrase, when not the public network (<code>network_passphrase</code>); null for the public
+network. An empty string is rejected rather than read as &quot;public network&quot;.</p>
+</dd>
+    <dt><code>originDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The fully qualified domain the request comes from (<code>origin_domain</code>); null leaves it out, empty is rejected.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The request URI.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a value would make the URI invalid; the message says which.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GenerateSignTransactionUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GenerateSignTransactionUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GenerateSignTransactionUri_StellarDotnetSdk_Transactions_TransactionBase_System_Collections_Generic_IEnumerable_StellarDotnetSdk_Sep_Sep0007_Sep7Replacement__System_String_System_String_System_String_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GenerateSignTransactionUri(StellarDotnetSdk.Transactions.TransactionBase,System.Collections.Generic.IEnumerable{StellarDotnetSdk.Sep.Sep0007.Sep7Replacement},System.String,System.String,System.String,System.String,System.String,System.String)">
+  GenerateSignTransactionUri(TransactionBase, IEnumerable&lt;Sep7Replacement&gt;?, string?, string?, string?, string?, string?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a <code>web+stellar:tx</code> URI asking a wallet to sign <code class="paramref">transaction</code>, encoded with
+its current signatures, if any (an unsigned transaction is allowed). See the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>
+overload for the other parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GenerateSignTransactionUri(TransactionBase transaction, IEnumerable&lt;Sep7Replacement&gt;? replacements = null, string? callback = null, string? publicKey = null, string? chain = null, string? message = null, string? networkPassphrase = null, string? originDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
+    <dd><p>The transaction to sign.</p>
+</dd>
+    <dt><code>replacements</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a>&gt;</dt>
+    <dd><p>Fields of the transaction the wallet should fill in (<code>replace</code>).</p>
+</dd>
+    <dt><code>callback</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URL the wallet should POST the signed transaction to (<code>callback</code>); null leaves it out, empty is rejected.</p>
+</dd>
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The account id that should sign the transaction (<code>pubkey</code>); null leaves it out, empty is rejected.</p>
+</dd>
+    <dt><code>chain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An embedded SEP-7 URI that caused this request (<code>chain</code>); null or empty leaves it out.</p>
+</dd>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A message for the user, at most 300 characters (<code>msg</code>); null or empty leaves it out.</p>
+</dd>
+    <dt><code>networkPassphrase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The network passphrase, when not the public network (<code>network_passphrase</code>); null for the public
+network. An empty string is rejected rather than read as &quot;public network&quot;.</p>
+</dd>
+    <dt><code>originDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The fully qualified domain the request comes from (<code>origin_domain</code>); null leaves it out, empty is rejected.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The request URI.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a value would make the URI invalid; the message says which.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GenerateSignTransactionUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GenerateSignTransactionUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_GenerateSignTransactionUri_System_String_System_Collections_Generic_IEnumerable_StellarDotnetSdk_Sep_Sep0007_Sep7Replacement__System_String_System_String_System_String_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.GenerateSignTransactionUri(System.String,System.Collections.Generic.IEnumerable{StellarDotnetSdk.Sep.Sep0007.Sep7Replacement},System.String,System.String,System.String,System.String,System.String,System.String)">
+  GenerateSignTransactionUri(string, IEnumerable&lt;Sep7Replacement&gt;?, string?, string?, string?, string?, string?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a <code>web+stellar:tx</code> URI asking a wallet to sign a transaction. Parameters are emitted in the
+order SEP-7 lists them and URL-encoded. Sign the result with <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SignUri_System_String_StellarDotnetSdk_Accounts_KeyPair_">SignUri(string, KeyPair)</a> when it carries an
+<code class="paramref">originDomain</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GenerateSignTransactionUri(string transactionEnvelopeXdr, IEnumerable&lt;Sep7Replacement&gt;? replacements = null, string? callback = null, string? publicKey = null, string? chain = null, string? message = null, string? networkPassphrase = null, string? originDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transactionEnvelopeXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The base64 XDR <code>TransactionEnvelope</code> to sign (<code>xdr</code>).</p>
+</dd>
+    <dt><code>replacements</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a>&gt;</dt>
+    <dd><p>Fields of the transaction the wallet should fill in (<code>replace</code>). Identifiers and hints must not
+contain <code>:</code>, <code>,</code> or <code>;</code>; see <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplacementsToString_System_Collections_Generic_IEnumerable_StellarDotnetSdk_Sep_Sep0007_Sep7Replacement__">ReplacementsToString(IEnumerable&lt;Sep7Replacement&gt;)</a>.</p>
+</dd>
+    <dt><code>callback</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URL the wallet should POST the signed transaction to (<code>callback</code>). The <code>url:</code> prefix is
+added when missing. Without a callback the wallet submits the transaction to the network itself. Null
+leaves it out; an empty string is rejected.</p>
+</dd>
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The account id that should sign the transaction (<code>pubkey</code>); null leaves it out, empty is rejected.</p>
+</dd>
+    <dt><code>chain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An embedded SEP-7 URI that caused this request (<code>chain</code>); null or empty leaves it out.</p>
+</dd>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A message for the user, at most 300 characters (<code>msg</code>); null or empty leaves it out.</p>
+</dd>
+    <dt><code>networkPassphrase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The network passphrase, when not the public network (<code>network_passphrase</code>); null for the public
+network. An empty string is rejected rather than read as &quot;public network&quot;.</p>
+</dd>
+    <dt><code>originDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The fully qualified domain the request comes from (<code>origin_domain</code>); null leaves it out, empty is rejected.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The request URI.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a value would make the URI invalid; the message says which.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_IsValidSignedUriAsync_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.IsValidSignedUriAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_IsValidSignedUriAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.IsValidSignedUriAsync(System.String,System.String,System.Threading.CancellationToken)">
+  IsValidSignedUriAsync(string?, string?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Runs <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a> and reports the outcome instead of throwing: every
+way the URI, the stellar.toml or its fetch can be wrong is reported as invalid, a <code>null</code> URI
+included. Only cancellation, a timeout and using a disposed instance still throw.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Sep7ValidationResult&gt; IsValidSignedUriAsync(string? uri, string? pinnedSigningKey = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The signed URI, exactly as received.</p>
+</dd>
+    <dt><code>pinnedSigningKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The key the wallet cached for this domain earlier, if any.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the stellar.toml fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7ValidationResult.html">Sep7ValidationResult</a>&gt;</dt>
+    <dd><p>Valid when the origin domain's signature verifies; otherwise invalid with the reason.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is cancelled or the fetch, response body included, takes
+longer than the HTTP client's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this instance or its HTTP client has been disposed.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseReplacements_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ParseReplacements*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseReplacements_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ParseReplacements(System.String)">
+  ParseReplacements(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses a URL-decoded <code>replace</code> value, e.g.
+<code>sourceAccount:X,operations[0].sourceAccount:Y;X:account paying fees,Y:receiving account</code>, into one
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a> per field, in order. An empty string gives an empty list. A hint may contain
+<code>:</code> (only the first one separates it from its identifier), but <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplacementsToString_System_Collections_Generic_IEnumerable_StellarDotnetSdk_Sep_Sep0007_Sep7Replacement__">ReplacementsToString(IEnumerable&lt;Sep7Replacement&gt;)</a>
+rejects such a hint, as other SDKs cut it off there, so these replacements cannot be passed back to it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;Sep7Replacement&gt; ParseReplacements(string replace)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>replace</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>replace</code> value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a>&gt;</dt>
+    <dd><p>The replacements.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7UriException.html">InvalidSep7UriException</a></dt>
+    <dd><p>Thrown when the value does not follow the grammar, repeats a field or hint, uses a path SEP-7 forbids
+(<code>tx.</code> prefix, signatures, <code>_present</code>/<code>len</code>), or its identifiers are unbalanced.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ParseUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ParseUri(System.String)">
+  ParseUri(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses and validates a SEP-7 URI. It checks:</p>
+<ul><li>
+        the <code>web+stellar:</code> scheme, a <code>tx</code> or <code>pay</code> operation, no fragment, no lone UTF-16
+        surrogate;
+    </li><li><code>name=value</code> query parameters, none repeated; known parameters are non-empty;</li><li>
+        no parameter of the other operation (<code>xdr</code>/<code>replace</code>/<code>pubkey</code>/<code>chain</code> are
+        <code>tx</code>-only; <code>destination</code>/<code>amount</code>/<code>asset_*</code>/<code>memo*</code> are <code>pay</code>-only);
+    </li><li>
+        <code>tx</code>: <code>xdr</code> decodes as a transaction envelope, <code>pubkey</code> is an account id,
+        <code>replace</code> follows the SEP-7 grammar with balanced identifiers, <code>chain</code> is itself a
+        valid SEP-7 URI nested at most 7 levels;
+    </li><li>
+        <code>pay</code>: <code>destination</code> is a G/M/C address or a federation address (<code>name*domain</code>), <code>amount</code> is a positive amount with at most
+        7 decimals, <code>asset_code</code> (1–12 alphanumerics) and <code>asset_issuer</code> (G...) come together,
+        <code>memo_type</code> is a SEP-7 memo type and <code>memo</code> fits it (hash memos exactly 32 bytes);
+        account ids and other strkeys must be upper case;
+    </li><li>
+        <code>callback</code> is <code>url:</code> plus an absolute http(s) URL without whitespace, credentials, a
+        host with no valid IDN form, a fragment, a malformed percent escape, a backslash or a
+        <code>.</code>/<code>..</code> path segment (SEP-7
+        allows http; <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken_">SubmitToCallbackAsync(string, string, CancellationToken)</a> still refuses it except for loopback addresses),
+        <code>msg</code> is at most 300
+        characters, <code>origin_domain</code> is a fully qualified domain name, <code>signature</code> is 64
+        base64-encoded bytes.
+    </li></ul>
+<p>A request with an <code>origin_domain</code> but no <code>signature</code> is invalid, as SEP-7 specifies. Query values
+are decoded like an HTML form and the other Stellar SDKs do: <code>+</code> is a space, except in the base64
+values (<code>xdr</code>, <code>signature</code>, hash memos), where it stays a <code>+</code>. A <code>%</code> not followed by
+two hex digits is kept as a literal character, as <code>URLSearchParams</code> keeps it, so the value read is the
+value shown; only <code>callback</code> rejects one, because there it would change the URL that is POSTed to.
+Escapes that decode to bytes that are not valid UTF-8 (<code>%FF</code>, <code>%ED%A0%80</code>) make the request
+invalid: decoders disagree on them (<code>URLSearchParams</code> reads U+FFFD, .NET's own decoder keeps the
+escape as text), so wallets would read different values.
+The request signature is not
+verified here; see <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifySignature_System_String_System_String_">VerifySignature(string, string)</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Sep7Uri ParseUri(string uri)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URI to parse.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html">Sep7Uri</a></dt>
+    <dd><p>The parsed request.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">uri</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7UriException.html">InvalidSep7UriException</a></dt>
+    <dd><p>Thrown when the URI is invalid; the message says why.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidOriginDomainException.html">InvalidOriginDomainException</a></dt>
+    <dd><p>Thrown when <code>origin_domain</code> is not a fully qualified domain name.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplacementsToString_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ReplacementsToString*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ReplacementsToString_System_Collections_Generic_IEnumerable_StellarDotnetSdk_Sep_Sep0007_Sep7Replacement__" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ReplacementsToString(System.Collections.Generic.IEnumerable{StellarDotnetSdk.Sep.Sep0007.Sep7Replacement})">
+  ReplacementsToString(IEnumerable&lt;Sep7Replacement&gt;)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a <code>replace</code> value (not yet URL-encoded) from replacements: <code>path:id</code> entries joined
+with <code>,</code>, then <code>;</code>, then one <code>id:hint</code> per identifier in first-seen order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ReplacementsToString(IEnumerable&lt;Sep7Replacement&gt; replacements)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>replacements</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a>&gt;</dt>
+    <dd><p>The replacements; fields sharing an identifier must share its hint.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>replace</code> value; empty when there are no replacements.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown for an invalid path, an empty or delimiter-containing identifier or hint, a repeated path, or
+one identifier with two different hints.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignAndSubmitTransactionAsync_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SignAndSubmitTransactionAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignAndSubmitTransactionAsync_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Server_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SignAndSubmitTransactionAsync(System.String,StellarDotnetSdk.Accounts.KeyPair,StellarDotnetSdk.Server,System.String,System.Threading.CancellationToken)">
+  SignAndSubmitTransactionAsync(string, KeyPair, Server?, string?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs the transaction of a <code>tx</code> request for the request's network and hands it on: POSTed to the
+<code>callback</code> URL when there is one, otherwise submitted to <code class="paramref">horizonServer</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Sep7SubmitResult&gt; SignAndSubmitTransactionAsync(string uri, KeyPair signer, Server? horizonServer = null, string? pinnedSigningKey = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>tx</code> request.</p>
+</dd>
+    <dt><code>signer</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The key pair to sign with; must match the request's <code>pubkey</code> when present.</p>
+</dd>
+    <dt><code>horizonServer</code> <a class="xref" href="StellarDotnetSdk.Server.html">Server</a></dt>
+    <dd><p>The Horizon server to submit to when the request has no callback.</p>
+</dd>
+    <dt><code>pinnedSigningKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>URI_REQUEST_SIGNING_KEY</code> the wallet expects for the request's <code>origin_domain</code>, if any; see
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a>. Passing one for a request without an
+<code>origin_domain</code> raises <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.MissingOriginDomainException.html">MissingOriginDomainException</a>: the key cannot be checked.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the stellar.toml fetch and the callback POST.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html">Sep7SubmitResult</a>&gt;</dt>
+    <dd><p>The callback's or Horizon's answer. Neither a callback's non-2xx status nor a transaction Horizon rejects
+is thrown; check <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html#StellarDotnetSdk_Sep_Sep0007_Sep7SubmitResult_IsSuccess">IsSuccess</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignAndSubmitTransactionAsync_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Server_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    Show the request to the user and get their approval first. A request with a <code>replace</code> parameter
+    must have its fields filled in before signing: verify any <code>origin_domain</code> with
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a>, take <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetTransaction">GetTransaction()</a>, apply the
+    replacements, sign, and call <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitTransactionAsync_StellarDotnetSdk_Sep_Sep0007_Sep7Uri_StellarDotnetSdk_Transactions_TransactionBase_StellarDotnetSdk_Server_System_Threading_CancellationToken_">SubmitTransactionAsync(Sep7Uri, TransactionBase, Server?, CancellationToken)</a>.
+</p>
+<p>
+    A request with an <code>origin_domain</code> is signed only after its signature verifies against the
+    domain's current <code>URI_REQUEST_SIGNING_KEY</code>, as SEP-7 requires: this method runs
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a> itself, fetching the stellar.toml again. Pass the key
+    that verified when the request was shown to the user as <code class="paramref">pinnedSigningKey</code> so that
+    a key change in between is caught too.
+</p>
+<p>
+    The transaction is signed for the request's network: its <code>network_passphrase</code>, or the public
+    network when it has none, as SEP-7 specifies. The requester chooses that value, so show
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetNetwork">GetNetwork()</a> to the user, or compare it with the network the wallet is on, before
+    approving; a request without a passphrase asks for a public-network signature. When the request has
+    no callback, pass a <code class="paramref">horizonServer</code> for that same network; this method cannot check
+    which network a <a class="xref" href="StellarDotnetSdk.Server.html">Server</a> serves.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7UriException.html">InvalidSep7UriException</a></dt>
+    <dd><p>Thrown when the URI is invalid, including an <code>origin_domain</code> without a <code>signature</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.Sep7Exception.html">Sep7Exception</a></dt>
+    <dd><p>Thrown when the request's <code>origin_domain</code> signature cannot be verified; the subtypes are those listed
+on <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a>. Nothing is signed or sent in that case.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown for a <code>pay</code> request, a signer without a private key or that does not match <code>pubkey</code>, or
+a callback that is not https (plain http is allowed only for loopback addresses).</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">uri</code> or <code class="paramref">signer</code> is null, or when the request has no
+callback and no Horizon server is given.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.AccountRequiresMemoException.html">AccountRequiresMemoException</a></dt>
+    <dd><p>Thrown by the Horizon path when a destination requires a memo (SEP-29); the other exceptions of
+<a class="xref" href="StellarDotnetSdk.Server.html#StellarDotnetSdk_Server_SubmitTransaction_StellarDotnetSdk_Transactions_Transaction_">SubmitTransaction(Transaction)</a> apply there too.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the request has a <code>replace</code> parameter.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the callback POST fails, is redirected, or its response exceeds 512 KiB; see
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken_">SubmitToCallbackAsync(string, string, CancellationToken)</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is cancelled or an HTTP exchange takes longer than the
+HTTP client's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SignUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SignUri_System_String_StellarDotnetSdk_Accounts_KeyPair_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SignUri(System.String,StellarDotnetSdk.Accounts.KeyPair)">
+  SignUri(string, KeyPair)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs a SEP-7 URI with the origin domain's <code>URI_REQUEST_SIGNING_KEY</code> and appends the result as the
+last parameter, <code>&amp;signature=</code>, base64- and then URL-encoded. The signature covers the URI string
+exactly as given, so do not re-encode the returned URI.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string SignUri(string uri, KeyPair signer)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The unsigned URI; it must carry an <code>origin_domain</code>.</p>
+</dd>
+    <dt><code>signer</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The key pair matching the domain's <code>URI_REQUEST_SIGNING_KEY</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The signed URI.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">uri</code> or <code class="paramref">signer</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7UriException.html">InvalidSep7UriException</a></dt>
+    <dd><p>Thrown when the URI is invalid or already signed.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.MissingOriginDomainException.html">MissingOriginDomainException</a></dt>
+    <dd><p>Thrown when the URI has no <code>origin_domain</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">signer</code> has no private key.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SubmitToCallbackAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SubmitToCallbackAsync(System.String,System.String,System.Threading.CancellationToken)">
+  SubmitToCallbackAsync(string, string, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>POSTs a signed transaction to a SEP-7 callback URL as <code>application/x-www-form-urlencoded</code> with a
+single <code>xdr</code> field, as SEP-7 specifies. Query parameters already on the URL are kept.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Sep7SubmitResult&gt; SubmitToCallbackAsync(string callbackUrl, string signedTransactionEnvelopeXdr, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>callbackUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The callback URL, with or without the <code>url:</code> prefix.</p>
+</dd>
+    <dt><code>signedTransactionEnvelopeXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The signed base64 XDR transaction envelope.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the POST.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html">Sep7SubmitResult</a>&gt;</dt>
+    <dd><p>The callback's status code and body (at most 512 KiB). A non-2xx status is returned, not thrown; check
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html#StellarDotnetSdk_Sep_Sep0007_Sep7SubmitResult_IsSuccess">IsSuccess</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Redirects are not followed: a callback that answers 3xx has its status returned, since following it
+would either drop the transaction (301/302/303 turn the POST into a GET) or send it to a URL that was
+never checked (307/308). If the HTTP client given to the constructor follows redirects by itself, the
+transaction may already have gone to the redirect target; the redirect is then detected afterwards and
+reported as an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a>. That detection compares the request's final method
+and URL with the callback's, so it is best effort: a redirect chain that ends back on the callback URL,
+or a handler that clones the request before redirecting, escapes it, and a handler that rewrites the
+request URL without redirecting triggers it.</p>
+<p>
+    Any https host is accepted, private and link-local addresses included, as is plain http to any
+    loopback port: SEP-7 lets the requester pick the callback. A service that signs requests on behalf of
+    others should restrict the hosts it POSTs to before calling this method.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the URL is not absolute https (plain http is allowed only for loopback addresses), or when it
+contains whitespace, control or invisible formatting characters, credentials, a host with no valid IDN
+form, a fragment, a malformed percent escape, a backslash or a <code>.</code>/<code>..</code> path segment, which a
+callback in a parsed request cannot either.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the POST fails (including a connection dropped mid-response and a request the client's
+resilience pipeline rejected or timed out), when the HTTP client followed a redirect, or when the
+response exceeds 512 KiB.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is cancelled or the POST, response body included, takes
+longer than the HTTP client's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitTransactionAsync_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SubmitTransactionAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitTransactionAsync_StellarDotnetSdk_Sep_Sep0007_Sep7Uri_StellarDotnetSdk_Transactions_TransactionBase_StellarDotnetSdk_Server_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.SubmitTransactionAsync(StellarDotnetSdk.Sep.Sep0007.Sep7Uri,StellarDotnetSdk.Transactions.TransactionBase,StellarDotnetSdk.Server,System.Threading.CancellationToken)">
+  SubmitTransactionAsync(Sep7Uri, TransactionBase, Server?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Hands a signed transaction for a request on: POSTed to the request's <code>callback</code> URL when there is
+one, otherwise submitted to <code class="paramref">horizonServer</code>. For a <code>tx</code> request that is its
+transaction with any replacements applied; for a <code>pay</code> request, the payment transaction the wallet
+built from it (SEP-7 defines <code>callback</code> for both operations).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Sep7SubmitResult&gt; SubmitTransactionAsync(Sep7Uri request, TransactionBase signedTransaction, Server? horizonServer = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html">Sep7Uri</a></dt>
+    <dd><p>The parsed request.</p>
+</dd>
+    <dt><code>signedTransaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
+    <dd><p>The transaction to hand on, with at least one signature.</p>
+</dd>
+    <dt><code>horizonServer</code> <a class="xref" href="StellarDotnetSdk.Server.html">Server</a></dt>
+    <dd><p>The Horizon server to submit to when the request has no callback.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the callback POST; the Horizon submission does not take a token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html">Sep7SubmitResult</a>&gt;</dt>
+    <dd><p>The callback's or Horizon's answer. A callback that answers with a non-2xx status is returned, not thrown;
+check <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html#StellarDotnetSdk_Sep_Sep0007_Sep7SubmitResult_IsSuccess">IsSuccess</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitTransactionAsync_StellarDotnetSdk_Sep_Sep0007_Sep7Uri_StellarDotnetSdk_Transactions_TransactionBase_StellarDotnetSdk_Server_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Nothing is verified here: when the request has an <code>origin_domain</code>, run
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a> before signing, as SEP-7 requires.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when an argument is null, or when the request has no callback and no Horizon server is given.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.NotEnoughSignaturesException.html">NotEnoughSignaturesException</a></dt>
+    <dd><p>Thrown when the transaction has no signature.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.AccountRequiresMemoException.html">AccountRequiresMemoException</a></dt>
+    <dd><p>Thrown by the Horizon path when a destination requires a memo (SEP-29) and the transaction has none;
+the other exceptions of <a class="xref" href="StellarDotnetSdk.Server.html#StellarDotnetSdk_Server_SubmitTransaction_StellarDotnetSdk_Transactions_Transaction_">SubmitTransaction(Transaction)</a> apply there too.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this instance or its HTTP client has been disposed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the callback is not https (http is allowed only for loopback).</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the callback POST fails, is redirected, or its response exceeds 512 KiB; see
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_SubmitToCallbackAsync_System_String_System_String_System_Threading_CancellationToken_">SubmitToCallbackAsync(string, string, CancellationToken)</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is cancelled or the callback POST, response body
+included, takes longer than the HTTP client's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_TryParseUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.TryParseUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_TryParseUri_System_String_StellarDotnetSdk_Sep_Sep0007_Sep7Uri__" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.TryParseUri(System.String,StellarDotnetSdk.Sep.Sep0007.Sep7Uri@)">
+  TryParseUri(string?, out Sep7Uri?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses and validates a SEP-7 URI without throwing. See <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_System_String_">ParseUri(string)</a> for the checks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryParseUri(string? uri, out Sep7Uri? result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URI to parse.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html">Sep7Uri</a></dt>
+    <dd><p>The parsed request, or <code>null</code> when the URI is invalid.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the URI is valid.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ValidateUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ValidateUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_ValidateUri_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.ValidateUri(System.String)">
+  ValidateUri(string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validates a SEP-7 URI and reports why it is invalid. See <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_System_String_">ParseUri(string)</a> for the checks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Sep7ValidationResult ValidateUri(string? uri)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URI to validate.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7ValidationResult.html">Sep7ValidationResult</a></dt>
+    <dd><p>The validation outcome, with the reason when invalid.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.VerifyOriginDomainSignatureAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.VerifyOriginDomainSignatureAsync(System.String,System.String,System.Threading.CancellationToken)">
+  VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies a request's <code>origin_domain</code> as SEP-7 prescribes, before a wallet may show the domain:
+the URI must be valid and carry both <code>origin_domain</code> and <code>signature</code>; the domain's
+stellar.toml is fetched (not cached, as the spec recommends) and must publish a valid
+<code>URI_REQUEST_SIGNING_KEY</code>; and the signature must verify against that key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; VerifyOriginDomainSignatureAsync(string uri, string? pinnedSigningKey = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The signed URI, exactly as received.</p>
+</dd>
+    <dt><code>pinnedSigningKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>URI_REQUEST_SIGNING_KEY</code> the wallet cached for this domain from an earlier request, if any.
+SEP-7 requires wallets to alert the user when the key changes; a different key raises
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.UriRequestSigningKeyChangedException.html">UriRequestSigningKeyChangedException</a>. Cache the returned key for the next request, keyed by
+the domain in lower case (domain names are case-insensitive, and <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OriginDomain">OriginDomain</a> is
+returned as sent). Keys are compared case-insensitively.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the stellar.toml fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The <code>URI_REQUEST_SIGNING_KEY</code> the signature verified against.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Only the <code>URI_REQUEST_SIGNING_KEY</code> of the stellar.toml's root table is read, with a non-recursive
+reader rather than the general <a class="xref" href="StellarDotnetSdk.Sep.Sep0001.StellarToml.html">StellarToml</a> parser: the domain
+is chosen by whoever wrote the URI, and that parser overflows the stack on small hostile documents. The
+whole document must be valid UTF-8, as TOML requires, including the tables after the root one.
+Redirects of the stellar.toml request that reach this class are followed, at most 5 of them and only to
+https URLs on a fully qualified domain name, the default port and no user info, so a redirect reaches no
+further than an origin domain could. With the SDK's own client that is every redirect; a client that
+follows redirects itself applies its own limits first (see the constructor).</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">uri</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when this instance or its HTTP client has been disposed.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7UriException.html">InvalidSep7UriException</a></dt>
+    <dd><p>Thrown when the URI is invalid.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidOriginDomainException.html">InvalidOriginDomainException</a></dt>
+    <dd><p>Thrown when <code>origin_domain</code> is not a fully qualified domain name.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.MissingOriginDomainException.html">MissingOriginDomainException</a></dt>
+    <dd><p>Thrown when the URI has no <code>origin_domain</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.MissingSignatureException.html">MissingSignatureException</a></dt>
+    <dd><p>Thrown when the URI has no <code>signature</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.OriginDomainStellarTomlException.html">OriginDomainStellarTomlException</a></dt>
+    <dd><p>Thrown when the stellar.toml cannot be fetched (including a connection dropped mid-response, a response
+over 512 KiB, a redirect this class does not follow, and a request the client's resilience pipeline rejected or
+timed out), is not valid UTF-8, or its root table cannot be read.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.NoUriRequestSigningKeyFoundException.html">NoUriRequestSigningKeyFoundException</a></dt>
+    <dd><p>Thrown when the stellar.toml has no <code>URI_REQUEST_SIGNING_KEY</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidUriRequestSigningKeyException.html">InvalidUriRequestSigningKeyException</a></dt>
+    <dd><p>Thrown when the published key is not a valid account id.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.UriRequestSigningKeyChangedException.html">UriRequestSigningKeyChangedException</a></dt>
+    <dd><p>Thrown when the published key differs from <code class="paramref">pinnedSigningKey</code>.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Exceptions.InvalidSep7SignatureException.html">InvalidSep7SignatureException</a></dt>
+    <dd><p>Thrown when the signature does not verify.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is cancelled or the fetch, response body included, takes
+longer than the HTTP client's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifySignature_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.VerifySignature*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifySignature_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0007.UriScheme.VerifySignature(System.String,System.String)">
+  VerifySignature(string, string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Checks the URI's <code>signature</code> against a known signing key, offline. The payload is the received URI
+string with the <code>signature</code> parameter removed. To check against the origin domain's published key
+use <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool VerifySignature(string uri, string signerAccountId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The signed URI, exactly as received.</p>
+</dd>
+    <dt><code>signerAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The account id (G...) expected to have signed, in either case.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the signature verifies; <code>false</code> when it does not, the URI is invalid or unsigned,
+or <code class="paramref">signerAccountId</code> is not a valid account id.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

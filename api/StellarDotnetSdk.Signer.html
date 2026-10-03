@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Signer ">
       
-      
+      <meta name="description" content="Represents an account signer with a signing key and associated weight. Signers are used to authorize transactions for Stellar accounts, where the weight contributes toward meeting the required signing thresholds.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class Signer
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an account signer with a signing key and associated weight.
+Signers are used to authorize transactions for Stellar accounts, where
+the weight contributes toward meeting the required signing thresholds.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +158,8 @@ Class Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Signer.html">Signer</a> with the given signing key and weight.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,9 +169,11 @@ Class Signer
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>key</code> <span class="xref">SignerKey</span></dt>
-    <dd></dd>
+    <dd><p>The XDR signer key.</p>
+</dd>
     <dt><code>weight</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The signer weight (0-255). A weight of 0 removes the signer.</p>
+</dd>
   </dl>
 
 
@@ -192,7 +198,8 @@ Class Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the XDR signer key.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -223,7 +230,8 @@ Class Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the signer weight (0-255) that contributes toward meeting threshold requirements.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -258,7 +266,8 @@ Class Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Signer.html">Signer</a> from an XDR signer object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -268,13 +277,15 @@ Class Signer
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrSigner</code> <span class="xref">Signer</span></dt>
-    <dd></dd>
+    <dd><p>The XDR signer to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Signer.html">Signer</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Signer.html">Signer</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -294,7 +305,8 @@ Class Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this signer to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -305,7 +317,8 @@ Class Signer
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Signer</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <span class="xref">StellarDotnetSdk.Xdr.Signer</span> object.</p>
+</dd>
   </dl>
 
 

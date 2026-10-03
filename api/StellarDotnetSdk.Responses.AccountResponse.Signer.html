@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AccountResponse.Signer ">
       
-      <meta name="description" content="Represents account signers.">
+      <meta name="description" content="Represents a signer authorized to sign transactions for an account.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,12 @@ Class AccountResponse.Signer
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents account signers.</p>
+  <div class="markdown summary"><p>Represents a signer authorized to sign transactions for an account.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AccountResponse.Signer</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AccountResponse.Signer</code></pre>
   </div>
 
 
@@ -130,9 +130,6 @@ Class AccountResponse.Signer
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -156,12 +153,13 @@ Class AccountResponse.Signer
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The public key or pre-authorized transaction hash of this signer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;key&quot;)]
-public string Key { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;key&quot;)]
+public required string Key { get; init; }</code></pre>
   </div>
 
 
@@ -188,12 +186,13 @@ public string Key { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of signer: &quot;ed25519_public_key&quot;, &quot;sha256_hash&quot;, or &quot;preauth_tx&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type&quot;)]
-public string Type { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+public required string Type { get; init; }</code></pre>
   </div>
 
 
@@ -220,12 +219,14 @@ public string Type { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The weight of this signer (0-255).
+A weight of 0 removes the signer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;weight&quot;)]
-public int Weight { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;weight&quot;)]
+public required int Weight { get; init; }</code></pre>
   </div>
 
 

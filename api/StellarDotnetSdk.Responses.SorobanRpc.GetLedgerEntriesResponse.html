@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetLedgerEntriesResponse ">
       
-      
+      <meta name="description" content="Represents the response from the Soroban RPC getLedgerEntries method. Contains the requested ledger entries and the latest ledger sequence number. A null element in the entries array fails deserialization with .">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,11 @@ Class GetLedgerEntriesResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from the Soroban RPC <code>getLedgerEntries</code> method.
+Contains the requested ledger entries and the latest ledger sequence number.
+A <code>null</code> element in the <code>entries</code> array fails deserialization with
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,43 +148,6 @@ Class GetLedgerEntriesResponse
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse__ctor_StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult___System_Nullable_System_UInt32__" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.#ctor(StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult[],System.Nullable{System.UInt32})">
-  GetLedgerEntriesResponse(LedgerEntryResult[]?, uint?)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetLedgerEntriesResponse(GetLedgerEntriesResponse.LedgerEntryResult[]? entryResults, uint? latestLedger)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>entryResults</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.html">LedgerEntryResult</a>[]</dt>
-    <dd></dd>
-    <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -192,11 +159,12 @@ Class GetLedgerEntriesResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint? LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long? LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -205,7 +173,7 @@ Class GetLedgerEntriesResponse
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -223,7 +191,8 @@ Class GetLedgerEntriesResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The array of ledger entries matching the requested keys. Null if no entries were found.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -254,7 +223,8 @@ Class GetLedgerEntriesResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The array of ledger keys corresponding to the requested entries. Null if no entries were found.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

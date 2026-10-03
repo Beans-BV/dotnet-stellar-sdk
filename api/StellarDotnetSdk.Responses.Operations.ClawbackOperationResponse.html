@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ClawbackOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents a clawback operation response. Claws back (burns) a specified amount of an asset from an account. This operation can only be performed by the asset issuer on assets that have the clawback-enabled flag set. The clawed back amount is permanently removed from circulation.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,10 @@ Class ClawbackOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents a clawback operation response.
+Claws back (burns) a specified amount of an asset from an account.
+This operation can only be performed by the asset issuer on assets that have the clawback-enabled flag set.
+The clawed back amount is permanently removed from circulation.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -211,13 +212,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Amount</p>
+  <div class="markdown level1 summary"><p>The amount of the asset being clawed back.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -244,12 +245,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset representation (Using the values of the other fields)</p>
+  <div class="markdown level1 summary"><p>The asset being clawed back, constructed from the asset type, code, and issuer.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AssetTypeCreditAlphaNum Asset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset Asset { get; }</code></pre>
   </div>
 
 
@@ -258,7 +260,7 @@ public string Amount { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum.html">AssetTypeCreditAlphaNum</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
     <dd></dd>
   </dl>
 
@@ -276,13 +278,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset code.</p>
+  <div class="markdown level1 summary"><p>The asset code of the asset being clawed back (e.g., &quot;USD&quot;, &quot;BTC&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public required string AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -309,13 +311,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset issuer.</p>
+  <div class="markdown level1 summary"><p>The account that issued the asset being clawed back.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public required string AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -342,13 +344,14 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset type (native / alphanum4 / alphanum12)</p>
+  <div class="markdown level1 summary"><p>The type of asset being clawed back (e.g., &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).
+Note: Native XLM cannot be clawed back.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -375,13 +378,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account from which the asset is clawed back</p>
+  <div class="markdown level1 summary"><p>The account address from which the asset is being clawed back.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from&quot;)]
-public string From { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from&quot;)]
+public required string From { get; init; }</code></pre>
   </div>
 
 
@@ -408,13 +411,13 @@ public string From { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Muxed Account from which the asset is clawed back</p>
+  <div class="markdown level1 summary"><p>The muxed account representation of the account from which the asset is being clawed back, if applicable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from_muxed&quot;)]
-public string FromMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed&quot;)]
+public string? FromMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -434,20 +437,20 @@ public string FromMuxed { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_Operations_ClawbackOperationResponse_FromMuxedID_" data-uid="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.FromMuxedID*"></a>
+  <a id="StellarDotnetSdk_Responses_Operations_ClawbackOperationResponse_FromMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.FromMuxedId*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_Operations_ClawbackOperationResponse_FromMuxedID" data-uid="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.FromMuxedID">
-  FromMuxedID
+  <h3 id="StellarDotnetSdk_Responses_Operations_ClawbackOperationResponse_FromMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.FromMuxedId">
+  FromMuxedId
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Muxed Account ID from which the asset is clawed back</p>
+  <div class="markdown level1 summary"><p>The muxed account ID of the account from which the asset is being clawed back, if applicable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from_muxed_id&quot;)]
-public ulong? FromMuxedID { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed_id&quot;)]
+public ulong? FromMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -474,7 +477,8 @@ public ulong? FromMuxedID { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

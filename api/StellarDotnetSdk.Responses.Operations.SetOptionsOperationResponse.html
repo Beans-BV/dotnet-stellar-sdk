@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SetOptionsOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents a set_options operation response. Sets various options for an account, such as signers, thresholds, flags, and home domain.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,8 @@ Class SetOptionsOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents a set_options operation response.
+Sets various options for an account, such as signers, thresholds, flags, and home domain.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -211,15 +210,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer
-subtracts
-from the existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
+  <div class="markdown level1 summary"><p>Array of flag names to clear (e.g., [&quot;auth_required&quot;, &quot;auth_revocable&quot;]). Only present if flags are being cleared.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;clear_flags_s&quot;)]
-public string[] ClearFlags { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;clear_flags_s&quot;)]
+public string[]? ClearFlags { get; init; }</code></pre>
   </div>
 
 
@@ -246,14 +243,13 @@ public string[] ClearFlags { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a high
-threshold.</p>
+  <div class="markdown level1 summary"><p>The threshold value (0-255) for high security operations. Only present if modified in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;high_threshold&quot;)]
-public int HighThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;high_threshold&quot;)]
+public int? HighThreshold { get; init; }</code></pre>
   </div>
 
 
@@ -262,7 +258,7 @@ public int HighThreshold { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -280,13 +276,13 @@ public int HighThreshold { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the home domain of an account.</p>
+  <div class="markdown level1 summary"><p>The home domain of the account. Only present if set in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;home_domain&quot;)]
-public string HomeDomain { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;home_domain&quot;)]
+public string? HomeDomain { get; init; }</code></pre>
   </div>
 
 
@@ -313,13 +309,13 @@ public string HomeDomain { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account of the inflation destination.</p>
+  <div class="markdown level1 summary"><p>The account designated to receive inflation. Only present if set in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;inflation_dest&quot;)]
-public string InflationDestination { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;inflation_dest&quot;)]
+public string? InflationDestination { get; init; }</code></pre>
   </div>
 
 
@@ -346,14 +342,13 @@ public string InflationDestination { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a low
-threshold.</p>
+  <div class="markdown level1 summary"><p>The threshold value (0-255) for low security operations. Only present if modified in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;low_threshold&quot;)]
-public int LowThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;low_threshold&quot;)]
+public int? LowThreshold { get; init; }</code></pre>
   </div>
 
 
@@ -362,7 +357,7 @@ public int LowThreshold { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -380,13 +375,13 @@ public int LowThreshold { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Weight of the master key.</p>
+  <div class="markdown level1 summary"><p>The weight of the master key (0-255). Only present if modified in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;master_key_weight&quot;)]
-public int MasterKeyWeight { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;master_key_weight&quot;)]
+public int? MasterKeyWeight { get; init; }</code></pre>
   </div>
 
 
@@ -395,7 +390,7 @@ public int MasterKeyWeight { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -413,14 +408,13 @@ public int MasterKeyWeight { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a medium
-threshold.</p>
+  <div class="markdown level1 summary"><p>The threshold value (0-255) for medium security operations. Only present if modified in this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;med_threshold&quot;)]
-public int MedThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;med_threshold&quot;)]
+public int? MedThreshold { get; init; }</code></pre>
   </div>
 
 
@@ -429,7 +423,7 @@ public int MedThreshold { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -447,15 +441,13 @@ public int MedThreshold { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer
-adds onto the
-existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
+  <div class="markdown level1 summary"><p>Array of flag names to set (e.g., [&quot;auth_required&quot;, &quot;auth_revocable&quot;]). Only present if flags are being set.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;set_flags_s&quot;)]
-public string[] SetFlags { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;set_flags_s&quot;)]
+public string[]? SetFlags { get; init; }</code></pre>
   </div>
 
 
@@ -482,13 +474,13 @@ public string[] SetFlags { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>A signer from an account.</p>
+  <div class="markdown level1 summary"><p>The public key of the signer being added or modified. Only present if a signer operation is performed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signer_key&quot;)]
-public string SignerKey { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signer_key&quot;)]
+public string? SignerKey { get; init; }</code></pre>
   </div>
 
 
@@ -515,13 +507,13 @@ public string SignerKey { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Weight of the signer.</p>
+  <div class="markdown level1 summary"><p>The weight of the signer (0-255). Only present if a signer is being added or modified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signer_weight&quot;)]
-public int SignerWeight { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signer_weight&quot;)]
+public int? SignerWeight { get; init; }</code></pre>
   </div>
 
 
@@ -530,7 +522,7 @@ public int SignerWeight { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -548,7 +540,8 @@ public int SignerWeight { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

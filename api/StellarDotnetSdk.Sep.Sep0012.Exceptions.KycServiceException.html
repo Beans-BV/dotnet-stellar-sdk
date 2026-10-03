@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class KycServiceException </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class KycServiceException ">
+      
+      <meta name="description" content="Base exception for SEP-0012 KYC API errors. Thrown as-is for any non-success HTTP status that has no more specific subclass (typically 400 Bad Request, 429 or a 5xx), for a response that arrived from a different origin after a redirect (its  is that response&#39;s status, possibly a success), and when the anchor&#39;s KYC server cannot be discovered from its stellar.toml.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException" class="text-break">
+Class KycServiceException  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.html">Sep0012</a>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.html">Exceptions</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Base exception for SEP-0012 KYC API errors. Thrown as-is for any non-success HTTP status that has no more
+specific subclass (typically <code>400 Bad Request</code>, <code>429</code> or a <code>5xx</code>), for a response that arrived
+from a different origin after a redirect (its <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html#StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_StatusCode">StatusCode</a> is that response's status, possibly
+a success), and when the anchor's KYC server cannot be discovered from its stellar.toml.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class KycServiceException : Exception, ISerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></div>
+      <div><span class="xref">KycServiceException</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">ISerializable</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.CustomerNotFoundException.html">CustomerNotFoundException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.InvalidKycResponseException.html">InvalidKycResponseException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.PayloadTooLargeException.html">PayloadTooLargeException</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.getbaseexception">Exception.GetBaseException()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.gettype">Exception.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.tostring">Exception.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.data">Exception.Data</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.helplink">Exception.HelpLink</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.hresult">Exception.HResult</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.innerexception">Exception.InnerException</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Exception.Message</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.source">Exception.Source</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.stacktrace">Exception.StackTrace</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.targetsite">Exception.TargetSite</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.serializeobjectstate">Exception.SerializeObjectState</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>SEP-0012 error responses carry a human-readable description under the <code>error</code> key; it is exposed through
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html#StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_ErrorMessage">ErrorMessage</a> verbatim. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Message</a> quotes a clamped copy of it in which
+control, format, line-separator and paragraph-separator characters are replaced with spaces, because the text is
+server-supplied and exception messages routinely end up in logs.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException__ctor_System_String_System_Nullable_System_Int32__System_String_System_Exception_System_Nullable_System_TimeSpan__" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.#ctor(System.String,System.Nullable{System.Int32},System.String,System.Exception,System.Nullable{System.TimeSpan})">
+  KycServiceException(string, int?, string?, Exception?, TimeSpan?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KycServiceException(string message, int? statusCode = null, string? errorMessage = null, Exception? innerException = null, TimeSpan? retryAfterDelay = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The exception message.</p>
+</dd>
+    <dt><code>statusCode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd><p>The HTTP status code of the response, or <code>null</code> when no response was involved.</p>
+</dd>
+    <dt><code>errorMessage</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The value of the <code>error</code> key in the response body, if any.</p>
+</dd>
+    <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>The exception that caused this one, if any.</p>
+</dd>
+    <dt><code>retryAfterDelay</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd><p>The delay the server asked for in a <code>Retry-After</code> header, if any.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_ErrorMessage_" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.ErrorMessage*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_ErrorMessage" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.ErrorMessage">
+  ErrorMessage
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the anchor-supplied description from the <code>error</code> key of the response body, or <code>null</code> when
+the body carried none or could not be parsed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ErrorMessage { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_RetryAfterDelay_" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.RetryAfterDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_RetryAfterDelay" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.RetryAfterDelay">
+  RetryAfterDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the delay the server asked the client to wait before retrying, from the <code>Retry-After</code> header of a
+response such as <code>429 Too Many Requests</code> or <code>503 Service Unavailable</code>, or <code>null</code> when the
+response carried none. Set only on a plain <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.html">KycServiceException</a>; the more specific subclasses
+are not raised for those statuses. Named like <code>TooManyRequestsException.RetryAfterDelay</code>; there,
+<code>RetryAfter</code> is the same value in whole seconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? RetryAfterDelay { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_StatusCode_" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.StatusCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_Exceptions_KycServiceException_StatusCode" data-uid="StellarDotnetSdk.Sep.Sep0012.Exceptions.KycServiceException.StatusCode">
+  StatusCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the HTTP status code returned by the KYC server, or <code>null</code> when the error did not come from an
+HTTP response (for example, when stellar.toml declares no KYC server).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? StatusCode { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

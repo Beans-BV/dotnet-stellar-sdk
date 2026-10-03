@@ -100,7 +100,8 @@ null.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class Asset</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(AssetJsonConverter))]
+public abstract class Asset</code></pre>
   </div>
 
 
@@ -173,7 +174,12 @@ null.</p>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns asset type. Possible types:</p>
-<ul><li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li><li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li><li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li><li>liquidity_pool_shares</li></ul>
+<ul>
+    <li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li>
+    <li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li>
+    <li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li>
+    <li>liquidity_pool_shares</li>
+</ul>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -241,7 +247,9 @@ null.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this asset to another <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a> for ordering.
+Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -251,13 +259,15 @@ null.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value if this asset is less than, equal to, or greater than <code class="paramref">asset</code>.</p>
+</dd>
   </dl>
 
 
@@ -277,7 +287,9 @@ null.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a> from its canonical string form.
+Native assets use <code>&quot;native&quot;</code>; credit assets use <code>&quot;CODE:ISSUER&quot;</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -287,13 +299,15 @@ null.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>canonicalForm</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The canonical asset string (e.g., <code>&quot;native&quot;</code> or <code>&quot;USD:GABC...&quot;</code>).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The corresponding <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -303,6 +317,12 @@ null.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the canonical form is invalid.</p>
+</dd>
+  </dl>
 
 
 

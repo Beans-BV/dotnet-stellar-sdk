@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ClaimPredicate ">
       
-      
+      <meta name="description" content="Represents a claim predicate for building claimable balance operations in Stellar transactions.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class ClaimPredicate
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a claim predicate for building claimable balance operations in Stellar transactions.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -153,6 +154,21 @@ Class ClaimPredicate
 
 
 
+  <h2 id="StellarDotnetSdk_Claimants_ClaimPredicate_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    This abstract class and its implementations are used when constructing
+    <a class="xref" href="StellarDotnetSdk.Operations.CreateClaimableBalanceOperation.html">CreateClaimableBalanceOperation</a> to define
+    conditions under which a claimable balance can be claimed.
+</p>
+<p>
+    Predicates can be combined using logical operators:
+<ul><li><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html#StellarDotnetSdk_Claimants_ClaimPredicate_And_StellarDotnetSdk_Claimants_ClaimPredicate_StellarDotnetSdk_Claimants_ClaimPredicate_">And(ClaimPredicate, ClaimPredicate)</a> - Both predicates must be true</li><li><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html#StellarDotnetSdk_Claimants_ClaimPredicate_Or_StellarDotnetSdk_Claimants_ClaimPredicate_StellarDotnetSdk_Claimants_ClaimPredicate_">Or(ClaimPredicate, ClaimPredicate)</a> - At least one predicate must be true</li><li><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html#StellarDotnetSdk_Claimants_ClaimPredicate_Not_StellarDotnetSdk_Claimants_ClaimPredicate_">Not(ClaimPredicate)</a> - The predicate must be false</li></ul>
+
+<p>
+    <strong>For deserializing Horizon API responses</strong>, use <a class="xref" href="StellarDotnetSdk.Responses.Predicates.Predicate.html">Predicate</a> instead,
+    which can be converted to this type using <a class="xref" href="StellarDotnetSdk.Responses.Predicates.Predicate.html#StellarDotnetSdk_Responses_Predicates_Predicate_ToClaimPredicate">ToClaimPredicate()</a>.
+</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods
@@ -166,7 +182,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate requiring both sub-predicates to be satisfied.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -176,15 +193,18 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>leftPredicate</code> <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>The first predicate.</p>
+</dd>
     <dt><code>rightPredicate</code> <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>The second predicate.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateAnd.html">ClaimPredicateAnd</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -204,7 +224,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate valid only before the given absolute time point.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -214,13 +235,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>timePoint</code> <span class="xref">TimePoint</span></dt>
-    <dd></dd>
+    <dd><p>The XDR time point representing the deadline.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -240,7 +263,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate valid only before the given date and time.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -250,13 +274,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>dateTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
-    <dd></dd>
+    <dd><p>The absolute deadline.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -276,7 +302,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate valid only before the given Unix timestamp.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -286,13 +313,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>timePoint</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
-    <dd></dd>
+    <dd><p>The Unix timestamp in seconds.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -312,7 +341,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate valid only before the given relative duration has elapsed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -322,13 +352,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>duration</code> <span class="xref">Duration</span></dt>
-    <dd></dd>
+    <dd><p>The XDR duration in seconds.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeRelativeTime.html">ClaimPredicateBeforeRelativeTime</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -348,7 +380,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate valid only before the given number of seconds has elapsed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -358,13 +391,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>duration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
-    <dd></dd>
+    <dd><p>The duration in seconds.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeRelativeTime.html">ClaimPredicateBeforeRelativeTime</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -384,7 +419,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a> from an XDR claim predicate, dispatching to the correct subclass.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -394,13 +430,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdr</code> <span class="xref">ClaimPredicate</span></dt>
-    <dd></dd>
+    <dd><p>The XDR claim predicate to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A concrete <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a> subclass instance.</p>
+</dd>
   </dl>
 
 
@@ -420,7 +458,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate that negates the given predicate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -430,13 +469,15 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>predicate</code> <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>The predicate to negate.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateNot.html">ClaimPredicateNot</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -456,7 +497,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a predicate requiring both sub-predicates to be satisfied.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -466,15 +508,18 @@ Class ClaimPredicate
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>leftPredicate</code> <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>The first predicate.</p>
+</dd>
     <dt><code>rightPredicate</code> <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>The second predicate.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateOr.html">ClaimPredicateOr</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -494,7 +539,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this claim predicate to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -505,7 +551,8 @@ Class ClaimPredicate
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ClaimPredicate</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <span class="xref">StellarDotnetSdk.Xdr.ClaimPredicate</span> object.</p>
+</dd>
   </dl>
 
 
@@ -525,7 +572,8 @@ Class ClaimPredicate
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates an unconditional predicate that is always satisfied.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -536,7 +584,8 @@ Class ClaimPredicate
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicate.html">ClaimPredicate</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateUnconditional.html">ClaimPredicateUnconditional</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -549,6 +598,10 @@ Class ClaimPredicate
 
 
 
+  <h2 id="seealso">See Also</h2>
+  <div class="seealso">
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Predicates.Predicate.html">Predicate</a></div>
+  </div>
 
 </article>
 

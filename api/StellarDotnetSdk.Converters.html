@@ -92,43 +92,168 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.AssetAmountJsonConverter.html">AssetAmountJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for AssetAmount.
+Handles conversion between JSON objects and AssetAmount instances.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.AssetJsonConverter.html">AssetJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for Asset.
+Handles conversion between JSON objects and Asset instances (native or credit assets).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.DateOnlyJsonConverter.html">DateOnlyJsonConverter</a></dt>
+      <dd><p>Serializes <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.dateonly">DateOnly</a> as ISO 8601 date-only strings (yyyy-MM-dd), matching SEP-0009.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.EffectResponseJsonConverter.html">EffectResponseJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for polymorphic EffectResponse deserialization.
+Uses the 'type_i' discriminator field to determine the concrete effect type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.EventFilterTypeJsonConverter.html">EventFilterTypeJsonConverter</a></dt>
+      <dd><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a> that maps between the flags enum and the single
+comma-separated string Stellar RPC uses for an event filter's <code>type</code> field.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.ExactDecimalJsonConverter.html">ExactDecimalJsonConverter</a></dt>
+      <dd><p>Reads a decimal amount or price that the wire carries as a string (or, leniently, as a bare JSON number)
+and rejects any value <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a> cannot hold exactly, instead of rounding it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html">JsonOptions</a></dt>
+      <dd><p>Centralized JSON serializer options used throughout the SDK.
+All API responses use these options for consistent behavior.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.KeyPairJsonConverter.html">KeyPairJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> that serializes and deserializes Stellar account IDs
+(public keys in StrKey format) as JSON string values.</p>
+</dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="StellarDotnetSdk.Converters.LinkJsonConverter.html">LinkJsonConverter</a></dt>
-      <dd></dd>
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.LedgerEntryResultsArrayJsonConverter.html">LedgerEntryResultsArrayJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in the <code>entries</code> array of <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html">GetLedgerEntriesResponse</a>, from
+which <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html#StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntries">LedgerEntries</a> and <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html#StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerKeys">LedgerKeys</a>
+are read.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.LinkJsonConverter-1.html">LinkJsonConverter&lt;T&gt;</a></dt>
+      <dd><p>JSON converter for Link&lt;T&gt; objects used in <a href="https://en.wikipedia.org/wiki/HATEOAS">HATEOAS</a>
+responses.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.html">LiquidityPoolClaimableAssetAmountJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for LiquidityPoolClaimableAssetAmount.
+Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.LiquidityPoolIdJsonConverter.html">LiquidityPoolIdJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for LiquidityPoolId.
+Handles conversion between JSON strings and LiquidityPoolId instances.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.LiquidityPoolTypeEnumJsonConverter.html">LiquidityPoolTypeEnumJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for LiquidityPoolType enum.
+Handles conversion between JSON string representations and LiquidityPoolTypeEnum values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.NonNullElementArrayJsonConverter-1.html">NonNullElementArrayJsonConverter&lt;T&gt;</a></dt>
+      <dd><p>Reads an array whose element type is non-nullable and rejects a <code>null</code> element with
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.NonNullElementListJsonConverter-1.html">NonNullElementListJsonConverter&lt;T&gt;</a></dt>
+      <dd><p>Reads a JSON array into a read-only list whose element type is non-nullable, rejecting a <code>null</code>
+element with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.NonNullValueDictionaryJsonConverter-1.html">NonNullValueDictionaryJsonConverter&lt;TValue&gt;</a></dt>
+      <dd><p>Reads a JSON object into a string-keyed dictionary whose value type is non-nullable, and rejects a
+<code>null</code> value with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.NullableDateOnlyJsonConverter.html">NullableDateOnlyJsonConverter</a></dt>
+      <dd><p>Serializes nullable <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.dateonly">DateOnly</a> as ISO 8601 date-only strings (yyyy-MM-dd), matching SEP-0009.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.OperationResponseJsonConverter.html">OperationResponseJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for polymorphic OperationResponse deserialization.
+Uses the 'type_i' discriminator field to determine the concrete operation type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.PredicateJsonConverter.html">PredicateJsonConverter</a></dt>
+      <dd><p>JSON converter for polymorphic Predicate deserialization.
+Determines the concrete predicate type by inspecting which property is present in the JSON.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Converters.ReserveJsonConverter.html">ReserveJsonConverter</a></dt>
-      <dd></dd>
+      <dd><p>JSON converter for Reserve.
+Handles conversion between JSON objects and Reserve instances.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.SendTransactionStatusEnumJsonConverter.html">SendTransactionStatusEnumJsonConverter</a></dt>
+      <dd><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus.html">SendTransactionResponse.SendTransactionStatus</a> that maps between
+the Soroban RPC string representations (e.g., &quot;PENDING&quot;, &quot;ERROR&quot;) and the corresponding enum values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.SimulationEventsArrayJsonConverter.html">SimulationEventsArrayJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_Events">Events</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.SimulationResultsArrayJsonConverter.html">SimulationResultsArrayJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_Results">Results</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.SorobanAuthArrayJsonConverter.html">SorobanAuthArrayJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.SimulateInvokeHostFunctionResult.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SimulateInvokeHostFunctionResult_Auth">Auth</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.StateChangesArrayJsonConverter.html">StateChangesArrayJsonConverter</a></dt>
+      <dd><p>Rejects a <code>null</code> element in <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_StateChanges">StateChanges</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.SubmitTransactionAsyncStatusJsonConverter.html">SubmitTransactionAsyncStatusJsonConverter</a></dt>
+      <dd><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Responses.SubmitTransactionAsyncResponse.TransactionStatus.html">SubmitTransactionAsyncResponse.TransactionStatus</a> that maps between the
+Horizon <code>POST /transactions_async</code> string representations (&quot;PENDING&quot;, &quot;DUPLICATE&quot;, &quot;TRY_AGAIN_LATER&quot;,
+&quot;ERROR&quot;) and the corresponding enum values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.TransactionStatusJsonConverter.html">TransactionStatusJsonConverter</a></dt>
+      <dd><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.TransactionStatus.html">TransactionInfo.TransactionStatus</a> that maps between the Stellar RPC
+string representations (&quot;NOT_FOUND&quot;, &quot;SUCCESS&quot;, &quot;FAILED&quot;) and the corresponding enum values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Converters.UtcDateTimeOffsetJsonConverter.html">UtcDateTimeOffsetJsonConverter</a></dt>
+      <dd><p>Reads an ISO 8601 timestamp that a specification defines as UTC, treating a value that carries no UTC
+offset as UTC rather than as the local time of the machine running the SDK.</p>
+</dd>
     </dl>
 
 

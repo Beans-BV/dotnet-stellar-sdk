@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolsRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests to the Horizon /liquidity_pools endpoint for retrieving liquidity pool details and streaming pool events.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPoolsRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests to the Horizon <code>/liquidity_pools</code> endpoint for retrieving
+liquidity pool details and streaming pool events.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -202,7 +204,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.LiquidityPoolsRequestBuilder.html">LiquidityPoolsRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -212,9 +215,11 @@ Class LiquidityPoolsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -238,7 +243,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The query parameter name used to filter liquidity pools by reserve assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -273,7 +279,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Filters liquidity pools that have reserves matching all of the specified assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -283,13 +290,15 @@ Class LiquidityPoolsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>reserves</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
+    <dd><p>The canonical asset identifiers (e.g. <code>&quot;native&quot;</code> or <code>&quot;USD:GABC...&quot;</code>) to filter by.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.LiquidityPoolsRequestBuilder.html">LiquidityPoolsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.LiquidityPoolsRequestBuilder.html">LiquidityPoolsRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -309,7 +318,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Requests <code>GET /liquidity_pools/{liquidityPoolId}</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -319,13 +329,15 @@ Class LiquidityPoolsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>liquidityPoolId</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a> of the pool to fetch.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>.</p>
+</dd>
   </dl>
 
 
@@ -345,7 +357,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Requests <code>GET /liquidity_pools/{liquidityPoolId}</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -355,13 +368,15 @@ Class LiquidityPoolsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>liquidityPoolId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The ID of the liquidity pool to fetch.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>.</p>
+</dd>
   </dl>
 
 
@@ -381,7 +396,8 @@ Class LiquidityPoolsRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Requests a single liquidity pool resource from the specified URI.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -391,13 +407,15 @@ Class LiquidityPoolsRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The URI of the liquidity pool resource.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a>.</p>
+</dd>
   </dl>
 
 
@@ -407,6 +425,13 @@ Class LiquidityPoolsRequestBuilder
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 

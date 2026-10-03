@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class EffectResponseJsonConverter ">
       
-      
+      <meta name="description" content="JSON converter for polymorphic EffectResponse deserialization. Uses the &#39;type_i&#39; discriminator field to determine the concrete effect type.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class EffectResponseJsonConverter
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>JSON converter for polymorphic EffectResponse deserialization.
+Uses the 'type_i' discriminator field to determine the concrete effect type.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -107,8 +109,8 @@ Class EffectResponseJsonConverter
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">JsonConverter</span></div>
-      <div><span class="xref">JsonConverter</span>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1">JsonConverter</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a>&gt;</div>
       <div><span class="xref">EffectResponseJsonConverter</span></div>
     </dd>
   </dl>
@@ -119,16 +121,16 @@ Class EffectResponseJsonConverter
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">JsonConverter&lt;EffectResponse&gt;.WriteJson(JsonWriter, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.readaspropertyname">JsonConverter&lt;EffectResponse&gt;.ReadAsPropertyName(ref Utf8JsonReader, Type, JsonSerializerOptions)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;EffectResponse&gt;.ReadJson(JsonReader, Type, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.writeaspropertyname">JsonConverter&lt;EffectResponse&gt;.WriteAsPropertyName(Utf8JsonWriter, EffectResponse, JsonSerializerOptions)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;EffectResponse&gt;.CanConvert(Type)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.handlenull">JsonConverter&lt;EffectResponse&gt;.HandleNull</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanRead</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.type">JsonConverter&lt;EffectResponse&gt;.Type</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -156,79 +158,104 @@ Class EffectResponseJsonConverter
 
 
 
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
-  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_CanWrite_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.CanWrite*"></a>
-
-  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_CanWrite" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.CanWrite">
-  CanWrite
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool CanWrite { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
+  <h2 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    This converter handles 31+ effect types with non-sequential discriminators:
+    0-7 = Account effects
+    10-12 = Signer effects
+    20-26 = Trustline effects,
+    30-33 = Offer/Trade effects
+    40-43 = Data effects
+    50-52 = Claimable balance,
+    60-74 = Sponsorship effects
+    80 = Clawback
+    90-95 = Liquidity pool effects
+    96-97 = Soroban SAC contract credited/debited effects.
+    Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
+    to avoid double-parsing overhead. Dispatches via an O(1) dictionary lookup over the immutable
+    discriminator set: a read-optimized <code>FrozenDictionary</code> on .NET 8 and later, a <code>Dictionary</code> on
+    netstandard2.1.
+    <br>
+</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_ReadJson_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.ReadJson*"></a>
+  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_CanConvert_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.CanConvert*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_StellarDotnetSdk_Responses_Effects_EffectResponse_System_Boolean_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,StellarDotnetSdk.Responses.Effects.EffectResponse,System.Boolean,Newtonsoft.Json.JsonSerializer)">
-  ReadJson(JsonReader, Type, EffectResponse?, bool, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_CanConvert_System_Type_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.CanConvert(System.Type)">
+  CanConvert(Type)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether the specified type can be converted.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override EffectResponse ReadJson(JsonReader reader, Type objectType, EffectResponse? existingValue, bool hasExistingValue, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override bool CanConvert(Type typeToConvert)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>reader</code> <span class="xref">JsonReader</span></dt>
-    <dd></dd>
-    <dt><code>objectType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
-    <dd></dd>
-    <dt><code>existingValue</code> <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a></dt>
-    <dd></dd>
-    <dt><code>hasExistingValue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dt><code>typeToConvert</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The type to compare against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the type can be converted; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_Read_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.Read*"></a>
+
+  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+  Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads and converts the JSON to type <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override EffectResponse? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>reader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonreader">Utf8JsonReader</a></dt>
+    <dd><p>The reader.</p>
+</dd>
+    <dt><code>typeToConvert</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The type to convert.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a></dt>
-    <dd></dd>
+    <dd><p>The converted value.</p>
+</dd>
   </dl>
 
 
@@ -241,28 +268,32 @@ Class EffectResponseJsonConverter
 
 
 
-  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_WriteJson_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.WriteJson*"></a>
+  <a id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_Write_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.Write*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_WriteJson_Newtonsoft_Json_JsonWriter_StellarDotnetSdk_Responses_Effects_EffectResponse_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,StellarDotnetSdk.Responses.Effects.EffectResponse,Newtonsoft.Json.JsonSerializer)">
-  WriteJson(JsonWriter, EffectResponse?, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_EffectResponseJsonConverter_Write_System_Text_Json_Utf8JsonWriter_StellarDotnetSdk_Responses_Effects_EffectResponse_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.EffectResponseJsonConverter.Write(System.Text.Json.Utf8JsonWriter,StellarDotnetSdk.Responses.Effects.EffectResponse,System.Text.Json.JsonSerializerOptions)">
+  Write(Utf8JsonWriter, EffectResponse, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Writes a specified value as JSON.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void WriteJson(JsonWriter writer, EffectResponse? value, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void Write(Utf8JsonWriter writer, EffectResponse value, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>writer</code> <span class="xref">JsonWriter</span></dt>
-    <dd></dd>
+    <dt><code>writer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonwriter">Utf8JsonWriter</a></dt>
+    <dd><p>The writer to write to.</p>
+</dd>
     <dt><code>value</code> <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dd><p>The value to convert to JSON.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
 

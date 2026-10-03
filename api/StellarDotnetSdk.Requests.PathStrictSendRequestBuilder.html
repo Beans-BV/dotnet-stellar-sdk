@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class PathStrictSendRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests to the Horizon /paths/strict-send endpoint for finding payment paths that send a specified amount of a source asset.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class PathStrictSendRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests to the Horizon <code>/paths/strict-send</code> endpoint for finding
+payment paths that send a specified amount of a source asset.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +196,8 @@ Class PathStrictSendRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,9 +207,11 @@ Class PathStrictSendRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -231,7 +236,8 @@ Class PathStrictSendRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the destination account for the path payment.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -241,13 +247,15 @@ Class PathStrictSendRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>account</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The destination account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -267,23 +275,26 @@ Class PathStrictSendRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the list of destination assets to consider for the path payment.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PathStrictSendRequestBuilder DestinationAssets(IEnumerable&lt;Asset&gt; sources)</code></pre>
+    <pre><code class="lang-csharp hljs">public PathStrictSendRequestBuilder DestinationAssets(IEnumerable&lt;Asset&gt; destinationAssets)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>sources</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>&gt;</dt>
-    <dd></dd>
+    <dt><code>destinationAssets</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>&gt;</dt>
+    <dd><p>The destination assets to consider.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -303,7 +314,8 @@ Class PathStrictSendRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the amount of the source asset to be sent.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -313,13 +325,15 @@ Class PathStrictSendRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The source amount.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -339,7 +353,8 @@ Class PathStrictSendRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the source asset to be sent in the path payment.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -349,13 +364,15 @@ Class PathStrictSendRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The source asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 

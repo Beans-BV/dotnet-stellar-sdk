@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Enum ProvidedFieldStatus </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Enum ProvidedFieldStatus ">
+      
+      <meta name="description" content="Status of a single field the anchor has already received, as returned in . Wire values are the exact literals SEP-0012 defines; any other value is rejected when the response is parsed.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatus">
+
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus" data-uid="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatus" class="text-break">
+Enum ProvidedFieldStatus  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.html">Sep0012</a>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.html">Responses</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Status of a single field the anchor has already received, as returned in
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoProvidedField.html#StellarDotnetSdk_Sep_Sep0012_Responses_GetCustomerInfoProvidedField_Status">Status</a>. Wire values are the exact literals SEP-0012 defines; any
+other value is rejected when the response is parsed.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(ProvidedFieldStatusJsonConverter))]
+public enum ProvidedFieldStatus</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h2 id="fields">Fields
+</h2>
+  <dl class="parameters">
+    <dt id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus_Accepted"><code>Accepted = 1</code></dt>
+  
+  <dd><p><code>ACCEPTED</code>: the field has been validated.</p>
+</dd>
+    <dt id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus_Processing"><code>Processing = 2</code></dt>
+  
+  <dd><p><code>PROCESSING</code>: the field is being validated; poll <code>GET /customer</code> later for the outcome.</p>
+</dd>
+    <dt id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus_Rejected"><code>Rejected = 3</code></dt>
+  
+  <dd><p><code>REJECTED</code>: the field did not pass validation. <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoProvidedField.html#StellarDotnetSdk_Sep_Sep0012_Responses_GetCustomerInfoProvidedField_Error">Error</a>
+describes why. If the value may be resubmitted the customer status is <code>NEEDS_INFO</code>, otherwise
+<code>REJECTED</code>.</p>
+</dd>
+    <dt id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus_VerificationRequired"><code>VerificationRequired = 4</code></dt>
+  
+  <dd><p><code>VERIFICATION_REQUIRED</code>: the field must be verified, for example with a confirmation code sent to
+the customer. Submit it through <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerInfoRequest_VerificationFields">VerificationFields</a>.</p>
+</dd>
+  </dl>
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0012_Responses_ProvidedFieldStatus_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Members are numbered from 1, so <code>default(ProvidedFieldStatus)</code> is not a defined value and never reads as a
+real one. The type-level converter (also registered on <a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html#StellarDotnetSdk_Converters_JsonOptions_DefaultOptions">DefaultOptions</a>)
+serializes the exact wire literal and rejects any other value, including a bare ordinal, when the enum is
+(de)serialized on its own — as a value or as a dictionary key — unless the caller's own options register an
+enum converter that claims it first (an options converter outranks a type-level attribute). The SEP-0012
+response properties are pinned with property-level converters, which hold regardless. Serializing an object
+whose <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.ProvidedFieldStatus.html">ProvidedFieldStatus</a> property was left at <code>default</code> fails with a
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

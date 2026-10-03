@@ -97,29 +97,39 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-      <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> represents public (and secret) keys of the account.
-Currently <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> only supports ed25519 but in a future this class can be abstraction layer for
-other public-key signature systems.</p>
+      <dd><p>Represents the public (and optionally secret) keys of a Stellar account, providing methods
+for signing data, verifying signatures, and encoding/decoding account identifiers.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccount.html">MuxedAccount</a></dt>
-      <dd></dd>
+      <dd><p>Provides factory methods for creating account identifiers from XDR muxed account representations.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html">MuxedAccountMed25519</a></dt>
-      <dd></dd>
+      <dd><p>Represents a multiplexed (muxed) Stellar account that combines an Ed25519 public key with
+a 64-bit numeric identifier. Muxed accounts allow a single Stellar account to distinguish
+between multiple virtual accounts (e.g., for custodial services) without requiring separate
+on-ledger accounts. Addresses for muxed accounts start with &quot;M&quot;.</p>
+</dd>
     </dl>
     <h3 id="interfaces">
 Interfaces
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Stellar account identifier, providing access to the account's public key,
+address, and signing key. Implemented by both standard <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> and
+<a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html">MuxedAccountMed25519</a> accounts.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Accounts.ITransactionBuilderAccount.html">ITransactionBuilderAccount</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Stellar account used for building transactions. Provides access to the account's
+key pair, sequence number management, and muxed account information needed by
+<a class="xref" href="StellarDotnetSdk.Transactions.TransactionBuilder.html">TransactionBuilder</a>.</p>
+</dd>
     </dl>
     <h3 id="enums">
 Enums

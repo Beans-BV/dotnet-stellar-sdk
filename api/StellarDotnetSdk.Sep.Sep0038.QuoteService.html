@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class QuoteService </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class QuoteService ">
+      
+      <meta name="description" content="Client for SEP-0038 v2.5.0 — Anchor RFQ API. Lets a wallet discover which assets an anchor exchanges, fetch indicative prices, and request firm quotes whose id it then passes as quote_id to a SEP-6, SEP-24 or SEP-31 transaction. See SEP-0038.      Authentication       ,  and  accept an optional     JWT, which the anchor may use to personalize the response.  and      require one. Obtain it with SEP-10     () for G.../M... accounts or SEP-45     () for contract accounts.       Amounts       Amounts and prices are  values. Requests send them as invariant-culture strings,     keeping the scale given; responses are read exactly: a value that  cannot hold without     rounding fails with  rather than being approximated.       Errors       Invalid arguments — including the sell/buy amount exclusivity rules, a zero or negative amount, a string     property that is empty or whitespace rather than null, and a JWT that is not printable ASCII without     whitespace — throw  from the returned task, before anything is sent. Error     responses map to  (400),  (403),      (404) and  (anything     else, including a 3xx, or an unusable success body); all derive from .     A Retry-After header on an error response (typically 429 or 503) is exposed as     &#39;s .     Response bodies are read up to 1 MiB, and parsed with the SDK&#39;s hardened JSON options, which reject     duplicated mapped properties. An error body over the limit is dropped (     and  are then null) but the status still selects the     exception type; a success body over the limit raises . A leading     UTF-8 byte order mark is skipped.       A success body is also checked against the request: a firm quote must carry a usable id, the     requested asset pair, no delivery method other than the one requested (compared without regard to case),     and an expiry no earlier than the requested expire_after; prices and amounts must be greater than     zero, and a decimals count must not be negative. A response that fails these checks raises     , whose  still     holds what the anchor sent (for POST /quote, the id of the quote it already created).       Transport failures surface as  (including a connection that drops     while a success body is being read) or  (cancellation, or a timeout, in     which case its inner exception is a ). The whole exchange — headers and     body — is bounded by the  of the client in use (and, for the internal     client, by ), so a server that trickles its body cannot     stall the caller. An internal client with  set     throws Polly&#39;s BrokenCircuitException while the circuit is open, and a call on a disposed service     that owns its client throws . On runtimes before .NET 10, a request     whose URL exceeds the runtime&#39;s length limit (a quote id tens of kilobytes long) raises     .       Redirects       The internal client does not follow redirects, so a 3xx answer raises      and a request is never replayed to another host. A caller-owned     client follows redirects if its handler does; the service then rejects any response that comes from a     different origin than the quote server, but by that point the request, its body and the custom headers     have already been sent there (on .NET&#39;s SocketsHttpHandler, not the JWT, whose Authorization     header it drops on a redirect). Only the final location is visible, so a chain that leaves the origin and     returns to it is not detected at all. Disable AllowAutoRedirect on a caller-owned client&#39;s handler     to avoid both. The check compares the final request URI, so a caller&#39;s handler that rewrites it to     another origin (a gateway, for example) is rejected the same way.       Retries       POST /quote is not idempotent: every call creates a new firm quote that the anchor holds in reserve     until it expires. Do not pass  or     : both retry POST on a 408, 429, 500, 502,     503 or 504 answer, so one call can reserve two quotes. Use  (which     still replays a POST whose response was lost in transit) or     .       HttpClient ownership       Pass a shared  (or one from IHttpClientFactory)     in production; it stays owned by the caller and is not disposed with this service. When none is passed,     the service creates its own, configured by , and disposes it in     .">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0038_QuoteService" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService" class="text-break">
+Class QuoteService  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.html">Sep0038</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Client for SEP-0038 v2.5.0 — Anchor RFQ API. Lets a wallet discover which assets an anchor exchanges, fetch
+indicative prices, and request firm quotes whose id it then passes as <code>quote_id</code> to a SEP-6, SEP-24 or
+SEP-31 transaction.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md">SEP-0038</a>.</p>
+<p>
+    <b>Authentication</b>
+</p>
+<p>
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_InfoAsync_System_String_System_Threading_CancellationToken_">InfoAsync(string?, CancellationToken)</a>, <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PricesAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_System_Threading_CancellationToken_">PricesAsync(PricesRequest, CancellationToken)</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PriceAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PriceRequest_System_Threading_CancellationToken_">PriceAsync(PriceRequest, CancellationToken)</a> accept an optional
+    JWT, which the anchor may use to personalize the response. <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PostQuoteAsync_StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_System_Threading_CancellationToken_">PostQuoteAsync(QuoteRequest, CancellationToken)</a> and
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_GetQuoteAsync_System_String_System_String_System_Threading_CancellationToken_">GetQuoteAsync(string, string, CancellationToken)</a> require one. Obtain it with SEP-10
+    (<a class="xref" href="StellarDotnetSdk.Sep.Sep0010.ClientWebAuth.html#StellarDotnetSdk_Sep_Sep0010_ClientWebAuth_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_Nullable_System_UInt64__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0010_ClientDomainSigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, ulong?, string?, string?, KeyPair?, ClientDomainSigningDelegate?)</a>) for <code>G...</code>/<code>M...</code> accounts or SEP-45
+    (<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)</a>) for contract accounts.
+</p>
+<p>
+    <b>Amounts</b>
+</p>
+<p>
+    Amounts and prices are <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a> values. Requests send them as invariant-culture strings,
+    keeping the scale given; responses are read exactly: a value that <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a> cannot hold without
+    rounding fails with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> rather than being approximated.
+</p>
+<p>
+    <b>Errors</b>
+</p>
+<p>
+    Invalid arguments — including the sell/buy amount exclusivity rules, a zero or negative amount, a string
+    property that is empty or whitespace rather than null, and a JWT that is not printable ASCII without
+    whitespace — throw <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> from the returned task, before anything is sent. Error
+    responses map to <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.BadRequestException.html">BadRequestException</a> (400), <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.PermissionDeniedException.html">PermissionDeniedException</a> (403),
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerNotFoundException.html">QuoteServerNotFoundException</a> (404) and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> (anything
+    else, including a 3xx, or an unusable success body); all derive from <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a>.
+    A <code>Retry-After</code> header on an error response (typically 429 or 503) is exposed as
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>'s <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_RetryAfterDelay">RetryAfterDelay</a>.
+    Response bodies are read up to 1 MiB, and parsed with the SDK's hardened JSON options, which reject
+    duplicated mapped properties. An error body over the limit is dropped (<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_Error">Error</a>
+    and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody">ResponseBody</a> are then null) but the status still selects the
+    exception type; a success body over the limit raises <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>. A leading
+    UTF-8 byte order mark is skipped.
+</p>
+<p>
+    A success body is also checked against the request: a firm quote must carry a usable <code>id</code>, the
+    requested asset pair, no delivery method other than the one requested (compared without regard to case),
+    and an expiry no earlier than the requested <code>expire_after</code>; prices and amounts must be greater than
+    zero, and a <code>decimals</code> count must not be negative. A response that fails these checks raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>, whose <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody">ResponseBody</a> still
+    holds what the anchor sent (for <code>POST /quote</code>, the id of the quote it already created).
+</p>
+<p>
+    Transport failures surface as <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a> (including a connection that drops
+    while a success body is being read) or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> (cancellation, or a timeout, in
+    which case its inner exception is a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>). The whole exchange — headers and
+    body — is bounded by the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a> of the client in use (and, for the internal
+    client, by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout">RequestTimeout</a>), so a server that trickles its body cannot
+    stall the caller. An internal client with <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker">EnableCircuitBreaker</a> set
+    throws Polly's <code>BrokenCircuitException</code> while the circuit is open, and a call on a disposed service
+    that owns its client throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a>. On runtimes before .NET 10, a request
+    whose URL exceeds the runtime's length limit (a quote id tens of kilobytes long) raises
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a>.
+</p>
+<p>
+    <b>Redirects</b>
+</p>
+<p>
+    The internal client does not follow redirects, so a 3xx answer raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> and a request is never replayed to another host. A caller-owned
+    client follows redirects if its handler does; the service then rejects any response that comes from a
+    different origin than the quote server, but by that point the request, its body and the custom headers
+    have already been sent there (on .NET's <code>SocketsHttpHandler</code>, not the JWT, whose <code>Authorization</code>
+    header it drops on a redirect). Only the final location is visible, so a chain that leaves the origin and
+    returns to it is not detected at all. Disable <code>AllowAutoRedirect</code> on a caller-owned client's handler
+    to avoid both. The check compares the final request URI, so a caller's handler that rewrites it to
+    another origin (a gateway, for example) is rejected the same way.
+</p>
+<p>
+    <b>Retries</b>
+</p>
+<p>
+    <code>POST /quote</code> is not idempotent: every call creates a new firm quote that the anchor holds in reserve
+    until it expires. Do not pass <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForHorizon">ForHorizon()</a> or
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForSoroban">ForSoroban()</a>: both retry <code>POST</code> on a 408, 429, 500, 502,
+    503 or 504 answer, so one call can reserve two quotes. Use <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_WithConnectionRetries">WithConnectionRetries()</a> (which
+    still replays a <code>POST</code> whose response was lost in transit) or
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_NoRetry">NoRetry()</a>.
+</p>
+<p>
+    <b>HttpClient ownership</b>
+</p>
+<p>
+    Pass a shared <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> (or one from <code>IHttpClientFactory</code>)
+    in production; it stays owned by the caller and is not disposed with this service. When none is passed,
+    the service creates its own, configured by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>, and disposes it in
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_Dispose">Dispose()</a>.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class QuoteService : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">QuoteService</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService__ctor_System_String_System_Net_Http_HttpClient_StellarDotnetSdk_Requests_HttpResilienceOptions_System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.#ctor(System.String,System.Net.Http.HttpClient,StellarDotnetSdk.Requests.HttpResilienceOptions,System.Collections.Generic.Dictionary{System.String,System.String})">
+  QuoteService(string, HttpClient?, HttpResilienceOptions?, Dictionary&lt;string, string&gt;?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a client for the quote server at <code class="paramref">serviceAddress</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public QuoteService(string serviceAddress, HttpClient? httpClient = null, HttpResilienceOptions? resilienceOptions = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>serviceAddress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The anchor's <code>ANCHOR_QUOTE_SERVER</code> URL.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client to use. It remains owned by the caller. When null, the service creates one and
+disposes it in <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_Dispose">Dispose()</a>.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry and timeout options for the client the service creates. Ignored when
+<code class="paramref">httpClient</code> is provided.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional headers added to every request. A content header (<code>Content-Language</code>, for example) is sent
+only with <code>POST /quote</code>; the other requests have no body to carry it, so it is dropped from them. A
+<code>Content-Type</code> header is ignored: <code>POST /quote</code> always sends <code>application/json</code>. An
+<code>Accept</code> header is ignored too: every request asks for <code>application/json</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">serviceAddress</code> is empty, is not an absolute URL, carries a query,
+fragment or user information, or uses plain <code>http</code> for a host other than a loopback address (the JWT travels with every
+authenticated request, so it must not go in cleartext; loopback is allowed for local development); or when
+<code class="paramref">httpRequestHeaders</code> holds a name that is not a valid HTTP header name, a
+<code>Content-Length</code> or <code>Transfer-Encoding</code> header, or a value with anything other than printable
+ASCII, spaces and tabs (a line break would otherwise split into extra headers on the wire). The headers are
+copied, so later changes to the dictionary have no effect.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_Dispose" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes the HTTP client if this service created it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.FromDomainAsync(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a client for the quote server declared as <code>ANCHOR_QUOTE_SERVER</code> in the stellar.toml of
+<code class="paramref">domain</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;QuoteService&gt; FromDomainAsync(string domain, HttpResilienceOptions? resilienceOptions = null, string? bearerToken = null, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The anchor's home domain, for example <code>testanchor.stellar.org</code>.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry and timeout options for the stellar.toml fetch and the client the service creates. Ignored
+when <code class="paramref">httpClient</code> is provided.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional bearer token for the stellar.toml fetch only. Ignored when <code class="paramref">httpClient</code> is
+provided: the stellar.toml is then fetched with the caller's client as it is configured, without the token.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client to use; it remains owned by the caller.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional headers added to the stellar.toml fetch and every request. A content header is sent only with
+<code>POST /quote</code>, the one request with a body, and a <code>Content-Type</code> header is ignored. An
+<code>Accept</code> header reaches the stellar.toml fetch only: requests to the quote server always ask for
+<code>application/json</code>.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the stellar.toml fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a>&gt;</dt>
+    <dd><p>A client for the anchor's quote server.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">domain</code> is null or empty, or when <code class="paramref">httpRequestHeaders</code>
+holds a header the constructor refuses.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a></dt>
+    <dd><p>Thrown when <code class="paramref">domain</code> is not a valid host name.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled during the stellar.toml fetch.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the stellar.toml cannot be fetched or parsed.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.NoAnchorQuoteServerFoundException.html">NoAnchorQuoteServerFoundException</a></dt>
+    <dd><p>Thrown when the stellar.toml does not declare <code>ANCHOR_QUOTE_SERVER</code>, or declares a value that is not
+an absolute https URL without a query or fragment (plain http is refused here even for loopback).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_GetQuoteAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.GetQuoteAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_GetQuoteAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.GetQuoteAsync(System.String,System.String,System.Threading.CancellationToken)">
+  GetQuoteAsync(string, string, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /quote/:id</code>: fetches a previously issued firm quote. Anchors keep quotes available past their
+expiry. Requires a JWT.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;QuoteResponse&gt; GetQuoteAsync(string quoteId, string jwt, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quoteId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.QuoteResponse.html#StellarDotnetSdk_Sep_Sep0038_Responses_QuoteResponse_Id">Id</a> returned by <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PostQuoteAsync_StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_System_Threading_CancellationToken_">PostQuoteAsync(QuoteRequest, CancellationToken)</a>.</p>
+</dd>
+    <dt><code>jwt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The SEP-10 or SEP-45 JWT of the account that requested the quote.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.QuoteResponse.html">QuoteResponse</a>&gt;</dt>
+    <dd><p>The quote.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">quoteId</code> or <code class="paramref">jwt</code> is empty, when
+<code class="paramref">quoteId</code> is <code>.</code> or <code>..</code>, or when <code class="paramref">jwt</code> is not printable ASCII
+without whitespace.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerNotFoundException.html">QuoteServerNotFoundException</a></dt>
+    <dd><p>Thrown when the anchor has no such quote for the account.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+    <dd><p>Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response, including
+a quote whose <code>id</code> is not <code class="paramref">quoteId</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the request cannot be sent or the response not read.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled, or when the timeout elapses (the inner
+exception is then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_InfoAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.InfoAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_InfoAsync_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.InfoAsync(System.String,System.Threading.CancellationToken)">
+  InfoAsync(string?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /info</code>: the Stellar and off-chain assets available for trading, with their delivery methods and
+country codes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;InfoResponse&gt; InfoAsync(string? jwt = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>jwt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional SEP-10 or SEP-45 JWT; the anchor may use it to personalize the response.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.InfoResponse.html">InfoResponse</a>&gt;</dt>
+    <dd><p>The supported assets.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">jwt</code> is empty or whitespace rather than null, or is not printable ASCII
+without whitespace.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+    <dd><p>Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the request cannot be sent or the response not read.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled, or when the timeout elapses (the inner
+exception is then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PostQuoteAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PostQuoteAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PostQuoteAsync_StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PostQuoteAsync(StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest,System.Threading.CancellationToken)">
+  PostQuoteAsync(QuoteRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /quote</code>: requests a firm quote. The anchor holds the quoted amount in reserve until the quote
+expires. Requires a JWT.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;QuoteResponse&gt; PostQuoteAsync(QuoteRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.QuoteRequest.html">QuoteRequest</a></dt>
+    <dd><p>The pair, exactly one of the two amounts, at most one delivery method, the context, and the JWT.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.QuoteResponse.html">QuoteResponse</a>&gt;</dt>
+    <dd><p>The firm quote; pass its <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.QuoteResponse.html#StellarDotnetSdk_Sep_Sep0038_Responses_QuoteResponse_Id">Id</a> as <code>quote_id</code> to use it.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when an asset or the JWT is missing, when the JWT is not printable ASCII without whitespace, when
+not exactly one amount is given, when an optional string property is empty or whitespace rather than
+null, or when both delivery methods are given.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when the context is not a defined value, or the amount is zero or negative.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+    <dd><p>Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the request cannot be sent or the response not read.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled, or when the timeout elapses (the inner
+exception is then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PriceAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PriceAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PriceAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PriceRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PriceAsync(StellarDotnetSdk.Sep.Sep0038.Requests.PriceRequest,System.Threading.CancellationToken)">
+  PriceAsync(PriceRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /price</code>: the indicative price for one asset pair, with its fee.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;PriceResponse&gt; PriceAsync(PriceRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PriceRequest.html">PriceRequest</a></dt>
+    <dd><p>The pair, exactly one of the two amounts, and the context (SEP-6 or SEP-31).</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.PriceResponse.html">PriceResponse</a>&gt;</dt>
+    <dd><p>The indicative price.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when an asset is missing, when not exactly one amount is given, when the context is SEP-24, when an
+optional string property is empty or whitespace rather than null, or when the JWT is not printable ASCII
+without whitespace.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when the context is not a defined value, or the amount is zero or negative.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+    <dd><p>Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the request cannot be sent or the response not read.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled, or when the timeout elapses (the inner
+exception is then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PricesAsync_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PricesAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_QuoteService_PricesAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0038.QuoteService.PricesAsync(StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest,System.Threading.CancellationToken)">
+  PricesAsync(PricesRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /prices</code>: indicative prices of the assets available in exchange for the asset given in the
+request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;PricesResponse&gt; PricesAsync(PricesRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest.html">PricesRequest</a></dt>
+    <dd><p>Either the sell side (<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_SellAsset">SellAsset</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_SellAmount">SellAmount</a>)
+or the buy side (<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_BuyAsset">BuyAsset</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Requests.PricesRequest.html#StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_BuyAmount">BuyAmount</a>).</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Token to cancel the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.PricesResponse.html">PricesResponse</a>&gt;</dt>
+    <dd><p>The prices: <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.PricesResponse.html#StellarDotnetSdk_Sep_Sep0038_Responses_PricesResponse_BuyAssets">BuyAssets</a> for a sell-side request,
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Responses.PricesResponse.html#StellarDotnetSdk_Sep_Sep0038_Responses_PricesResponse_SellAssets">SellAssets</a> for a buy-side one.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">request</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the request mixes or omits the sell and buy sides, when a string property is empty or
+whitespace rather than null, or when the JWT is not printable ASCII without whitespace.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when the amount is zero or negative.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+    <dd><p>Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd><p>Thrown when the request cannot be sent or the response not read.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a></dt>
+    <dd><p>Thrown when <code class="paramref">cancellationToken</code> is canceled, or when the timeout elapses (the inner
+exception is then a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>).</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

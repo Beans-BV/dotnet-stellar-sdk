@@ -99,7 +99,8 @@ Class WebAuthentication
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class WebAuthentication</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use ServerWebAuth instead. This class will be removed in a future version.&quot;)]
+public static class WebAuthentication</code></pre>
   </div>
 
 
@@ -393,7 +394,7 @@ Performs the following checks:</p>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0010.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
     <dd></dd>
   </dl>
 
@@ -461,76 +462,7 @@ Performs the following checks:</p>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-  <a id="StellarDotnetSdk_WebAuthentication_VerifyChallengeTransaction_" data-uid="StellarDotnetSdk.WebAuthentication.VerifyChallengeTransaction*"></a>
-
-  <h3 id="StellarDotnetSdk_WebAuthentication_VerifyChallengeTransaction_StellarDotnetSdk_Transactions_Transaction_System_String_System_String_System_String_StellarDotnetSdk_Network_System_Nullable_System_DateTimeOffset__" data-uid="StellarDotnetSdk.WebAuthentication.VerifyChallengeTransaction(StellarDotnetSdk.Transactions.Transaction,System.String,System.String,System.String,StellarDotnetSdk.Network,System.Nullable{System.DateTimeOffset})">
-  VerifyChallengeTransaction(Transaction, string, string, string, Network?, DateTimeOffset?)
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Verify that a transaction is a valid Stellar Web Authentication transaction.
-Performs the following checks:</p>
-<ol>
-<li>Transaction sequence number is 0</li>
-<li>Transaction source account is <code class="paramref">serverAccountId</code></li>
-<li>Transaction has one operation only, of type ManageDataOperation</li>
-<li>The ManageDataOperation name and value are correct</li>
-<li>Transaction time bounds are still valid</li>
-<li>Transaction is signed by server and client</li>
-</ol>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use VerifyChallengeTransactionThreshold and VerifyChallengeTransactionSigners&quot;)]
-public static bool VerifyChallengeTransaction(Transaction transaction, string serverAccountId, string homeDomain, string webAuthDomain, Network? network = null, DateTimeOffset? now = null)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>transaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd><p>The challenge transaction</p>
-</dd>
-    <dt><code>serverAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The server account id</p>
-</dd>
-    <dt><code>homeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The server home domain</p>
-</dd>
-    <dt><code>webAuthDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The server auth domain</p>
-</dd>
-    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd><p>The network the transaction was submitted to, defaults to Network.Current</p>
-</dd>
-    <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
-    <dd><p>Current time, defaults to DateTimeOffset.Now</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>True if the transaction is valid</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0010.Exceptions.InvalidWebAuthenticationException.html">InvalidWebAuthenticationException</a></dt>
     <dd></dd>
   </dl>
 
@@ -607,7 +539,8 @@ found is returned, excluding the server account id.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Verifies that the signers of a SEP-10 challenge transaction meet the specified threshold.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -617,27 +550,36 @@ found is returned, excluding the server account id.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>transaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The signed challenge transaction to verify.</p>
+</dd>
     <dt><code>serverAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The server's Stellar account ID.</p>
+</dd>
     <dt><code>threshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The required signing threshold to meet.</p>
+</dd>
     <dt><code>signerSummary</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2">IDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A dictionary mapping signer account IDs to their weights.</p>
+</dd>
     <dt><code>homeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The home domain used in the challenge.</p>
+</dd>
     <dt><code>webAuthDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The web auth domain used in the challenge.</p>
+</dd>
     <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd></dd>
+    <dd><p>The Stellar network to use. Defaults to the current network if null.</p>
+</dd>
     <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
-    <dd></dd>
+    <dd><p>The reference time for validation. Defaults to current time if null.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A collection of signer account IDs that signed the transaction.</p>
+</dd>
   </dl>
 
 

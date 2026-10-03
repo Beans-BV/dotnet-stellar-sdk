@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LedgerResponse ">
       
-      
+      <meta name="description" content="Represents a ledger from the Stellar network. A ledger is equivalent to a block in other blockchain systems and contains all transactions that were applied during that consensus round.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,14 @@ Class LedgerResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a ledger from the Stellar network.
+A ledger is equivalent to a block in other blockchain systems and contains all transactions
+that were applied during that consensus round.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LedgerResponse : Response, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class LedgerResponse : Response, IPagingToken</code></pre>
   </div>
 
 
@@ -124,15 +127,6 @@ Class LedgerResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -146,9 +140,6 @@ Class LedgerResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -167,19 +158,20 @@ Class LedgerResponse
 </h2>
 
 
-  <a id="StellarDotnetSdk_Responses_LedgerResponse_BaseFee_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFee*"></a>
+  <a id="StellarDotnetSdk_Responses_LedgerResponse_BaseFeeInStroops_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFeeInStroops*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_BaseFee" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFee">
-  BaseFee
+  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_BaseFeeInStroops" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFeeInStroops">
+  BaseFeeInStroops
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base fee for operations in this ledger (in stroops).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base_fee&quot;)]
-public long BaseFee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base_fee_in_stroops&quot;)]
+public required long BaseFeeInStroops { get; init; }</code></pre>
   </div>
 
 
@@ -199,70 +191,6 @@ public long BaseFee { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_LedgerResponse_BaseFeeInStroops_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFeeInStroops*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_BaseFeeInStroops" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseFeeInStroops">
-  BaseFeeInStroops
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base_fee_in_stroops&quot;)]
-public string BaseFeeInStroops { get; init; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_LedgerResponse_BaseReserve_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseReserve*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_BaseReserve" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseReserve">
-  BaseReserve
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base_reserve&quot;)]
-public string BaseReserve { get; init; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="StellarDotnetSdk_Responses_LedgerResponse_BaseReserveInStroops_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseReserveInStroops*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_LedgerResponse_BaseReserveInStroops" data-uid="StellarDotnetSdk.Responses.LedgerResponse.BaseReserveInStroops">
@@ -270,12 +198,13 @@ public string BaseReserve { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The minimum account balance required to exist on the network (in stroops).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base_reserve_in_stroops&quot;)]
-public string BaseReserveInStroops { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base_reserve_in_stroops&quot;)]
+public required long BaseReserveInStroops { get; init; }</code></pre>
   </div>
 
 
@@ -284,7 +213,7 @@ public string BaseReserveInStroops { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -302,12 +231,13 @@ public string BaseReserveInStroops { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The time when this ledger was closed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;closed_at&quot;)]
-public string ClosedAt { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;closed_at&quot;)]
+public required DateTimeOffset ClosedAt { get; init; }</code></pre>
   </div>
 
 
@@ -316,7 +246,7 @@ public string ClosedAt { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -334,12 +264,13 @@ public string ClosedAt { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of failed transactions in this ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;failed_transaction_count&quot;)]
-public int? FailedTransactionCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;failed_transaction_count&quot;)]
+public required int FailedTransactionCount { get; init; }</code></pre>
   </div>
 
 
@@ -348,7 +279,7 @@ public int? FailedTransactionCount { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
   </dl>
 
@@ -366,12 +297,14 @@ public int? FailedTransactionCount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sum of all transaction fees (in lumens) since the last inflation operation.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_pool&quot;)]
-public string FeePool { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_pool&quot;)]
+public required string FeePool { get; init; }</code></pre>
   </div>
 
 
@@ -398,12 +331,79 @@ public string FeePool { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A hex-encoded SHA-256 hash of the ledger's XDR-encoded form.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
-public string Hash { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hash&quot;)]
+public required string Hash { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_LedgerResponse_HeaderXdr_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.HeaderXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_HeaderXdr" data-uid="StellarDotnetSdk.Responses.LedgerResponse.HeaderXdr">
+  HeaderXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A base64 encoded string of the raw LedgerHeader xdr struct for this ledger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;header_xdr&quot;)]
+public required string HeaderXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_LedgerResponse_Id_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Id*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_Id" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Id">
+  Id
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>A unique identifier for this ledger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required string Id { get; init; }</code></pre>
   </div>
 
 
@@ -430,12 +430,13 @@ public string Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Links to related resources for this ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public LedgerResponse.LedgerResponseLinks Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required LedgerResponse.LedgerResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -462,12 +463,13 @@ public LedgerResponse.LedgerResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum number of transactions allowed in this ledger's transaction set.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max_tx_set_size&quot;)]
-public int MaxTxSetSize { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_tx_set_size&quot;)]
+public required int MaxTxSetSize { get; init; }</code></pre>
   </div>
 
 
@@ -494,12 +496,13 @@ public int MaxTxSetSize { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total number of operations in all successful transactions in this ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;operation_count&quot;)]
-public int OperationCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;operation_count&quot;)]
+public required int OperationCount { get; init; }</code></pre>
   </div>
 
 
@@ -526,12 +529,14 @@ public int OperationCount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.
+This token can be used to retrieve the next or previous page of results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 
@@ -558,12 +563,13 @@ public string PagingToken { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hash of the previous ledger in the chain.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;prev_hash&quot;)]
-public string PrevHash { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;prev_hash&quot;)]
+public required string PrevHash { get; init; }</code></pre>
   </div>
 
 
@@ -583,19 +589,20 @@ public string PrevHash { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_LedgerResponse_Sequence_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Sequence*"></a>
+  <a id="StellarDotnetSdk_Responses_LedgerResponse_ProtocolVersion_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.ProtocolVersion*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_Sequence" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Sequence">
-  Sequence
+  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_ProtocolVersion" data-uid="StellarDotnetSdk.Responses.LedgerResponse.ProtocolVersion">
+  ProtocolVersion
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The protocol version that the Stellar network was running when this ledger was committed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sequence&quot;)]
-public uint Sequence { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;protocol_version&quot;)]
+public required int ProtocolVersion { get; init; }</code></pre>
   </div>
 
 
@@ -604,7 +611,40 @@ public uint Sequence { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_LedgerResponse_Sequence_" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Sequence*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_LedgerResponse_Sequence" data-uid="StellarDotnetSdk.Responses.LedgerResponse.Sequence">
+  Sequence
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The sequence number of this ledger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sequence&quot;)]
+public required long Sequence { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -622,12 +662,13 @@ public uint Sequence { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of successful transactions in this ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;successful_transaction_count&quot;)]
-public int SuccessfulTransactionCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;successful_transaction_count&quot;)]
+public required int SuccessfulTransactionCount { get; init; }</code></pre>
   </div>
 
 
@@ -654,12 +695,14 @@ public int SuccessfulTransactionCount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total number of lumens in circulation.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;total_coins&quot;)]
-public string TotalCoins { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;total_coins&quot;)]
+public required string TotalCoins { get; init; }</code></pre>
   </div>
 
 
@@ -686,12 +729,14 @@ public string TotalCoins { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of operations in the transaction set (may differ from operation_count
+if there are failed transactions).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;tx_set_operation_count&quot;)]
-public int? TxSetOperationCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;tx_set_operation_count&quot;)]
+public required int TxSetOperationCount { get; init; }</code></pre>
   </div>
 
 
@@ -700,7 +745,7 @@ public int? TxSetOperationCount { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
   </dl>
 

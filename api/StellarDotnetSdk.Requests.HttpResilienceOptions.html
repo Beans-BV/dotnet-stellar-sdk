@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class HttpResilienceOptions </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class HttpResilienceOptions ">
+      
+      <meta name="description" content="Configuration options for HTTP resilience behavior including retry, circuit breaker, and timeout policies.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions">
+
+
+
+  <h1 id="StellarDotnetSdk_Requests_HttpResilienceOptions" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions" class="text-break">
+Class HttpResilienceOptions  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Requests.html">Requests</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Configuration options for HTTP resilience behavior including retry, circuit breaker, and timeout policies.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class HttpResilienceOptions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">HttpResilienceOptions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_AdditionalRetriableExceptionTypes_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.AdditionalRetriableExceptionTypes*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_AdditionalRetriableExceptionTypes" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.AdditionalRetriableExceptionTypes">
+  AdditionalRetriableExceptionTypes
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Additional exception types to retry, in addition to the defaults (
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a>,
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>, and <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> when the
+request's <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a> is not signaled — note that an
+<code>HttpClient.Timeout</code> cancellation signals that token and is therefore NOT retried).
+A requested cancellation is never retried or counted as a failure, even when its exception type
+is registered here — the cancellation check takes precedence.</p>
+<p>
+    <b>Scope limitation:</b> This applies only to exceptions thrown from within the HTTP message handler
+    chain (i.e., from <code>HttpClient.SendAsync</code>). It does <i>not</i> apply to exceptions thrown by
+    <code>ResponseHandler</code> after the response is received — including <code>TooManyRequestsException</code>,
+    <code>ServiceUnavailableException</code>, and <code>HttpResponseException</code>. To retry those, use
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a> instead — that mechanism inspects the response before it is
+    translated into a typed exception.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ISet&lt;Type&gt; AdditionalRetriableExceptionTypes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iset-1">ISet</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_BaseDelay_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.BaseDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_BaseDelay" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.BaseDelay">
+  BaseDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the base delay for exponential backoff. Default is 200ms.
+Must be positive and at most 1 day (Polly's retry strategy accepts up to 1 day; the SDK additionally
+requires a positive value).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan BaseDelay { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is not positive or exceeds 1 day.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_BreakDuration_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.BreakDuration*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_BreakDuration" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.BreakDuration">
+  BreakDuration
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the duration the circuit breaker stays open before attempting to close. Default is 30 seconds.
+Must be between 500 milliseconds and 1 day (the range Polly's circuit breaker accepts).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan BreakDuration { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is below 500ms or exceeds 1 day.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.EnableCircuitBreaker*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.EnableCircuitBreaker">
+  EnableCircuitBreaker
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets whether to enable circuit breaker. Default is false.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool EnableCircuitBreaker { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_FailureRatio_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.FailureRatio*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_FailureRatio" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.FailureRatio">
+  FailureRatio
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the failure ratio threshold for circuit breaker (0.0 to 1.0). Default is 0.5 (50%).
+The circuit will open when the failure ratio exceeds this value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double FailureRatio { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is not between 0.0 and 1.0.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_HasAnyResilienceFeatureEnabled_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.HasAnyResilienceFeatureEnabled*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_HasAnyResilienceFeatureEnabled" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.HasAnyResilienceFeatureEnabled">
+  HasAnyResilienceFeatureEnabled
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets whether any resilience feature is enabled (retries, circuit breaker, or timeout).
+Returns true if <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount">MaxRetryCount</a> is greater than 0, <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker">EnableCircuitBreaker</a>
+is true, or <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout">RequestTimeout</a> has a value.</p>
+<p>
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a> is intentionally NOT a separate enabler — status-code retries
+    only fire inside the retry strategy, which itself requires <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount">MaxRetryCount</a> &gt; 0.
+    Configuring status codes without a positive <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount">MaxRetryCount</a> causes no retries;
+    however, when <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker">EnableCircuitBreaker</a> is true those status codes still count as
+    failures toward opening the circuit.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasAnyResilienceFeatureEnabled { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxDelay_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxDelay" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxDelay">
+  MaxDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the maximum delay for exponential backoff. Default is 5 seconds.
+Must be positive and at most 1 day (Polly's retry strategy accepts up to 1 day; the SDK additionally
+requires a positive value).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan MaxDelay { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is not positive or exceeds 1 day.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryAfterDelay_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxRetryAfterDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryAfterDelay" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxRetryAfterDelay">
+  MaxRetryAfterDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Upper bound applied to a server-provided <code>Retry-After</code> delay (RFC 7231) when
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RespectRetryAfter">RespectRetryAfter</a> is true: a longer <code>Retry-After</code> is capped to this value.
+Default is 1 minute.</p>
+<p>
+    This is intentionally separate from <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxDelay">MaxDelay</a>, which bounds the exponential
+    backoff. Servers commonly ask for tens of seconds on HTTP 429 — longer than a typical backoff
+    cap — and honoring that (rather than retrying early against a server that explicitly asked the
+    client to wait) is the whole point of <code>Retry-After</code>. Keep this at or above
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxDelay">MaxDelay</a>.
+</p>
+<p>
+    Unlike the backoff/circuit-breaker durations this is not a Polly-bound field (it is applied in
+    the SDK's own delay generator), so its upper bound is <a class="xref" href="StellarDotnetSdk.Requests.RetryAfterParser.html">RetryAfterParser</a>'s
+    representable-delay ceiling (~49.7 days) rather than Polly's 1 day — a larger cap can never
+    bind, since a parsed <code>Retry-After</code> is itself clamped to that ceiling.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan MaxRetryAfterDelay { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is not positive or exceeds <a class="xref" href="StellarDotnetSdk.Requests.RetryAfterParser.html#StellarDotnetSdk_Requests_RetryAfterParser_MaxRepresentableDelay">MaxRepresentableDelay</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxRetryCount*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MaxRetryCount">
+  MaxRetryCount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the maximum number of retry attempts. Default is 0 (disabled).
+Set to a positive value to enable retries for connection failures (network errors, DNS failures, etc.).
+HTTP error status codes are retried only when added to <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxRetryCount { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is negative.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_MinimumThroughput_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MinimumThroughput*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_MinimumThroughput" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.MinimumThroughput">
+  MinimumThroughput
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the minimum throughput required before circuit breaker can trip. Default is 10.
+The circuit breaker will not open unless at least this many requests have been made.
+Must be at least 2 (Polly's circuit-breaker minimum).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MinimumThroughput { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is less than 2.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RequestTimeout*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RequestTimeout">
+  RequestTimeout
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the overall operation timeout. Default is null (no timeout).
+When set, the entire send operation — including all retry attempts and their backoff delays — must
+complete within this duration (applied as the outermost resilience strategy), not each attempt individually.
+When non-null, must be between 10 milliseconds and 1 day (the range Polly's timeout strategy accepts).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? RequestTimeout { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when a non-null value is below 10ms or exceeds 1 day.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_RespectRetryAfter_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RespectRetryAfter*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_RespectRetryAfter" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RespectRetryAfter">
+  RespectRetryAfter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>When the server responds with a <code>Retry-After</code> header (RFC 7231) on a retried status code,
+use that value as the retry delay (capped by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryAfterDelay">MaxRetryAfterDelay</a>). Default: true.
+Only takes effect when status-code retries are enabled (see <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool RespectRetryAfter { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpMethods_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RetryHttpMethods*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpMethods" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RetryHttpMethods">
+  RetryHttpMethods
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>HTTP methods that may be retried on a configured status code. Default: <code>GET</code>, <code>HEAD</code>,
+<code>OPTIONS</code> — the methods that are safe by RFC 9110. To retry POST (e.g. for
+<code>Server.SubmitTransaction()</code> on Horizon, or every JSON-RPC call on Stellar RPC), add
+<code>HttpMethod.Post</code> explicitly. Methods not in this set are never retried on a status code,
+even if the status code is in <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a>.</p>
+<p>
+    This is an explicit whitelist by design: future SDK methods that introduce <code>PUT</code>,
+    <code>PATCH</code>, or <code>DELETE</code> are not silently retried unless added here. Some Stellar
+    ecosystem endpoints (e.g. SEP-10 <code>POST /auth</code>, SEP-24
+    <code>POST /transactions/{deposit,withdraw}/interactive</code>)
+    are explicitly non-idempotent per spec, so a blanket "retry everything" policy is unsafe.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ISet&lt;HttpMethod&gt; RetryHttpMethods { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iset-1">ISet</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpmethod">HttpMethod</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RetryHttpStatusCodes*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.RetryHttpStatusCodes">
+  RetryHttpStatusCodes
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>HTTP status codes that should trigger a retry when received as a response. Default: empty (no status-code retries).
+When non-empty and <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_MaxRetryCount">MaxRetryCount</a> is greater than 0, the retry pipeline observes
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage.statuscode">StatusCode</a> and retries on match.
+Retries are also gated by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpMethods">RetryHttpMethods</a>: only requests whose HTTP method is in
+that set are retried on a configured status code.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ISet&lt;HttpStatusCode&gt; RetryHttpStatusCodes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iset-1">ISet</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.httpstatuscode">HttpStatusCode</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_SamplingDuration_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.SamplingDuration*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_SamplingDuration" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.SamplingDuration">
+  SamplingDuration
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the sampling duration for circuit breaker. Default is 30 seconds.
+The circuit breaker evaluates failures over this time window.
+Must be between 500 milliseconds and 1 day (the range Polly's circuit breaker accepts).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan SamplingDuration { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when value is below 500ms or exceeds 1 day.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Requests_HttpResilienceOptions_UseJitter_" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.UseJitter*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_HttpResilienceOptions_UseJitter" data-uid="StellarDotnetSdk.Requests.HttpResilienceOptions.UseJitter">
+  UseJitter
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets whether to use jitter in the backoff calculation. Default is true.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool UseJitter { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

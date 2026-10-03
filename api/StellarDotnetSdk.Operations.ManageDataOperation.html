@@ -224,7 +224,8 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new <code>ManageDataOperation</code> with a string value that is UTF-8 encoded.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -234,11 +235,14 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The name of the data entry (up to 64 characters).</p>
+</dd>
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) The string value to set. If null, the data entry is deleted. Up to 64 bytes when encoded.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
 
@@ -331,7 +335,8 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Operations.ManageDataOperation.html">ManageDataOperation</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -341,13 +346,15 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>manageDataOp</code> <span class="xref">ManageDataOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR ManageDataOp object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.ManageDataOperation.html">ManageDataOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.ManageDataOperation.html">ManageDataOperation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -367,7 +374,7 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -379,7 +386,7 @@ be set in the DataEntry. Up to 64 bytes long.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

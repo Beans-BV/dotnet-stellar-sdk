@@ -157,7 +157,8 @@ information about the current ledger.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -167,15 +168,20 @@ information about the current ledger.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>errorResultXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Base64-encoded XDR string of the TransactionResult if status is ERROR.</p>
+</dd>
     <dt><code>hash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The hex-encoded transaction hash.</p>
+</dd>
     <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
+    <dd><p>The latest ledger sequence number known to the server.</p>
+</dd>
     <dt><code>latestLedgerCloseTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
+    <dd><p>The close time of the latest ledger.</p>
+</dd>
     <dt><code>status</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus.html">SendTransactionStatus</a></dt>
-    <dd></dd>
+    <dd><p>The status of the submitted transaction.</p>
+</dd>
   </dl>
 
 
@@ -206,7 +212,7 @@ XDR struct containing details on why stellar-core rejected the transaction.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? ErrorResultXdr { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? ErrorResultXdr { get; init; }</code></pre>
   </div>
 
 
@@ -238,7 +244,8 @@ XDR struct containing details on why stellar-core rejected the transaction.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Hash { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonRequired]
+public string Hash { get; init; }</code></pre>
   </div>
 
 
@@ -254,6 +261,16 @@ XDR struct containing details on why stellar-core rejected the transaction.</p>
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_Hash_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Stellar RPC tags this field <code>json:&quot;hash&quot;</code> with no <code>omitempty</code>, so it is always present.
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a> makes that a contract the deserializer enforces:
+<code>RespectNullableAnnotations</code> rejects an explicit <code>null</code> but not an <em>absent</em> property,
+which would otherwise leave this non-nullable <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> holding <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+The check enforces presence, not validity — an empty string is not rejected (a conforming server never
+sends one) — and required-property checks run before any field is readable, so a non-conforming reply
+that omits <code>hash</code> surfaces as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a> before
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_Status">Status</a> or <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_ErrorResultXdr">ErrorResultXdr</a> can be observed.</p>
+</div>
 
 
 
@@ -265,12 +282,12 @@ XDR struct containing details on why stellar-core rejected the transaction.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long? LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -297,12 +314,12 @@ XDR struct containing details on why stellar-core rejected the transaction.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? LatestLedgerCloseTime { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long? LatestLedgerCloseTime { get; init; }</code></pre>
   </div>
 
 
@@ -339,7 +356,9 @@ in the previous 4 ledgers and get banned for being added in the next few ledgers
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SendTransactionResponse.SendTransactionStatus Status { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SendTransactionStatusEnumJsonConverter))]
+[JsonRequired]
+public SendTransactionResponse.SendTransactionStatus Status { get; init; }</code></pre>
   </div>
 
 
@@ -355,13 +374,21 @@ in the previous 4 ledgers and get banned for being added in the next few ledgers
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_Status_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a> closes the other half of the &quot;a malformed response must not read as
+a plausible status&quot; problem that <a class="xref" href="StellarDotnetSdk.Converters.SendTransactionStatusEnumJsonConverter.html">SendTransactionStatusEnumJsonConverter</a> closes
+for <code>&quot;status&quot;: 0</code>. Nothing enforces presence otherwise — an enum is a value type, so a response with
+no <code>status</code> at all silently yielded the zero member, <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus.html#StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_PENDING">PENDING</a>,
+presenting a submission the server never accepted as pending. Stellar RPC tags the field
+<code>json:&quot;status&quot;</code> with no <code>omitempty</code>, so requiring it rejects nothing a conforming server sends.</p>
+</div>
 
 
 
 
   <h2 id="seealso">See Also</h2>
   <div class="seealso">
-      <div><span><a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction</a></span></div>
+      <div><span><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction">https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction</a></span></div>
   </div>
 
 </article>

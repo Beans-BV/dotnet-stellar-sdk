@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class KycCallbackSignature </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class KycCallbackSignature ">
+      
+      <meta name="description" content="Verifies (and, for anchors and tests, computes) the signature SEP-0012 attaches to the status callbacks an anchor POSTs to the URL registered with PUT /customer/callback.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature" class="text-break">
+Class KycCallbackSignature  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.html">Sep0012</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Verifies (and, for anchors and tests, computes) the signature SEP-0012 attaches to the status callbacks an
+anchor POSTs to the URL registered with <code>PUT /customer/callback</code>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class KycCallbackSignature</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">KycCallbackSignature</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    The anchor sends a <code>Signature</code> header (or the deprecated <code>X-Stellar-Signature</code>) of the form
+    <code>t=&lt;unix timestamp&gt;, s=&lt;base64 signature&gt;</code>, where the signature is an Ed25519 signature,
+    by the <code>SIGNING_KEY</code> in the anchor's stellar.toml, over the UTF-8 bytes of
+    <code>&lt;timestamp&gt;.&lt;host&gt;.&lt;body&gt;</code>. The wallet's host stops a callback being relayed to another
+    wallet, and the timestamp stops it being replayed after the freshness window. Within the window the same
+    signed callback verifies every time it is delivered, so a wallet that must act on each status change exactly
+    once should deduplicate callbacks itself.
+</p>
+<p>
+    SEP-0012 makes checking it the wallet's responsibility: verify the signature against the anchor's
+    <code>SIGNING_KEY</code>, and discard callbacks older than a threshold of one to two minutes. Only then parse the
+    body with <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Responses.GetCustomerInfoResponse.html#StellarDotnetSdk_Sep_Sep0012_Responses_GetCustomerInfoResponse_FromJson_System_String_">FromJson(string)</a>.
+</p>
+<p>
+    The host must be spelled exactly as the anchor signs it. SEP-0012 says only "the wallet host"; the
+    reference Anchor Platform signs the host as it appears in the registered callback URL, with
+    <code>:port</code> appended when the URL names a port. <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_GetSignedHost_System_String_">GetSignedHost(string)</a> derives that string from the
+    URL; <code>new Uri(url).Host</code> does not, because it drops the port and lower-cases the host.
+</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DeprecatedSignatureHeaderName" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.DeprecatedSignatureHeaderName">
+  DeprecatedSignatureHeaderName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the deprecated callback signature header. Wallets should accept it until SEP-0012 removes it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string DeprecatedSignatureHeaderName = &quot;X-Stellar-Signature&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_SignatureHeaderName" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.SignatureHeaderName">
+  SignatureHeaderName
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the callback signature header.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SignatureHeaderName = &quot;Signature&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DefaultMaxAge_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.DefaultMaxAge*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DefaultMaxAge" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.DefaultMaxAge">
+  DefaultMaxAge
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The default freshness window, two minutes: the upper end of the threshold SEP-0012 recommends.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TimeSpan DefaultMaxAge { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_CreateSignatureHeader_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.CreateSignatureHeader*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_CreateSignatureHeader_StellarDotnetSdk_Accounts_KeyPair_System_String_System_String_System_Nullable_System_DateTimeOffset__" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.CreateSignatureHeader(StellarDotnetSdk.Accounts.KeyPair,System.String,System.String,System.Nullable{System.DateTimeOffset})">
+  CreateSignatureHeader(KeyPair, string, string, DateTimeOffset?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes a callback signature header value, <code>t=&lt;timestamp&gt;, s=&lt;base64 signature&gt;</code>, as an
+anchor sends it. Wallets need only <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_System_String_System_Byte___System_String_StellarDotnetSdk_Accounts_KeyPair_System_Nullable_System_DateTimeOffset__System_Nullable_System_TimeSpan__">Verify(string?, byte[], string, KeyPair, DateTimeOffset?, TimeSpan?)</a>; this is for anchor implementations and tests.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string CreateSignatureHeader(KeyPair signer, string host, string body, DateTimeOffset? timestamp = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signer</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The anchor's signing key pair; it must hold the secret seed.</p>
+</dd>
+    <dt><code>host</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The host of the wallet's callback URL.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The callback request body.</p>
+</dd>
+    <dt><code>timestamp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
+    <dd><p>The signing time; defaults to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset.utcnow">UtcNow</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The header value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when an argument is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">timestamp</code> is before the Unix epoch, which the header cannot express.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="paramref">signer</code> holds no secret seed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>Thrown when <code class="paramref">signer</code> has been disposed.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_GetSignedHost_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.GetSignedHost*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_GetSignedHost_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.GetSignedHost(System.String)">
+  GetSignedHost(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Derives the host string an anchor signs from the callback URL the wallet registered: the host exactly as
+it is written in the URL, followed by <code>:port</code> when the URL names a port — how the reference Anchor
+Platform builds it. For <code>https://wallet.example.com/kyc</code> this is <code>wallet.example.com</code>; for
+<code>https://wallet.example.com:8443/kyc</code> it is <code>wallet.example.com:8443</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GetSignedHost(string callbackUrl)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>callbackUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The absolute http(s) URL registered with <code>PUT /customer/callback</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The host (and port, when the URL names one) to pass to <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_System_String_System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_System_Nullable_System_DateTimeOffset__System_Nullable_System_TimeSpan__">Verify(string?, string, string, KeyPair, DateTimeOffset?, TimeSpan?)</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">callbackUrl</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">callbackUrl</code> is not an absolute http(s) URL.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.Verify*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_System_String_System_Byte___System_String_StellarDotnetSdk_Accounts_KeyPair_System_Nullable_System_DateTimeOffset__System_Nullable_System_TimeSpan__" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.Verify(System.String,System.Byte[],System.String,StellarDotnetSdk.Accounts.KeyPair,System.Nullable{System.DateTimeOffset},System.Nullable{System.TimeSpan})">
+  Verify(string?, byte[], string, KeyPair, DateTimeOffset?, TimeSpan?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies a callback's signature header against the raw bytes of its body. Prefer this overload when the
+body is available as bytes: decoding it to a string first can change it (a byte order mark is dropped,
+invalid UTF-8 is replaced), and the signature covers the bytes exactly as the anchor sent them.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Verify(string? signatureHeader, byte[] body, string host, KeyPair anchorSigningKey, DateTimeOffset? now = null, TimeSpan? maxAge = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signatureHeader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The value of the <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_SignatureHeaderName">SignatureHeaderName</a> header, or of <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DeprecatedSignatureHeaderName">DeprecatedSignatureHeaderName</a>
+if only that one is present.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The raw callback request body, exactly as received.</p>
+</dd>
+    <dt><code>host</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The host the callback was sent to; see <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_GetSignedHost_System_String_">GetSignedHost(string)</a>.</p>
+</dd>
+    <dt><code>anchorSigningKey</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The anchor's <code>SIGNING_KEY</code> from its stellar.toml.</p>
+</dd>
+    <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
+    <dd><p>The current time; defaults to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset.utcnow">UtcNow</a>.</p>
+</dd>
+    <dt><code>maxAge</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd><p>The largest accepted difference between <code class="paramref">now</code> and the signed timestamp, in either
+direction; defaults to <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DefaultMaxAge">DefaultMaxAge</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the header is well formed, its timestamp is within <code class="paramref">maxAge</code> of
+<code class="paramref">now</code>, and the signature verifies; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">body</code>, <code class="paramref">host</code> or <code class="paramref">anchorSigningKey</code> is
+<code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">maxAge</code> is negative.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.Verify*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_Verify_System_String_System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_System_Nullable_System_DateTimeOffset__System_Nullable_System_TimeSpan__" data-uid="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.Verify(System.String,System.String,System.String,StellarDotnetSdk.Accounts.KeyPair,System.Nullable{System.DateTimeOffset},System.Nullable{System.TimeSpan})">
+  Verify(string?, string, string, KeyPair, DateTimeOffset?, TimeSpan?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies a callback's signature header against the anchor's signing key and checks that it is fresh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Verify(string? signatureHeader, string body, string host, KeyPair anchorSigningKey, DateTimeOffset? now = null, TimeSpan? maxAge = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signatureHeader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The value of the <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_SignatureHeaderName">SignatureHeaderName</a> header, or of <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DeprecatedSignatureHeaderName">DeprecatedSignatureHeaderName</a>
+if only that one is present.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The raw callback request body, exactly as received.</p>
+</dd>
+    <dt><code>host</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The host the callback was sent to, derived from the URL registered with <code>PUT /customer/callback</code> —
+use <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_GetSignedHost_System_String_">GetSignedHost(string)</a> — and not from the request's <code>Host</code> header, which a relaying party
+controls.</p>
+</dd>
+    <dt><code>anchorSigningKey</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The anchor's <code>SIGNING_KEY</code> from its stellar.toml, for example
+<code>KeyPair.FromAccountId(toml.GeneralInformation.SigningKey)</code>.</p>
+</dd>
+    <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
+    <dd><p>The current time; defaults to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset.utcnow">UtcNow</a>.</p>
+</dd>
+    <dt><code>maxAge</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd><p>The largest accepted difference between <code class="paramref">now</code> and the signed timestamp, in either
+direction; defaults to <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.KycCallbackSignature.html#StellarDotnetSdk_Sep_Sep0012_KycCallbackSignature_DefaultMaxAge">DefaultMaxAge</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the header is well formed, its timestamp is within <code class="paramref">maxAge</code> of
+<code class="paramref">now</code>, and the signature verifies; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">body</code>, <code class="paramref">host</code> or <code class="paramref">anchorSigningKey</code> is
+<code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">maxAge</code> is negative.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SubmitTransactionResponse ">
       
-      
+      <meta name="description" content="Represents the response from a synchronous transaction submission to Horizon. Contains the result of the transaction execution including success/failure status.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class SubmitTransactionResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from a synchronous transaction submission to Horizon.
+Contains the result of the transaction execution including success/failure status.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SubmitTransactionResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SubmitTransactionResponse : Response</code></pre>
   </div>
 
 
@@ -118,15 +120,6 @@ Class SubmitTransactionResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -140,9 +133,6 @@ Class SubmitTransactionResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -168,11 +158,13 @@ Class SubmitTransactionResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The XDR-encoded transaction envelope.
+Retrieved from the success response or the extras on failure.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string EnvelopeXdr { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? EnvelopeXdr { get; }</code></pre>
   </div>
 
 
@@ -199,12 +191,13 @@ Class SubmitTransactionResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hash of the submitted transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
-public string Hash { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hash&quot;)]
+public string? Hash { get; init; }</code></pre>
   </div>
 
 
@@ -231,7 +224,8 @@ public string Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Whether the transaction was successfully included in a ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -262,12 +256,14 @@ public string Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The ledger sequence number in which the transaction was included.
+Null if the transaction failed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;ledger&quot;)]
-public uint? Ledger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ledger&quot;)]
+public long? Ledger { get; init; }</code></pre>
   </div>
 
 
@@ -276,7 +272,7 @@ public uint? Ledger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -294,11 +290,12 @@ public uint? Ledger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The parsed transaction result.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TransactionResult Result { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public TransactionResult? Result { get; }</code></pre>
   </div>
 
 
@@ -325,11 +322,13 @@ public uint? Ledger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The XDR-encoded transaction result.
+Retrieved from the success response or the extras on failure.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ResultXdr { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? ResultXdr { get; }</code></pre>
   </div>
 
 
@@ -356,12 +355,13 @@ public uint? Ledger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Additional information about a failed transaction submission.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;extras&quot;)]
-public SubmitTransactionResponse.Extras SubmitTransactionResponseExtras { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;extras&quot;)]
+public SubmitTransactionResponse.Extras? SubmitTransactionResponseExtras { get; init; }</code></pre>
   </div>
 
 
@@ -405,15 +405,23 @@ This is helpful when you need ID of an offer to update it later.</p>
   <dl class="parameters">
     <dt><code>position</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd><p>Position of ManageOffer operation. If ManageOffer is second operation in this transaction this
-should be equal <pre><code class="lang-csharp">1</code></pre>.
+should be equal</p>
+<pre><code class="lang-csharp">1</code></pre>
+<p>.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd><p>Offer ID or <pre><code class="lang-csharp">null</code></pre> when operation at <pre><code class="lang-csharp">position</code></pre> is not a ManageOffer operation or error
-has occurred.
+    <dd><pre><code>   Offer ID or 
+
+   &lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;null&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>when operation at</p>
+<pre><code class="lang-csharp">position</code></pre>
+<p>is not a ManageOffer operation or error
+has occurred.</p>
 </dd>
   </dl>
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetLatestLedgerResponse ">
       
-      
+      <meta name="description" content="Represents the response from the Soroban RPC getLatestLedger method. Contains the hash, sequence number, protocol version, close time, and encoded header and metadata of the most recent ledger.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class GetLatestLedgerResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from the Soroban RPC <code>getLatestLedger</code> method.
+Contains the hash, sequence number, protocol version, close time, and encoded header and metadata of the most
+recent ledger.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,31 +147,74 @@ Class GetLatestLedgerResponse
 
 
 
-  <h2 class="section" id="constructors">Constructors
+  <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.#ctor*"></a>
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_CloseTime_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.CloseTime*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse__ctor_System_String_System_Int32_System_Int32_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.#ctor(System.String,System.Int32,System.Int32)">
-  GetLatestLedgerResponse(string, int, int)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_CloseTime" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.CloseTime">
+  CloseTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The close time of the latest ledger, as a unix timestamp in seconds. Stellar RPC sends it as a quoted
+number; <code>null</code> when the server is older than v26 and omits it.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetLatestLedgerResponse(string id, int protocolVersion, int sequence)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+public long? CloseTime { get; init; }</code></pre>
   </div>
 
-  <h4 class="section">Parameters</h4>
+
+
+
+
+  <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
     <dd></dd>
-    <dt><code>protocolVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-    <dt><code>sequence</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_CloseTime_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandlingattribute">JsonNumberHandlingAttribute</a> records the quoted wire form at the declaration, so a caller who
+deserializes this type with their own options reads it without enabling
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a> globally. Those options must still bind the camelCase
+wire name (for example with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamecaseinsensitive">PropertyNameCaseInsensitive</a>);
+under default case-sensitive options the property stays <code>null</code>. See the remarks on
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee">MinResourceFee</a>.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_HeaderXdr_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.HeaderXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_HeaderXdr" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.HeaderXdr">
+  HeaderXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The base-64 encoded XDR of the latest ledger's header.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? HeaderXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -179,14 +225,6 @@ Class GetLatestLedgerResponse
 
 
 
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_Id_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.Id*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_Id" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.Id">
@@ -194,13 +232,45 @@ Class GetLatestLedgerResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Hash identifier of the latest ledger (as a hex-encoded string) known to Soroban RPC at the time it handled the
+  <div class="markdown level1 summary"><p>Hash identifier of the latest ledger (as a hex-encoded string) known to Stellar RPC at the time it handled the
 request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Id { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_MetadataXdr_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.MetadataXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLatestLedgerResponse_MetadataXdr" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.MetadataXdr">
+  MetadataXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The base-64 encoded XDR of the latest ledger's close metadata.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? MetadataXdr { get; init; }</code></pre>
   </div>
 
 
@@ -232,7 +302,7 @@ request.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int ProtocolVersion { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int ProtocolVersion { get; init; }</code></pre>
   </div>
 
 
@@ -259,12 +329,12 @@ request.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Sequence { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Sequence { get; init; }</code></pre>
   </div>
 
 

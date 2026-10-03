@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>.NET MAUI compatibility </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content=".NET MAUI compatibility ">
+      
+      
+      <link rel="icon" href="favicon">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="net-maui-compatibility">.NET MAUI compatibility</h1>
+
+<p>Validation of the SDK in .NET MAUI apps (SCF Q3 2026 deliverable 2, &quot;MAUI Validation&quot;). Android: validated against <code>main</code> @ <code>83303a27</code> on 2026-10-02, on an Android emulator, four physical Android devices and a Linux desktop, and against the published NuGet package 15.1.0. Apple platforms: validated on 2026-10-03 on macOS with Xcode 27.0, against <code>main</code> @ <code>9440e88e</code> and the published NuGet package 16.0.0 (§3.4).</p>
+<p>The multi-target build is <strong>published</strong> as 16.0.0 (<code>net10.0</code>, <code>net8.0</code>, <code>netstandard2.1</code>; 16.0.0 is built from <code>9440e88e</code>). The Android runs predate it and used <code>main</code> and 15.1.0. 15.1.0 targets only <code>net8.0</code>, and it does not work on Android without the workaround below (§1). §5 lists what the SCF deliverable asked for and what was not done.</p>
+<p><strong>Summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android, x86_64 emulator (API 28), SDK built from <code>main</code></td>
+<td><strong>Works</strong>, with one limitation: with the default HTTP handler, SSE streaming events arrive about 50 s late and can be lost if the connection drops. A small consumer-side workaround fixes both on Android (§3.3). §3.3 also describes a loss case that applies to every platform. Crypto, Horizon queries, transaction submit and Soroban simulate pass in a trimmed Release build.</td>
+</tr>
+<tr>
+<td>Android, x86_64 emulator (API 28), NuGet package 15.1.0</td>
+<td><strong>Fails</strong> at the first crypto call with <code>PlatformNotSupportedException</code>. Works with an added <code>NSec.Cryptography</code> 26.4.0 reference (§1).</td>
+</tr>
+<tr>
+<td>Android, arm64 physical devices (API 29, 35, 36), SDK built from <code>main</code></td>
+<td><strong>Works</strong>, with the same SSE limitation and workaround as the emulator. Four devices from three vendors, under <code>TrimMode=full</code> with the workaround, and one of them also under the MAUI default <code>TrimMode=partial</code>: crypto, Horizon queries, transaction submit and Soroban simulate pass; the SDK's default SSE stream is 46–48 s late (50.7 s in the <code>partial</code> run), and the <code>SocketsHttpHandler</code> stream delivers in 2–4 s (§3.1).</td>
+</tr>
+<tr>
+<td>iOS device: iPhone 15 Pro, iOS 26.6.2 (AOT-only), SDK built from <code>main</code> and NuGet 16.0.0</td>
+<td><strong>Works.</strong> All six checks pass under <code>TrimMode=full</code> with the workaround, with no JIT (<code>dynamicCode=False</code>). libsodium is statically linked into the app. SSE events arrive promptly with the default HTTP handler (§3.4).</td>
+</tr>
+<tr>
+<td>iOS Simulator (iOS 27.0, arm64)</td>
+<td><strong>Fails to link</strong> with the package's libsodium, which has no simulator build (§1). <strong>Works</strong> with a simulator libsodium built by <code>build-libsodium-simulator.sh</code> (§3.4).</td>
+</tr>
+<tr>
+<td>Mac Catalyst (macOS 26.6, arm64), SDK built from <code>main</code> and NuGet 16.0.0</td>
+<td><strong>Works.</strong> All six checks pass (§3.4).</td>
+</tr>
+</tbody>
+</table>
+<p>Workarounds consumers need today:</p>
+<ul>
+<li>Android with the published package (15.1.0): add <code>&lt;PackageReference Include=&quot;NSec.Cryptography&quot; Version=&quot;26.4.0&quot; /&gt;</code> to the app (§1). The same reference fixes MAUI 9 apps, which get the same <code>net8.0</code> assembly even from <code>main</code>.</li>
+<li><code>TrimMode=full</code>: add the workaround in §3.2. On Android the MAUI default (<code>TrimMode=partial</code>) needs nothing, but a plain .NET for Android app created with <code>dotnet new android</code> uses <code>TrimMode=full</code> by default.</li>
+<li>iOS Simulator: build libsodium for the simulator and link it in place of the package's library (§3.4). Devices and Mac Catalyst need nothing.</li>
+<li>iOS 27: adopt the UIScene lifecycle. A MAUI app without <code>UIApplicationSceneManifest</code> in <code>Info.plist</code> is stopped at launch on the iOS 27 simulator. This is a MAUI app requirement, not an SDK one (§3.4).</li>
+<li>SSE on Android: give the stream <code>SocketsHttpHandler</code> (§3.3). Whatever the platform, do not rely on a stream alone for payments: resume from a saved paging token and reconcile with a query (§3.3).</li>
+</ul>
+<h2 id="1-desk-check-does-the-ed25519-backend-load-on-ios-and-android">1. Desk check: does the Ed25519 backend load on iOS and Android?</h2>
+<p>All signing and verification goes through the internal <code>Ed25519</code> facade (<code>StellarDotnetSdk/Crypto/Ed25519.cs</code>, <code>Ed25519Signer.cs</code>). Both backends are thin managed wrappers over native libsodium, so the question is whether libsodium is present and bindable for each mobile RID. The findings below come from the package contents in the local NuGet cache (<code>~/.nuget/packages</code>), not from package descriptions.</p>
+<h3 id="which-backend-a-maui-app-gets">Which backend a MAUI app gets</h3>
+<p>NuGet picks the SDK assembly nearest to the app's TFM, then resolves that assembly's dependency group:</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>App TFM</th>
+<th>SDK assembly</th>
+<th>Ed25519 package</th>
+<th>libsodium package</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main</code> (multi-target, unreleased)</td>
+<td><code>net10.0-android</code> / <code>net10.0-ios</code> (MAUI 10)</td>
+<td><code>net10.0</code></td>
+<td>NSec.Cryptography 26.4.0</td>
+<td>libsodium 1.0.22 (NSec range <code>[1.0.22, 1.0.23)</code>)</td>
+</tr>
+<tr>
+<td><code>main</code> (multi-target, unreleased)</td>
+<td><code>net9.0-android</code> / <code>net9.0-ios</code> (MAUI 9)</td>
+<td><code>net8.0</code></td>
+<td>NSec.Cryptography 25.4.0</td>
+<td>libsodium 1.0.20.1 (NSec range <code>[1.0.20.1, 1.0.21)</code>)</td>
+</tr>
+<tr>
+<td>NuGet 15.1.0 (latest release)</td>
+<td>any MAUI version</td>
+<td><code>net8.0</code> (the only one it ships)</td>
+<td>NSec.Cryptography 25.4.0</td>
+<td>libsodium 1.0.20.1</td>
+</tr>
+</tbody>
+</table>
+<p>A MAUI app never resolves the <code>netstandard2.1</code> assembly, so Sodium.Core is not on the MAUI path. It is listed below for completeness only. The <code>16.0.0-beta</code> git tag is <code>net8.0</code>-only as well and is not on nuget.org.</p>
+<p>For the platform-specific TFMs, NuGet also picks the package's platform-specific managed assembly. NSec 26.4.0 ships <code>lib/net9.0-ios18.0</code>, <code>net9.0-maccatalyst18.0</code> and <code>net9.0-tvos18.0</code>; NSec 25.4.0 ships the same set under <code>net8.0-*</code>. Sodium.Core 1.4.1 ships <code>net9.0-ios18.0</code> and siblings as well.</p>
+<h3 id="native-binding-per-assembly">Native binding per assembly</h3>
+<p>The native library name each assembly binds to (from its metadata string heap):</p>
+<table>
+<thead>
+<tr>
+<th>Assembly</th>
+<th>Binds to</th>
+<th>Interop style</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSec 26.4.0 / 25.4.0, <code>lib/net9.0</code> / <code>lib/net8.0</code> (used on Android)</td>
+<td><code>libsodium</code> (dynamic, <code>libsodium.so</code>)</td>
+<td><code>[LibraryImport]</code> (source-generated marshalling)</td>
+</tr>
+<tr>
+<td>NSec 26.4.0 / 25.4.0, <code>lib/*-ios18.0</code>, <code>*-maccatalyst18.0</code>, <code>*-tvos18.0</code></td>
+<td><code>__Internal</code> (statically linked into the app binary)</td>
+<td><code>[LibraryImport]</code></td>
+</tr>
+<tr>
+<td>Sodium.Core 1.4.1, <code>lib/net9.0-ios18.0</code> and siblings</td>
+<td><code>__Internal</code></td>
+<td><code>[DllImport]</code></td>
+</tr>
+<tr>
+<td>Sodium.Core 1.4.1, <code>lib/netstandard2.0</code>, <code>lib/netstandard2.1</code>, <code>lib/net9.0</code></td>
+<td><code>libsodium</code></td>
+<td><code>[DllImport]</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>[LibraryImport]</code> generates its marshalling stubs at compile time, so it needs no runtime IL stub generation. On iOS, where there is no JIT, the AOT compiler also precompiles <code>[DllImport]</code> wrappers, so both styles are expected to work there; neither was run on iOS.</p>
+<h3 id="native-assets-per-libsodium-version">Native assets per libsodium version</h3>
+<table>
+<thead>
+<tr>
+<th>RID</th>
+<th style="text-align: center;">libsodium 1.0.22 (MAUI 10 path)</th>
+<th style="text-align: center;">libsodium 1.0.20.1 (MAUI 9 path)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>android-arm64</code></td>
+<td style="text-align: center;">yes, <code>libsodium.so</code></td>
+<td style="text-align: center;"><strong>no</strong></td>
+</tr>
+<tr>
+<td><code>android-x64</code> (emulator)</td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><strong>no</strong></td>
+</tr>
+<tr>
+<td><code>android-arm</code>, <code>android-x86</code></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><strong>no</strong></td>
+</tr>
+<tr>
+<td><code>ios-arm64</code> (device)</td>
+<td style="text-align: center;">yes, <code>libsodium.a</code></td>
+<td style="text-align: center;">yes, <code>libsodium.a</code></td>
+</tr>
+<tr>
+<td><code>iossimulator-arm64</code>, <code>iossimulator-x64</code></td>
+<td style="text-align: center;"><strong>no</strong></td>
+<td style="text-align: center;"><strong>no</strong></td>
+</tr>
+<tr>
+<td><code>maccatalyst-arm64</code>, <code>maccatalyst-x64</code></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;">yes</td>
+</tr>
+</tbody>
+</table>
+<p>Details checked on the binaries themselves:</p>
+<ul>
+<li><strong>Android</strong> (1.0.22): the <code>.so</code> files are built with NDK r27d for API 21. Every <code>LOAD</code> segment is aligned to <code>0x4000</code>, which meets Google Play's 16 KB page-size requirement.</li>
+<li><strong>iOS</strong> (1.0.22): <code>ios-arm64/native/libsodium.a</code> is a universal archive with an <code>arm64</code> slice (<code>LC_VERSION_MIN_IPHONEOS</code> 9.0) and an <code>arm64e</code> slice (<code>LC_BUILD_VERSION</code> platform 2 = iOS, minimum 14.0). It has <strong>no simulator slice</strong>: nothing is tagged platform 7 (iOSSimulator), and the package has no <code>iossimulator-*</code> RID folder.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>The premise that neither backend ships native libsodium for the mobile RIDs does not hold for the dependency set on <code>main</code>. It still holds for the published 15.1.0 package and for the <code>net8.0</code> path (item 4):</p>
+<ol>
+<li><strong>Android, MAUI 10, SDK built from <code>main</code>: expected to work unchanged.</strong> NSec 26.4.0 with libsodium 1.0.22 ships <code>android-arm64</code> and <code>android-x64</code> binaries, and they are 16 KB page aligned. This is verified on an emulator and on four physical arm64 devices in section 3.1.</li>
+<li><strong>iOS device, MAUI 10: works unchanged.</strong> NSec ships iOS-specific assemblies that bind to <code>__Internal</code>, and libsodium ships a device static library. The .NET for iOS build links <code>runtimes/ios-arm64/native/libsodium.a</code> from the package statically: the app binary exports the <code>crypto_sign_ed25519_*</code> symbols. Verified on an iPhone 15 Pro (§3.4).</li>
+<li><strong>iOS Simulator: does not work with the package.</strong> There is no simulator slice. NuGet resolves <code>iossimulator-arm64</code> to the device library through RID fallback, and the linker rejects it: <code>ld: building for 'iOS-simulator', but linking in object file (.../libsodium/1.0.22/runtimes/ios-arm64/native/libsodium.a[arm64]...) built for 'iOS'</code>. <code>iossimulator-x64</code> resolves no native library, and the link fails on the undefined <code>_crypto_sign_ed25519_*</code> symbols. This affects development and CI only, not shipped apps. Mac Catalyst is covered and verified (§3.4).</li>
+<li><strong>Android with the <code>net8.0</code> assembly does not work: MAUI 9 with <code>main</code>, and every MAUI version with the published 15.1.0.</strong> That path pins libsodium 1.0.20.1, which has no Android binaries. NuGet falls back from the <code>android-*</code> RIDs to <code>linux-*</code> and packs the glibc builds of <code>libsodium.so</code>, which Android cannot load. The first crypto call throws <code>PlatformNotSupportedException</code> (&quot;Could not initialize platform-specific components&quot;) with an inner <code>DllNotFoundException: libsodium</code>. Verified on the emulator with 15.1.0 (§3.1). The <code>net9.0-android</code> workload is already out of support in the .NET 10 SDK (warning NETSDK1202).</li>
+<li><strong>Sodium.Core (<code>netstandard2.1</code>) is irrelevant to MAUI.</strong> It would also work on Android and iOS devices through the same libsodium 1.0.22 package.</li>
+</ol>
+<h3 id="decision">Decision</h3>
+<p><strong>Keep NSec as the only backend on the MAUI path. Do not bundle libsodium ourselves, and do not add a managed Ed25519 fallback for this deliverable.</strong> Document the two gaps with their workarounds:</p>
+<ul>
+<li><strong>iOS Simulator:</strong> run on a physical device or on Mac Catalyst. Alternatively, an app can supply its own simulator build of libsodium as a <code>NativeReference</code>; that is unsupported by the SDK. The validation app does this (<code>build-libsodium-simulator.sh</code>, §3.4), and it passes on the iOS 27 simulator.</li>
+<li><strong>Android with the <code>net8.0</code> assembly (15.1.0 on any MAUI version, or MAUI 9):</strong> add <code>&lt;PackageReference Include=&quot;NSec.Cryptography&quot; Version=&quot;26.4.0&quot; /&gt;</code> to the app. NuGet then resolves NSec 26.4.0 and libsodium 1.0.22, which ships the Android binaries; the SDK's <code>NSec.Cryptography &gt;= 25.4.0</code> dependency allows it, so there is no NU1608 warning. Verified on the emulator with 15.1.0 (§3.1). NSec 26.4.0 needs <code>net9.0</code> or later, so MAUI 8 has no workaround. Referencing libsodium 1.0.22 alone does <strong>not</strong> work: NSec 25.4.0 checks the library version at startup and throws <code>InvalidOperationException</code> (&quot;Expected libsodium 1.0.20 but found 1.0.22&quot;).</li>
+</ul>
+<p>Options considered:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>For</th>
+<th>Against</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Keep NSec, document gaps</strong> (chosen)</td>
+<td>No code change. Keeps libsodium's audited constant-time implementation and the secure-memory (mlock) signing key handling added for <code>KeyPair</code>. Android and iOS device are already covered by upstream packages.</td>
+<td>Simulator unsupported. Android apps on the <code>net8.0</code> assembly need the NSec reference until a multi-target release is published.</td>
+</tr>
+<tr>
+<td>Bundle libsodium for missing RIDs in the SDK package</td>
+<td>Would close the simulator and MAUI 9 gaps.</td>
+<td>Makes the SDK responsible for building, signing and updating native binaries for each libsodium release. The bundled binaries would collide with NSec's own <code>libsodium</code> dependency when both provide the same RID. The work is out of proportion to two gaps that only affect development or an expiring runtime.</td>
+</tr>
+<tr>
+<td>Managed Ed25519 (BouncyCastle) as a third backend</td>
+<td>No native dependency. Works on simulator, WASM, and any AOT target.</td>
+<td>Large dependency (only partly trimmable). No secure-memory key handling. Verification edge cases (non-canonical encodings, small-order points) differ subtly from libsodium, so equivalence tests would have to cover them. A third backend to test on every TFM.</td>
+</tr>
+<tr>
+<td>Small in-repo managed Ed25519</td>
+<td>No dependency.</td>
+<td>Self-maintained cryptography: constant-time properties and edge cases become this project's audit burden. Not justified by the gaps above.</td>
+</tr>
+</tbody>
+</table>
+<p>Reopen this decision if a supported target appears that no upstream libsodium package covers, for example WASM or a new mobile RID.</p>
+<h2 id="2-environment-setup">2. Environment setup</h2>
+<h3 id="pinned-versions">Pinned versions</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version used here (Android run)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET SDK</td>
+<td>10.0.401 (Microsoft build, installed user-local with <code>dotnet-install.sh --version 10.0.401</code>)</td>
+<td>The repo's <code>global.json</code> (10.0.100, <code>latestFeature</code>) accepts it. Distribution-built SDKs, such as Fedora's in <code>/usr/lib64/dotnet</code>, cannot take the MAUI workloads without root, and the workload packs are built against Microsoft's SDK.</td>
+</tr>
+<tr>
+<td>Workload set</td>
+<td>10.0.401.1</td>
+<td>Contains <code>Microsoft.NET.Sdk.Maui</code> 10.0.110, <code>Microsoft.NET.Sdk.Android</code> 36.1.69, <code>Microsoft.NET.Sdk.iOS</code> / <code>MacCatalyst</code> 27.0.10722</td>
+</tr>
+<tr>
+<td>Microsoft.Maui.Controls</td>
+<td>10.0.110 (<code>$(MauiVersion)</code> from the workload)</td>
+<td></td>
+</tr>
+<tr>
+<td>Android runtime</td>
+<td>Mono (the .NET 10 default for Android)</td>
+<td>Release builds are AOT-compiled (the APK contains <code>libaot-*.so</code>), with the JIT still available: the app logs <code>dynamicCodeCompiled=True</code>. CoreCLR on Android is opt-in and was not tested.</td>
+</tr>
+<tr>
+<td>JDK</td>
+<td>Microsoft OpenJDK 21.0.12.1</td>
+<td>.NET for Android supports JDK 17 and 21; the system JDK 25 was not used.</td>
+</tr>
+<tr>
+<td>Android SDK</td>
+<td>platform <code>android-36</code>, build-tools 36.0.0, platform-tools 37.0.0, cmdline-tools 20.0</td>
+<td>Only <code>android-36</code> (the target API of Android pack 36.1.69) is required.</td>
+</tr>
+<tr>
+<td>Android Emulator</td>
+<td>36.6.11, started with <code>-gpu swangle_indirect</code></td>
+<td>With the default SwiftShader renderer (<code>-gpu swiftshader_indirect</code>, <code>guest</code>) it segfaults in <code>lib64/gles_swiftshader/libGLESv2.so</code> about 20–60 s after start on this host.</td>
+</tr>
+<tr>
+<td>Emulator image</td>
+<td><code>system-images;android-28;google_apis;x86_64</code> rev 11</td>
+<td>The minimum the app supports is API 21. A current image (API 35/36) was not downloaded for this run.</td>
+</tr>
+<tr>
+<td>Xcode (iOS / Mac Catalyst)</td>
+<td><strong>Xcode 27.0 or later</strong> (the minimum in the iOS workload 27.0.10722's <code>WorkloadDependencies.json</code>); Xcode's own macOS requirement applies</td>
+<td>Not on this host. The Apple runs used a Mac (below).</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>Fedora 44, kernel 7.2.5, x86_64, KVM</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="reproducing-the-android-run">Reproducing the Android run</h3>
+<pre><code class="lang-bash"># 1. .NET SDK and workload (user-local; nothing system-wide)
+curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+bash /tmp/dotnet-install.sh --version 10.0.401 --install-dir ~/.dotnet
+export DOTNET_ROOT=~/.dotnet PATH=~/.dotnet:$PATH
+dotnet workload install maui-android --version 10.0.401.1
+
+# 2. JDK 21 (Microsoft OpenJDK 21.0.12.1)
+mkdir -p ~/.local/lib
+curl -sSL https://aka.ms/download-jdk/microsoft-jdk-21.0.12.1-linux-x64.tar.gz | tar -xz -C ~/.local/lib
+export JAVA_HOME=~/.local/lib/jdk-21.0.12.1+1
+
+# 3. Android SDK. First install the Android command-line tools (20.0 used here) from
+#    https://developer.android.com/studio#command-line-tools-only into $ANDROID_SDK_ROOT/cmdline-tools/latest.
+export ANDROID_SDK_ROOT=~/Android/Sdk
+export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/emulator:$PATH
+yes | sdkmanager --licenses
+sdkmanager &quot;platforms;android-36&quot; &quot;build-tools;36.0.0&quot; &quot;platform-tools&quot; &quot;emulator&quot; &quot;system-images;android-28;google_apis;x86_64&quot;
+echo no | avdmanager create avd -n stellar_api28 -k &quot;system-images;android-28;google_apis;x86_64&quot;   # &quot;no&quot; = no custom hardware profile
+emulator -avd stellar_api28 -no-window -no-audio -no-snapshot -gpu swangle_indirect &amp;
+
+# 4. Build (Release, trimmed), install, run and collect results (the script waits for the emulator to boot)
+cd StellarDotnetSdk.MauiValidation
+./run-android.sh partial                                          # MAUI default trimming
+./run-android.sh full                                             # full trimming + SDK workaround (§3.2)
+./run-android.sh full -p:StellarDotnetSdkTrimWorkaround=false     # full trimming without the workaround (fails, §3.2)
+
+# 5. Desktop baseline: the same checks as a console app (§3)
+dotnet run --project Desktop
+</code></pre>
+<p><code>sdkmanager</code> installs the newest <code>platform-tools</code> and <code>emulator</code>; the versions used here are in the table above. On a physical device, enable USB debugging and pass its serial: <code>ADB_SERIAL=&lt;serial&gt; ./run-android.sh partial</code> (<code>adb devices</code> lists it). Keep the device awake and unlocked for the whole run (for example Developer options → Stay awake): if the screen is off when the app launches, Doze blocks its network although the device is online: the first network check fails with <code>EAI_NODATA</code> (&quot;No address associated with hostname&quot;), and the checks that depend on it fail after it. On macOS the script also works: it builds only the Android target, so the iOS workloads are not needed.</p>
+<p><code>run-android.sh</code> cleans the app's Release output (switching trim modes over an incremental build reuses stale linked assemblies, which then crash inside MAUI at startup). It then publishes the APK, waits for the device, installs the APK, enlarges the device's logcat buffer to 8 MB (so that a long run cannot push out its first results; on some devices the setting stays until reboot), launches it, and prints every logcat line that carries the <code>STELLAR-MAUI-VALIDATION</code> prefix (the logcat tag is <code>DOTNET</code>). It stops with an error if no booted device appears within <code>BOOT_TIMEOUT_SECONDS</code> (default 300), if the app does not launch (it then prints the output of the <code>monkey</code> launch command), if the app crashes (Java exception or native crash), or if it does not finish within <code>TIMEOUT_SECONDS</code> (default 1200). <code>./run-android.sh --help</code> prints the usage.</p>
+<p>It exits 0 when every check passed, except the checks in <code>KNOWN_FAILURES</code> that failed for their known reason, which it reports as <code>KNOWN FAIL</code>. Only a check whose known reason is defined in the script can be listed there; any other name stops the script with an error before the build, because excusing a check by name alone would also hide unrelated failures of it. The default is <code>horizon.submit-and-sse-stream</code> failing with &quot;SSE event arrived … after submit&quot;: the SDK's SSE stream with the default Android handler is late because of the SDK limitation in §3.3. Any other failure of that check (a submit error, a timeout, a second inconclusive measurement) still fails the run. The same stream with the workaround is its own check and must pass. Set <code>KNOWN_FAILURES=&quot;&quot;</code> to make that failure fatal, for example after the SDK is fixed; the script also notes when a known failure starts passing. The app's own <code>RESULT</code> line counts every check, so it reads <code>RESULT FAIL 5/6</code> on Android.</p>
+<h3 id="reproducing-on-macos-ios-mac-catalyst">Reproducing on macOS (iOS, Mac Catalyst)</h3>
+<p>Versions used for the Apple runs (2026-10-03):</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>Apple silicon Mac, macOS 26.6</td>
+</tr>
+<tr>
+<td>Xcode</td>
+<td>27.0 (27A266a), selected with <code>xcode-select</code>. With Xcode 26.5 the build stops: &quot;This version of .NET for MacCatalyst (27.0.10722) requires Xcode 27.0&quot;. Skipping that check with <code>-p:ValidateXcodeVersion=false</code> does not help: the link then fails on APIs introduced in the 27.0 SDKs.</td>
+</tr>
+<tr>
+<td>.NET SDK</td>
+<td>10.0.103, workload set 10.0.112.1 (<code>maui</code> workload: <code>Microsoft.NET.Sdk.Maui</code> 10.0.110, iOS / Mac Catalyst 27.0.10722)</td>
+</tr>
+<tr>
+<td>Microsoft.Maui.Controls</td>
+<td>10.0.110</td>
+</tr>
+<tr>
+<td>iOS device</td>
+<td>iPhone 15 Pro (<code>iPhone16,1</code>), iOS 26.6.2, Developer Mode on, USB</td>
+</tr>
+<tr>
+<td>iOS Simulator</td>
+<td>iPhone 18 Pro, iOS 27.0 runtime, arm64</td>
+</tr>
+<tr>
+<td>Signing</td>
+<td>an Apple Development certificate and a wildcard team provisioning profile (<code>iOS Team Provisioning Profile: *</code>)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-bash">cd StellarDotnetSdk.MauiValidation
+
+# Mac Catalyst (no signing needed). The app writes the validation lines to standard output.
+dotnet build -f net10.0-maccatalyst -c Release
+&quot;bin/Release/net10.0-maccatalyst/Stellar SDK MAUI Validation.app/Contents/MacOS/Stellar SDK MAUI Validation&quot;
+
+# iOS device. CodesignKey names the signing certificate; the build picks a matching provisioning profile.
+dotnet build -f net10.0-ios -c Release -r ios-arm64 &quot;-p:CodesignKey=Apple Development: &lt;name&gt; (&lt;id&gt;)&quot;
+xcrun devicectl device install app --device &lt;udid&gt; bin/Release/net10.0-ios/ios-arm64/StellarDotnetSdk.MauiValidation.app
+xcrun devicectl device process launch --device &lt;udid&gt; --console --terminate-existing io.github.beansbv.dotnetstellarsdk.mauivalidation
+
+# iOS Simulator: build the simulator libsodium once (needs minisign), then build and run.
+./build-libsodium-simulator.sh
+dotnet build -f net10.0-ios -c Release -r iossimulator-arm64
+xcrun simctl install booted bin/Release/net10.0-ios/iossimulator-arm64/StellarDotnetSdk.MauiValidation.app
+xcrun simctl launch --console booted io.github.beansbv.dotnetstellarsdk.mauivalidation
+</code></pre>
+<p>Add <code>-p:StellarDotnetSdkPackageVersion=16.0.0</code> to any build to test the published package. After a change to <code>Info.plist</code>, delete <code>bin/Release/net10.0-ios</code> and <code>obj/Release/net10.0-ios</code> first: an incremental build kept the old <code>Info.plist</code> in the app bundle.</p>
+<h2 id="3-validation-results">3. Validation results</h2>
+<p>The validation app, <code>StellarDotnetSdk.MauiValidation/</code>, is a single-page MAUI app that runs these checks on startup and again on a button press:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crypto.rfc8032</code></td>
+<td>The native Ed25519 backend loads, and derives the RFC 8032 §7.1 test 1 public key and signature from its seed.</td>
+</tr>
+<tr>
+<td><code>crypto.random-keypair</code></td>
+<td><code>KeyPair.Random</code>, sign/verify, a tampered signature is rejected, StrKey seed round trip.</td>
+</tr>
+<tr>
+<td><code>horizon.friendbot-and-account</code></td>
+<td>Friendbot funding and a Horizon account query (JSON deserialization of SDK models): the account id, a positive sequence number and a native balance come back. Horizon's servers ingest ledgers independently, so one can answer 404 for the new account; the query is then repeated up to 4 more times, 2 s apart.</td>
+</tr>
+<tr>
+<td><code>horizon.submit-and-sse-stream</code></td>
+<td>Starts an SSE payments stream from the UI thread (asserted in the MAUI app), builds, signs and submits a <code>CreateAccount</code> transaction, and waits for the stream to deliver it. Passes only if the submit finished within 20 s of the stream opening and the event arrived within 20 s of the submit, so an event held back until Horizon closes the stream (about 55 s after it opens) cannot pass. A submit slower than that makes the measurement inconclusive, not failed: the check is then run once more, and the second run's result counts, so a second inconclusive measurement fails it. For comparison it also reads the same stream with a bare <code>HttpClient</code> three ways; these never affect a verdict.</td>
+</tr>
+<tr>
+<td><code>horizon.sse-stream-sockets-handler</code></td>
+<td>The same stream, opened at the same time with <code>SocketsHttpHandler</code> (the §3.3 workaround), judged by the same two rules. It gets 5 s to open before the submit. Once the transaction is submitted, each stream is judged only on its own delivery.</td>
+</tr>
+<tr>
+<td><code>soroban.simulate</code></td>
+<td>Stellar RPC <code>simulateTransaction</code> of the native XLM Stellar Asset Contract's <code>balance(address)</code> for the funded account. The decoded <code>i128</code> must equal the account's native balance from Horizon, in stroops. Because Horizon and the RPC node can be a ledger apart, Horizon's account is re-read up to 4 more times, 2 s apart, until it shows the payment the previous check submitted, and the simulation is repeated the same way until the RPC node reports that it has reached the ledger that last changed the account; the check fails if Horizon is still behind, or if the RPC node is still behind or does not report its ledger.</td>
+</tr>
+</tbody>
+</table>
+<p>It is referenced by project, not by package, and is deliberately <strong>not</strong> in <code>stellar-dotnet-sdk.sln</code>, so building the solution never needs the MAUI workloads. With a project reference, the app resolves the SDK's <code>net10.0</code> assembly and its dependency graph (NSec 26.4.0, libsodium 1.0.22), the same as a <code>net10.0-android</code> app would from a package built from <code>main</code>. That is <strong>not</strong> what the published package gives it (§1). To run the checks against a published package instead, pass <code>-p:StellarDotnetSdkPackageVersion=15.1.0</code>, and add <code>-p:NSecPackageVersion=26.4.0</code> for the consumer-side workaround:</p>
+<pre><code class="lang-bash">./run-android.sh partial -p:StellarDotnetSdkPackageVersion=15.1.0                               # fails at crypto
+./run-android.sh partial -p:StellarDotnetSdkPackageVersion=15.1.0 -p:NSecPackageVersion=26.4.0  # workaround
+</code></pre>
+<p>The same checks also run as a desktop console app, <code>StellarDotnetSdk.MauiValidation/Desktop</code> (<code>dotnet run --project Desktop</code> from <code>StellarDotnetSdk.MauiValidation/</code>; exit code 0 only if every check passed), as a baseline. On linux-x64: 6/6 pass, and both SSE streams deliver about 1 s after the submit.</p>
+<h3 id="31-android-results-mono-runtime-release">3.1 Android: results (Mono runtime, Release)</h3>
+<h4 id="emulator-x86_64-api-28">Emulator (x86_64, API 28)</h4>
+<p>One run of each configuration of <code>run-android.sh</code>. SSE times are after the submit returned.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th style="text-align: center;"><code>TrimMode=partial</code> (MAUI default)</th>
+<th style="text-align: center;"><code>TrimMode=full</code> + workaround</th>
+<th style="text-align: center;"><code>TrimMode=full</code>, no workaround</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crypto.rfc8032</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>crypto.random-keypair</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.friendbot-and-account</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;"><strong>fail</strong>: <code>TypeInitializationException</code> in <code>JsonOptions</code></td>
+</tr>
+<tr>
+<td><code>horizon.submit-and-sse-stream</code></td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (47 s), known failure</td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (47 s), known failure</td>
+<td style="text-align: center;"><strong>fail</strong>: no funded account</td>
+</tr>
+<tr>
+<td><code>horizon.sse-stream-sockets-handler</code></td>
+<td style="text-align: center;">pass (3.8 s)</td>
+<td style="text-align: center;">pass (3.5 s)</td>
+<td style="text-align: center;"><strong>fail</strong>: no measurement</td>
+</tr>
+<tr>
+<td><code>soroban.simulate</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;"><strong>fail</strong>: no funded account</td>
+</tr>
+<tr>
+<td><code>run-android.sh</code> exit code</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr>
+<td>Unique IL2xxx warnings (see §3.2 for how they are counted)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">124</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr>
+<td>APK size (arm64-v8a + x86_64)</td>
+<td style="text-align: center;">32.9 MB</td>
+<td style="text-align: center;">29.3 MB</td>
+<td style="text-align: center;">28.1 MB</td>
+</tr>
+</tbody>
+</table>
+<p>The APK contains <code>lib/arm64-v8a/libsodium.so</code> and <code>lib/x86_64/libsodium.so</code> from the libsodium 1.0.22 package. The x86_64 one is the binary the emulator runs.</p>
+<p>With the published package instead of <code>main</code> (<code>TrimMode=partial</code>, <code>-p:StellarDotnetSdkPackageVersion=15.1.0</code>, §3):</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th style="text-align: center;">15.1.0</th>
+<th style="text-align: center;">15.1.0 + <code>NSec.Cryptography</code> 26.4.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crypto.rfc8032</code></td>
+<td style="text-align: center;"><strong>fail</strong>: <code>PlatformNotSupportedException</code></td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>crypto.random-keypair</code></td>
+<td style="text-align: center;"><strong>fail</strong>: same</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.friendbot-and-account</code></td>
+<td style="text-align: center;"><strong>fail</strong>: same (from <code>KeyPair.Random</code>)</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.submit-and-sse-stream</code></td>
+<td style="text-align: center;"><strong>fail</strong>: no funded account</td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (47 s), known failure</td>
+</tr>
+<tr>
+<td><code>horizon.sse-stream-sockets-handler</code></td>
+<td style="text-align: center;"><strong>fail</strong>: no measurement</td>
+<td style="text-align: center;">pass (3.5 s)</td>
+</tr>
+<tr>
+<td><code>soroban.simulate</code></td>
+<td style="text-align: center;"><strong>fail</strong>: no funded account</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>run-android.sh</code> exit code</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+<p>With 15.1.0 the APK contains the <code>linux-arm64</code> and <code>linux-x64</code> glibc builds of libsodium 1.0.20.1 under <code>lib/arm64-v8a</code> and <code>lib/x86_64</code> (NuGet's RID fallback), which Android cannot load. The app's <code>INFO assemblies</code> line shows which SDK and NSec builds ran (NSec 25.4.0 vs 26.4.0 here).</p>
+<h4 id="physical-devices-arm64-mono-runtime-release-2026-10-02">Physical devices (arm64, Mono runtime, Release, 2026-10-02)</h4>
+<p>One run per device of <code>ADB_SERIAL=&lt;serial&gt; ./run-android.sh full</code> (full trimming with the §3.2 workaround), with the SDK built from <code>main</code> @ <code>83303a27</code>. These runs execute the <code>lib/arm64-v8a/libsodium.so</code> binary that the emulator never ran. All four devices use 4 KB memory pages; no 16 KB page-size device was available (§4). SSE times are after the submit returned.</p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th style="text-align: center;">Pixel XL</th>
+<th style="text-align: center;">Galaxy S21 Ultra (<code>SM-G998B</code>)</th>
+<th style="text-align: center;">Find X9 Pro (<code>CPH2791</code>)</th>
+<th style="text-align: center;">Galaxy S23 Ultra (<code>SM-S918B</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android version (API)</td>
+<td style="text-align: center;">10 (29)</td>
+<td style="text-align: center;">15 (35)</td>
+<td style="text-align: center;">16 (36)</td>
+<td style="text-align: center;">16 (36)</td>
+</tr>
+<tr>
+<td>SoC</td>
+<td style="text-align: center;">Snapdragon 821</td>
+<td style="text-align: center;">Exynos 2100</td>
+<td style="text-align: center;">MediaTek MT6993</td>
+<td style="text-align: center;">Snapdragon 8 Gen 2 (SM8550)</td>
+</tr>
+<tr>
+<td><code>crypto.rfc8032</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>crypto.random-keypair</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.friendbot-and-account</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.submit-and-sse-stream</code></td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (47.4 s), known failure</td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (47.6 s), known failure</td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (46.0 s), known failure</td>
+<td style="text-align: center;">submit pass; <strong>SSE late</strong> (46.2 s), known failure</td>
+</tr>
+<tr>
+<td><code>horizon.sse-stream-sockets-handler</code></td>
+<td style="text-align: center;">pass (2.0 s)</td>
+<td style="text-align: center;">pass (4.0 s)</td>
+<td style="text-align: center;">pass (3.5 s)</td>
+<td style="text-align: center;">pass (2.6 s)</td>
+</tr>
+<tr>
+<td><code>soroban.simulate</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td>App result</td>
+<td style="text-align: center;"><code>RESULT FAIL 5/6</code></td>
+<td style="text-align: center;"><code>RESULT FAIL 5/6</code></td>
+<td style="text-align: center;"><code>RESULT FAIL 5/6</code></td>
+<td style="text-align: center;"><code>RESULT FAIL 5/6</code></td>
+</tr>
+</tbody>
+</table>
+<p>The results match the emulator's: the only failure is the known SSE delay (§3.3), on Android 10 as on Android 16 and on Qualcomm, Exynos and MediaTek hardware. The trim warnings were the same 124 as in §3.2.</p>
+<p>The MAUI default, <code>TrimMode=partial</code> (<code>./run-android.sh partial</code>), was also run on the Galaxy S21 Ultra. The result is the same: every check passes except the known SSE failure (<code>RESULT FAIL 5/6</code>). The SDK's default stream delivered the payment 50.7 s after the submit, the <code>SocketsHttpHandler</code> stream after 2.0 s, and the build raised no trim warnings, as on the emulator.</p>
+<h3 id="32-trimming">3.2 Trimming</h3>
+<p><strong>On Android, the MAUI default works as is.</strong> Release builds of MAUI apps trim with <code>TrimMode=partial</code>, which only trims assemblies marked <code>IsTrimmable</code>. The SDK is not marked, so it is kept whole and no trim warnings are raised for it. The Android SDK also sets <code>JsonSerializerIsReflectionEnabledByDefault=true</code> in partial mode. A plain .NET for Android app is different: the <code>dotnet new android</code> template sets <code>TrimMode=full</code>, so it needs the workaround below from the start.</p>
+<p><strong><code>TrimMode=full</code> breaks the SDK at the first Horizon or RPC call</strong> unless the app opts out for the SDK. Two separate problems, both confirmed on the emulator:</p>
+<ol>
+<li>With <code>TrimMode=full</code>, the Android SDK does not set <code>JsonSerializerIsReflectionEnabledByDefault</code>, and the .NET trimming targets default it to false. <code>JsonOptions.CreateDefaultOptions</code> calls <code>MakeReadOnly(populateMissingResolver: true)</code>, which then throws <code>InvalidOperationException: JsonSerializerIsReflectionDisabled</code>, surfacing as a <code>TypeInitializationException</code> for <code>StellarDotnetSdk.Converters.JsonOptions</code>.</li>
+<li>With reflection re-enabled but nothing else, the trimmer has removed the constructors of the SDK's response models: <code>NotSupportedException: DeserializeNoConstructor ... StellarDotnetSdk.Responses.FriendBotResponse</code>.</li>
+</ol>
+<p>The workaround is a property, an item and a descriptor file in the app project. Add them unconditionally rather than under a condition on <code>$(TrimMode)</code>: a platform SDK can compute <code>TrimMode</code> after the project file is evaluated (<code>AndroidLinkMode</code>, <code>PublishAot</code>, <code>MtouchLink</code>), and a property condition then sees a different value than an item condition. (<code>StellarDotnetSdk.MauiValidation.csproj</code> can use conditions because it sets <code>TrimMode</code> itself.)</p>
+<pre><code class="lang-xml">&lt;PropertyGroup&gt;
+    &lt;JsonSerializerIsReflectionEnabledByDefault&gt;true&lt;/JsonSerializerIsReflectionEnabledByDefault&gt;
+&lt;/PropertyGroup&gt;
+&lt;ItemGroup&gt;
+    &lt;TrimmerRootDescriptor Include=&quot;ILLink.Descriptors.xml&quot; /&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>where <code>ILLink.Descriptors.xml</code> roots the SDK assembly:</p>
+<pre><code class="lang-xml">&lt;linker&gt;
+    &lt;assembly fullname=&quot;StellarDotnetSdk&quot; preserve=&quot;all&quot; /&gt;
+&lt;/linker&gt;
+</code></pre>
+<p>With it, every check passes under full trimming except the known SSE failure (§3.3).</p>
+<p><strong>iOS and Mac Catalyst (read from the iOS SDK 27.0.10722 targets; the runs in §3.4 used <code>TrimMode=full</code> with the workaround):</strong> the iOS SDK sets <code>JsonSerializerIsReflectionEnabledByDefault=true</code> in every trim mode, and its default link mode for devices (<code>SdkOnly</code>) maps to <code>TrimMode=partial</code>. Full trimming comes from <code>MtouchLink=Full</code> or from <code>PublishAot=true</code> (NativeAOT); an app that uses either still needs the descriptor. Reflection-based System.Text.Json under iOS NativeAOT is untested.</p>
+<p>Trim warnings with the SDK built from <code>main</code> at <code>83303a27</code>. MSBuild prints each warning several times, so they are counted once per source location and message; counting by message alone gives a few fewer (118 here), because one message can occur at several places in a file. The counts come from the <code>dotnet publish</code> output of <code>run-android.sh full</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Code</th>
+<th style="text-align: center;">Count (full, workaround)</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK JSON converters (<code>EffectResponseJsonConverter</code>, <code>OperationResponseJsonConverter</code>, <code>PredicateJsonConverter</code>, <code>NonNullElementArrayJsonConverter</code>)</td>
+<td>IL2026</td>
+<td style="text-align: center;">92</td>
+<td><code>JsonSerializer.(De)Serialize</code> with reflection-based metadata</td>
+</tr>
+<tr>
+<td>SDK request/response plumbing (<code>ResponseHandler</code>, <code>Server</code>, <code>StellarRpcServer</code>, <code>RequestBuilderStreamable</code>, <code>JsonOptions</code>)</td>
+<td>IL2026</td>
+<td style="text-align: center;">5</td>
+<td>same</td>
+</tr>
+<tr>
+<td>SDK SEP services (SEP-6, 9, 10, 24, 45)</td>
+<td>IL2026</td>
+<td style="text-align: center;">17</td>
+<td>same</td>
+</tr>
+<tr>
+<td>SDK <code>UriTemplate</code></td>
+<td>IL2075</td>
+<td style="text-align: center;">1</td>
+<td><code>GetType().GetProperties()</code> on parameter objects</td>
+</tr>
+<tr>
+<td>Nett (TOML, used by SEP-1 / federation)</td>
+<td>IL2067, IL2070</td>
+<td style="text-align: center;">7</td>
+<td>reflection-based TOML mapping</td>
+</tr>
+<tr>
+<td>Common.Logging (dependency of LaunchDarkly.EventSource 3.3.2)</td>
+<td>IL2072</td>
+<td style="text-align: center;">2</td>
+<td><code>Activator.CreateInstance</code> on a configured type</td>
+</tr>
+</tbody>
+</table>
+<p>Without the descriptor there are 99, because unreachable SDK code (SEP services, TOML) is trimmed away before it is analyzed. The SDK and Nett warnings are covered by the descriptor. The Common.Logging warning is on the path that instantiates a logging adapter named in configuration settings; neither the SDK nor this app configures one.</p>
+<p>The durable fix is SDK-side: a source-generated <code>JsonSerializerContext</code> for the SDK models, and marking the SDK <code>IsTrimmable</code> once it is warning-free. That is a larger change and is not part of this deliverable.</p>
+<h3 id="33-sse-streaming-on-android-the-default-http-handler-holds-events-back">3.3 SSE streaming on Android: the default HTTP handler holds events back</h3>
+<p>With the SDK's default setup, <code>Stream(...)</code> on Android hands an event to the listener only when more data arrives on the connection after it: the next event, or Horizon closing the connection. Horizon closes an SSE connection after 10 events or about 55 s, whichever comes first (<code>event: close</code>, <code>data: &quot;byebye&quot;</code>). On a quiet stream, such as the payments of one account, the event is therefore about 50 s late. Measured on the emulator in every configuration that reaches the stream: the payment appeared 46.7–47.1 s after the submit. On the physical devices (§3.1) it appeared 46–48 s after the submit in the four <code>TrimMode=full</code> runs, and 50.7 s after it in the <code>TrimMode=partial</code> run.</p>
+<p>The check reads the same payments URL five ways in one run. The check prints stopwatch times; the table subtracts its <code>submit done</code> time, so these are times after the submit returned, from one run (<code>TrimMode=partial</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Reader</th>
+<th>HTTP handler</th>
+<th style="text-align: center;">Android emulator</th>
+<th style="text-align: center;">Linux desktop, same code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK <code>Stream(...)</code> (LaunchDarkly.EventSource 3.3.2)</td>
+<td>platform default</td>
+<td style="text-align: center;">47.1 s</td>
+<td style="text-align: center;">1.1 s</td>
+</tr>
+<tr>
+<td>SDK <code>Stream(...)</code></td>
+<td><code>SocketsHttpHandler</code></td>
+<td style="text-align: center;">3.8 s</td>
+<td style="text-align: center;">0.9 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>Stream.ReadAsync</code></td>
+<td>platform default</td>
+<td style="text-align: center;">2.6 s</td>
+<td style="text-align: center;">0.8 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>StreamReader.ReadLineAsync</code></td>
+<td>platform default</td>
+<td style="text-align: center;"><code>id:</code> line 2.6 s, <code>data:</code> line 47.6 s</td>
+<td style="text-align: center;">1.1 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>StreamReader.ReadLineAsync</code></td>
+<td><code>SocketsHttpHandler</code></td>
+<td style="text-align: center;">3.6 s</td>
+<td style="text-align: center;">1.1 s</td>
+</tr>
+</tbody>
+</table>
+<p>The physical devices show the same pattern. Ranges over the four <code>TrimMode=full</code> runs, one per device:</p>
+<table>
+<thead>
+<tr>
+<th>Reader</th>
+<th>HTTP handler</th>
+<th style="text-align: center;">Physical devices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK <code>Stream(...)</code></td>
+<td>platform default</td>
+<td style="text-align: center;">46.0–47.6 s</td>
+</tr>
+<tr>
+<td>SDK <code>Stream(...)</code></td>
+<td><code>SocketsHttpHandler</code></td>
+<td style="text-align: center;">2.0–4.0 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>Stream.ReadAsync</code></td>
+<td>platform default</td>
+<td style="text-align: center;">1.9–3.5 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>StreamReader.ReadLineAsync</code></td>
+<td>platform default</td>
+<td style="text-align: center;"><code>id:</code> line 1.9–3.5 s, <code>data:</code> line 46.9–48.6 s</td>
+</tr>
+<tr>
+<td><code>HttpClient</code> + <code>StreamReader.ReadLineAsync</code></td>
+<td><code>SocketsHttpHandler</code></td>
+<td style="text-align: center;">1.3–3.9 s</td>
+</tr>
+</tbody>
+</table>
+<p>The delay needs both <code>StreamReader</code> and the platform default handler (<code>AndroidMessageHandler</code> in a MAUI app). Raw <code>ReadAsync</code> over that handler gets the whole event at once, and so does <code>StreamReader</code> over <code>SocketsHttpHandler</code>. <code>StreamReader</code> over the default handler returns the event's short <code>id:</code> line promptly, then holds the long <code>data:</code> line (about 1.5 KB for an operation) until more bytes arrive. LaunchDarkly.EventSource 3.3.2 reads with <code>StreamReader.ReadLineAsync</code> (<code>EventSourceStreamReader</code>) through <code>new HttpClient()</code>, i.e. the platform default handler, unless it is given a handler. Horizon sends no <code>Content-Encoding</code>. The cause below <code>StreamReader</code> was not isolated further.</p>
+<h4 id="workaround-socketshttphandler">Workaround: <code>SocketsHttpHandler</code></h4>
+<p>The request builders accept a custom event source, so an app can give a stream <code>SocketsHttpHandler</code> without any SDK change:</p>
+<pre><code class="lang-csharp">// One handler for the app's streams: LaunchDarkly.EventSource does not dispose a handler it is given.
+private static readonly SocketsHttpHandler SseHandler = new();
+
+var payments = server.Payments.ForAccount(accountId).Cursor(savedPagingToken);
+payments.EventSource = new SseEventSource(payments.BuildUri(),
+    config =&gt; config.MessageHandler(SseHandler));
+var stream = payments.Stream((_, payment) =&gt; HandlePayment(payment));
+var running = stream.Connect(); // completes after stream.Shutdown(), possibly after a reconnect wait
+</code></pre>
+<p><code>SocketsHttpHandler</code> is .NET's managed HTTP stack, not Android's, so settings that only the Android handler applies do not carry over. It was validated here only against Horizon testnet, on the emulator and the four physical devices (§3.1).</p>
+<h4 id="events-can-be-lost">Events can be lost</h4>
+<p>The SDK does not reconnect from its own cursor. <code>Stream(...)</code> updates the builder's cursor and <code>EventSource.Url</code> on every event (<code>RequestBuilderStreamable</code>), but the LaunchDarkly connection never reads that URL again. A reconnect resumes only through the <code>Last-Event-ID</code> header, which LaunchDarkly takes from the last <code>id:</code> line it parsed and which Horizon honours. That has two consequences:</p>
+<ul>
+<li><strong>Android, default handler: a dropped connection loses the event being held.</strong> LaunchDarkly records the id as soon as it parses the <code>id:</code> line (<code>EventSource.ProcessField</code>), and on Android that line arrives about 45 s before the event's data (tables above). If the connection drops in between, for example on a network change, the reconnect asks for the events after the held one, and the held one is never delivered. Reproduced on the emulator by cutting the first connection 8 s after the submit: the payment was not delivered within 150 s, although Horizon lists it. With <code>SocketsHttpHandler</code> the event had already arrived (after 1.3 s) when the connection was cut, and without a cut it arrived after 51 s.</li>
+<li><strong>All platforms: a stream opened with <code>Cursor(&quot;now&quot;)</code> that has not received an event yet</strong> reconnects with <code>cursor=now</code> and no <code>Last-Event-ID</code>, so payments that land between Horizon closing the stream and the reconnect are skipped. On desktop, 4 of 4 payments submitted in reconnect gaps never reached a <code>now</code> stream, while a stream opened at an earlier cursor delivered all 4.</li>
+</ul>
+<p>Reconnects also slow down over time. LaunchDarkly resets its backoff only after a connection that lasted at least a minute, and Horizon closes connections sooner, so the wait before each reconnect grows up to 30 s (measured on desktop). An event that lands during a wait arrives with the next connection, and on Android with the default handler that connection holds it back again, so the worst-case delay is above 55 s.</p>
+<p>The connection-cut and reconnect-gap measurements come from one-off probes that are not part of the validation app. They ran on 2026-09-30 against <code>main</code> @ <code>f3375ed8</code>, before the response-parsing changes that <code>83303a27</code> adds; the streaming code they exercise (<code>EventSources/</code>, <code>RequestBuilderStreamable</code>) is the same in both.</p>
+<p>Consequences and options:</p>
+<ul>
+<li>Consumers on Android today: give streams <code>SocketsHttpHandler</code> (above). On every platform, store the paging token of the last processed record, open streams with <code>Cursor(savedToken)</code> instead of <code>&quot;now&quot;</code> (use <code>&quot;now&quot;</code> only on the very first start, then save the token of each record you process), and reconcile with a query after a reconnect or when the app resumes: <code>server.Payments.ForAccount(id).Cursor(savedToken).Execute()</code> returns up to 10 records by default, so repeat it from the last record's token until a page comes back empty.</li>
+<li>SDK fix (follow-up): make the default <code>SseEventSource</code> avoid the stall, either by using <code>SocketsHttpHandler</code> on Android (no public API change) or by reading the response as bytes. For bytes, LaunchDarkly.EventSource 6.0.0 has a byte-level reader (<code>ProcessResponseFromUtf8StreamAsync</code>, enabled with <code>PreferDataAsUtf8Bytes</code>), but moving to it changes <code>SseEventSource</code>'s public constructor, which exposes LaunchDarkly 3.x's <code>ConfigurationBuilder</code>; a small in-SDK reader over <code>Stream.ReadAsync</code> is the alternative. Separately, the SDK should resume from its own cursor so that <code>Cursor(&quot;now&quot;)</code> streams do not skip events. Any of these must be re-validated with this app.</li>
+</ul>
+<p>Starting an SDK stream (<code>Connect()</code>) from the UI thread works; the check asserts that it runs there. LaunchDarkly then reads the response on thread-pool threads, so this covers starting a stream on the UI thread, not reading on it. While the harness was being written, a bare <code>HttpClient</code> that read a response stream on the UI thread failed with a Java <code>RuntimeException</code> from <code>AndroidMessageHandler</code>; the committed app does not repeat that experiment. The SDK's HTTP calls started from the UI thread all passed.</p>
+<h3 id="34-ios-and-mac-catalyst-results-release-trimmodefull--workaround-2026-10-03">3.4 iOS and Mac Catalyst: results (Release, <code>TrimMode=full</code> + workaround, 2026-10-03)</h3>
+<p>One run per configuration, with the SDK built from <code>main</code> @ <code>9440e88e</code> and with the published NuGet package 16.0.0, which is built from the same commit. SSE times are after the submit returned.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th style="text-align: center;">iPhone 15 Pro, iOS 26.6.2</th>
+<th style="text-align: center;">iOS Simulator, iOS 27.0 (simulator libsodium)</th>
+<th style="text-align: center;">Mac Catalyst, macOS 26.6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crypto.rfc8032</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>crypto.random-keypair</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.friendbot-and-account</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td><code>horizon.submit-and-sse-stream</code></td>
+<td style="text-align: center;">pass (1.8 s)</td>
+<td style="text-align: center;">pass (2.7 s)</td>
+<td style="text-align: center;">pass (3.8 s)</td>
+</tr>
+<tr>
+<td><code>horizon.sse-stream-sockets-handler</code></td>
+<td style="text-align: center;">pass (2.2 s)</td>
+<td style="text-align: center;">pass (2.7 s)</td>
+<td style="text-align: center;">pass (4.0 s)</td>
+</tr>
+<tr>
+<td><code>soroban.simulate</code></td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+<td style="text-align: center;">pass</td>
+</tr>
+<tr>
+<td>App result, <code>main</code></td>
+<td style="text-align: center;"><code>RESULT PASS 6/6</code></td>
+<td style="text-align: center;"><code>RESULT PASS 6/6</code></td>
+<td style="text-align: center;"><code>RESULT PASS 6/6</code></td>
+</tr>
+<tr>
+<td>App result, NuGet 16.0.0</td>
+<td style="text-align: center;"><code>RESULT PASS 6/6</code></td>
+<td style="text-align: center;">not run</td>
+<td style="text-align: center;"><code>RESULT PASS 6/6</code></td>
+</tr>
+<tr>
+<td>Runtime line</td>
+<td style="text-align: center;"><code>rid=ios-arm64 dynamicCode=False</code></td>
+<td style="text-align: center;"><code>rid=iossimulator-arm64 dynamicCode=False</code></td>
+<td style="text-align: center;"><code>rid=maccatalyst-arm64 dynamicCode=False</code></td>
+</tr>
+</tbody>
+</table>
+<p>Findings:</p>
+<ul>
+<li><strong>The device run is AOT-only.</strong> <code>dynamicCode=False</code> means no JIT: everything ran precompiled, including NSec's <code>[LibraryImport]</code> calls into the statically linked libsodium. This closes the main iOS risk from §1.</li>
+<li><strong>SSE has no Android-style delay.</strong> With the platform default handler, the SDK's stream and every raw reader got the event within about 2 s of the submit on the iPhone. The <code>StreamReader</code> stall in §3.3 is specific to <code>AndroidMessageHandler</code>. The loss case for <code>Cursor(&quot;now&quot;)</code> streams in §3.3 still applies to every platform.</li>
+<li><strong>NSec's iOS 18.0 platform attribute does not matter on iOS 26.</strong> NSec's iOS assembly declares <code>SupportedOSPlatform</code> iOS 18.0; the app targets iOS 15.0 and ran on 26.6.2. iOS 15 to 17 were not run (§4).</li>
+<li><strong>Trim warnings:</strong> 224 unique on iOS and Mac Catalyst, against 124 on Android. The SDK, Nett and Common.Logging warnings are the same as in §3.2. The additional ones come from the trimmer itself (78 × IL2037) and from MAUI (13 × IL2026 for <code>HybridWebViewHandler</code>); they were not analyzed further, and no check failed.</li>
+<li><strong>iOS Simulator</strong> needs a simulator build of libsodium (§1). <code>build-libsodium-simulator.sh</code> builds libsodium 1.0.22 from the signed release tarball (checked with minisign) for arm64 and x86_64 simulators, into <code>native/iossimulator/libsodium.a</code> (not committed). For <code>iossimulator-*</code> builds the project adds it as a <code>NativeReference</code> and removes the package's device library from the link. Without that file the build stops with an error that names the script.</li>
+<li><strong>iOS 27 requires the UIScene lifecycle.</strong> Without <code>UIApplicationSceneManifest</code> in <code>Info.plist</code>, the app was stopped at launch on the iOS 27 simulator with <code>EXC_BREAKPOINT</code> in <code>_UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption</code>, before any SDK code ran. The fix is a scene manifest with MAUI's default configuration name <code>__MAUI_DEFAULT_SCENE_CONFIGURATION__</code> and a <code>SceneDelegate : MauiUISceneDelegate</code> class (<code>Platforms/iOS</code>, <code>Platforms/MacCatalyst</code>). The MAUI 10.0.110 <code>maui</code> template's <code>Info.plist</code> has no scene manifest either, so new MAUI apps need the same change. The iPhone on iOS 26.6.2 ran fine without it. A physical iOS 27 device was not run.</li>
+</ul>
+<p>Project file fixes found by the first Apple builds:</p>
+<ul>
+<li>The Mac Catalyst platform floor was 15.0. The Mac Catalyst pack 27.0.10722 requires at least 17.0 (<code>MacCatalystMinSupportedOSPlatformVersion</code>); it is now 17.0. iOS stays at 15.0, which the iOS pack accepts.</li>
+<li><code>PublishTrimmed=true</code> made the Mac Catalyst build fail with NETSDK1102 in the outer build that merges the arm64 and x64 apps. It is now set for Android only. iOS and Mac Catalyst Release builds trim without it, and <code>TrimMode</code> still applies.</li>
+</ul>
+<h2 id="4-residual-risk-what-was-not-validated">4. Residual risk: what was not validated</h2>
+<ul>
+<li><strong>iOS coverage is one physical device</strong>: an iPhone 15 Pro on iOS 26.6.2, one run each with <code>main</code> and with 16.0.0, under <code>TrimMode=full</code> with the workaround. The MAUI default trimming on iOS (<code>partial</code>, from <code>MtouchLink=SdkOnly</code>) and NativeAOT (<code>PublishAot=true</code>) were not run. No physical iOS 27 device was run; the UIScene requirement was seen on the iOS 27 simulator only.</li>
+<li><strong>Physical Android coverage is four devices, one full-trimming run each.</strong> The arm64-v8a build ran on API 29, 35 and 36 (§3.1) with full trimming, and with <code>TrimMode=partial</code> on one device (API 35) only; the published 15.1.0 package ran on the emulator only. No 16 KB page-size device was run: all four use 4 KB pages, so the 16 KB alignment of the binaries (§1) was checked statically only.</li>
+<li><strong>Mono only.</strong> The CoreCLR runtime for Android (opt-in in .NET 10) was not tested.</li>
+<li><strong>Old Apple OS versions.</strong> The app's floors are iOS 15 and Mac Catalyst 17. NSec's iOS and Mac Catalyst assemblies declare <code>SupportedOSPlatform</code> iOS 18.0 / Mac Catalyst 18.0; devices on iOS 15 to 17 were not run. Mac Catalyst ran on an arm64 Mac only, not on Intel.</li>
+<li><strong>Android with 16.0.0.</strong> The published multi-target package was run on Apple platforms only. On Android it gives the app the same <code>net10.0</code> assembly and dependency graph as the <code>main</code> runs in §3.1, but that was not run.</li>
+<li><strong>The <code>SocketsHttpHandler</code> workaround (§3.3)</strong> was validated only against Horizon testnet, on the emulator and the four physical devices.</li>
+<li><strong>Scope of the checks.</strong> Only the listed flows ran. Other Horizon endpoints and response types, SEP-1/6/9/10/24/45 flows, federation (Nett TOML parsing) and Soroban transaction submission were not exercised on a device. Under <code>TrimMode=full</code> they depend entirely on the descriptor in §3.2, and their trim warnings are listed there but unverified at runtime.</li>
+<li><strong>MAUI 9 on Android</strong> was not built. The same <code>net8.0</code> dependency path was run on the emulator through the published 15.1.0 package on <code>net10.0-android</code>, with and without the NSec workaround (§3.1).</li>
+<li><strong>Secure memory.</strong> NSec keeps signing keys in libsodium secure memory (<code>mlock</code>). On Android, <code>mlock</code> limits were not measured; libsodium degrades silently if locking fails.</li>
+</ul>
+<h2 id="5-deliverable-coverage-scf-q3-2026-deliverable-2">5. Deliverable coverage (SCF Q3 2026, deliverable 2)</h2>
+<p>What the deliverable committed to, and what this report covers. Items not delivered are marked plainly.</p>
+<table>
+<thead>
+<tr>
+<th>Commitment</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desk check: do NSec and Sodium.Core load on iOS and Android; pick a fallback</td>
+<td>Done (§1), on 2026-09-30, not in the first week of July as planned. Decision: no fallback needed for the dependency set on <code>main</code>.</td>
+</tr>
+<tr>
+<td>Environment: Android SDK, emulator image, MAUI workloads, pinned versions, reproducible</td>
+<td>Done for Android on a Linux host (§2), with one emulator image (API 28).</td>
+</tr>
+<tr>
+<td>Environment: macOS host with Xcode and iOS simulators</td>
+<td>Done on 2026-10-03 (§2): Xcode 27.0, iOS 27.0 simulator runtime.</td>
+</tr>
+<tr>
+<td>Environment: signing and provisioning configuration</td>
+<td>Done for iOS with a development certificate and a team provisioning profile (§2). Android uses the default debug signing.</td>
+</tr>
+<tr>
+<td>Minimal MAUI validation app, Release builds with trimming</td>
+<td>Done: <code>StellarDotnetSdk.MauiValidation/</code>, with partial and full trimming.</td>
+</tr>
+<tr>
+<td>Core flows: key pair generation and signing, Horizon query, transaction submit, Soroban simulate</td>
+<td>Done on the Android emulator and four physical Android devices (§3.1).</td>
+</tr>
+<tr>
+<td>Ed25519 native library loading, HTTP/SSE behaviour, trimming compatibility</td>
+<td>Done on the Android emulator (§3.1–3.3), and on four physical devices: all four with full trimming, one also with partial trimming (§3.1). The SSE validation found an SDK limitation, with a workaround.</td>
+</tr>
+<tr>
+<td>Android emulator</td>
+<td>Done (x86_64, API 28).</td>
+</tr>
+<tr>
+<td>At least one physical Android device</td>
+<td>Done: four arm64 devices, API 29, 35 and 36 (§3.1), on 2026-10-02.</td>
+</tr>
+<tr>
+<td>iOS simulator</td>
+<td>Done (§3.4). Fails to link with the libsodium package, as the desk check predicted; passes 6/6 with a simulator libsodium built by <code>build-libsodium-simulator.sh</code>.</td>
+</tr>
+<tr>
+<td>iOS device smoke test, if provisioning allows</td>
+<td>Done (§3.4): iPhone 15 Pro, iOS 26.6.2, AOT-only, 6/6 with <code>main</code> and with 16.0.0.</td>
+</tr>
+<tr>
+<td>Mac Catalyst</td>
+<td>Done (§3.4): 6/6 with <code>main</code> and with 16.0.0.</td>
+</tr>
+<tr>
+<td>Validation after the multi-target package is published</td>
+<td>Done on iOS and Mac Catalyst with 16.0.0 (§3.4). Not run on Android with 16.0.0 (§4).</td>
+</tr>
+<tr>
+<td>Compatibility report with workarounds and residual risk</td>
+<td>This document.</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

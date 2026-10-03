@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TradeEffectResponse ">
       
-      <meta name="description" content="Represents trade effect response.">
+      <meta name="description" content="Represents the trade effect response. This effect occurs when a trade is executed on the DEX.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class TradeEffectResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents trade effect response.</p>
+  <div class="markdown summary"><p>Represents the trade effect response.
+This effect occurs when a trade is executed on the DEX.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TradeEffectResponse : EffectResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TradeEffectResponse : EffectResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -150,15 +151,6 @@ Class TradeEffectResponse
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_PagingToken">EffectResponse.PagingToken</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -172,9 +164,6 @@ Class TradeEffectResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -200,12 +189,13 @@ Class TradeEffectResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the bought asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bought_amount&quot;)]
-public string BoughtAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bought_amount&quot;)]
+public required string BoughtAmount { get; init; }</code></pre>
   </div>
 
 
@@ -232,11 +222,13 @@ public string BoughtAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The bought asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset BoughtAsset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset BoughtAsset { get; }</code></pre>
   </div>
 
 
@@ -263,12 +255,13 @@ public string BoughtAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The code of the bought asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bought_asset_code&quot;)]
-public string BoughtAssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bought_asset_code&quot;)]
+public string? BoughtAssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -295,12 +288,13 @@ public string BoughtAssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The issuer of the bought asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bought_asset_issuer&quot;)]
-public string BoughtAssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bought_asset_issuer&quot;)]
+public string? BoughtAssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -327,12 +321,13 @@ public string BoughtAssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of the bought asset: &quot;native&quot;, &quot;credit_alphanum4&quot;, or &quot;credit_alphanum12&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bought_asset_type&quot;)]
-public string BoughtAssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bought_asset_type&quot;)]
+public required string BoughtAssetType { get; init; }</code></pre>
   </div>
 
 
@@ -359,12 +354,13 @@ public string BoughtAssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The offer ID that was matched.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;offer_id&quot;)]
-public string OfferId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;offer_id&quot;)]
+public required string OfferId { get; init; }</code></pre>
   </div>
 
 
@@ -391,12 +387,13 @@ public string OfferId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID of the seller.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;seller&quot;)]
-public string Seller { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;seller&quot;)]
+public required string Seller { get; init; }</code></pre>
   </div>
 
 
@@ -423,12 +420,13 @@ public string Seller { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the seller, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;seller_muxed&quot;)]
-public string SellerMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;seller_muxed&quot;)]
+public string? SellerMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -455,12 +453,13 @@ public string SellerMuxed { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the seller, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;seller_muxed_id&quot;)]
-public long? SellerMuxedId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;seller_muxed_id&quot;)]
+public ulong? SellerMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -469,7 +468,7 @@ public long? SellerMuxedId { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -487,12 +486,13 @@ public long? SellerMuxedId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the sold asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sold_amount&quot;)]
-public string SoldAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sold_amount&quot;)]
+public required string SoldAmount { get; init; }</code></pre>
   </div>
 
 
@@ -519,7 +519,8 @@ public string SoldAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sold asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -550,12 +551,13 @@ public string SoldAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The code of the sold asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sold_asset_code&quot;)]
-public string SoldAssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sold_asset_code&quot;)]
+public string? SoldAssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -582,12 +584,13 @@ public string SoldAssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The issuer of the sold asset. Null for native XLM.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sold_asset_issuer&quot;)]
-public string SoldAssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sold_asset_issuer&quot;)]
+public string? SoldAssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -614,12 +617,13 @@ public string SoldAssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type of the sold asset: &quot;native&quot;, &quot;credit_alphanum4&quot;, or &quot;credit_alphanum12&quot;.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;sold_asset_type&quot;)]
-public string SoldAssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sold_asset_type&quot;)]
+public required string SoldAssetType { get; init; }</code></pre>
   </div>
 
 
@@ -646,7 +650,8 @@ public string SoldAssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric type identifier of the effect.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

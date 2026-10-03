@@ -92,51 +92,74 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Amount.html">Amount</a></dt>
-      <dd></dd>
+      <dd><p>Utility class for converting between Stellar amount representations. Stellar stores amounts as
+64-bit integers with 7 decimal places of precision (1 XLM = 10,000,000 stroops).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Base32Encoding.html">Base32Encoding</a></dt>
-      <dd></dd>
+      <dd><p>Provides RFC 4648 Base32 encoding and decoding methods. Used internally by <a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>
+for encoding and decoding Stellar keys and identifiers.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Base32Encoding.Base32EncodingOptions.html">Base32Encoding.Base32EncodingOptions</a></dt>
-      <dd></dd>
+      <dd><p>Options for controlling Base32 encoding behavior.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.ClaimAtom.html">ClaimAtom</a></dt>
-      <dd></dd>
+      <dd><p>Represents a single trade that was executed during a path payment or offer operation on the Stellar network.
+Each claim atom contains the assets and amounts exchanged.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.ClaimAtomLiquidityPool.html">ClaimAtomLiquidityPool</a></dt>
-      <dd></dd>
+      <dd><p>Represents a claim atom from a liquidity pool trade on the Stellar network.
+Contains the liquidity pool ID and the assets and amounts exchanged.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.ClaimAtomOrderBook.html">ClaimAtomOrderBook</a></dt>
-      <dd></dd>
+      <dd><p>Represents a claim atom from an order book trade on the Stellar decentralized exchange.
+Contains the seller, offer ID, and the assets and amounts exchanged.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.ClaimAtomV0.html">ClaimAtomV0</a></dt>
-      <dd></dd>
+      <dd><p>Represents a V0 claim atom from a trade on the Stellar network.
+This is the original format that identifies the seller by their Ed25519 public key
+rather than a full account ID.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.ClaimableBalanceIdUtils.html">ClaimableBalanceIdUtils</a></dt>
-      <dd></dd>
+      <dd><p>Utility methods for converting between different representations of Stellar claimable balance IDs
+(base32 B..., hex 0000..., and XDR).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.HashCode.html">HashCode</a></dt>
-      <dd></dd>
+      <dd><p>Provides fluent hash code generation utilities using the FNV-style chained hashing pattern.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-      <dd></dd>
+      <dd><p>Represents a Stellar network identified by its unique passphrase.
+The passphrase is hashed to produce the network ID, which is used to distinguish
+transactions on different networks (e.g., public mainnet vs. testnet).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
-      <dd></dd>
+      <dd><p>Represents a price as a ratio of two 32-bit integers, used for building Stellar transactions.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></dt>
-      <dd></dd>
+      <dd><p>Provides access to the Stellar Horizon API server. Offers request builders for querying accounts, assets,
+transactions, and other Stellar resources, as well as methods for submitting transactions.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.SignedPayloadSigner.html">SignedPayloadSigner</a></dt>
@@ -146,7 +169,10 @@ payload signer</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Signer.html">Signer</a></dt>
-      <dd></dd>
+      <dd><p>Represents an account signer with a signing key and associated weight.
+Signers are used to authorize transactions for Stellar accounts, where
+the weight contributes toward meeting the required signing thresholds.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.SignerUtil.html">SignerUtil</a></dt>
@@ -155,11 +181,16 @@ payload signer</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a></dt>
-      <dd></dd>
+      <dd><p>Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a
+version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar
+identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Util.html">Util</a></dt>
-      <dd></dd>
+      <dd><p>General-purpose utility methods for byte/hex conversion, hashing, and array manipulation
+used throughout the Stellar SDK.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.WebAuthentication.html">WebAuthentication</a></dt>
@@ -172,7 +203,10 @@ Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">StrKey.VersionByte</a></dt>
-      <dd></dd>
+      <dd><p>Specifies the type of Stellar key, encoded as the first byte of a StrKey-encoded string.
+Each version byte determines the prefix character of the encoded key
+(e.g., 'G' for accounts, 'S' for seeds, 'C' for contracts).</p>
+</dd>
     </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetHealthResponse ">
       
-      
+      <meta name="description" content="Represents the response from the Soroban RPC getHealth method. Contains the health status, ledger information, and retention window of the Soroban RPC server.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class GetHealthResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from the Soroban RPC <code>getHealth</code> method.
+Contains the health status, ledger information, and retention window of the Soroban RPC server.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,47 +146,6 @@ Class GetHealthResponse
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse__ctor_System_String_System_Int64_System_Int64_System_Int64_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.#ctor(System.String,System.Int64,System.Int64,System.Int64)">
-  GetHealthResponse(string, long, long, long)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetHealthResponse(string status, long latestLedger, long oldestLedger, long ledgerRetentionWindow)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>status</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-    <dt><code>oldestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-    <dt><code>ledgerRetentionWindow</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -201,7 +162,7 @@ Class GetHealthResponse
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -221,6 +182,48 @@ Class GetHealthResponse
 
 
 
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_LatestLedgerCloseTime_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.LatestLedgerCloseTime*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_LatestLedgerCloseTime" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.LatestLedgerCloseTime">
+  LatestLedgerCloseTime
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The close time of the latest ledger, as a unix timestamp in seconds. <code>null</code> when the server is older
+than RPC v27.1.0 and omits it. Stellar RPC sends it as a quoted number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+public long? LatestLedgerCloseTime { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_LatestLedgerCloseTime_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandlingattribute">JsonNumberHandlingAttribute</a> records the quoted wire form at the declaration, so a caller who
+deserializes this type with their own options reads it without enabling
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a> globally. Those options must still bind the camelCase
+wire name (for example with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamecaseinsensitive">PropertyNameCaseInsensitive</a>);
+under default case-sensitive options the property stays <code>null</code>. See the remarks on
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee">MinResourceFee</a>.</p>
+</div>
+
+
+
+
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_LedgerRetentionWindow_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.LedgerRetentionWindow*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_LedgerRetentionWindow" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.LedgerRetentionWindow">
@@ -234,7 +237,7 @@ latestLedger - oldestLedger + 1.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long LedgerRetentionWindow { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long LedgerRetentionWindow { get; init; }</code></pre>
   </div>
 
 
@@ -266,7 +269,7 @@ latestLedger - oldestLedger + 1.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long OldestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long OldestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -286,6 +289,48 @@ latestLedger - oldestLedger + 1.</p>
 
 
 
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_OldestLedgerCloseTime_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.OldestLedgerCloseTime*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_OldestLedgerCloseTime" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.OldestLedgerCloseTime">
+  OldestLedgerCloseTime
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The close time of the oldest ledger kept in history, as a unix timestamp in seconds. <code>null</code> when the
+server is older than RPC v27.1.0 and omits it. Stellar RPC sends it as a quoted number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+public long? OldestLedgerCloseTime { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_OldestLedgerCloseTime_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandlingattribute">JsonNumberHandlingAttribute</a> records the quoted wire form at the declaration, so a caller who
+deserializes this type with their own options reads it without enabling
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a> globally. Those options must still bind the camelCase
+wire name (for example with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamecaseinsensitive">PropertyNameCaseInsensitive</a>);
+under default case-sensitive options the property stays <code>null</code>. See the remarks on
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee">MinResourceFee</a>.</p>
+</div>
+
+
+
+
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_Status_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.Status*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetHealthResponse_Status" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.Status">
@@ -298,7 +343,7 @@ latestLedger - oldestLedger + 1.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Status { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Status { get; init; }</code></pre>
   </div>
 
 

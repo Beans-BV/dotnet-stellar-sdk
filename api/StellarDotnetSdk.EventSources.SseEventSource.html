@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SseEventSource ">
       
-      
+      <meta name="description" content="Provides a Server-Sent Events (SSE) event source implementation for streaming events from a Stellar Horizon server. This class wraps the LaunchDarkly EventSource library to provide SSE connectivity.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class SseEventSource
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Provides a Server-Sent Events (SSE) event source implementation for streaming events from a Stellar Horizon server.
+This class wraps the LaunchDarkly EventSource library to provide SSE connectivity.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -162,7 +164,8 @@ Class SseEventSource
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.EventSources.SseEventSource.html">SseEventSource</a> class with the specified URI and optional configuration.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -172,9 +175,11 @@ Class SseEventSource
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The URI of the SSE endpoint to connect to.</p>
+</dd>
     <dt><code>configureEventSource</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<span class="xref">ConfigurationBuilder</span>&gt;</dt>
-    <dd></dd>
+    <dd><p>An optional action to configure the underlying event source connection settings.</p>
+</dd>
   </dl>
 
 
@@ -199,7 +204,8 @@ Class SseEventSource
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the custom HTTP headers (obsolete, not supported by the underlying implementation).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -231,7 +237,8 @@ public NameValueCollection Headers { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the last event ID received from the server, used for reconnection.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -262,7 +269,8 @@ public NameValueCollection Headers { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the message types to filter (obsolete, not supported by the underlying implementation).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -294,7 +302,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the current connection state of the event source.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -325,7 +334,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the connection timeout in milliseconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -356,7 +366,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the URI of the SSE endpoint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -391,7 +402,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initiates the SSE connection to the server asynchronously.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -402,7 +414,8 @@ public string[] MessageTypes { get; }</code></pre>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
-    <dd></dd>
+    <dd><p>A task that completes when the connection is established.</p>
+</dd>
   </dl>
 
 
@@ -422,7 +435,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Releases all resources used by the <a class="xref" href="StellarDotnetSdk.EventSources.SseEventSource.html">SseEventSource</a>, including the underlying SSE connection.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -448,7 +462,9 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gracefully shuts down the SSE connection. Unlike <a class="xref" href="StellarDotnetSdk.EventSources.SseEventSource.html#StellarDotnetSdk_EventSources_SseEventSource_Dispose">Dispose()</a>, this signals the event source
+to close without disposing the underlying resources immediately.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -477,7 +493,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Occurs when an error is encountered during the SSE connection.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -507,7 +524,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Occurs when a message is received from the SSE endpoint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -537,7 +555,8 @@ public string[] MessageTypes { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Occurs when the connection state changes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

@@ -184,7 +184,8 @@ pool withdraw
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new <code>LiquidityPoolWithdrawOperation</code> from asset amounts, automatically deriving the pool ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -194,13 +195,17 @@ pool withdraw
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>assetA</code> <a class="xref" href="StellarDotnetSdk.Assets.AssetAmount.html">AssetAmount</a></dt>
-    <dd></dd>
+    <dd><p>The first asset and its minimum withdrawal amount.</p>
+</dd>
     <dt><code>assetB</code> <a class="xref" href="StellarDotnetSdk.Assets.AssetAmount.html">AssetAmount</a></dt>
-    <dd></dd>
+    <dd><p>The second asset and its minimum withdrawal amount.</p>
+</dd>
     <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Amount of pool shares to withdraw.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
 
@@ -402,7 +407,8 @@ pool withdraw
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolWithdrawOperation.html">LiquidityPoolWithdrawOperation</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -412,13 +418,15 @@ pool withdraw
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>liquidityPoolWithdrawOp</code> <span class="xref">LiquidityPoolWithdrawOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR LiquidityPoolWithdrawOp object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolWithdrawOperation.html">LiquidityPoolWithdrawOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolWithdrawOperation.html">LiquidityPoolWithdrawOperation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -438,7 +446,7 @@ pool withdraw
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -450,7 +458,7 @@ pool withdraw
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

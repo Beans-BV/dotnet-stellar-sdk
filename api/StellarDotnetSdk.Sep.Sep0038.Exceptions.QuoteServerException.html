@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class QuoteServerException </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class QuoteServerException ">
+      
+      <meta name="description" content="Base type of the errors  raises for a response from an anchor&#39;s SEP-38 quote server, or for a stellar.toml that declares no usable one. Catch this to handle all of them.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException" class="text-break">
+Class QuoteServerException  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.html">Sep0038</a>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.html">Exceptions</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Base type of the errors <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a> raises for a response from an anchor's SEP-38 quote
+server, or for a stellar.toml that declares no usable one. Catch this to handle all of them.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class QuoteServerException : Exception, ISerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></div>
+      <div><span class="xref">QuoteServerException</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">ISerializable</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.BadRequestException.html">BadRequestException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.NoAnchorQuoteServerFoundException.html">NoAnchorQuoteServerFoundException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.PermissionDeniedException.html">PermissionDeniedException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerNotFoundException.html">QuoteServerNotFoundException</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.getbaseexception">Exception.GetBaseException()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.gettype">Exception.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.tostring">Exception.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.data">Exception.Data</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.helplink">Exception.HelpLink</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.hresult">Exception.HResult</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.innerexception">Exception.InnerException</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Exception.Message</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.source">Exception.Source</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.stacktrace">Exception.StackTrace</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.targetsite">Exception.TargetSite</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.serializeobjectstate">Exception.SerializeObjectState</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>A stellar.toml that cannot be fetched or parsed during discovery raises
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a>, which does not derive from this type,
+and a domain that is empty or is not a valid host name raises <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> or
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a>. Transport failures (DNS, TLS, connection resets, timeouts) are not wrapped:
+they surface as the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a> or
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> that <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>
+raised. Invalid request arguments, a malformed JWT among them, raise <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> before
+anything is sent; on runtimes before .NET 10, a request URL beyond the runtime's length limit (a quote id tens
+of kilobytes long) raises <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a>.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor(System.String)">
+  QuoteServerException(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public QuoteServerException(string message)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The error message.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_System_String_System_Exception_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor(System.String,System.Exception)">
+  QuoteServerException(string, Exception)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with a message and the exception that caused it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public QuoteServerException(string message, Exception innerException)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The error message.</p>
+</dd>
+    <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>The exception that caused this one.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException__ctor_System_String_System_Nullable_System_Int32__System_String_System_String_System_Exception_System_Nullable_System_TimeSpan__" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.#ctor(System.String,System.Nullable{System.Int32},System.String,System.String,System.Exception,System.Nullable{System.TimeSpan})">
+  QuoteServerException(string, int?, string?, string?, Exception?, TimeSpan?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance describing an HTTP response.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public QuoteServerException(string message, int? statusCode, string? error, string? responseBody, Exception? innerException = null, TimeSpan? retryAfterDelay = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The error message.</p>
+</dd>
+    <dt><code>statusCode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd><p>The HTTP status code of the response.</p>
+</dd>
+    <dt><code>error</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>error</code> field of the response body, if it had one.</p>
+</dd>
+    <dt><code>responseBody</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The response body, if it was read.</p>
+</dd>
+    <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>The exception that caused this one, if any.</p>
+</dd>
+    <dt><code>retryAfterDelay</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd><p>The delay the server asked for in a <code>Retry-After</code> header, if any.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_Error_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.Error*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_Error" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.Error">
+  Error
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The human-readable <code>error</code> field of the anchor's error body, exactly as sent, or
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> when the body had none. Server-controlled: escape it before logging or display.
+The exception <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Message</a> carries an escaped, length-bounded copy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Error { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.ResponseBody*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.ResponseBody">
+  ResponseBody
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The raw response body (at most the size limit <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a> reads), or
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> when it was not read. Server-controlled: escape it before logging or display.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ResponseBody { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_RetryAfterDelay_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.RetryAfterDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_RetryAfterDelay" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.RetryAfterDelay">
+  RetryAfterDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The delay the server asked the client to wait before retrying, from the <code>Retry-After</code> header of an
+error response such as <code>429 Too Many Requests</code> or <code>503 Service Unavailable</code>, or
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> when the response carried none that can be read. Only an <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>
+for an error status carries it, whatever the size of the error body; the 400, 403 and 404 subtypes never do. Named like
+<a class="xref" href="StellarDotnetSdk.Exceptions.TooManyRequestsException.html#StellarDotnetSdk_Exceptions_TooManyRequestsException_RetryAfterDelay">RetryAfterDelay</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? RetryAfterDelay { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_RetryAfterDelay_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><code>POST /quote</code> must not be retried automatically: each call reserves a new firm quote. The default
+resilience options retry nothing, but the <code>ForHorizon()</code> and <code>ForSoroban()</code> presets retry
+<code>POST</code> on a 408, 429, 500, 502, 503 or 504 answer, so configure the service with options whose
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpMethods">RetryHttpMethods</a> leaves out <code>POST</code>
+(connection-failure retries still replay every method; see the README). A 429 then surfaces here, and
+this delay is how the caller honors the anchor's rate limit before asking for another quote.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_StatusCode_" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.StatusCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_StatusCode" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.StatusCode">
+  StatusCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The HTTP status code of the response, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> when the error did not come from a
+response.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? StatusCode { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

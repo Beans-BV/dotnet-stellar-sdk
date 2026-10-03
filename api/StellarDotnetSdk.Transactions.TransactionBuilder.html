@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TransactionBuilder ">
       
-      
+      <meta name="description" content="Builds Stellar transactions by accumulating operations, preconditions, and memo before creating a signed-ready  object.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class TransactionBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds Stellar transactions by accumulating operations, preconditions, and memo before creating a signed-ready
+<a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> object.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -193,7 +195,8 @@ who will use a sequence number. When build() is called, the account object's seq
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the number of operations added to this builder so far.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -309,7 +312,8 @@ See:
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the preconditions for the transaction, such as time bounds, ledger bounds, and extra signers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -319,13 +323,15 @@ See:
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>preconditions</code> <a class="xref" href="StellarDotnetSdk.Transactions.TransactionPreconditions.html">TransactionPreconditions</a></dt>
-    <dd></dd>
+    <dd><p>The preconditions to apply.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBuilder.html">TransactionBuilder</a></dt>
-    <dd></dd>
+    <dd><p>Builder object so you can chain methods.</p>
+</dd>
   </dl>
 
 
@@ -417,7 +423,9 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Builds a fee bump transaction using the inner transaction's per-operation fee.
+The total fee is calculated as <code>innerPerOpFee * (numOps + 1)</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -427,15 +435,18 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeSource</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>The account paying the fee.</p>
+</dd>
     <dt><code>inner</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The inner transaction to wrap.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a>.</p>
+</dd>
   </dl>
 
 
@@ -445,6 +456,12 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>Thrown when the inner transaction has no operations.</p>
+</dd>
+  </dl>
 
 
 
@@ -455,7 +472,9 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Builds a fee bump transaction with an explicit per-operation fee.
+The total fee is calculated as <code>fee * (numOps + 1)</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -465,17 +484,21 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeSource</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>The account paying the fee.</p>
+</dd>
     <dt><code>inner</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The inner transaction to wrap.</p>
+</dd>
     <dt><code>fee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The per-operation fee in stroops (must be at least the inner transaction's per-operation fee).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a>.</p>
+</dd>
   </dl>
 
 
@@ -485,6 +508,12 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>Thrown when the inner transaction has no operations or the fee is too low.</p>
+</dd>
+  </dl>
 
 
 
@@ -495,7 +524,9 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a> from a <span class="xref">StellarDotnetSdk.Xdr.TransactionEnvelope</span> XDR object.
+Supports V0, V1, and fee bump envelope types.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -505,13 +536,15 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <span class="xref">TransactionEnvelope</span></dt>
-    <dd></dd>
+    <dd><p>The XDR transaction envelope.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
-    <dd></dd>
+    <dd><p>The decoded transaction.</p>
+</dd>
   </dl>
 
 
@@ -521,6 +554,12 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the envelope type is unknown.</p>
+</dd>
+  </dl>
 
 
 
@@ -531,7 +570,9 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a> (either <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> or <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a>)
+from a base64-encoded XDR transaction envelope string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -541,13 +582,15 @@ See: <a href="https://www.stellar.org/developers/learn/concepts/transactions.htm
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The base64-encoded XDR transaction envelope.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
-    <dd></dd>
+    <dd><p>The decoded transaction.</p>
+</dd>
   </dl>
 
 

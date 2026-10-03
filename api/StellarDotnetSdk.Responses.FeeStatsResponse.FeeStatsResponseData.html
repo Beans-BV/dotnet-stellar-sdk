@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class FeeStatsResponse.FeeStatsResponseData ">
       
-      
+      <meta name="description" content="Contains statistical data about fees including minimum, maximum, mode, and percentiles.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,12 @@ Class FeeStatsResponse.FeeStatsResponseData
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Contains statistical data about fees including minimum, maximum, mode, and percentiles.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FeeStatsResponse.FeeStatsResponseData</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class FeeStatsResponse.FeeStatsResponseData</code></pre>
   </div>
 
 
@@ -129,9 +130,6 @@ Class FeeStatsResponse.FeeStatsResponseData
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -155,12 +153,13 @@ Class FeeStatsResponse.FeeStatsResponseData
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max&quot;)]
-public long Max { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max&quot;)]
+public required long Max { get; init; }</code></pre>
   </div>
 
 
@@ -187,12 +186,13 @@ public long Max { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The minimum fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;min&quot;)]
-public long Min { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;min&quot;)]
+public required long Min { get; init; }</code></pre>
   </div>
 
 
@@ -219,12 +219,13 @@ public long Min { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The mode fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;mode&quot;)]
-public long Mode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;mode&quot;)]
+public required long Mode { get; init; }</code></pre>
   </div>
 
 
@@ -251,12 +252,13 @@ public long Mode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 10th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p10&quot;)]
-public long P10 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p10&quot;)]
+public required long P10 { get; init; }</code></pre>
   </div>
 
 
@@ -283,12 +285,13 @@ public long P10 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 20th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p20&quot;)]
-public long P20 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p20&quot;)]
+public required long P20 { get; init; }</code></pre>
   </div>
 
 
@@ -315,12 +318,13 @@ public long P20 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 30th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p30&quot;)]
-public long P30 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p30&quot;)]
+public required long P30 { get; init; }</code></pre>
   </div>
 
 
@@ -347,12 +351,13 @@ public long P30 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 40th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p40&quot;)]
-public long P40 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p40&quot;)]
+public required long P40 { get; init; }</code></pre>
   </div>
 
 
@@ -379,12 +384,13 @@ public long P40 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 50th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p50&quot;)]
-public long P50 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p50&quot;)]
+public required long P50 { get; init; }</code></pre>
   </div>
 
 
@@ -411,12 +417,13 @@ public long P50 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 60th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p60&quot;)]
-public long P60 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p60&quot;)]
+public required long P60 { get; init; }</code></pre>
   </div>
 
 
@@ -443,12 +450,13 @@ public long P60 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 70th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p70&quot;)]
-public long P70 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p70&quot;)]
+public required long P70 { get; init; }</code></pre>
   </div>
 
 
@@ -475,12 +483,13 @@ public long P70 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 80th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p80&quot;)]
-public long P80 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p80&quot;)]
+public required long P80 { get; init; }</code></pre>
   </div>
 
 
@@ -507,12 +516,13 @@ public long P80 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 90th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p90&quot;)]
-public long P90 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p90&quot;)]
+public required long P90 { get; init; }</code></pre>
   </div>
 
 
@@ -539,12 +549,13 @@ public long P90 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 95th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p95&quot;)]
-public long P95 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p95&quot;)]
+public required long P95 { get; init; }</code></pre>
   </div>
 
 
@@ -571,12 +582,13 @@ public long P95 { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 99th max percentile fee over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;p99&quot;)]
-public long P99 { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;p99&quot;)]
+public required long P99 { get; init; }</code></pre>
   </div>
 
 

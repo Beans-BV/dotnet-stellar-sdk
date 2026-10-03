@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Events ">
       
-      
+      <meta name="description" content="Represents the collection of events returned from a Soroban transaction simulation or execution, including diagnostic events, transaction events, and contract events in XDR format.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class Events
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the collection of events returned from a Soroban transaction simulation or execution,
+including diagnostic events, transaction events, and contract events in XDR format.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +157,8 @@ Class Events
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.Events.html">Events</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,11 +168,14 @@ Class Events
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>diagnosticEventsXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
+    <dd><p>Base64-encoded XDR diagnostic event strings.</p>
+</dd>
     <dt><code>transactionEventsXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
+    <dd><p>Base64-encoded XDR transaction event strings.</p>
+</dd>
     <dt><code>contractEventsXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[][]</dt>
-    <dd></dd>
+    <dd><p>Base64-encoded XDR contract event strings, grouped by invocation.</p>
+</dd>
   </dl>
 
 
@@ -194,7 +200,8 @@ Class Events
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Base64-encoded XDR contract event strings, grouped by invocation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -225,7 +232,8 @@ Class Events
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Base64-encoded XDR diagnostic event strings emitted during contract execution.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -256,7 +264,8 @@ Class Events
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Base64-encoded XDR transaction event strings emitted during execution.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

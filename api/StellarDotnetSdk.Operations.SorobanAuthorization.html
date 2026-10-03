@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SorobanAuthorization </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SorobanAuthorization ">
+      
+      <meta name="description" content="Helpers for constructing and signing Soroban authorization entries (Protocol 27).">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Operations.SorobanAuthorization">
+
+
+
+  <h1 id="StellarDotnetSdk_Operations_SorobanAuthorization" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization" class="text-break">
+Class SorobanAuthorization  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Operations.html">Operations</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Helpers for constructing and signing Soroban authorization entries (Protocol 27).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class SorobanAuthorization</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SorobanAuthorization</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntry*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Accounts_KeyPair_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntry(StellarDotnetSdk.Operations.SorobanAuthorizationEntry,StellarDotnetSdk.Accounts.KeyPair,System.UInt32,StellarDotnetSdk.Network,StellarDotnetSdk.Operations.SorobanCredentialsVersion,StellarDotnetSdk.Soroban.ScAddress)">
+  AuthorizeEntry(SorobanAuthorizationEntry, KeyPair, uint, Network, SorobanCredentialsVersion, ScAddress?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs an authorization entry with a classic Ed25519 <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>. By default it
+preserves the entry's existing credential variant (see <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html">SorobanCredentialsVersion</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SorobanAuthorizationEntry AuthorizeEntry(SorobanAuthorizationEntry entry, KeyPair signer, uint validUntilLedgerSeq, Network network, SorobanCredentialsVersion version = SorobanCredentialsVersion.Preserve, ScAddress? forAddress = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entry</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>The (typically simulation-produced) entry to sign. Address or delegated credentials are
+signed; source-account credentials are returned unchanged (a no-op — <code class="paramref">forAddress</code>
+and <code class="paramref">version</code> are ignored for them), so callers can authorize every entry
+from a simulation result without special-casing the mix.</p>
+</dd>
+    <dt><code>signer</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>The Ed25519 key pair authorizing the invocation.</p>
+</dd>
+    <dt><code>validUntilLedgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signature expires. In multi-party flows every
+signer must pass the same value; see the signer-based overload's remarks.</p>
+</dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+    <dt><code>version</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html">SorobanCredentialsVersion</a></dt>
+    <dd><p>Which credential variant to produce. Defaults to <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_Preserve">Preserve</a>,
+keeping the entry's existing variant; pass <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_V2">V2</a> to upgrade a
+legacy entry to the Protocol 27 address-bound credential, or <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_V1">V1</a>
+to force the legacy credential. Ignored for entries carrying delegated credentials, which keep their
+credential type.</p>
+</dd>
+    <dt><code>forAddress</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
+    <dd><p>Optional address of the credential node that receives the signature. When omitted, the
+signature is placed on the root (top-level) credential node. For delegated entries, pass a
+delegate's address to route the signature to every matching delegate node (including nested
+ones), enabling incremental multi-party signing.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>A new signed <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntry*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntry(StellarDotnetSdk.Operations.SorobanAuthorizationEntry,StellarDotnetSdk.Operations.ISorobanEntrySigner,System.UInt32,StellarDotnetSdk.Network,StellarDotnetSdk.Operations.SorobanCredentialsVersion,StellarDotnetSdk.Soroban.ScAddress)">
+  AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs an authorization entry with a custom <a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a> (for
+smart-contract accounts). By default it preserves the entry's existing credential variant
+(see <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html">SorobanCredentialsVersion</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SorobanAuthorizationEntry AuthorizeEntry(SorobanAuthorizationEntry entry, ISorobanEntrySigner signer, uint validUntilLedgerSeq, Network network, SorobanCredentialsVersion version = SorobanCredentialsVersion.Preserve, ScAddress? forAddress = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entry</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>The (typically simulation-produced) entry to sign. Address or delegated credentials are
+signed; source-account credentials are returned unchanged (a no-op — <code class="paramref">forAddress</code>
+and <code class="paramref">version</code> are ignored for them), so callers can authorize every entry
+from a simulation result without special-casing the mix.</p>
+</dd>
+    <dt><code>signer</code> <a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a></dt>
+    <dd><p>The signer authorizing the invocation.</p>
+</dd>
+    <dt><code>validUntilLedgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signature expires. In multi-party flows every
+signer must pass the same value; see remarks.</p>
+</dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+    <dt><code>version</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html">SorobanCredentialsVersion</a></dt>
+    <dd><p>Which credential variant to produce. Defaults to <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_Preserve">Preserve</a>,
+keeping the entry's existing variant; pass <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_V2">V2</a> to upgrade a
+legacy entry to the Protocol 27 address-bound credential, or <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html#StellarDotnetSdk_Operations_SorobanCredentialsVersion_V1">V1</a>
+to force the legacy credential. Ignored for entries carrying delegated credentials, which keep their
+credential type.</p>
+</dd>
+    <dt><code>forAddress</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
+    <dd><p>Optional address of the credential node that receives the signature. When omitted, the
+signature is placed on the root (top-level) credential node. For delegated entries, pass a
+delegate's address to route the signature to every matching delegate node (including nested
+ones), enabling incremental multi-party signing.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>A new signed <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    The credential address is taken from <code class="paramref">entry</code> (matching the Java and JS
+    SDKs); <code class="paramref">signer</code> only supplies the signature. Signing with a key that does
+    not correspond to the entry's address yields an entry the on-chain <code>__check_auth</code> rejects.
+</p>
+<p>
+    Entries carrying <a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates.html">SorobanAddressCredentialsWithDelegates</a> credentials keep
+    their credential type (<code class="paramref">version</code> is ignored): the payload is the
+    CAP-0071-01 root-bound preimage shared by the top-level account and every delegate, the
+    root expiration is updated to <code class="paramref">validUntilLedgerSeq</code>, and the signatures
+    of all non-target nodes are preserved — mirroring the JS SDK's
+    <code>authorizeEntry(..., forAddress)</code>. Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a>
+    when <code class="paramref">forAddress</code> matches no credential node.
+</p>
+<p>
+    IMPORTANT — multi-party coordination: the signing payload embeds
+    <code class="paramref">validUntilLedgerSeq</code>, and this method updates the root credential's
+    expiration to that value while leaving the other nodes' signatures untouched. Every party
+    signing the same delegated entry must therefore pass the <b>same</b>
+    <code class="paramref">validUntilLedgerSeq</code>: re-signing with a different value invalidates the
+    signatures already attached, because their payloads embedded the old expiration. As a
+    partial safety net this method throws an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a> when the
+    expiration would change out from under an existing real (non-placeholder) signature it must
+    preserve — both when signing a delegate while the root already holds a signature over a
+    different expiration, and when re-signing the root (whether <code class="paramref">forAddress</code>
+    is omitted or names the root address) while a delegate already holds one. Delegate-vs-delegate
+    mismatches (re-signing one delegate
+    while a sibling is signed over a different expiration) cannot be detected here, because a
+    delegate node carries no expiration of its own; fix the expiration once (e.g. via
+    <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorization.html#StellarDotnetSdk_Operations_SorobanAuthorization_BuildWithDelegatesEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_System_Collections_Generic_IReadOnlyList_StellarDotnetSdk_Soroban_ScAddress__System_UInt32_">BuildWithDelegatesEntry(SorobanAuthorizationEntry, IReadOnlyList&lt;ScAddress&gt;, uint)</a>) before collecting signatures.
+</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntryWithDelegates_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntryWithDelegates*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntryWithDelegates_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_Collections_Generic_IReadOnlyList_StellarDotnetSdk_Operations_ISorobanEntrySigner__System_UInt32_StellarDotnetSdk_Network_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.AuthorizeEntryWithDelegates(StellarDotnetSdk.Operations.SorobanAuthorizationEntry,StellarDotnetSdk.Operations.ISorobanEntrySigner,System.Collections.Generic.IReadOnlyList{StellarDotnetSdk.Operations.ISorobanEntrySigner},System.UInt32,StellarDotnetSdk.Network)">
+  AuthorizeEntryWithDelegates(SorobanAuthorizationEntry, ISorobanEntrySigner, IReadOnlyList&lt;ISorobanEntrySigner&gt;, uint, Network)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs an authorization entry as delegated credentials (Protocol 27, CAP-0071-01):
+the root signer authorizes, and each delegate co-signs on its behalf. Produces
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates.html">SorobanAddressCredentialsWithDelegates</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SorobanAuthorizationEntry AuthorizeEntryWithDelegates(SorobanAuthorizationEntry entry, ISorobanEntrySigner rootSigner, IReadOnlyList&lt;ISorobanEntrySigner&gt; delegateSigners, uint validUntilLedgerSeq, Network network)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entry</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>The entry to sign. Its credentials must be ADDRESS or ADDRESS_V2; source-account and
+already-delegated entries are rejected.</p>
+</dd>
+    <dt><code>rootSigner</code> <a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a></dt>
+    <dd><p>The root account delegating its authorization.</p>
+</dd>
+    <dt><code>delegateSigners</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a>&gt;</dt>
+    <dd><p>The delegates co-signing on the root's behalf; input order is irrelevant, as the method
+sorts them into the protocol-required ascending-address order. May be empty, producing
+delegated credentials with no delegates.</p>
+</dd>
+    <dt><code>validUntilLedgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signatures expire.</p>
+</dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>A new signed <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a> with delegated credentials.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntryWithDelegates_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_Collections_Generic_IReadOnlyList_StellarDotnetSdk_Operations_ISorobanEntrySigner__System_UInt32_StellarDotnetSdk_Network__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    Per CAP-0071-01, the top-level account and every delegate sign the same payload: the
+    address-bound preimage (<code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</code>)
+    bound to the top-level account's address. This method emits leaf delegates only (no
+    nested delegates); to build deeper delegation chains, construct
+    <a class="xref" href="StellarDotnetSdk.Operations.SorobanDelegateSignature.html">SorobanDelegateSignature</a> values manually — every nested array must
+    also be sorted by increasing address with no duplicates. The shared signing payload is
+    cross-checked against the JS reference SDK by an in-repo known-answer test; the full
+    delegated-entry XDR layout is locked by the vendored Protocol 27 schema.
+</p>
+<p>
+    The root credential address is taken from the entry; the
+    root signer only supplies the root signature. Delegates are emitted sorted by increasing
+    address as required by CAP-71; passing two signers with the same address throws an
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> before any signer is invoked, because the protocol
+    rejects duplicate delegate addresses at invocation time.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">entry</code>, <code class="paramref">rootSigner</code>,
+<code class="paramref">delegateSigners</code>, or <code class="paramref">network</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown — before any signer is invoked — when <code class="paramref">entry</code> does not carry ADDRESS
+or ADDRESS_V2 credentials (source-account or already-delegated), when any element of
+<code class="paramref">delegateSigners</code> is null, or when two delegate signers share the same
+address (CAP-0071-01 forbids duplicate delegate addresses).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAddressAuthPreimageHash_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAddressAuthPreimageHash*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAddressAuthPreimageHash_StellarDotnetSdk_Network_StellarDotnetSdk_Soroban_ScAddress_System_Int64_System_UInt32_StellarDotnetSdk_Operations_SorobanAuthorizedInvocation_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAddressAuthPreimageHash(StellarDotnetSdk.Network,StellarDotnetSdk.Soroban.ScAddress,System.Int64,System.UInt32,StellarDotnetSdk.Operations.SorobanAuthorizedInvocation)">
+  BuildAddressAuthPreimageHash(Network, ScAddress, long, uint, SorobanAuthorizedInvocation)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds and SHA-256-hashes the Protocol 27 address-bound signing payload
+(<code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</code>), used by V2 and delegated
+credentials.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] BuildAddressAuthPreimageHash(Network network, ScAddress address, long nonce, uint signatureExpirationLedger, SorobanAuthorizedInvocation invocation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+    <dt><code>address</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
+    <dd><p>The address being bound to the signing payload, preventing cross-account replay.</p>
+</dd>
+    <dt><code>nonce</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>A value unique for all signatures performed by <code class="paramref">address</code> until
+<code class="paramref">signatureExpirationLedger</code>.</p>
+</dd>
+    <dt><code>signatureExpirationLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signature expires.</p>
+</dd>
+    <dt><code>invocation</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a></dt>
+    <dd><p>The authorized invocation tree to sign.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A 32-byte SHA-256 hash of the XDR-encoded preimage.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAuthPreimageHash_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAuthPreimageHash*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAuthPreimageHash_StellarDotnetSdk_Network_System_Int64_System_UInt32_StellarDotnetSdk_Operations_SorobanAuthorizedInvocation_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAuthPreimageHash(StellarDotnetSdk.Network,System.Int64,System.UInt32,StellarDotnetSdk.Operations.SorobanAuthorizedInvocation)">
+  BuildAuthPreimageHash(Network, long, uint, SorobanAuthorizedInvocation)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds and SHA-256-hashes the legacy V1 signing payload
+(<code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] BuildAuthPreimageHash(Network network, long nonce, uint signatureExpirationLedger, SorobanAuthorizedInvocation invocation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+    <dt><code>nonce</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>A value unique for all signatures performed by the address until
+<code class="paramref">signatureExpirationLedger</code>.</p>
+</dd>
+    <dt><code>signatureExpirationLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signature expires.</p>
+</dd>
+    <dt><code>invocation</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a></dt>
+    <dd><p>The authorized invocation tree to sign.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A 32-byte SHA-256 hash of the XDR-encoded preimage.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAuthorizationEntryPreimageHash_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAuthorizationEntryPreimageHash*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildAuthorizationEntryPreimageHash_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_System_UInt32_StellarDotnetSdk_Network_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildAuthorizationEntryPreimageHash(StellarDotnetSdk.Operations.SorobanAuthorizationEntry,System.UInt32,StellarDotnetSdk.Network)">
+  BuildAuthorizationEntryPreimageHash(SorobanAuthorizationEntry, uint, Network)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds and SHA-256-hashes the signing payload for <code class="paramref">entry</code>, selecting the
+preimage variant by the entry's credential type (the single source of truth, mirroring the
+JS SDK's <code>buildAuthorizationEntryPreimage</code>): V1 address credentials select the legacy
+<code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</code> preimage; V2 and delegated credentials select the
+address-bound <code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</code> preimage bound to the
+(root) credential address. Use this to obtain the exact payload for external signers (e.g.
+hardware wallets) without going through
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorization.html#StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress_">AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)</a>
+.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] BuildAuthorizationEntryPreimageHash(SorobanAuthorizationEntry entry, uint validUntilLedgerSeq, Network network)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entry</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>The entry whose signing payload to compute. Its credentials must be address (V1/V2) or
+delegated credentials; source-account credentials are rejected.</p>
+</dd>
+    <dt><code>validUntilLedgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signature expires.</p>
+</dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network the transaction is submitted to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A 32-byte SHA-256 hash of the XDR-encoded preimage.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">entry</code> or <code class="paramref">network</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown for source-account credentials, which have no signing payload (they are authorized via
+the transaction source account); pass an address-credentialed or delegated entry instead.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown for unrecognized credential subtypes.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildWithDelegatesEntry_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildWithDelegatesEntry*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_SorobanAuthorization_BuildWithDelegatesEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_System_Collections_Generic_IReadOnlyList_StellarDotnetSdk_Soroban_ScAddress__System_UInt32_" data-uid="StellarDotnetSdk.Operations.SorobanAuthorization.BuildWithDelegatesEntry(StellarDotnetSdk.Operations.SorobanAuthorizationEntry,System.Collections.Generic.IReadOnlyList{StellarDotnetSdk.Soroban.ScAddress},System.UInt32)">
+  BuildWithDelegatesEntry(SorobanAuthorizationEntry, IReadOnlyList&lt;ScAddress&gt;, uint)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds an unsigned delegated authorization entry (mirroring the JS SDK's
+<code>buildWithDelegatesEntry</code>): the root credential and every delegate node carry an
+<a class="xref" href="StellarDotnetSdk.Soroban.SCVoid.html">SCVoid</a> placeholder signature, ready for incremental signing via
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorization.html#StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress_">AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)</a>
+with <code>forAddress</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SorobanAuthorizationEntry BuildWithDelegatesEntry(SorobanAuthorizationEntry entry, IReadOnlyList&lt;ScAddress&gt; delegateAddresses, uint validUntilLedgerSeq)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>entry</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>The (typically simulation-produced) entry to convert. Its ADDRESS or ADDRESS_V2 credentials
+supply the root address and nonce. An entry that already carries delegated (WITH_DELEGATES)
+credentials is rejected with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> (matching the JS
+SDK), because rebuilding it would discard every signature already collected on the existing
+delegate tree; sign such an entry incrementally with
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorization.html#StellarDotnetSdk_Operations_SorobanAuthorization_AuthorizeEntry_StellarDotnetSdk_Operations_SorobanAuthorizationEntry_StellarDotnetSdk_Operations_ISorobanEntrySigner_System_UInt32_StellarDotnetSdk_Network_StellarDotnetSdk_Operations_SorobanCredentialsVersion_StellarDotnetSdk_Soroban_ScAddress_">AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)</a>
+instead.</p>
+</dd>
+    <dt><code>delegateAddresses</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a>&gt;</dt>
+    <dd><p>The delegate addresses, one leaf node each; input order is irrelevant, as the method sorts
+them into the protocol-required ascending-address order. Duplicate addresses throw an
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a>. For deeper delegation chains, construct
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanDelegateSignature.html">SorobanDelegateSignature</a> values manually.</p>
+</dd>
+    <dt><code>validUntilLedgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The ledger sequence number on which the signatures will expire. This value is embedded in
+every party's signing payload — fix it here once, and have every subsequent
+<code>AuthorizeEntry</code> call pass the same value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+    <dd><p>A new unsigned <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a> with delegated credentials.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

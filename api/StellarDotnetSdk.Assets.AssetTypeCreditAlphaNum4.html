@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AssetTypeCreditAlphaNum4 ">
       
-      
+      <meta name="description" content="Represents a Stellar credit asset with an alphanumeric code between 1 and 4 characters long.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class AssetTypeCreditAlphaNum4
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Stellar credit asset with an alphanumeric code between 1 and 4 characters long.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -185,7 +186,8 @@ Class AssetTypeCreditAlphaNum4
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> with the specified asset code and issuer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -195,9 +197,11 @@ Class AssetTypeCreditAlphaNum4
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset code (1-4 alphanumeric characters).</p>
+</dd>
     <dt><code>issuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Stellar account ID of the asset issuer.</p>
+</dd>
   </dl>
 
 
@@ -208,6 +212,12 @@ Class AssetTypeCreditAlphaNum4
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.AssetCodeLengthInvalidException.html">AssetCodeLengthInvalidException</a></dt>
+    <dd><p>Thrown when the code length is not between 1 and 4.</p>
+</dd>
+  </dl>
 
 
 
@@ -221,7 +231,8 @@ Class AssetTypeCreditAlphaNum4
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The Horizon REST API type identifier for alphanumeric 4-character assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -257,7 +268,12 @@ Class AssetTypeCreditAlphaNum4
   </h3>
 
   <div class="markdown level1 summary"><p>Returns asset type. Possible types:</p>
-<ul><li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li><li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li><li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li><li>liquidity_pool_shares</li></ul>
+<ul>
+    <li>native See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeNative.html">AssetTypeNative</a> for more information.</li>
+    <li>credit_alphanum4 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum4.html">AssetTypeCreditAlphaNum4</a> for more information.</li>
+    <li>credit_alphanum12 See <a class="xref" href="StellarDotnetSdk.Assets.AssetTypeCreditAlphaNum12.html">AssetTypeCreditAlphaNum12</a> for more information.</li>
+    <li>liquidity_pool_shares</li>
+</ul>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -293,7 +309,9 @@ Class AssetTypeCreditAlphaNum4
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this asset to another <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a> for ordering.
+Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -303,13 +321,15 @@ Class AssetTypeCreditAlphaNum4
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value if this asset is less than, equal to, or greater than <code class="paramref">asset</code>.</p>
+</dd>
   </dl>
 
 

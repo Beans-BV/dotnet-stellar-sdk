@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolRevokedEffectResponse ">
       
-      
+      <meta name="description" content="Represents the liquidity_pool_revoked effect response. This effect occurs when pool shares are revoked due to clawback.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class LiquidityPoolRevokedEffectResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the liquidity_pool_revoked effect response.
+This effect occurs when pool shares are revoked due to clawback.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LiquidityPoolRevokedEffectResponse : EffectResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class LiquidityPoolRevokedEffectResponse : EffectResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -149,15 +151,6 @@ Class LiquidityPoolRevokedEffectResponse
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_PagingToken">EffectResponse.PagingToken</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -171,9 +164,6 @@ Class LiquidityPoolRevokedEffectResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -199,12 +189,13 @@ Class LiquidityPoolRevokedEffectResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The liquidity pool that had shares revoked.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;liquidity_pool&quot;)]
-public LiquidityPool LiquidityPool { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;liquidity_pool&quot;)]
+public required LiquidityPool LiquidityPool { get; init; }</code></pre>
   </div>
 
 
@@ -231,12 +222,13 @@ public LiquidityPool LiquidityPool { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amounts of each reserve asset revoked.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;reserves_revoked&quot;)]
-public LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;reserves_revoked&quot;)]
+public required LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; init; }</code></pre>
   </div>
 
 
@@ -263,12 +255,13 @@ public LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; init; }</code>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of pool shares revoked.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;shares_revoked&quot;)]
-public string SharesRevoked { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;shares_revoked&quot;)]
+public required string SharesRevoked { get; init; }</code></pre>
   </div>
 
 
@@ -295,7 +288,8 @@ public string SharesRevoked { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric type identifier of the effect.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

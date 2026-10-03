@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DataUpdatedEffectResponse ">
       
-      <meta name="description" content="Represents manage_data_updated effect response.">
+      <meta name="description" content="Represents the data_updated effect response. This effect occurs when a data entry is updated on an account.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class DataUpdatedEffectResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents manage_data_updated effect response.</p>
+  <div class="markdown summary"><p>Represents the data_updated effect response.
+This effect occurs when a data entry is updated on an account.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DataUpdatedEffectResponse : EffectResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DataUpdatedEffectResponse : EffectResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -150,15 +151,6 @@ Class DataUpdatedEffectResponse
       <a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html#StellarDotnetSdk_Responses_Effects_EffectResponse_PagingToken">EffectResponse.PagingToken</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -172,9 +164,6 @@ Class DataUpdatedEffectResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -193,6 +182,39 @@ Class DataUpdatedEffectResponse
 </h2>
 
 
+  <a id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_Name_" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.Name*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_Name" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.Name">
+  Name
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of the updated data entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;name&quot;)]
+public required string Name { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_TypeId_" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.TypeId*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_TypeId" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.TypeId">
@@ -200,7 +222,8 @@ Class DataUpdatedEffectResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric type identifier of the effect.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -214,6 +237,39 @@ Class DataUpdatedEffectResponse
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_Value_" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.Value*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Effects_DataUpdatedEffectResponse_Value" data-uid="StellarDotnetSdk.Responses.Effects.DataUpdatedEffectResponse.Value">
+  Value
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Value of the updated data entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;value&quot;)]
+public required string Value { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 

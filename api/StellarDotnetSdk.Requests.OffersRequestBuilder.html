@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OffersRequestBuilder ">
       
-      
+      <meta name="description" content="Base class for request builders that execute requests and return a  of results.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class OffersRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Base class for request builders that execute requests and return a <a class="xref" href="StellarDotnetSdk.Responses.Page-1.html">Page&lt;T&gt;</a> of results.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +195,8 @@ Class OffersRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.OffersRequestBuilder.html">OffersRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,9 +206,11 @@ Class OffersRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -270,7 +274,9 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/offers-for-ac
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Requests <pre><code class="lang-csharp">GET /offers/{offerId}</code></pre><a href="https://developers.stellar.org/docs/data/horizon/api-reference/get-offer-by-offer-id">Retrieve an Offer</a>
+  <div class="markdown level1 summary"><p>Requests</p>
+<pre><code class="lang-csharp">GET /offers/{offerId}</code></pre>
+<p><a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-offer-by-offer-id">Retrieve an Offer</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -335,6 +341,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/offers-for-ac
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 

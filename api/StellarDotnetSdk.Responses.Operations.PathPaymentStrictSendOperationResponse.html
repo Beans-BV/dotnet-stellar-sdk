@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class PathPaymentStrictSendOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents a path_payment_strict_send operation response. Sends an amount in a specific asset to a destination account through a path of offers. The send amount is specified, and the receive amount can vary.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,9 @@ Class PathPaymentStrictSendOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents a path_payment_strict_send operation response.
+Sends an amount in a specific asset to a destination account through a path of offers.
+The send amount is specified, and the receive amount can vary.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -211,13 +211,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The amount of destination asset the destination account receives.</p>
+  <div class="markdown level1 summary"><p>The amount of destination asset the destination account received.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -244,13 +244,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The destination asset code (Alpha4, Alpha12, etc.)</p>
+  <div class="markdown level1 summary"><p>The destination asset code. Only present for non-native assets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public string? AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -277,13 +277,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The destination asset issuer account.</p>
+  <div class="markdown level1 summary"><p>The destination asset issuer account. Only present for non-native assets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public string? AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -310,13 +310,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The destination asset type. (Alpha4, Alpha12, etc.)</p>
+  <div class="markdown level1 summary"><p>The type of destination asset (e.g., &quot;native&quot;, &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -343,12 +343,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Destination Asset</p>
+  <div class="markdown level1 summary"><p>The destination asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset DestinationAsset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset DestinationAsset { get; }</code></pre>
   </div>
 
 
@@ -375,13 +376,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The maximum send amount.</p>
+  <div class="markdown level1 summary"><p>The minimum amount of the destination asset that can be received.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;destination_min&quot;)]
-public string DestinationMin { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;destination_min&quot;)]
+public required string DestinationMin { get; init; }</code></pre>
   </div>
 
 
@@ -408,13 +409,13 @@ public string DestinationMin { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account address that is sending the payment.</p>
+  <div class="markdown level1 summary"><p>The account address that sent the payment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from&quot;)]
-public string From { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from&quot;)]
+public required string From { get; init; }</code></pre>
   </div>
 
 
@@ -434,20 +435,20 @@ public string From { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_Path_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.Path*"></a>
+  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_FromMuxed_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.FromMuxed*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_Path" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.Path">
-  Path
+  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_FromMuxed" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.FromMuxed">
+  FromMuxed
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Additional hops the operation went through to get to the destination asset</p>
+  <div class="markdown level1 summary"><p>The muxed account representation of the sender, if applicable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;path&quot;)]
-public IEnumerable&lt;Asset&gt; Path { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed&quot;)]
+public string? FromMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -456,7 +457,73 @@ public IEnumerable&lt;Asset&gt; Path { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_FromMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.FromMuxedId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_FromMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.FromMuxedId">
+  FromMuxedId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The muxed account ID of the sender, if applicable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed_id&quot;)]
+public ulong? FromMuxedId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_Path_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.Path*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_Path" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.Path">
+  Path
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The assets (excluding source and destination) the payment path goes through.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;path&quot;)]
+public required IReadOnlyList&lt;Asset&gt; Path { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -474,13 +541,13 @@ public IEnumerable&lt;Asset&gt; Path { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The amount sent.</p>
+  <div class="markdown level1 summary"><p>The amount of the source asset that was sent.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_amount&quot;)]
-public string SourceAmount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_amount&quot;)]
+public required string SourceAmount { get; init; }</code></pre>
   </div>
 
 
@@ -507,12 +574,13 @@ public string SourceAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Source Asset</p>
+  <div class="markdown level1 summary"><p>The source asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset SourceAsset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset SourceAsset { get; }</code></pre>
   </div>
 
 
@@ -539,13 +607,13 @@ public string SourceAmount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The source asset code.</p>
+  <div class="markdown level1 summary"><p>The source asset code. Only present for non-native assets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_asset_code&quot;)]
-public string SourceAssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_asset_code&quot;)]
+public string? SourceAssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -572,13 +640,13 @@ public string SourceAssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The source asset issuer account.</p>
+  <div class="markdown level1 summary"><p>The source asset issuer account. Only present for non-native assets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_asset_issuer&quot;)]
-public string SourceAssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_asset_issuer&quot;)]
+public string? SourceAssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -605,13 +673,13 @@ public string SourceAssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The source asset type. (Alpha4, Alpha12, etc.)</p>
+  <div class="markdown level1 summary"><p>The type of source asset (e.g., &quot;native&quot;, &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_asset_type&quot;)]
-public string SourceAssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_asset_type&quot;)]
+public required string SourceAssetType { get; init; }</code></pre>
   </div>
 
 
@@ -638,13 +706,13 @@ public string SourceAssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account address that receives the payment.</p>
+  <div class="markdown level1 summary"><p>The account address that received the payment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;to&quot;)]
-public string To { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to&quot;)]
+public required string To { get; init; }</code></pre>
   </div>
 
 
@@ -664,6 +732,72 @@ public string To { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_ToMuxed_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.ToMuxed*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_ToMuxed" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.ToMuxed">
+  ToMuxed
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The muxed account representation of the receiver, if applicable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to_muxed&quot;)]
+public string? ToMuxed { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_ToMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.ToMuxedId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_ToMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.ToMuxedId">
+  ToMuxedId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The muxed account ID of the receiver, if applicable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to_muxed_id&quot;)]
+public ulong? ToMuxedId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_TypeId_" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.TypeId*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Operations_PathPaymentStrictSendOperationResponse_TypeId" data-uid="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.TypeId">
@@ -671,7 +805,8 @@ public string To { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

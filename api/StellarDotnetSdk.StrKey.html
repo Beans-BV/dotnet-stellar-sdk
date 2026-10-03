@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class StrKey ">
       
-      
+      <meta name="description" content="Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class StrKey
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a
+version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar
+identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +158,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a StrKey-encoded string, verifying the version byte and CRC16-XModem checksum.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,15 +169,18 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>versionByte</code> <a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>.<a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">VersionByte</a></dt>
-    <dd></dd>
+    <dd><p>The expected version byte.</p>
+</dd>
     <dt><code>encoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The StrKey-encoded string to decode.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The raw data bytes (without the version byte or checksum).</p>
+</dd>
   </dl>
 
 
@@ -544,7 +551,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a Stellar account ID (G...) to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -555,13 +563,15 @@ public static byte[] DecodeStellarAccountId(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A StrKey-encoded account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>Raw bytes of the decoded account ID.</p>
+</dd>
   </dl>
 
 
@@ -581,7 +591,9 @@ public static byte[] DecodeStellarAccountId(string data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a StrKey-encoded string to an XDR <span class="xref">StellarDotnetSdk.Xdr.MuxedAccount</span>.
+Supports both Ed25519 (G...) and muxed Ed25519 (M...) addresses.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -592,13 +604,15 @@ public static MuxedAccount DecodeStellarMuxedAccount(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A StrKey-encoded account address.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">MuxedAccount</span></dt>
-    <dd></dd>
+    <dd><p>The decoded XDR <span class="xref">StellarDotnetSdk.Xdr.MuxedAccount</span>.</p>
+</dd>
   </dl>
 
 
@@ -618,7 +632,8 @@ public static MuxedAccount DecodeStellarMuxedAccount(string data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a Stellar secret seed (S...) to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -629,13 +644,15 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A StrKey-encoded secret seed.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>Raw bytes of the decoded secret seed.</p>
+</dd>
   </dl>
 
 
@@ -655,7 +672,8 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Extracts the version byte from a StrKey-encoded string to determine the key type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -665,13 +683,15 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>encoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The StrKey-encoded string.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>.<a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">VersionByte</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">StrKey.VersionByte</a> indicating the type of key.</p>
+</dd>
   </dl>
 
 
@@ -691,7 +711,8 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes raw data with a version byte prefix and CRC16-XModem checksum in base32.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -701,15 +722,18 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>versionByte</code> <a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>.<a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">VersionByte</a></dt>
-    <dd></dd>
+    <dd><p>The version byte indicating the key type.</p>
+</dd>
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The raw data bytes to encode.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A StrKey-encoded string.</p>
+</dd>
   </dl>
 
 
@@ -1080,7 +1104,8 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a Stellar account ID (G...).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1091,13 +1116,15 @@ public static string EncodeStellarAccountId(byte[] data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>A raw byte array.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Base32-encoded representation (G...) of the provided data.</p>
+</dd>
   </dl>
 
 
@@ -1117,7 +1144,8 @@ public static string EncodeStellarAccountId(byte[] data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes an XDR muxed account to its StrKey string representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1128,13 +1156,15 @@ public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)</code>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>muxedAccount</code> <span class="xref">MuxedAccount</span></dt>
-    <dd></dd>
+    <dd><p>The XDR muxed account to encode.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A StrKey-encoded string (G... for Ed25519, M... for muxed Ed25519).</p>
+</dd>
   </dl>
 
 
@@ -1154,7 +1184,8 @@ public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)</code>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a Stellar secret seed (S...).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1165,13 +1196,15 @@ public static string EncodeStellarSecretSeed(byte[] data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>A raw byte array.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Base32-encoded representation (S...) of the provided data.</p>
+</dd>
   </dl>
 
 
@@ -1425,7 +1458,8 @@ public static string EncodeStellarSecretSeed(byte[] data)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks validity of a muxed account address (M...).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1436,13 +1470,15 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The muxed account address to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if the given address is a valid muxed account; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 
@@ -1462,7 +1498,8 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Attempts to decode an Ed25519 public key (G...) to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1472,15 +1509,18 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The StrKey-encoded public key.</p>
+</dd>
     <dt><code>decoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>When this method returns, contains the decoded bytes if successful.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if the decoding succeeded; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 
@@ -1500,7 +1540,8 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Attempts to decode a muxed Ed25519 public key (M...) to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1510,15 +1551,18 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The StrKey-encoded muxed public key.</p>
+</dd>
     <dt><code>decoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>When this method returns, contains the decoded bytes if successful.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if the decoding succeeded; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0007 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0007 ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0007">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0007" data-uid="StellarDotnetSdk.Sep.Sep0007" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0007</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7MemoType.html">Sep7MemoType</a></dt>
+      <dd><p>The values SEP-7 allows for the <code>memo_type</code> parameter of a <code>pay</code> request.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Parameters.html">Sep7Parameters</a></dt>
+      <dd><p>The query parameter names defined by SEP-7.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a></dt>
+      <dd><p>One entry of a SEP-7 <code>replace</code> parameter: a SEP-11 Txrep field of the transaction that the wallet
+should fill in, the reference identifier that groups fields taking the same value, and the hint shown to
+the user for that identifier.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7SubmitResult.html">Sep7SubmitResult</a></dt>
+      <dd><p>The outcome of handing a signed SEP-7 transaction on: either POSTed to the request's <code>callback</code>
+URL, or submitted to Horizon when the request has no callback.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html">Sep7Uri</a></dt>
+      <dd><p>A parsed and validated SEP-7 request (<code>web+stellar:tx?...</code> or <code>web+stellar:pay?...</code>).
+Instances come from <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_System_String_">ParseUri(string)</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_TryParseUri_System_String_StellarDotnetSdk_Sep_Sep0007_Sep7Uri__">TryParseUri(string?, out Sep7Uri?)</a>, so every
+parameter has already passed the checks described there. Parameter values are URL-decoded.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7ValidationResult.html">Sep7ValidationResult</a></dt>
+      <dd><p>The outcome of validating a SEP-7 URI without throwing.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html">UriScheme</a></dt>
+      <dd><p>SEP-7 (URI Scheme to facilitate delegated signing): builds, parses, validates, signs and verifies
+<code>web+stellar:</code> request URIs, and hands the signed transaction of a <code>tx</code> request on to its
+callback or to Horizon.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7OperationType.html">Sep7OperationType</a></dt>
+      <dd><p>The operations a SEP-7 URI can request.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

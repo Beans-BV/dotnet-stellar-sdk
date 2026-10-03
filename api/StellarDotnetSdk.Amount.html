@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Amount ">
       
-      
+      <meta name="description" content="Utility class for converting between Stellar amount representations. Stellar stores amounts as 64-bit integers with 7 decimal places of precision (1 XLM = 10,000,000 stroops).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class Amount
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Utility class for converting between Stellar amount representations. Stellar stores amounts as
+64-bit integers with 7 decimal places of precision (1 XLM = 10,000,000 stroops).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +157,8 @@ Class Amount
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts a decimal value to its culture-invariant string representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,13 +168,15 @@ Class Amount
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>d</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a></dt>
-    <dd></dd>
+    <dd><p>The decimal value to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A culture-invariant string representation of the decimal.</p>
+</dd>
   </dl>
 
 
@@ -191,7 +196,8 @@ Class Amount
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts an XDR amount (in stroops) to a human-readable decimal string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -201,13 +207,15 @@ Class Amount
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The XDR amount in stroops (1 unit = 10,000,000 stroops).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A decimal string representation of the amount.</p>
+</dd>
   </dl>
 
 
@@ -227,7 +235,8 @@ Class Amount
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts a human-readable decimal string to an XDR amount (in stroops).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -237,13 +246,15 @@ Class Amount
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The decimal string to convert (e.g., &quot;10.5&quot;).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The amount in stroops as a 64-bit integer.</p>
+</dd>
   </dl>
 
 

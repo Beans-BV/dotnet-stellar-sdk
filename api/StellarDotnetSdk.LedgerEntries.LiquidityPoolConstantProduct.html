@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolConstantProduct ">
       
-      
+      <meta name="description" content="Represents the body of a constant-product liquidity pool entry, including parameters, reserves, and share counts.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class LiquidityPoolConstantProduct
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the body of a constant-product liquidity pool entry, including parameters, reserves, and share counts.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -159,7 +160,8 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The constant-product pool parameters (asset pair and fee).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -190,7 +192,8 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of trust lines that hold shares in this pool.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -221,7 +224,8 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of asset A held in reserve by this pool, in stroops.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -252,7 +256,8 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of asset B held in reserve by this pool, in stroops.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -283,7 +288,8 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total number of pool share tokens that have been issued.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -318,7 +324,9 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a> from an XDR
+<span class="xref">StellarDotnetSdk.Xdr.LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -328,13 +336,15 @@ Class LiquidityPoolConstantProduct
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrConstantProduct</code> <span class="xref">LiquidityPoolEntry</span>.<span class="xref">LiquidityPoolEntryBody</span>.<span class="xref">LiquidityPoolEntryConstantProduct</span></dt>
-    <dd></dd>
+    <dd><p>The XDR constant product object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -354,7 +364,9 @@ Class LiquidityPoolConstantProduct
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a> from an XDR
+<span class="xref">StellarDotnetSdk.Xdr.LiquidityPoolEntry.LiquidityPoolEntryBody</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -364,13 +376,15 @@ Class LiquidityPoolConstantProduct
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrBody</code> <span class="xref">LiquidityPoolEntry</span>.<span class="xref">LiquidityPoolEntryBody</span></dt>
-    <dd></dd>
+    <dd><p>The XDR liquidity pool entry body.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.LedgerEntries.LiquidityPoolConstantProduct.html">LiquidityPoolConstantProduct</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -380,6 +394,12 @@ Class LiquidityPoolConstantProduct
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the body is not a constant-product pool.</p>
+</dd>
+  </dl>
 
 
 

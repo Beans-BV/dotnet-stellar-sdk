@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SorobanRpcResponse&lt;T&gt; ">
       
-      
+      <meta name="description" content="Represents a generic JSON-RPC response from the Soroban RPC server, wrapping the typed result along with the request ID and JSON-RPC version.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class SorobanRpcResponse&lt;T&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a generic JSON-RPC response from the Soroban RPC server,
+wrapping the typed result along with the request ID and JSON-RPC version.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -105,7 +107,8 @@ Class SorobanRpcResponse&lt;T&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The type of the result payload.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -162,31 +165,33 @@ Class SorobanRpcResponse&lt;T&gt;
 
 
 
-  <h2 class="section" id="constructors">Constructors
+  <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.#ctor*"></a>
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Error_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.Error*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1__ctor_System_String_System_String__0_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.#ctor(System.String,System.String,`0)">
-  SorobanRpcResponse(string, string, T)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Error" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.Error">
+  Error
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON-RPC error returned by the server, or null when the request succeeded. A JSON-RPC error
+response carries no <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse-1.html#StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Result">Result</a> and normally arrives with HTTP status 200.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanRpcResponse(string jsonRpc, string id, T result)</code></pre>
+    <pre><code class="lang-csharp hljs">public SorobanRpcErrorResponse? Error { get; init; }</code></pre>
   </div>
 
-  <h4 class="section">Parameters</h4>
+
+
+
+
+  <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><code>jsonRpc</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>result</code> <span class="xref">T</span></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcErrorResponse.html">SorobanRpcErrorResponse</a></dt>
     <dd></dd>
   </dl>
 
@@ -197,14 +202,6 @@ Class SorobanRpcResponse&lt;T&gt;
 
 
 
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
   <a id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Id_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.Id*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Id" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse`1.Id">
@@ -212,11 +209,14 @@ Class SorobanRpcResponse&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON-RPC request identifier echoed back by the server, normally the one sent with the request.
+JSON-RPC 2.0 §5 requires it to be null in exactly one case — the server could not read the request's
+id at all, a parse error or an invalid request — and such a response carries <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse-1.html#StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Error">Error</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Id { get; init; }</code></pre>
   </div>
 
 
@@ -243,11 +243,12 @@ Class SorobanRpcResponse&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON-RPC protocol version (e.g., &quot;2.0&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string JsonRpc { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string JsonRpc { get; init; }</code></pre>
   </div>
 
 
@@ -274,11 +275,15 @@ Class SorobanRpcResponse&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The typed result payload of the JSON-RPC response, or null when the server answered with
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SorobanRpcResponse-1.html#StellarDotnetSdk_Responses_SorobanRpc_SorobanRpcResponse_1_Error">Error</a> instead — a JSON-RPC error response carries no result. It is also null for a
+malformed envelope that carries neither member, which <a class="xref" href="StellarDotnetSdk.Soroban.StellarRpcServer.html">StellarRpcServer</a>
+rejects rather than passing on.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T Result { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public T? Result { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ReserveJsonConverter ">
       
-      
+      <meta name="description" content="JSON converter for Reserve. Handles conversion between JSON objects and Reserve instances.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ReserveJsonConverter
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>JSON converter for Reserve.
+Handles conversion between JSON objects and Reserve instances.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -107,8 +109,8 @@ Class ReserveJsonConverter
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">JsonConverter</span></div>
-      <div><span class="xref">JsonConverter</span>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1">JsonConverter</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a>&gt;</div>
       <div><span class="xref">ReserveJsonConverter</span></div>
     </dd>
   </dl>
@@ -119,19 +121,19 @@ Class ReserveJsonConverter
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">JsonConverter&lt;Reserve&gt;.WriteJson(JsonWriter, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.canconvert">JsonConverter&lt;Reserve&gt;.CanConvert(Type)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;Reserve&gt;.ReadJson(JsonReader, Type, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.readaspropertyname">JsonConverter&lt;Reserve&gt;.ReadAsPropertyName(ref Utf8JsonReader, Type, JsonSerializerOptions)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;Reserve&gt;.CanConvert(Type)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.writeaspropertyname">JsonConverter&lt;Reserve&gt;.WriteAsPropertyName(Utf8JsonWriter, Reserve, JsonSerializerOptions)</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanRead</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.handlenull">JsonConverter&lt;Reserve&gt;.HandleNull</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanWrite</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.type">JsonConverter&lt;Reserve&gt;.Type</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -159,44 +161,52 @@ Class ReserveJsonConverter
 
 
 
+  <h2 id="StellarDotnetSdk_Converters_ReserveJsonConverter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Duplicate JSON property names are always rejected with a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>, matched
+case-insensitively. This is intentional hardening for financial fields and does not honor the
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a> passed to <a class="xref" href="StellarDotnetSdk.Converters.ReserveJsonConverter.html#StellarDotnetSdk_Converters_ReserveJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_">Read(ref Utf8JsonReader, Type, JsonSerializerOptions)</a> — neither
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.allowduplicateproperties">AllowDuplicateProperties</a> nor
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamecaseinsensitive">PropertyNameCaseInsensitive</a> changes it.</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="StellarDotnetSdk_Converters_ReserveJsonConverter_ReadJson_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.ReadJson*"></a>
+  <a id="StellarDotnetSdk_Converters_ReserveJsonConverter_Read_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.Read*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_ReserveJsonConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_StellarDotnetSdk_Responses_Reserve_System_Boolean_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,StellarDotnetSdk.Responses.Reserve,System.Boolean,Newtonsoft.Json.JsonSerializer)">
-  ReadJson(JsonReader, Type, Reserve?, bool, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_ReserveJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+  Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Reads and converts the JSON to type <a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Reserve ReadJson(JsonReader reader, Type objectType, Reserve? existingValue, bool hasExistingValue, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Reserve Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>reader</code> <span class="xref">JsonReader</span></dt>
-    <dd></dd>
-    <dt><code>objectType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
-    <dd></dd>
-    <dt><code>existingValue</code> <a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a></dt>
-    <dd></dd>
-    <dt><code>hasExistingValue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dt><code>reader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonreader">Utf8JsonReader</a></dt>
+    <dd><p>The reader.</p>
+</dd>
+    <dt><code>typeToConvert</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The type to convert.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a></dt>
-    <dd></dd>
+    <dd><p>The converted value.</p>
+</dd>
   </dl>
 
 
@@ -209,28 +219,32 @@ Class ReserveJsonConverter
 
 
 
-  <a id="StellarDotnetSdk_Converters_ReserveJsonConverter_WriteJson_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.WriteJson*"></a>
+  <a id="StellarDotnetSdk_Converters_ReserveJsonConverter_Write_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.Write*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_ReserveJsonConverter_WriteJson_Newtonsoft_Json_JsonWriter_StellarDotnetSdk_Responses_Reserve_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,StellarDotnetSdk.Responses.Reserve,Newtonsoft.Json.JsonSerializer)">
-  WriteJson(JsonWriter, Reserve?, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_ReserveJsonConverter_Write_System_Text_Json_Utf8JsonWriter_StellarDotnetSdk_Responses_Reserve_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.ReserveJsonConverter.Write(System.Text.Json.Utf8JsonWriter,StellarDotnetSdk.Responses.Reserve,System.Text.Json.JsonSerializerOptions)">
+  Write(Utf8JsonWriter, Reserve, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Writes a specified value as JSON.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void WriteJson(JsonWriter writer, Reserve? value, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void Write(Utf8JsonWriter writer, Reserve value, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>writer</code> <span class="xref">JsonWriter</span></dt>
-    <dd></dd>
+    <dt><code>writer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonwriter">Utf8JsonWriter</a></dt>
+    <dd><p>The writer to write to.</p>
+</dd>
     <dt><code>value</code> <a class="xref" href="StellarDotnetSdk.Responses.Reserve.html">Reserve</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dd><p>The value to convert to JSON.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ResponseHandler&lt;T&gt; ">
       
-      
+      <meta name="description" content="Deserializes Horizon HTTP responses into strongly-typed objects and translates HTTP error status codes into appropriate SDK exceptions.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ResponseHandler&lt;T&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Deserializes Horizon HTTP responses into strongly-typed objects and translates
+HTTP error status codes into appropriate SDK exceptions.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -105,7 +107,8 @@ Class ResponseHandler&lt;T&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The response type to deserialize into.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -160,7 +163,9 @@ Class ResponseHandler&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Processes an HTTP response, throwing appropriate exceptions for error status codes
+and deserializing the response body for successful responses.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -170,13 +175,15 @@ Class ResponseHandler&lt;T&gt;
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>response</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage">HttpResponseMessage</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP response message to process.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;T&gt;</dt>
-    <dd></dd>
+    <dd><p>The deserialized response object of type <code class="typeparamref">T</code>.</p>
+</dd>
   </dl>
 
 
@@ -186,6 +193,13 @@ Class ResponseHandler&lt;T&gt;
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetEventsResponse.EventInfo ">
       
-      
+      <meta name="description" content="Represents a single event emitted by a Soroban smart contract, including its metadata and payload.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class GetEventsResponse.EventInfo
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a single event emitted by a Soroban smart contract, including its metadata and payload.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,61 +145,6 @@ Class GetEventsResponse.EventInfo
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo__ctor_System_String_System_String_System_Boolean_System_Int32_System_String_System_String___System_String_System_String_System_UInt32_System_UInt32_System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.#ctor(System.String,System.String,System.Boolean,System.Int32,System.String,System.String[],System.String,System.String,System.UInt32,System.UInt32,System.String)">
-  EventInfo(string, string, bool, int, string, string[], string, string, uint, uint, string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EventInfo(string contractId, string id, bool inSuccessfulContractCall, int ledger, string ledgerClosedAt, string[] topics, string type, string value, uint transactionIndex, uint operationIndex, string transactionHash)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>contractId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>inSuccessfulContractCall</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-    <dt><code>ledger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-    <dt><code>ledgerClosedAt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>topics</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
-    <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>transactionIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-    <dt><code>operationIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-    <dt><code>transactionHash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -215,7 +161,8 @@ Class GetEventsResponse.EventInfo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ContractId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;contractId&quot;)]
+public string ContractId { get; init; }</code></pre>
   </div>
 
 
@@ -247,7 +194,8 @@ Class GetEventsResponse.EventInfo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public string Id { get; init; }</code></pre>
   </div>
 
 
@@ -280,7 +228,8 @@ Class GetEventsResponse.EventInfo
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Will be removed in the next version.&quot;)]
-public bool InSuccessfulContractCall { get; }</code></pre>
+[JsonPropertyName(&quot;inSuccessfulContractCall&quot;)]
+public bool InSuccessfulContractCall { get; init; }</code></pre>
   </div>
 
 
@@ -312,7 +261,8 @@ public bool InSuccessfulContractCall { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Ledger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ledger&quot;)]
+public long Ledger { get; init; }</code></pre>
   </div>
 
 
@@ -321,7 +271,7 @@ public bool InSuccessfulContractCall { get; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -339,13 +289,13 @@ public bool InSuccessfulContractCall { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>ISO-8601 timestamp of the ledger closing time.
-See <a href="https://www.iso.org/iso-8601-date-and-time-format.html">https://www.iso.org/iso-8601-date-and-time-format.html</a>.</p>
+  <div class="markdown level1 summary"><p>The time when the ledger was closed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string LedgerClosedAt { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ledgerClosedAt&quot;)]
+public DateTimeOffset LedgerClosedAt { get; init; }</code></pre>
   </div>
 
 
@@ -354,7 +304,7 @@ See <a href="https://www.iso.org/iso-8601-date-and-time-format.html">https://www
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -377,7 +327,8 @@ See <a href="https://www.iso.org/iso-8601-date-and-time-format.html">https://www
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint OperationIndex { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;operationIndex&quot;)]
+public uint OperationIndex { get; init; }</code></pre>
   </div>
 
 
@@ -410,8 +361,8 @@ object, this event was emitted with.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;topic&quot;)]
-public string[] Topics { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;topic&quot;)]
+public string[] Topics { get; init; }</code></pre>
   </div>
 
 
@@ -442,12 +393,13 @@ public string[] Topics { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hex-encoded hash of the transaction that emitted this event.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;txHash&quot;)]
-public string TransactionHash { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;txHash&quot;)]
+public string TransactionHash { get; init; }</code></pre>
   </div>
 
 
@@ -479,7 +431,8 @@ public string TransactionHash { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TransactionIndex { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;transactionIndex&quot;)]
+public uint TransactionIndex { get; init; }</code></pre>
   </div>
 
 
@@ -506,12 +459,18 @@ public string TransactionHash { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The type of event emission. Allowed values: contract, diagnostic, system.</p>
+  <div class="markdown level1 summary"><p>The type of event emission. Allowed values: <code>contract</code>, <code>system</code>.</p>
+<p>
+    <code>diagnostic</code> was a third value up to Stellar RPC v22.1.5. Protocol 23 removed diagnostic
+    events from the <code>getEvents</code> stream, so no server this SDK supports emits it here — matching
+    <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a>, which does not offer it on the request side.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Type { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+public string Type { get; init; }</code></pre>
   </div>
 
 
@@ -544,7 +503,8 @@ broadcasting in the emitted event.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Value { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;value&quot;)]
+public string Value { get; init; }</code></pre>
   </div>
 
 

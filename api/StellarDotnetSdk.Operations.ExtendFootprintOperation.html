@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ExtendFootprintOperation ">
       
-      <meta name="description" content="Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least until the extendTo ledger sequence number is reached. See:  Extend footprint TTL">
+      <meta name="description" content="Extend the time to live (TTL) of entries for Soroban smart contracts. This operation extends the TTL of the entries specified in the readOnly footprint of the transaction so that they will live at least extendTo ledgers past the last-closed ledger. See:  Extend footprint TTL">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -95,7 +95,7 @@ Class ExtendFootprintOperation
 
   <div class="markdown summary"><p>Extend the time to live (TTL) of entries for Soroban smart contracts.
 This operation extends the TTL of the entries specified in the readOnly footprint of
-the transaction so that they will live at least until the extendTo ledger sequence number is reached.
+the transaction so that they will live at least extendTo ledgers past the last-closed ledger.
 See:
 <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
 Extend footprint TTL
@@ -198,10 +198,13 @@ Extend footprint TTL
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>extendTo</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd><p>The ledger sequence number the entries will live until.</p>
+    <dd><p>The number of ledgers past the last-closed ledger the entries should live for (relative, not an absolute
+ledger sequence number). The new live-until ledger becomes approximately the current ledger plus
+<code>extendTo</code> when that exceeds the entries' current TTL.</p>
 </dd>
     <dt><code>extensionPoint</code> <a class="xref" href="StellarDotnetSdk.Soroban.ExtensionPoint.html">ExtensionPoint</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Reserved for later use.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
     <dd><p>(Optional) Source account of the operation.</p>
 </dd>
@@ -229,7 +232,9 @@ Extend footprint TTL
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The ledger sequence number the entries will live until.</p>
+  <div class="markdown level1 summary"><p>The number of ledgers past the last-closed ledger the entries should live for (relative, not an absolute
+ledger sequence number). The new live-until ledger becomes approximately the current ledger plus
+<code>ExtendTo</code> when that exceeds the entries' current TTL.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -297,7 +302,8 @@ Extend footprint TTL
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="StellarDotnetSdk.Operations.ExtendFootprintOperation.html">ExtendFootprintOperation</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -307,13 +313,15 @@ Extend footprint TTL
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>extendFootprintTtlOp</code> <span class="xref">ExtendFootprintTTLOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR ExtendFootprintTTLOp object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.ExtendFootprintOperation.html">ExtendFootprintOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.ExtendFootprintOperation.html">ExtendFootprintOperation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -333,7 +341,7 @@ Extend footprint TTL
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -345,7 +353,7 @@ Extend footprint TTL
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

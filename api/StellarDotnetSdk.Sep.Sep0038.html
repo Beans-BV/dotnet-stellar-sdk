@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0038 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0038 ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0038">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0038" data-uid="StellarDotnetSdk.Sep.Sep0038" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0038</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.AssetIdentifier.html">AssetIdentifier</a></dt>
+      <dd><p>An asset in the SEP-38 Asset Identification Format, <code>&lt;scheme&gt;:&lt;identifier&gt;</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a></dt>
+      <dd><p>Client for SEP-0038 v2.5.0 — Anchor RFQ API. Lets a wallet discover which assets an anchor exchanges, fetch
+indicative prices, and request firm quotes whose id it then passes as <code>quote_id</code> to a SEP-6, SEP-24 or
+SEP-31 transaction.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md">SEP-0038</a>.</p>
+<p>
+    <b>Authentication</b>
+</p>
+<p>
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_InfoAsync_System_String_System_Threading_CancellationToken_">InfoAsync(string?, CancellationToken)</a>, <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PricesAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PricesRequest_System_Threading_CancellationToken_">PricesAsync(PricesRequest, CancellationToken)</a> and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PriceAsync_StellarDotnetSdk_Sep_Sep0038_Requests_PriceRequest_System_Threading_CancellationToken_">PriceAsync(PriceRequest, CancellationToken)</a> accept an optional
+    JWT, which the anchor may use to personalize the response. <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_PostQuoteAsync_StellarDotnetSdk_Sep_Sep0038_Requests_QuoteRequest_System_Threading_CancellationToken_">PostQuoteAsync(QuoteRequest, CancellationToken)</a> and
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_GetQuoteAsync_System_String_System_String_System_Threading_CancellationToken_">GetQuoteAsync(string, string, CancellationToken)</a> require one. Obtain it with SEP-10
+    (<a class="xref" href="StellarDotnetSdk.Sep.Sep0010.ClientWebAuth.html#StellarDotnetSdk_Sep_Sep0010_ClientWebAuth_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_Nullable_System_UInt64__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0010_ClientDomainSigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, ulong?, string?, string?, KeyPair?, ClientDomainSigningDelegate?)</a>) for <code>G...</code>/<code>M...</code> accounts or SEP-45
+    (<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)</a>) for contract accounts.
+</p>
+<p>
+    <b>Amounts</b>
+</p>
+<p>
+    Amounts and prices are <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a> values. Requests send them as invariant-culture strings,
+    keeping the scale given; responses are read exactly: a value that <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a> cannot hold without
+    rounding fails with <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> rather than being approximated.
+</p>
+<p>
+    <b>Errors</b>
+</p>
+<p>
+    Invalid arguments — including the sell/buy amount exclusivity rules, a zero or negative amount, a string
+    property that is empty or whitespace rather than null, and a JWT that is not printable ASCII without
+    whitespace — throw <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> from the returned task, before anything is sent. Error
+    responses map to <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.BadRequestException.html">BadRequestException</a> (400), <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.PermissionDeniedException.html">PermissionDeniedException</a> (403),
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerNotFoundException.html">QuoteServerNotFoundException</a> (404) and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> (anything
+    else, including a 3xx, or an unusable success body); all derive from <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a>.
+    A <code>Retry-After</code> header on an error response (typically 429 or 503) is exposed as
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>'s <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_RetryAfterDelay">RetryAfterDelay</a>.
+    Response bodies are read up to 1 MiB, and parsed with the SDK's hardened JSON options, which reject
+    duplicated mapped properties. An error body over the limit is dropped (<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_Error">Error</a>
+    and <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody">ResponseBody</a> are then null) but the status still selects the
+    exception type; a success body over the limit raises <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>. A leading
+    UTF-8 byte order mark is skipped.
+</p>
+<p>
+    A success body is also checked against the request: a firm quote must carry a usable <code>id</code>, the
+    requested asset pair, no delivery method other than the one requested (compared without regard to case),
+    and an expiry no earlier than the requested <code>expire_after</code>; prices and amounts must be greater than
+    zero, and a <code>decimals</code> count must not be negative. A response that fails these checks raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a>, whose <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_QuoteServerException_ResponseBody">ResponseBody</a> still
+    holds what the anchor sent (for <code>POST /quote</code>, the id of the quote it already created).
+</p>
+<p>
+    Transport failures surface as <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a> (including a connection that drops
+    while a success body is being read) or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> (cancellation, or a timeout, in
+    which case its inner exception is a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a>). The whole exchange — headers and
+    body — is bounded by the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.timeout">Timeout</a> of the client in use (and, for the internal
+    client, by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RequestTimeout">RequestTimeout</a>), so a server that trickles its body cannot
+    stall the caller. An internal client with <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_EnableCircuitBreaker">EnableCircuitBreaker</a> set
+    throws Polly's <code>BrokenCircuitException</code> while the circuit is open, and a call on a disposed service
+    that owns its client throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a>. On runtimes before .NET 10, a request
+    whose URL exceeds the runtime's length limit (a quote id tens of kilobytes long) raises
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uriformatexception">UriFormatException</a>.
+</p>
+<p>
+    <b>Redirects</b>
+</p>
+<p>
+    The internal client does not follow redirects, so a 3xx answer raises
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a> and a request is never replayed to another host. A caller-owned
+    client follows redirects if its handler does; the service then rejects any response that comes from a
+    different origin than the quote server, but by that point the request, its body and the custom headers
+    have already been sent there (on .NET's <code>SocketsHttpHandler</code>, not the JWT, whose <code>Authorization</code>
+    header it drops on a redirect). Only the final location is visible, so a chain that leaves the origin and
+    returns to it is not detected at all. Disable <code>AllowAutoRedirect</code> on a caller-owned client's handler
+    to avoid both. The check compares the final request URI, so a caller's handler that rewrites it to
+    another origin (a gateway, for example) is rejected the same way.
+</p>
+<p>
+    <b>Retries</b>
+</p>
+<p>
+    <code>POST /quote</code> is not idempotent: every call creates a new firm quote that the anchor holds in reserve
+    until it expires. Do not pass <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForHorizon">ForHorizon()</a> or
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_ForSoroban">ForSoroban()</a>: both retry <code>POST</code> on a 408, 429, 500, 502,
+    503 or 504 answer, so one call can reserve two quotes. Use <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_WithConnectionRetries">WithConnectionRetries()</a> (which
+    still replays a <code>POST</code> whose response was lost in transit) or
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html#StellarDotnetSdk_Requests_HttpResilienceOptionsPresets_NoRetry">NoRetry()</a>.
+</p>
+<p>
+    <b>HttpClient ownership</b>
+</p>
+<p>
+    Pass a shared <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> (or one from <code>IHttpClientFactory</code>)
+    in production; it stays owned by the caller and is not disposed with this service. When none is passed,
+    the service creates its own, configured by <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>, and disposes it in
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html#StellarDotnetSdk_Sep_Sep0038_QuoteService_Dispose">Dispose()</a>.
+</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

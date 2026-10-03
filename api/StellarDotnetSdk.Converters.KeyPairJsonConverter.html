@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class KeyPairJsonConverter ">
       
-      
+      <meta name="description" content="JSON converter for  that serializes and deserializes Stellar account IDs (public keys in StrKey format) as JSON string values.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class KeyPairJsonConverter
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>JSON converter for <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> that serializes and deserializes Stellar account IDs
+(public keys in StrKey format) as JSON string values.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -107,8 +109,8 @@ Class KeyPairJsonConverter
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">JsonConverter</span></div>
-      <div><span class="xref">JsonConverter</span>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1">JsonConverter</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</div>
       <div><span class="xref">KeyPairJsonConverter</span></div>
     </dd>
   </dl>
@@ -119,19 +121,19 @@ Class KeyPairJsonConverter
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">JsonConverter&lt;KeyPair&gt;.WriteJson(JsonWriter, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.canconvert">JsonConverter&lt;KeyPair&gt;.CanConvert(Type)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;KeyPair&gt;.ReadJson(JsonReader, Type, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.readaspropertyname">JsonConverter&lt;KeyPair&gt;.ReadAsPropertyName(ref Utf8JsonReader, Type, JsonSerializerOptions)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;KeyPair&gt;.CanConvert(Type)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.writeaspropertyname">JsonConverter&lt;KeyPair&gt;.WriteAsPropertyName(Utf8JsonWriter, KeyPair, JsonSerializerOptions)</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanRead</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.handlenull">JsonConverter&lt;KeyPair&gt;.HandleNull</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanWrite</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.type">JsonConverter&lt;KeyPair&gt;.Type</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -165,38 +167,39 @@ Class KeyPairJsonConverter
 </h2>
 
 
-  <a id="StellarDotnetSdk_Converters_KeyPairJsonConverter_ReadJson_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.ReadJson*"></a>
+  <a id="StellarDotnetSdk_Converters_KeyPairJsonConverter_Read_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.Read*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_KeyPairJsonConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_StellarDotnetSdk_Accounts_KeyPair_System_Boolean_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,StellarDotnetSdk.Accounts.KeyPair,System.Boolean,Newtonsoft.Json.JsonSerializer)">
-  ReadJson(JsonReader, Type, KeyPair?, bool, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_KeyPairJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+  Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Reads and converts the JSON to type <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override KeyPair? ReadJson(JsonReader reader, Type objectType, KeyPair? existingValue, bool hasExistingValue, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override KeyPair? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>reader</code> <span class="xref">JsonReader</span></dt>
-    <dd></dd>
-    <dt><code>objectType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
-    <dd></dd>
-    <dt><code>existingValue</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
-    <dt><code>hasExistingValue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dt><code>reader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonreader">Utf8JsonReader</a></dt>
+    <dd><p>The reader.</p>
+</dd>
+    <dt><code>typeToConvert</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The type to convert.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The converted value.</p>
+</dd>
   </dl>
 
 
@@ -209,28 +212,32 @@ Class KeyPairJsonConverter
 
 
 
-  <a id="StellarDotnetSdk_Converters_KeyPairJsonConverter_WriteJson_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.WriteJson*"></a>
+  <a id="StellarDotnetSdk_Converters_KeyPairJsonConverter_Write_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.Write*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_KeyPairJsonConverter_WriteJson_Newtonsoft_Json_JsonWriter_StellarDotnetSdk_Accounts_KeyPair_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,StellarDotnetSdk.Accounts.KeyPair,Newtonsoft.Json.JsonSerializer)">
-  WriteJson(JsonWriter, KeyPair?, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_KeyPairJsonConverter_Write_System_Text_Json_Utf8JsonWriter_StellarDotnetSdk_Accounts_KeyPair_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.KeyPairJsonConverter.Write(System.Text.Json.Utf8JsonWriter,StellarDotnetSdk.Accounts.KeyPair,System.Text.Json.JsonSerializerOptions)">
+  Write(Utf8JsonWriter, KeyPair, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Writes a specified value as JSON.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void WriteJson(JsonWriter writer, KeyPair? value, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void Write(Utf8JsonWriter writer, KeyPair value, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>writer</code> <span class="xref">JsonWriter</span></dt>
-    <dd></dd>
+    <dt><code>writer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonwriter">Utf8JsonWriter</a></dt>
+    <dd><p>The writer to write to.</p>
+</dd>
     <dt><code>value</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dd><p>The value to convert to JSON.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
 

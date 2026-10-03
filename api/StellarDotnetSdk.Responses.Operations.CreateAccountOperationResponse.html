@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class CreateAccountOperationResponse ">
       
-      <meta name="description" content="Represents CreateAccount operation response.">
+      <meta name="description" content="Represents a create_account operation response. Creates and funds a new account with a starting balance of XLM.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class CreateAccountOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents CreateAccount operation response.</p>
+  <div class="markdown summary"><p>Represents a create_account operation response.
+Creates and funds a new account with a starting balance of XLM.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -209,12 +210,13 @@ Class CreateAccountOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The address of the new account that was created.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account&quot;)]
-public string Account { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account&quot;)]
+public required string Account { get; init; }</code></pre>
   </div>
 
 
@@ -241,12 +243,13 @@ public string Account { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that funded the new account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;funder&quot;)]
-public string Funder { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;funder&quot;)]
+public required string Funder { get; init; }</code></pre>
   </div>
 
 
@@ -273,12 +276,13 @@ public string Funder { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the funder, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;funder_muxed&quot;)]
-public string FunderMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;funder_muxed&quot;)]
+public string? FunderMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -305,11 +309,12 @@ public string FunderMuxed { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the funder, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;funder_muxed_id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;funder_muxed_id&quot;)]
 public ulong? FunderMuxedId { get; init; }</code></pre>
   </div>
 
@@ -337,12 +342,13 @@ public ulong? FunderMuxedId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of XLM sent to the new account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;starting_balance&quot;)]
-public string StartingBalance { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;starting_balance&quot;)]
+public required string StartingBalance { get; init; }</code></pre>
   </div>
 
 
@@ -369,7 +375,8 @@ public string StartingBalance { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

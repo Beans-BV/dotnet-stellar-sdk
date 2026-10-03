@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AllowTrustOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents an allow_trust operation response (deprecated operation). Allows another account to hold an asset issued by the source account.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,14 +93,14 @@ Class AllowTrustOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents an allow_trust operation response (deprecated operation).
+Allows another account to hold an asset issued by the source account.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AllowTrustOperationResponse : OperationResponse, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;This operation is deprecated as of Protocol 17. Prefer SetTrustLineFlags instead.&quot;)]
+public class AllowTrustOperationResponse : OperationResponse, IPagingToken</code></pre>
   </div>
 
 
@@ -198,6 +198,9 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
 
 
 
+  <h2 id="StellarDotnetSdk_Responses_Operations_AllowTrustOperationResponse_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This operation is deprecated. Use <a class="xref" href="StellarDotnetSdk.Responses.Operations.SetTrustlineFlagsOperationResponse.html">SetTrustlineFlagsOperationResponse</a> instead.</p>
+</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -211,7 +214,7 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The asset to allow trust.</p>
+  <div class="markdown level1 summary"><p>The asset for which trust is being allowed or revoked.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -243,13 +246,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset code.</p>
+  <div class="markdown level1 summary"><p>The asset code.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public required string AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -276,13 +279,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset issuer.</p>
+  <div class="markdown level1 summary"><p>The asset issuer account.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public required string AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -309,13 +312,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Asset type (native / alphanum4 / alphanum12)</p>
+  <div class="markdown level1 summary"><p>The type of asset (e.g., &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -342,12 +345,12 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>true when allowing trust, false when revoking trust</p>
+  <div class="markdown level1 summary"><p>Indicates whether the trustline is being authorized (true) or deauthorized (false).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;authorize&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorize&quot;)]
 public bool Authorize { get; init; }</code></pre>
   </div>
 
@@ -375,13 +378,13 @@ public bool Authorize { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Trustee account.</p>
+  <div class="markdown level1 summary"><p>The asset issuer account (typically the source account).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustee&quot;)]
-public string Trustee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustee&quot;)]
+public required string Trustee { get; init; }</code></pre>
   </div>
 
 
@@ -408,13 +411,13 @@ public string Trustee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Trustee account.</p>
+  <div class="markdown level1 summary"><p>The muxed account representation of the trustee, if applicable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustee_muxed&quot;)]
-public string TrusteeMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustee_muxed&quot;)]
+public string? TrusteeMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -434,20 +437,20 @@ public string TrusteeMuxed { get; init; }</code></pre>
 
 
 
-  <a id="StellarDotnetSdk_Responses_Operations_AllowTrustOperationResponse_TrusteeMuxedID_" data-uid="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.TrusteeMuxedID*"></a>
+  <a id="StellarDotnetSdk_Responses_Operations_AllowTrustOperationResponse_TrusteeMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.TrusteeMuxedId*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_Operations_AllowTrustOperationResponse_TrusteeMuxedID" data-uid="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.TrusteeMuxedID">
-  TrusteeMuxedID
+  <h3 id="StellarDotnetSdk_Responses_Operations_AllowTrustOperationResponse_TrusteeMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.TrusteeMuxedId">
+  TrusteeMuxedId
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Trustee account.</p>
+  <div class="markdown level1 summary"><p>The muxed account ID of the trustee, if applicable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustee_muxed_id&quot;)]
-public ulong? TrusteeMuxedID { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustee_muxed_id&quot;)]
+public ulong? TrusteeMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -474,13 +477,13 @@ public ulong? TrusteeMuxedID { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Trustor account.</p>
+  <div class="markdown level1 summary"><p>The account that is being authorized or deauthorized.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustor&quot;)]
-public string Trustor { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustor&quot;)]
+public required string Trustor { get; init; }</code></pre>
   </div>
 
 
@@ -507,7 +510,8 @@ public string Trustor { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

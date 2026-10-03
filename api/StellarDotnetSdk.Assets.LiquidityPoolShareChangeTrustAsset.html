@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolShareChangeTrustAsset ">
       
-      
+      <meta name="description" content="Represents a liquidity pool share asset used in change trust operations. This asset type allows accounts to establish trustlines to liquidity pools on the Stellar network.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPoolShareChangeTrustAsset
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a liquidity pool share asset used in change trust operations.
+This asset type allows accounts to establish trustlines to liquidity pools on the Stellar network.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -207,7 +209,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance from existing liquidity pool parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -217,7 +220,8 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters.html">LiquidityPoolParameters</a></dt>
-    <dd></dd>
+    <dd><p>The liquidity pool parameters. Must not be null.</p>
+</dd>
   </dl>
 
 
@@ -228,6 +232,12 @@ Class LiquidityPoolShareChangeTrustAsset
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">parameters</code> is null.</p>
+</dd>
+  </dl>
 
 
 
@@ -241,7 +251,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The Horizon REST API type identifier for liquidity pool share assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -276,7 +287,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the liquidity pool parameters that define this pool share asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -307,7 +319,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the asset type string (e.g., <code>&quot;native&quot;</code>, <code>&quot;credit_alphanum4&quot;</code>, <code>&quot;credit_alphanum12&quot;</code>, or <code>&quot;pool_share&quot;</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -342,7 +355,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this change trust asset to another for ordering.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -352,13 +366,15 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>The change trust asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value for ordering.</p>
+</dd>
   </dl>
 
 
@@ -414,7 +430,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -425,7 +442,8 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A hash code for the current object.</p>
+</dd>
   </dl>
 
 
@@ -445,7 +463,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the unique identifier of the liquidity pool associated with this asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -456,7 +475,8 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a> derived from the pool parameters.</p>
+</dd>
   </dl>
 
 
@@ -476,7 +496,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -487,7 +508,8 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A string that represents the current object.</p>
+</dd>
   </dl>
 
 
@@ -507,7 +529,8 @@ Class LiquidityPoolShareChangeTrustAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this change trust asset to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -518,7 +541,8 @@ Class LiquidityPoolShareChangeTrustAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ChangeTrustAsset</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <code>ChangeTrustAsset</code> object.</p>
+</dd>
   </dl>
 
 

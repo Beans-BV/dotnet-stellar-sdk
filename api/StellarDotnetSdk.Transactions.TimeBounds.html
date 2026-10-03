@@ -190,7 +190,10 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes time bounds from signed 64-bit Unix timestamps. Values must be non-negative,
+and <code class="paramref">minTime</code> must be less than <code class="paramref">maxTime</code> unless
+<code class="paramref">maxTime</code> is 0 (infinite).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -200,9 +203,11 @@ bounds
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>minTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The minimum time as a Unix timestamp in seconds (must be &gt;= 0).</p>
+</dd>
     <dt><code>maxTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The maximum time as a Unix timestamp in seconds (must be &gt;= 0; 0 means no upper bound).</p>
+</dd>
   </dl>
 
 
@@ -213,6 +218,12 @@ bounds
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when time values are negative or minTime &gt;= maxTime.</p>
+</dd>
+  </dl>
 
 
 
@@ -332,7 +343,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the maximum time (latest valid time) as a Unix timestamp in seconds. 0 if unset (infinite).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -363,7 +375,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the minimum time (earliest valid time) as a Unix timestamp in seconds. 0 if unset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -398,7 +411,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -414,7 +428,8 @@ bounds
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
   </dl>
 
 
@@ -434,7 +449,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Transactions.TimeBounds.html">TimeBounds</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -444,13 +460,15 @@ bounds
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>timeBounds</code> <span class="xref">TimeBounds</span></dt>
-    <dd></dd>
+    <dd><p>The XDR time bounds object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.TimeBounds.html">TimeBounds</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Transactions.TimeBounds.html">TimeBounds</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -470,7 +488,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -481,7 +500,8 @@ bounds
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A hash code for the current object.</p>
+</dd>
   </dl>
 
 
@@ -501,7 +521,8 @@ bounds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to its XDR <span class="xref">StellarDotnetSdk.Xdr.TimeBounds</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -512,7 +533,8 @@ bounds
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">TimeBounds</span></dt>
-    <dd></dd>
+    <dd><p>An XDR time bounds object.</p>
+</dd>
   </dl>
 
 

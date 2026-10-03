@@ -92,25 +92,51 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest.html">GetEventsRequest</a></dt>
-      <dd></dd>
+      <dd><p>Represents the request parameters for the Soroban RPC <code>getEvents</code> method,
+which retrieves contract events from the network.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest.EventFilter.html">GetEventsRequest.EventFilter</a></dt>
-      <dd></dd>
+      <dd><p>Defines criteria for filtering contract events by type, contract ID, and topic.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest.PaginationOptions.html">GetEventsRequest.PaginationOptions</a></dt>
+      <dd><p>Pagination parameters for controlling the cursor position and page size of event results.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetLedgersRequest.html">GetLedgersRequest</a></dt>
+      <dd><p>Represents the request parameters for the Soroban RPC <code>getLedgers</code> method,
+which retrieves a range of ledgers from the network.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetTransactionsRequest.html">GetTransactionsRequest</a></dt>
-      <dd></dd>
+      <dd><p>Represents the request parameters for the Soroban RPC <code>getTransactions</code> method,
+which retrieves a list of transactions from the network.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.PaginationOptions.html">PaginationOptions</a></dt>
       <dd><p>Pagination in RPC is similar to pagination in Horizon.
-See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/pagination">Pagination</a></p>
+See: <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/pagination">Pagination</a></p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.SorobanRpcRequest-1.html">SorobanRpcRequest&lt;T&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Represents a JSON-RPC 2.0 request envelope for Soroban RPC calls.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a></dt>
+      <dd><p>The contract event types a <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest.EventFilter.html">GetEventsRequest.EventFilter</a> can select. Values are combinable:
+<code>EventFilterType.System | EventFilterType.Contract</code> matches both.</p>
+</dd>
     </dl>
 
 

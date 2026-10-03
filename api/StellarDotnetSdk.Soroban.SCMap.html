@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SCMap ">
       
-      
+      <meta name="description" content="Represents a Soroban map (key-value collection) of  elements.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class SCMap
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Soroban map (key-value collection) of <a class="xref" href="StellarDotnetSdk.Soroban.SCMapEntry.html">SCMapEntry</a> elements.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -165,7 +166,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a> with the specified entries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -175,7 +177,8 @@ Class SCMap
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>entries</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCMapEntry.html">SCMapEntry</a>[]</dt>
-    <dd></dd>
+    <dd><p>The array of key-value entries, or <code>null</code> for an empty map.</p>
+</dd>
   </dl>
 
 
@@ -200,7 +203,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The array of key-value entries in this map.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -235,7 +239,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a> from an XDR <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -245,13 +250,15 @@ Class SCMap
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrVal</code> <span class="xref">SCVal</span></dt>
-    <dd></dd>
+    <dd><p>The XDR value to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a></dt>
-    <dd></dd>
+    <dd><p>An <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -261,6 +268,13 @@ Class SCMap
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">xdrVal</code> is not an <code>SCV_MAP</code>, or is an <code>SCV_MAP</code> whose optional
+body is absent.</p>
+</dd>
+  </dl>
 
 
 
@@ -271,7 +285,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a> from an XDR <span class="xref">StellarDotnetSdk.Xdr.SCMap</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -281,13 +296,15 @@ Class SCMap
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrSCMap</code> <span class="xref">SCMap</span></dt>
-    <dd></dd>
+    <dd><p>The XDR value to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a></dt>
-    <dd></dd>
+    <dd><p>An <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -307,7 +324,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to an XDR <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -318,7 +336,8 @@ Class SCMap
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SCVal</span></dt>
-    <dd></dd>
+    <dd><p>An <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> XDR object of type <code>SCV_MAP</code>.</p>
+</dd>
   </dl>
 
 
@@ -338,7 +357,8 @@ Class SCMap
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -349,7 +369,8 @@ Class SCMap
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SCMap</span></dt>
-    <dd></dd>
+    <dd><p>An <span class="xref">StellarDotnetSdk.Xdr.SCMap</span> XDR object.</p>
+</dd>
   </dl>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TransactionResponse.InnerTransaction ">
       
-      
+      <meta name="description" content="Represents the inner transaction within a fee bump transaction.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,12 @@ Class TransactionResponse.InnerTransaction
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the inner transaction within a fee bump transaction.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TransactionResponse.InnerTransaction</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TransactionResponse.InnerTransaction</code></pre>
   </div>
 
 
@@ -129,54 +130,12 @@ Class TransactionResponse.InnerTransaction
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
     </div>
   </dd></dl>
-
-
-
-
-
-
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_TransactionResponse_InnerTransaction__ctor_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.InnerTransaction.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_InnerTransaction__ctor_System_String_System_Collections_Generic_List_System_String__System_Int64_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.InnerTransaction.#ctor(System.String,System.Collections.Generic.List{System.String},System.Int64)">
-  InnerTransaction(string, List&lt;string&gt;, long)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InnerTransaction(string hash, List&lt;string&gt; signatures, long maxFee)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>hash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>signatures</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd></dd>
-    <dt><code>maxFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
 
 
 
@@ -194,12 +153,13 @@ Class TransactionResponse.InnerTransaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hash of the inner transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
-public string Hash { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hash&quot;)]
+public required string Hash { get; init; }</code></pre>
   </div>
 
 
@@ -226,12 +186,13 @@ public string Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum fee of the inner transaction in stroops.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max_fee&quot;)]
-public long MaxFee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_fee&quot;)]
+public required long MaxFee { get; init; }</code></pre>
   </div>
 
 
@@ -258,12 +219,13 @@ public long MaxFee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base64-encoded signatures on the inner transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signatures&quot;)]
-public List&lt;string&gt; Signatures { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signatures&quot;)]
+public required List&lt;string&gt; Signatures { get; init; }</code></pre>
   </div>
 
 

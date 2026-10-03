@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AssetResponse.AssetBalances ">
       
-      <meta name="description" content="Describe asset balances">
+      <meta name="description" content="Total balances of the asset, categorized by authorization status.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,12 @@ Class AssetResponse.AssetBalances
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Describe asset balances</p>
+  <div class="markdown summary"><p>Total balances of the asset, categorized by authorization status.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AssetResponse.AssetBalances</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AssetResponse.AssetBalances</code></pre>
   </div>
 
 
@@ -130,54 +130,12 @@ Class AssetResponse.AssetBalances
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
     </div>
   </dd></dl>
-
-
-
-
-
-
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_AssetResponse_AssetBalances__ctor_" data-uid="StellarDotnetSdk.Responses.AssetResponse.AssetBalances.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_AssetResponse_AssetBalances__ctor_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Responses.AssetResponse.AssetBalances.#ctor(System.String,System.String,System.String)">
-  AssetBalances(string, string, string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AssetBalances(string authorized, string authorizedToMaintainLiabilities, string unauthorized)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>authorized</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>authorizedToMaintainLiabilities</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>unauthorized</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
 
 
 
@@ -195,12 +153,14 @@ Class AssetResponse.AssetBalances
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total balance held by fully authorized accounts.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;authorized&quot;)]
-public string Authorized { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorized&quot;)]
+public required string Authorized { get; init; }</code></pre>
   </div>
 
 
@@ -227,12 +187,14 @@ public string Authorized { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total balance held by accounts authorized only to maintain liabilities.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;authorized_to_maintain_liabilities&quot;)]
-public string AuthorizedToMaintainLiabilities { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorized_to_maintain_liabilities&quot;)]
+public required string AuthorizedToMaintainLiabilities { get; init; }</code></pre>
   </div>
 
 
@@ -259,12 +221,14 @@ public string AuthorizedToMaintainLiabilities { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total balance held by unauthorized accounts.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;unauthorized&quot;)]
-public string Unauthorized { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;unauthorized&quot;)]
+public required string Unauthorized { get; init; }</code></pre>
   </div>
 
 

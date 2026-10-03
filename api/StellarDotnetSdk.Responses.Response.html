@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Response ">
       
-      
+      <meta name="description" content="Abstract base class for all Horizon API responses. Provides common functionality for handling rate limit headers.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class Response
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Abstract base class for all Horizon API responses.
+Provides common functionality for handling rate limit headers.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonObject(MemberSerialization.OptIn)]
-public abstract class Response</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Response</code></pre>
   </div>
 
 
@@ -122,10 +123,13 @@ public abstract class Response</code></pre>
       <div><a class="xref" href="StellarDotnetSdk.Responses.ClaimableBalanceResponse.html">ClaimableBalanceResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.Effects.EffectResponse.html">EffectResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.FeeStatsResponse.html">FeeStatsResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.FriendBotResponse.html">FriendBotResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.HealthResponse.html">HealthResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.LedgerResponse.html">LedgerResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.LiquidityPoolResponse.html">LiquidityPoolResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.OfferResponse.html">OfferResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.OperationResponse.html">OperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.OrderBookResponse.html">OrderBookResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.Page-1.html">Page&lt;T&gt;</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.PathResponse.html">PathResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.RootResponse.html">RootResponse</a></div>
@@ -135,6 +139,32 @@ public abstract class Response</code></pre>
       <div><a class="xref" href="StellarDotnetSdk.Responses.TradeAggregationResponse.html">TradeAggregationResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.TradeResponse.html">TradeResponse</a></div>
       <div><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorFeatureFlags.html">AnchorFeatureFlags</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorFeeInfo.html">AnchorFeeInfo</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransaction.html">AnchorTransaction</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionInfo.html">AnchorTransactionInfo</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionResponse.html">AnchorTransactionResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionsInfo.html">AnchorTransactionsInfo</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionsResponse.html">AnchorTransactionsResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.DepositResponse.html">DepositResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.ExtraInfo.html">ExtraInfo</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.FeeResponse.html">FeeResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.InfoResponse.html">InfoResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.WithdrawResponse.html">WithdrawResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.DepositAsset.html">DepositAsset</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.FeatureFlags.html">FeatureFlags</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.FeeBreakdown.html">FeeBreakdown</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.FeeDetails.html">FeeDetails</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.FeeEndpointInfo.html">FeeEndpointInfo</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.FeeResponse.html">FeeResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.InfoResponse.html">InfoResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.InteractiveResponse.html">InteractiveResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.Refund.html">Refund</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.RefundPayment.html">RefundPayment</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.Transaction.html">Transaction</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.TransactionResponse.html">TransactionResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.TransactionsResponse.html">TransactionsResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Responses.WithdrawAsset.html">WithdrawAsset</a></div>
     </dd>
   </dl>
 
@@ -180,11 +210,13 @@ public abstract class Response</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum number of requests allowed per hour for this endpoint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected int RateLimitLimit { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+protected int RateLimitLimit { get; }</code></pre>
   </div>
 
 
@@ -211,11 +243,13 @@ public abstract class Response</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of requests remaining in the current rate limit window.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected int RateLimitRemaining { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+protected int RateLimitRemaining { get; }</code></pre>
   </div>
 
 
@@ -242,11 +276,13 @@ public abstract class Response</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The Unix timestamp (in seconds) when the rate limit window resets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected int RateLimitReset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+protected int RateLimitReset { get; }</code></pre>
   </div>
 
 
@@ -277,7 +313,8 @@ public abstract class Response</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the rate limit information from HTTP response headers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -287,7 +324,8 @@ public abstract class Response</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>headers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.headers.httpresponseheaders">HttpResponseHeaders</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP response headers containing rate limit information.</p>
+</dd>
   </dl>
 
 

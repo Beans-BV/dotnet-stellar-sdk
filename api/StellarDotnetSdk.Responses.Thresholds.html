@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Thresholds ">
       
-      <meta name="description" content="Represents account thresholds.">
+      <meta name="description" content="Operations have varying levels of access. This field specifies thresholds for different access levels, as well as the weight of the master key.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class Thresholds
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents account thresholds.</p>
+  <div class="markdown summary"><p>Operations have varying levels of access. This field specifies thresholds
+for different access levels, as well as the weight of the master key.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Thresholds</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class Thresholds</code></pre>
   </div>
 
 
@@ -130,9 +131,6 @@ Class Thresholds
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -156,12 +154,13 @@ Class Thresholds
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The weight required for a valid transaction including the Account Merge and Set Options operations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;high_threshold&quot;)]
-public int HighThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;high_threshold&quot;)]
+public required int HighThreshold { get; init; }</code></pre>
   </div>
 
 
@@ -188,12 +187,13 @@ public int HighThreshold { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The weight required for a valid transaction including the Allow Trust and Bump Sequence operations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;low_threshold&quot;)]
-public int LowThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;low_threshold&quot;)]
+public required int LowThreshold { get; init; }</code></pre>
   </div>
 
 
@@ -220,12 +220,15 @@ public int LowThreshold { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The weight required for a valid transaction including the Create Account, Payment, Path Payment,
+Manage Buy Offer, Manage Sell Offer, Create Passive Sell Offer, Change Trust, Inflation,
+and Manage Data operations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;med_threshold&quot;)]
-public int MedThreshold { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;med_threshold&quot;)]
+public required int MedThreshold { get; init; }</code></pre>
   </div>
 
 

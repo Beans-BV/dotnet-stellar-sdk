@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetEventsRequest.EventFilter ">
       
-      
+      <meta name="description" content="Defines criteria for filtering contract events by type, contract ID, and topic.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class GetEventsRequest.EventFilter
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Defines criteria for filtering contract events by type, contract ID, and topic.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -161,7 +162,8 @@ allowed per request.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[]? ContractIds { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;contractIds&quot;)]
+public string[]? ContractIds { get; set; }</code></pre>
   </div>
 
 
@@ -194,7 +196,8 @@ if they match any of the filters. Maximum 5 filters are allowed per request.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[][]? Topics { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;topics&quot;)]
+public string[][]? Topics { get; set; }</code></pre>
   </div>
 
 
@@ -221,13 +224,21 @@ if they match any of the filters. Maximum 5 filters are allowed per request.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>A comma separated list of event types (system, contract, or diagnostic) used to filter events. If omitted, all
+  <div class="markdown level1 summary"><p>The event types to return, combined as flags — for example
+<code>EventFilterType.System | EventFilterType.Contract</code>. If omitted (left <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>), all
 event types are included.</p>
+<p>
+    Note that <code>diagnostic</code> is not a selectable type: Protocol 23 removed diagnostic events from the
+    <code>getEvents</code> stream, and Stellar RPC v23.0.0 onwards rejects a filter that names it. See
+    <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a>.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? Type { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+[JsonConverter(typeof(EventFilterTypeJsonConverter))]
+public EventFilterType? Type { get; set; }</code></pre>
   </div>
 
 
@@ -236,7 +247,7 @@ event types are included.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -244,6 +255,14 @@ event types are included.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when the assigned value contains bits that are not defined <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a> flags,
+so that a bad cast such as <code>(EventFilterType)99</code> fails at the assignment rather than as a server
+round-trip error.</p>
+</dd>
+  </dl>
 
 
 

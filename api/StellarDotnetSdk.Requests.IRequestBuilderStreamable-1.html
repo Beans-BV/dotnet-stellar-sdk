@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IRequestBuilderStreamable&lt;TResponse&gt; ">
       
-      
+      <meta name="description" content="Defines the ability to open a Server-Sent Events (SSE) stream from a Horizon endpoint.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Interface IRequestBuilderStreamable&lt;TResponse&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Defines the ability to open a Server-Sent Events (SSE) stream from a Horizon endpoint.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -105,7 +106,8 @@ Interface IRequestBuilderStreamable&lt;TResponse&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>TResponse</code></dt>
-    <dd></dd>
+    <dd><p>The type of response objects received from the event stream.</p>
+</dd>
   </dl>
 
 
@@ -128,7 +130,8 @@ Interface IRequestBuilderStreamable&lt;TResponse&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the SSE event source used for streaming. If null, a default one is created on first stream.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -180,7 +183,10 @@ Interface IRequestBuilderStreamable&lt;TResponse&gt;
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.EventSources.IEventSource.html">IEventSource</a></dt>
-    <dd><p>EventSource object, so you can <pre><code class="lang-csharp">close()</code></pre> connection when not needed anymore
+    <dd><p>EventSource object, so you can</p>
+<pre><code>&lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;close()&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>connection when not needed anymore</p>
 </dd>
   </dl>
 

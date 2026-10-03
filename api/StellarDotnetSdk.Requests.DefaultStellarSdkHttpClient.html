@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DefaultStellarSdkHttpClient ">
       
-      
+      <meta name="description" content="A preconfigured  for communicating with Stellar Horizon and Soroban RPC servers. Sets default request headers (client name, version, and optional bearer token) and optionally wraps the handler pipeline with  when  has any feature enabled (retries, circuit breaker, or timeout — see ; status codes alone enable nothing).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,12 @@ Class DefaultStellarSdkHttpClient
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>A preconfigured <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> for communicating with Stellar Horizon and Soroban RPC servers.
+Sets default request headers (client name, version, and optional bearer token) and optionally
+wraps the handler pipeline with <a class="xref" href="StellarDotnetSdk.Requests.RetryingHttpMessageHandler.html">RetryingHttpMessageHandler</a> when <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>
+has any feature enabled (retries, circuit breaker, or timeout — see
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_HasAnyResilienceFeatureEnabled">HasAnyResilienceFeatureEnabled</a>; status codes alone enable nothing).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -320,17 +325,34 @@ Class DefaultStellarSdkHttpClient
 
   <a id="StellarDotnetSdk_Requests_DefaultStellarSdkHttpClient__ctor_" data-uid="StellarDotnetSdk.Requests.DefaultStellarSdkHttpClient.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_Requests_DefaultStellarSdkHttpClient__ctor_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Requests.DefaultStellarSdkHttpClient.#ctor(System.String,System.String,System.String)">
-  DefaultStellarSdkHttpClient(string?, string?, string?)
+  <h3 id="StellarDotnetSdk_Requests_DefaultStellarSdkHttpClient__ctor_System_String_System_String_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_Net_Http_HttpMessageHandler_" data-uid="StellarDotnetSdk.Requests.DefaultStellarSdkHttpClient.#ctor(System.String,System.String,System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.Net.Http.HttpMessageHandler)">
+  DefaultStellarSdkHttpClient(string?, string?, string?, HttpResilienceOptions?, HttpMessageHandler?)
   
   </h3>
 
   <div class="markdown level1 summary"><p>Creates an HTTP client with some default request headers and the given bearer token.</p>
+<p>
+    This type is a convenience helper around <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> for non-DI scenarios. It is
+    intended to be created once and reused for the lifetime of your application, just like a regular
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> instance.
+</p>
+<p>
+    In applications using dependency injection and <code>IHttpClientFactory</code>, prefer configuring a
+    regular <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> instance (potentially using <a class="xref" href="StellarDotnetSdk.Requests.RetryingHttpMessageHandler.html">RetryingHttpMessageHandler</a>
+    and <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>) instead of relying on this type directly.
+</p>
+<p>
+    By default, no automatic retries are enabled. To enable retries, pass a custom
+    <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a> instance with <code>MaxRetryCount</code> set to a positive value
+    (and optionally populate <code>RetryHttpStatusCodes</code> for HTTP status-code retries). For
+    Horizon clients use <code>HttpResilienceOptionsPresets.ForHorizon()</code>; for Stellar RPC (Soroban)
+    use <code>HttpResilienceOptionsPresets.ForSoroban()</code>.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DefaultStellarSdkHttpClient(string? bearerToken = null, string? clientName = null, string? clientVersion = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public DefaultStellarSdkHttpClient(string? bearerToken = null, string? clientName = null, string? clientVersion = null, HttpResilienceOptions? resilienceOptions = null, HttpMessageHandler? innerHandler = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -343,6 +365,15 @@ Class DefaultStellarSdkHttpClient
 </dd>
     <dt><code>clientVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>Version of the client.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options. If null, no resilience handler is added — requests are sent with no retries,
+circuit breaker, or timeout.</p>
+</dd>
+    <dt><code>innerHandler</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpmessagehandler">HttpMessageHandler</a></dt>
+    <dd><p>Optional inner HTTP message handler. If null, defaults to <code>SocketsHttpHandler</code> on .NET 8 and later,
+and to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler">HttpClientHandler</a> on netstandard2.1.
+Use this to inject a custom handler for testing, proxies, or custom certificate handling.</p>
 </dd>
   </dl>
 

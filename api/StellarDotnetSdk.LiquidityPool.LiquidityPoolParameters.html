@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolParameters ">
       
-      
+      <meta name="description" content="Base class for liquidity pool parameters on the Stellar network. Defines the pool type, assets, and fee structure for an automated market maker (AMM) pool.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPoolParameters
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Base class for liquidity pool parameters on the Stellar network.
+Defines the pool type, assets, and fee structure for an automated market maker (AMM) pool.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -160,7 +162,8 @@ Class LiquidityPoolParameters
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The default fee for liquidity pool trades in basis points (30 bp = 0.3%).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -195,7 +198,8 @@ Class LiquidityPoolParameters
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters.html">LiquidityPoolParameters</a> instance for the specified pool type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -205,13 +209,17 @@ Class LiquidityPoolParameters
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>type</code> <span class="xref">LiquidityPoolType</span>.<span class="xref">LiquidityPoolTypeEnum</span></dt>
-    <dd></dd>
+    <dd><p>The type of the liquidity pool.</p>
+</dd>
     <dt><code>assetA</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The first asset in the pool (must be lexicographically less than assetB).</p>
+</dd>
     <dt><code>assetB</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The second asset in the pool.</p>
+</dd>
     <dt><code>feeBp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The fee charged per trade in basis points.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -237,7 +245,8 @@ Class LiquidityPoolParameters
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters.html">LiquidityPoolParameters</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -247,7 +256,8 @@ Class LiquidityPoolParameters
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>liquidityPoolParametersXdr</code> <span class="xref">LiquidityPoolParameters</span></dt>
-    <dd></dd>
+    <dd><p>The XDR liquidity pool parameters object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -273,7 +283,8 @@ Class LiquidityPoolParameters
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Computes and returns the unique <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a> for these parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -304,7 +315,8 @@ Class LiquidityPoolParameters
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this liquidity pool parameters object to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

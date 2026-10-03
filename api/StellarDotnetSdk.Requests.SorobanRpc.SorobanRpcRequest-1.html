@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SorobanRpcRequest&lt;T&gt; ">
       
-      
+      <meta name="description" content="Represents a JSON-RPC 2.0 request envelope for Soroban RPC calls.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class SorobanRpcRequest&lt;T&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a JSON-RPC 2.0 request envelope for Soroban RPC calls.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -105,7 +106,8 @@ Class SorobanRpcRequest&lt;T&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The type of the request parameters payload.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -160,7 +162,8 @@ Class SorobanRpcRequest&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new JSON-RPC 2.0 request for a Soroban RPC call.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -170,11 +173,14 @@ Class SorobanRpcRequest&lt;T&gt;
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The unique request identifier.</p>
+</dd>
     <dt><code>method</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The JSON-RPC method name (e.g. <code>getEvents</code>, <code>getLedgerEntries</code>).</p>
+</dd>
     <dt><code>parameters</code> <span class="xref">T</span></dt>
-    <dd></dd>
+    <dd><p>The method-specific parameters, or null if none.</p>
+</dd>
   </dl>
 
 
@@ -199,11 +205,12 @@ Class SorobanRpcRequest&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier for this JSON-RPC request.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
 public string Id { get; }</code></pre>
   </div>
 
@@ -231,11 +238,12 @@ public string Id { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON-RPC protocol version. Always <code>&quot;2.0&quot;</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;jsonrpc&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;jsonrpc&quot;)]
 public string JsonRpc { get; }</code></pre>
   </div>
 
@@ -263,11 +271,12 @@ public string JsonRpc { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON-RPC method name to invoke on the Soroban RPC server.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;method&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;method&quot;)]
 public string Method { get; }</code></pre>
   </div>
 
@@ -295,11 +304,12 @@ public string Method { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The method-specific parameters payload, or null if the method takes no parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;params&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;params&quot;)]
 public T? Params { get; }</code></pre>
   </div>
 

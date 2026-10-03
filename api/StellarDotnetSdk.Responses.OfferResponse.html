@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OfferResponse ">
       
-      <meta name="description" content="Represents offer response.">
+      <meta name="description" content="Represents an offer on the Stellar decentralized exchange. An offer is a bid or ask to exchange one asset for another at a specified price.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class OfferResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents offer response.</p>
+  <div class="markdown summary"><p>Represents an offer on the Stellar decentralized exchange.
+An offer is a bid or ask to exchange one asset for another at a specified price.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class OfferResponse : Response, IPagingToken</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class OfferResponse : Response, IPagingToken</code></pre>
   </div>
 
 
@@ -125,15 +126,6 @@ Class OfferResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -147,9 +139,6 @@ Class OfferResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -175,12 +164,14 @@ Class OfferResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The amount of the selling asset available for trade.
+Represented as a string to preserve precision.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -207,13 +198,14 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset being bought.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;buying&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;buying&quot;)]
 [JsonConverter(typeof(AssetJsonConverter))]
-public Asset Buying { get; init; }</code></pre>
+public required Asset Buying { get; init; }</code></pre>
   </div>
 
 
@@ -240,12 +232,13 @@ public Asset Buying { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier for this offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
-public string Id { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required string Id { get; init; }</code></pre>
   </div>
 
 
@@ -272,12 +265,13 @@ public string Id { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the last ledger in which this offer was modified.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;last_modified_ledger&quot;)]
-public int LastModifiedLedger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_modified_ledger&quot;)]
+public required int LastModifiedLedger { get; init; }</code></pre>
   </div>
 
 
@@ -304,12 +298,13 @@ public int LastModifiedLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>An ISO 8601 formatted string of when this offer was last modified.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;last_modified_time&quot;)]
-public string LastModifiedTime { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_modified_time&quot;)]
+public required DateTimeOffset? LastModifiedTime { get; init; }</code></pre>
   </div>
 
 
@@ -318,7 +313,7 @@ public string LastModifiedTime { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -336,12 +331,13 @@ public string LastModifiedTime { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Links to related resources for this offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public OfferResponse.OfferResponseLinks Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required OfferResponse.OfferResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -368,12 +364,14 @@ public OfferResponse.OfferResponseLinks Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.
+This token can be used to retrieve the next or previous page of results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 
@@ -400,13 +398,14 @@ public string PagingToken { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The ask/bid price.</p>
+  <div class="markdown level1 summary"><p>The ask/bid price as a decimal string.
+Represents how much of the buying asset is required for 1 unit of the selling asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;price&quot;)]
-public string Price { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;price&quot;)]
+public required string Price { get; init; }</code></pre>
   </div>
 
 
@@ -433,13 +432,14 @@ public string Price { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The ask/bid price as a ratio.</p>
+  <div class="markdown level1 summary"><p>The ask/bid price as a ratio (numerator/denominator).
+Represents how much of the buying asset is required for 1 unit of the selling asset.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;price_r&quot;)]
-public Price PriceRatio { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;price_r&quot;)]
+public required Price PriceRatio { get; init; }</code></pre>
   </div>
 
 
@@ -448,7 +448,7 @@ public Price PriceRatio { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
     <dd></dd>
   </dl>
 
@@ -466,12 +466,13 @@ public Price PriceRatio { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID of the offer creator.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;seller&quot;)]
-public string Seller { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;seller&quot;)]
+public required string Seller { get; init; }</code></pre>
   </div>
 
 
@@ -498,13 +499,14 @@ public string Seller { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset being sold.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;selling&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;selling&quot;)]
 [JsonConverter(typeof(AssetJsonConverter))]
-public Asset Selling { get; init; }</code></pre>
+public required Asset Selling { get; init; }</code></pre>
   </div>
 
 
@@ -514,6 +516,39 @@ public Asset Selling { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_OfferResponse_Sponsor_" data-uid="StellarDotnetSdk.Responses.OfferResponse.Sponsor*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_OfferResponse_Sponsor" data-uid="StellarDotnetSdk.Responses.OfferResponse.Sponsor">
+  Sponsor
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The account id of the sponsor who is paying the reserves for this offer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sponsor&quot;)]
+public string? Sponsor { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 

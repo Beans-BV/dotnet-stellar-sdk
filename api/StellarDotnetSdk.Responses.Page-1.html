@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Page&lt;T&gt; ">
       
-      <meta name="description" content="Represents page of objects.">
+      <meta name="description" content="Represents a paginated page of objects from the Horizon API. Used to navigate through large result sets using cursor-based pagination.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class Page&lt;T&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents page of objects.</p>
+  <div class="markdown summary"><p>Represents a paginated page of objects from the Horizon API.
+Used to navigate through large result sets using cursor-based pagination.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Page&lt;T&gt; : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class Page&lt;T&gt; : Response</code></pre>
   </div>
 
 
@@ -106,7 +107,8 @@ Class Page&lt;T&gt;
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The type of records contained in this page.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -124,15 +126,6 @@ Class Page&lt;T&gt;
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -146,9 +139,6 @@ Class Page&lt;T&gt;
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -174,12 +164,13 @@ Class Page&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The embedded records container for HAL JSON format.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_embedded&quot;)]
-public Page&lt;T&gt;.EmbeddedRecords Embedded { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_embedded&quot;)]
+public required Page&lt;T&gt;.EmbeddedRecords Embedded { get; init; }</code></pre>
   </div>
 
 
@@ -206,12 +197,13 @@ public Page&lt;T&gt;.EmbeddedRecords Embedded { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Navigation links for this page.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public Page&lt;T&gt;.PageLinks&lt;T&gt; Links { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public Page&lt;T&gt;.PageLinks&lt;T&gt;? Links { get; init; }</code></pre>
   </div>
 
 
@@ -238,7 +230,8 @@ public Page&lt;T&gt;.PageLinks&lt;T&gt; Links { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The list of records in this page.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +271,7 @@ public Page&lt;T&gt;.PageLinks&lt;T&gt; Links { get; init; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;Page&lt;T&gt;&gt; NextPage()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;Page&lt;T&gt;&gt;? NextPage()</code></pre>
   </div>
 
 
@@ -310,7 +303,7 @@ public Page&lt;T&gt;.PageLinks&lt;T&gt; Links { get; init; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;Page&lt;T&gt;&gt; PreviousPage()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;Page&lt;T&gt;&gt;? PreviousPage()</code></pre>
   </div>
 
 

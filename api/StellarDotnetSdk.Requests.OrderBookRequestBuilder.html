@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OrderBookRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests to the Horizon /order_book endpoint for retrieving the current order book for a given asset pair.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class OrderBookRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests to the Horizon <code>/order_book</code> endpoint for retrieving
+the current order book for a given asset pair.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -183,7 +185,8 @@ Class OrderBookRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -193,9 +196,11 @@ Class OrderBookRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -220,7 +225,8 @@ Class OrderBookRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the asset being bought (the ask side of the order book).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -230,13 +236,15 @@ Class OrderBookRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset being bought.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -256,10 +264,7 @@ Class OrderBookRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets <pre><code class="lang-csharp">cursor</code></pre> parameter on the request.
-A cursor is a value that points to a specific location in a collection of resources.
-The cursor attribute itself is an opaque value meaning that users should not try to parse it.
-Read <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html">https://www.stellar.org/developers/horizon/reference/resources/page.html</a> for more information.
+  <div class="markdown level1 summary"><p>Not supported for the order book endpoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -286,6 +291,12 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notimplementedexception">NotImplementedException</a></dt>
+    <dd><p>Always thrown; order book does not support cursor pagination.</p>
+</dd>
+  </dl>
 
 
 
@@ -327,7 +338,7 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets order parameter on request.</p>
+  <div class="markdown level1 summary"><p>Not supported for the order book endpoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -354,6 +365,12 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notimplementedexception">NotImplementedException</a></dt>
+    <dd><p>Always thrown; order book does not support ordering.</p>
+</dd>
+  </dl>
 
 
 
@@ -364,7 +381,8 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the asset being sold (the bid side of the order book).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -374,13 +392,15 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset being sold.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 

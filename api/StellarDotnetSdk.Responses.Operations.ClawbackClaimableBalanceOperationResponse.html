@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ClawbackClaimableBalanceOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents a clawback_claimable_balance operation response. Claws back (destroys) a claimable balance, removing it from the network. This operation can only be performed by the asset issuer on claimable balances containing assets that have the clawback-enabled flag set. The claimable balance and its assets are permanently removed.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,10 @@ Class ClawbackClaimableBalanceOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents a clawback_claimable_balance operation response.
+Claws back (destroys) a claimable balance, removing it from the network.
+This operation can only be performed by the asset issuer on claimable balances containing assets
+that have the clawback-enabled flag set. The claimable balance and its assets are permanently removed.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -211,13 +212,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Claimable balance identifier of the claimable balance to be clawed back.</p>
+  <div class="markdown level1 summary"><p>The unique identifier of the claimable balance being clawed back.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;balance_id&quot;)]
-public string BalanceId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;balance_id&quot;)]
+public required string BalanceId { get; init; }</code></pre>
   </div>
 
 
@@ -244,7 +245,8 @@ public string BalanceId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

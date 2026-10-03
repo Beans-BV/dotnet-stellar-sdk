@@ -107,7 +107,7 @@
 <pre><code class="lang-csharp">public static async Task&lt;string&gt; UploadContract(IAccountId sourceKeyPair)
 {
     // Initialize the Soroban server connection
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Load the WASM bytecode
     var wasm = await File.ReadAllBytesAsync(&quot;path/to/your/contract.wasm&quot;);
@@ -148,7 +148,7 @@
 <p>After uploading the contract, you can create an instance:</p>
 <pre><code class="lang-csharp">public static async Task&lt;string&gt; CreateContract(IAccountId keyPair, string wasmId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with the latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -175,11 +175,58 @@
 }
 </code></pre>
 <p>This creates a contract instance that you can interact with. The contract ID is the unique identifier for this instance.</p>
+<h3 id="creating-a-contract-from-an-external-executable-reference-protocol-28">Creating a Contract from an External Executable Reference (Protocol 28)</h3>
+<p><a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</a> lets a contract follow the Wasm that another contract (the <em>owner</em>) names under a <em>tag</em>, instead of carrying its own Wasm hash. The owner builds the tag's storage key with the <code>create_executable_tag</code> host function and stores the Wasm hash under it as a persistent contract data entry (<code>put_contract_data</code>), so by overwriting that entry it can upgrade every contract that references the tag at once.</p>
+<blockquote>
+<p>⚠️ <strong>Trust</strong>: the owner can replace the referenced Wasm at any time, so it has full control over every contract created this way. Only reference an owner you trust as much as the contract's own admin.</p>
+</blockquote>
+<pre><code class="lang-csharp">public static async Task&lt;string&gt; CreateContractFromExternalRef(IAccountId keyPair, string ownerContractId, string tag)
+{
+    StellarRpcServer server = new(TestNetSorobanUrl);
+    var account = await server.GetAccount(keyPair.AccountId);
+
+    // The tag is encoded as UTF-8. Use the byte[] overload for a tag that is not text.
+    var operation = CreateContractOperation.FromExternalRef(ownerContractId, tag, account.AccountId);
+
+    var tx = new TransactionBuilder(account).AddOperation(operation).Build();
+    await SimulateAndUpdateTransaction(tx, keyPair);
+    var sendResponse = await server.SendTransaction(tx);
+    var response = await PollTransaction(sendResponse.Hash);
+    return response.CreatedContractId;
+}
+</code></pre>
+<p>To find out which Wasm such a contract currently runs, read its instance and resolve the reference. <code>GetExternalRefWasmHash</code> reads the owner's tag entry with one <code>getLedgerEntries</code> call and returns the hex-encoded Wasm hash. It throws <code>ExternalRefNotFoundException</code> when the entry is missing, or archived (<code>IsArchived</code>); an archived entry must be restored before the reference resolves again.</p>
+<p><code>ContractDataDurability</code> lives in <code>StellarDotnetSdk.Xdr</code>, which also defines XDR types named <code>SCContractInstance</code> and <code>ContractExecutableExternalRef</code>. Alias the SDK types so that the names are not ambiguous:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.LedgerEntries;
+using StellarDotnetSdk.LedgerKeys;
+using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Xdr;
+using ContractExecutableExternalRef = StellarDotnetSdk.Soroban.ContractExecutableExternalRef;
+using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
+</code></pre>
+<pre><code class="lang-csharp">public static async Task&lt;string?&gt; GetCurrentWasmHash(string contractId)
+{
+    StellarRpcServer server = new(TestNetSorobanUrl);
+    var instanceKey = new LedgerKeyContractData(
+        new ScContractId(contractId),
+        new SCLedgerKeyContractInstance(),
+        ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
+    var response = await server.GetLedgerEntries([instanceKey]);
+    var instance = (SCContractInstance)((LedgerEntryContractData)response.LedgerEntries![0]).Value;
+
+    return instance.Executable switch
+    {
+        ContractExecutableWasm wasm =&gt; wasm.WasmHash,
+        ContractExecutableExternalRef externalRef =&gt; await server.GetExternalRefWasmHash(externalRef),
+        _ =&gt; null, // the built-in Stellar Asset Contract has no Wasm
+    };
+}
+</code></pre>
 <h2 id="invoking-a-contract">Invoking a Contract</h2>
 <p>Once you have a contract instance, you can call its functions:</p>
 <pre><code class="lang-csharp">public static async Task InvokeContract(IAccountId keyPair, string contractId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -221,7 +268,7 @@
     uint ledgerSequence,
     uint currentTtl)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -262,19 +309,25 @@
     Transaction tx,
     IAccountId signer)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Simulate the transaction to get Soroban-specific details
     var simulateResponse = await server.SimulateTransaction(tx);
 
-    // Update the transaction with Soroban-specific data
-    if (simulateResponse.SorobanTransactionData != null)
+    // Update the transaction with Soroban-specific data.
+    // Read each property once: both decode base64 XDR on every access.
+    var transactionData = simulateResponse.SorobanTransactionData;
+    if (transactionData != null)
     {
-        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
+        tx.SetSorobanTransactionData(transactionData);
     }
-    if (simulateResponse.SorobanAuthorization != null)
+    // Check for auth entries via Results[0].Auth: SorobanAuthorization throws on a malformed entry
+    // rather than returning null, so it can't be used as the presence check.
+    var result = simulateResponse.Results is { Length: &gt; 0 } results ? results[0] : null;
+    if (result?.Auth != null)
     {
-        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        var authorization = simulateResponse.SorobanAuthorization!;
+        tx.SetSorobanAuthorization(authorization);
     }
 
     // Add a resource fee
@@ -289,7 +342,7 @@
 <h3 id="polling-for-transaction-completion">Polling for Transaction Completion</h3>
 <pre><code class="lang-csharp">private static async Task&lt;GetTransactionResponse&gt; PollTransaction(string transactionHash)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var status = TransactionInfo.TransactionStatus.NOT_FOUND;
     GetTransactionResponse? transactionResponse = null;
     

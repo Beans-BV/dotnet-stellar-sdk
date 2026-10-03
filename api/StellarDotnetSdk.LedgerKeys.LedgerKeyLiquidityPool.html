@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LedgerKeyLiquidityPool ">
       
-      
+      <meta name="description" content="Represents a ledger key for a liquidity pool entry on the Stellar network. Used to look up liquidity pool data from the ledger by its pool ID.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LedgerKeyLiquidityPool
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a ledger key for a liquidity pool entry on the Stellar network.
+Used to look up liquidity pool data from the ledger by its pool ID.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -195,7 +197,8 @@ Class LedgerKeyLiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyLiquidityPool</code> from asset pair and fee, computing the pool ID automatically.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -205,11 +208,14 @@ Class LedgerKeyLiquidityPool
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>assetA</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The first asset in the pool (must be lexicographically less than assetB).</p>
+</dd>
     <dt><code>assetB</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The second asset in the pool.</p>
+</dd>
     <dt><code>fee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>The fee charged per trade in basis points (typically 30).</p>
+</dd>
   </dl>
 
 
@@ -230,7 +236,8 @@ Class LedgerKeyLiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyLiquidityPool</code> from a liquidity pool ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -240,7 +247,8 @@ Class LedgerKeyLiquidityPool
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>poolId</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the liquidity pool.</p>
+</dd>
   </dl>
 
 
@@ -265,7 +273,8 @@ Class LedgerKeyLiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The unique identifier of the liquidity pool.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -300,7 +309,8 @@ Class LedgerKeyLiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKeyLiquidityPool.html">LedgerKeyLiquidityPool</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -310,7 +320,8 @@ Class LedgerKeyLiquidityPool
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdr</code> <span class="xref">LedgerKey</span>.<span class="xref">LedgerKeyLiquidityPool</span></dt>
-    <dd></dd>
+    <dd><p>The XDR ledger key liquidity pool object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -336,7 +347,8 @@ Class LedgerKeyLiquidityPool
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this ledger key to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

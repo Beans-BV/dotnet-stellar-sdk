@@ -145,51 +145,11 @@ Class GetLedgerEntriesResponse.LedgerEntryResult
 
 
 
-  <h2 class="section" id="constructors">Constructors
+  <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult__ctor_System_String_System_UInt32_System_UInt32_System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.#ctor(System.String,System.UInt32,System.UInt32,System.String)">
-  LedgerEntryResult(string, uint, uint, string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerEntryResult(string key, uint lastModifiedLedger, uint liveUntilLedger, string xdr)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>lastModifiedLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-    <dt><code>liveUntilLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-    <dt><code>xdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="fields">Fields
-</h2>
-
-
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LastModifiedLedger_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LastModifiedLedger*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LastModifiedLedger" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LastModifiedLedger">
   LastModifiedLedger
@@ -201,14 +161,15 @@ Class GetLedgerEntriesResponse.LedgerEntryResult
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;lastModifiedLedgerSeq&quot;)]
-public readonly uint LastModifiedLedger</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;lastModifiedLedgerSeq&quot;)]
+public uint LastModifiedLedger { get; init; }</code></pre>
   </div>
 
 
 
 
-  <h4 class="section">Field Value</h4>
+
+  <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
@@ -219,44 +180,6 @@ public readonly uint LastModifiedLedger</code></pre>
 
 
 
-
-
-
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LiveUntilLedger" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LiveUntilLedger">
-  LiveUntilLedger
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>The ledger sequence number after which the ledger entry would expire. This field exists only for ContractCodeEntry
-and ContractDataEntry ledger entries (optional).</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;liveUntilLedgerSeq&quot;)]
-public readonly uint LiveUntilLedger</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
 
 
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LedgerEntry_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LedgerEntry*"></a>
@@ -271,7 +194,8 @@ public readonly uint LiveUntilLedger</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerEntry LedgerEntry { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public LedgerEntry LedgerEntry { get; }</code></pre>
   </div>
 
 
@@ -323,9 +247,43 @@ public readonly uint LiveUntilLedger</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LiveUntilLedger_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LiveUntilLedger*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetLedgerEntriesResponse_LedgerEntryResult_LiveUntilLedger" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.LedgerEntryResult.LiveUntilLedger">
+  LiveUntilLedger
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The ledger sequence number after which the ledger entry would expire. This field exists only for ContractCodeEntry
+and ContractDataEntry ledger entries (optional).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;liveUntilLedgerSeq&quot;)]
+public uint LiveUntilLedger { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <h2 id="seealso">See Also</h2>
   <div class="seealso">
-      <div><span><a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries</a></span></div>
+      <div><span><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries">https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries</a></span></div>
   </div>
 
 </article>

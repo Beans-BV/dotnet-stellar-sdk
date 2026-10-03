@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SCContractInstance ">
       
-      
+      <meta name="description" content="Represents a Soroban contract instance, containing the executable and optional instance storage.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class SCContractInstance
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Soroban contract instance, containing the executable and optional instance storage.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -165,7 +166,8 @@ Class SCContractInstance
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Soroban.SCContractInstance.html">SCContractInstance</a> with the specified executable and optional storage.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -175,9 +177,11 @@ Class SCContractInstance
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>executable</code> <a class="xref" href="StellarDotnetSdk.Soroban.ContractExecutable.html">ContractExecutable</a></dt>
-    <dd></dd>
+    <dd><p>The contract executable (Wasm, Stellar Asset Contract, or CAP-85 external reference).</p>
+</dd>
     <dt><code>storage</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCMap.html">SCMap</a></dt>
-    <dd></dd>
+    <dd><p>Optional instance storage as a map.</p>
+</dd>
   </dl>
 
 
@@ -202,7 +206,8 @@ Class SCContractInstance
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The contract executable (Wasm, Stellar Asset Contract, or CAP-85 external reference).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -269,7 +274,8 @@ Class SCContractInstance
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Soroban.SCContractInstance.html">SCContractInstance</a> from an XDR <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -279,13 +285,15 @@ Class SCContractInstance
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrVal</code> <span class="xref">SCVal</span></dt>
-    <dd></dd>
+    <dd><p>The XDR value to convert.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Soroban.SCContractInstance.html">SCContractInstance</a></dt>
-    <dd></dd>
+    <dd><p>An <a class="xref" href="StellarDotnetSdk.Soroban.SCContractInstance.html">SCContractInstance</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -305,7 +313,8 @@ Class SCContractInstance
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to an XDR <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -316,7 +325,8 @@ Class SCContractInstance
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SCVal</span></dt>
-    <dd></dd>
+    <dd><p>An <span class="xref">StellarDotnetSdk.Xdr.SCVal</span> XDR object of type <code>SCV_CONTRACT_INSTANCE</code>.</p>
+</dd>
   </dl>
 
 
@@ -336,7 +346,8 @@ Class SCContractInstance
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -347,7 +358,8 @@ Class SCContractInstance
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SCContractInstance</span></dt>
-    <dd></dd>
+    <dd><p>An <span class="xref">StellarDotnetSdk.Xdr.SCContractInstance</span> XDR object.</p>
+</dd>
   </dl>
 
 

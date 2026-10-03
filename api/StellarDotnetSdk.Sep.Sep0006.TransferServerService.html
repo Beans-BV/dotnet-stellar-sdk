@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TransferServerService </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TransferServerService ">
+      
+      <meta name="description" content="Implements SEP-0006 Programmatic Deposit and Withdrawal API. This service implements SEP-0006, which defines a non-interactive protocol for deposits and withdrawals between Stellar assets and external systems (fiat, crypto, etc.). Unlike SEP-0024&#39;s interactive flow, SEP-0006 is designed for programmatic integration where all required information can be provided in API requests. See SEP-0006">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService" class="text-break">
+Class TransferServerService  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.html">Sep0006</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Implements SEP-0006 Programmatic Deposit and Withdrawal API.
+This service implements SEP-0006, which defines a non-interactive
+protocol for deposits and withdrawals between Stellar assets and external systems
+(fiat, crypto, etc.). Unlike SEP-0024's interactive flow, SEP-0006 is designed
+for programmatic integration where all required information can be provided in
+API requests.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md">SEP-0006</a></p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TransferServerService : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TransferServerService</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    <b>HttpClient Usage:</b> It is strongly recommended to pass a shared <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>
+    instance to this service. HttpClient is designed to be long-lived and reused across multiple
+    requests. Creating a new HttpClient for each request can exhaust available sockets and lead
+    to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.sockets.socketexception">SocketException</a> errors under load.
+</p>
+<p>
+    If no HttpClient is provided, an internal one will be created and disposed when this service
+    is disposed. For optimal performance and resource management, inject your application's
+    shared HttpClient instance (e.g., via IHttpClientFactory in ASP.NET Core applications).
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService__ctor_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.#ctor(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+  TransferServerService(string, HttpResilienceOptions?, string?, Dictionary&lt;string, string&gt;?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a TransferServerService instance with resilience options and bearer token.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransferServerService(string transferServiceAddress, HttpResilienceOptions? resilienceOptions, string? bearerToken = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transferServiceAddress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The base URL of the anchor's transfer server endpoint</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options for HTTP requests</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Bearer token in case the server requires it</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers to include in all requests</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService__ctor_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.#ctor(System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String})">
+  TransferServerService(string, HttpClient?, Dictionary&lt;string, string&gt;?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a TransferServerService instance with the specified transfer server address.
+Use
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.TransferServerService.html#StellarDotnetSdk_Sep_Sep0006_TransferServerService_FromDomainAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_">FromDomainAsync</a>
+instead if you want to automatically discover the transfer server URL from an anchor's stellar.toml file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransferServerService(string transferServiceAddress, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transferServiceAddress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The base URL of the anchor's transfer server endpoint</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>A shared HttpClient instance for making requests. It is strongly recommended to provide
+a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+created and disposed with this service.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers to include in all requests</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_DepositAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.DepositAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_DepositAsync_StellarDotnetSdk_Sep_Sep0006_Requests_DepositRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.DepositAsync(StellarDotnetSdk.Sep.Sep0006.Requests.DepositRequest,System.Threading.CancellationToken)">
+  DepositAsync(DepositRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initiates a deposit of an external asset to receive the equivalent Stellar asset.
+A deposit occurs when a user sends an external asset (BTC, USD via bank transfer,
+etc.) to an address held by an anchor. The anchor then sends an equivalent amount
+of the Stellar asset (minus fees) to the user's Stellar account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DepositResponse&gt; DepositAsync(DepositRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.DepositRequest.html">DepositRequest</a></dt>
+    <dd><p>Deposit request parameters</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.DepositResponse.html">DepositResponse</a>&gt;</dt>
+    <dd><p>Deposit instructions including how to send the external asset</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationNeededException.html">CustomerInformationNeededException</a></dt>
+    <dd><p>Thrown when additional KYC information is required</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationStatusException.html">CustomerInformationStatusException</a></dt>
+    <dd><p>Thrown when KYC status needs to be checked</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when authentication is missing or invalid</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_DepositExchangeAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.DepositExchangeAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_DepositExchangeAsync_StellarDotnetSdk_Sep_Sep0006_Requests_DepositExchangeRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.DepositExchangeAsync(StellarDotnetSdk.Sep.Sep0006.Requests.DepositExchangeRequest,System.Threading.CancellationToken)">
+  DepositExchangeAsync(DepositExchangeRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initiates a deposit with asset conversion between non-equivalent tokens.
+Used when the anchor supports SEP-38 quotes and the user wants to deposit one
+asset type and receive a different asset type on Stellar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DepositResponse&gt; DepositExchangeAsync(DepositExchangeRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.DepositExchangeRequest.html">DepositExchangeRequest</a></dt>
+    <dd><p>Deposit exchange request with source asset, destination asset, and amount</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.DepositResponse.html">DepositResponse</a>&gt;</dt>
+    <dd><p>Deposit instructions for the cross-asset deposit</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationNeededException.html">CustomerInformationNeededException</a></dt>
+    <dd><p>Thrown when additional KYC information is required</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationStatusException.html">CustomerInformationStatusException</a></dt>
+    <dd><p>Thrown when KYC status needs to be checked</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when authentication is missing or invalid</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_Dispose" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes the internal HttpClient if one was created.
+Does not dispose externally provided HttpClient instances.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FeeAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FeeAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FeeAsync_StellarDotnetSdk_Sep_Sep0006_Requests_FeeRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FeeAsync(StellarDotnetSdk.Sep.Sep0006.Requests.FeeRequest,System.Threading.CancellationToken)">
+  FeeAsync(FeeRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieves the fee structure for deposit or withdrawal operations.
+This endpoint allows wallets to query the fee that would be charged for
+a given deposit or withdrawal operation before initiating it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;FeeResponse&gt; FeeAsync(FeeRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.FeeRequest.html">FeeRequest</a></dt>
+    <dd><p>Fee request parameters</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.FeeResponse.html">FeeResponse</a>&gt;</dt>
+    <dd><p>A FeeResponse containing the calculated fee amount</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FromDomainAsync(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a TransferServerService by automatically discovering the transfer
+server URL from an anchor's stellar.toml file with resilience options.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;TransferServerService&gt; FromDomainAsync(string domain, HttpResilienceOptions? resilienceOptions, string? bearerToken = null, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The anchor's domain name</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options for HTTP requests</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Bearer token in case the server requires it</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>A shared HttpClient instance for making requests. It is strongly recommended to provide
+a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+created and disposed with this service.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers to include in all requests</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.TransferServerService.html">TransferServerService</a>&gt;</dt>
+    <dd><p>A configured TransferServerService instance ready to use</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.TransferServerException.html">TransferServerException</a></dt>
+    <dd><p>Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not
+found</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_FromDomainAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.FromDomainAsync(System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a TransferServerService by automatically discovering the transfer
+server URL from an anchor's stellar.toml file.
+This is the recommended way to create a TransferServerService instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;TransferServerService&gt; FromDomainAsync(string domain, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The anchor's domain name (e.g., 'testanchor.stellar.org')</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>A shared HttpClient instance for making requests. It is strongly recommended to provide
+a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+created and disposed with this service.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom headers to include in all requests</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.TransferServerService.html">TransferServerService</a>&gt;</dt>
+    <dd><p>A configured TransferServerService instance ready to use</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.TransferServerException.html">TransferServerException</a></dt>
+    <dd><p>Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not
+found</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_InfoAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.InfoAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_InfoAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.InfoAsync(System.String,System.String,System.Threading.CancellationToken)">
+  InfoAsync(string?, string?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieves basic information about the anchor's transfer server capabilities.
+Queries the /info endpoint to discover which assets the anchor supports for
+deposit and withdrawal operations, along with required fields and fee structure
+for each asset.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;InfoResponse&gt; InfoAsync(string? language = null, string? jwt = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>language</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Language code for error messages using RFC 4646 (defaults to 'en')</p>
+</dd>
+    <dt><code>jwt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>JWT token from SEP-10 authentication</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.InfoResponse.html">InfoResponse</a>&gt;</dt>
+    <dd><p>Information about supported assets and their requirements</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_PatchTransactionAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.PatchTransactionAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_PatchTransactionAsync_StellarDotnetSdk_Sep_Sep0006_Requests_PatchTransactionRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.PatchTransactionAsync(StellarDotnetSdk.Sep.Sep0006.Requests.PatchTransactionRequest,System.Threading.CancellationToken)">
+  PatchTransactionAsync(PatchTransactionRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Updates transaction information with additional fields requested by the anchor.
+This endpoint allows clients to update a transaction with additional information
+that the anchor has requested.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;AnchorTransactionResponse&gt; PatchTransactionAsync(PatchTransactionRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.PatchTransactionRequest.html">PatchTransactionRequest</a></dt>
+    <dd><p>Patch transaction request with transaction ID and fields to update</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionResponse.html">AnchorTransactionResponse</a>&gt;</dt>
+    <dd><p>The updated transaction details</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when request.Fields is null</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationNeededException.html">CustomerInformationNeededException</a></dt>
+    <dd><p>Thrown when additional KYC information is required</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationStatusException.html">CustomerInformationStatusException</a></dt>
+    <dd><p>Thrown when KYC status needs to be checked</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when authentication is missing or invalid</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_TransactionAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.TransactionAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_TransactionAsync_StellarDotnetSdk_Sep_Sep0006_Requests_AnchorTransactionRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.TransactionAsync(StellarDotnetSdk.Sep.Sep0006.Requests.AnchorTransactionRequest,System.Threading.CancellationToken)">
+  TransactionAsync(AnchorTransactionRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieves details for a specific transaction at the anchor.
+Queries the /transaction endpoint to get the current status and details of
+a specific deposit or withdrawal transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;AnchorTransactionResponse&gt; TransactionAsync(AnchorTransactionRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.AnchorTransactionRequest.html">AnchorTransactionRequest</a></dt>
+    <dd><p>Transaction query request with at least one identifier</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionResponse.html">AnchorTransactionResponse</a>&gt;</dt>
+    <dd><p>Current status and details of the requested transaction</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_TransactionsAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.TransactionsAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_TransactionsAsync_StellarDotnetSdk_Sep_Sep0006_Requests_AnchorTransactionsRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.TransactionsAsync(StellarDotnetSdk.Sep.Sep0006.Requests.AnchorTransactionsRequest,System.Threading.CancellationToken)">
+  TransactionsAsync(AnchorTransactionsRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieves transaction history for an account with the anchor.
+Queries the /transactions endpoint to get the status of deposits and withdrawals
+while they process, as well as a history of past transactions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;AnchorTransactionsResponse&gt; TransactionsAsync(AnchorTransactionsRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.AnchorTransactionsRequest.html">AnchorTransactionsRequest</a></dt>
+    <dd><p>Transaction history request with account, asset code, and optional filters</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.AnchorTransactionsResponse.html">AnchorTransactionsResponse</a>&gt;</dt>
+    <dd><p>List of transactions with their current status and details</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_WithdrawAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.WithdrawAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_WithdrawAsync_StellarDotnetSdk_Sep_Sep0006_Requests_WithdrawRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.WithdrawAsync(StellarDotnetSdk.Sep.Sep0006.Requests.WithdrawRequest,System.Threading.CancellationToken)">
+  WithdrawAsync(WithdrawRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initiates a withdrawal to redeem a Stellar asset for its off-chain equivalent.
+A withdrawal occurs when a user redeems an asset on the Stellar network for its
+equivalent off-chain asset via the anchor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;WithdrawResponse&gt; WithdrawAsync(WithdrawRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.WithdrawRequest.html">WithdrawRequest</a></dt>
+    <dd><p>Withdrawal request parameters</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.WithdrawResponse.html">WithdrawResponse</a>&gt;</dt>
+    <dd><p>Withdrawal instructions including the Stellar account to send funds to</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationNeededException.html">CustomerInformationNeededException</a></dt>
+    <dd><p>Thrown when additional KYC information is required</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationStatusException.html">CustomerInformationStatusException</a></dt>
+    <dd><p>Thrown when KYC status needs to be checked</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when authentication is missing or invalid</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_WithdrawExchangeAsync_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.WithdrawExchangeAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0006_TransferServerService_WithdrawExchangeAsync_StellarDotnetSdk_Sep_Sep0006_Requests_WithdrawExchangeRequest_System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0006.TransferServerService.WithdrawExchangeAsync(StellarDotnetSdk.Sep.Sep0006.Requests.WithdrawExchangeRequest,System.Threading.CancellationToken)">
+  WithdrawExchangeAsync(WithdrawExchangeRequest, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initiates a withdrawal with asset conversion between non-equivalent tokens.
+Used when the anchor supports SEP-38 quotes and the user wants to withdraw one
+asset type from Stellar and receive a different asset type off-chain.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;WithdrawResponse&gt; WithdrawExchangeAsync(WithdrawExchangeRequest request, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Requests.WithdrawExchangeRequest.html">WithdrawExchangeRequest</a></dt>
+    <dd><p>Withdrawal exchange request with source asset, destination asset, and amount</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Responses.WithdrawResponse.html">WithdrawResponse</a>&gt;</dt>
+    <dd><p>Withdrawal instructions for the cross-asset withdrawal</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationNeededException.html">CustomerInformationNeededException</a></dt>
+    <dd><p>Thrown when additional KYC information is required</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.CustomerInformationStatusException.html">CustomerInformationStatusException</a></dt>
+    <dd><p>Thrown when KYC status needs to be checked</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0006.Exceptions.AuthenticationRequiredException.html">AuthenticationRequiredException</a></dt>
+    <dd><p>Thrown when authentication is missing or invalid</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

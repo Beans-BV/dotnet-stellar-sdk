@@ -98,21 +98,23 @@ Classes
     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#account-merge">
         Account
         merge
-    </a></p>
+    </a>
+</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.BeginSponsoringFutureReservesOperation.html">BeginSponsoringFutureReservesOperation</a></dt>
       <dd><p>
-        Allows an account to pay the base reserves for another account; sponsoring account establishes the
-        is-sponsoring-future-reserves relationship.
-    </p>
+    Allows an account to pay the base reserves for another account; sponsoring account establishes the
+    is-sponsoring-future-reserves relationship.
+</p>
 <p>There must also be an <a class="xref" href="StellarDotnetSdk.Operations.EndSponsoringFutureReservesOperation.html">EndSponsoringFutureReservesOperation</a> in the same transaction.</p>
 <p>
-        See:
-        <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves">
-            Begin sponsoring future reserves
-        </a></p>
+    See:
+    <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves">
+        Begin sponsoring future reserves
+    </a>
+</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -124,7 +126,8 @@ with a smaller sequence number.</p>
     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#bump-sequence">
         Bump
         sequence
-    </a></p>
+    </a>
+</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -135,7 +138,8 @@ with a smaller sequence number.</p>
     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#change-trust">
         Change
         trust
-    </a></p>
+    </a>
+</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -166,15 +170,21 @@ See:
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a></dt>
-      <dd></dd>
+      <dd><p>Represents a contract ID preimage derived from an account address and a 32-byte salt.
+The contract ID is deterministically computed from the address and salt combination.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdAssetPreimage.html">ContractIdAssetPreimage</a></dt>
-      <dd></dd>
+      <dd><p>Represents a contract ID preimage derived from a Stellar asset.
+Used when deploying the builtin Soroban Asset Contract for a given Stellar asset.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdPreimage.html">ContractIdPreimage</a></dt>
-      <dd></dd>
+      <dd><p>Abstract base class for contract ID preimages used to deterministically derive a contract ID
+when deploying a new Soroban smart contract.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateAccountOperation.html">CreateAccountOperation</a></dt>
@@ -201,7 +211,10 @@ Create claimable balance
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateContractOperation.html">CreateContractOperation</a></dt>
-      <dd></dd>
+      <dd><p>Operation that invokes a Soroban host function to deploy a new smart contract on the Stellar network.
+Supports creating contracts from a Wasm hash or a CAP-85 external executable reference with an
+address-derived contract ID, or deploying the builtin Soroban Asset Contract from a Stellar asset.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateContractV2HostFunction.html">CreateContractV2HostFunction</a></dt>
@@ -230,7 +243,7 @@ Begin and end sponsorships
       <dt><a class="xref" href="StellarDotnetSdk.Operations.ExtendFootprintOperation.html">ExtendFootprintOperation</a></dt>
       <dd><p>Extend the time to live (TTL) of entries for Soroban smart contracts.
 This operation extends the TTL of the entries specified in the readOnly footprint of
-the transaction so that they will live at least until the extendTo ledger sequence number is reached.
+the transaction so that they will live at least extendTo ledgers past the last-closed ledger.
 See:
 <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
 Extend footprint TTL
@@ -239,11 +252,15 @@ Extend footprint TTL
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.HostFunction.html">HostFunction</a></dt>
-      <dd></dd>
+      <dd><p>Abstract base class for Soroban host functions that can be invoked via an
+<a class="xref" href="StellarDotnetSdk.Operations.InvokeHostFunctionOperation.html">InvokeHostFunctionOperation</a>.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeContractHostFunction.html">InvokeContractHostFunction</a></dt>
-      <dd></dd>
+      <dd><p>Represents a host function that invokes a method on an existing Soroban smart contract.
+Encapsulates the contract address, function name, and arguments required for the invocation.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeContractOperation.html">InvokeContractOperation</a></dt>
@@ -258,6 +275,12 @@ See:
 Invoke
 host function
 </a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.KeyPairEntrySigner.html">KeyPairEntrySigner</a></dt>
+      <dd><p><a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a> for a classic Ed25519 <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>. Produces
+the standard account-contract signature: <code>SCVec[ SCMap{ public_key, signature } ]</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -395,38 +418,101 @@ Set trustline flags
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentials.html">SorobanAddressCredentials</a></dt>
-      <dd></dd>
+      <dd><p>Represents Soroban credentials that authenticate a specific address for contract invocation authorization.
+Contains the authorizing address, a unique nonce, a signature expiration ledger, and the cryptographic signature.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsBase.html">SorobanAddressCredentialsBase</a></dt>
+      <dd><p>Shared base for the address-bearing Soroban credentials. V1
+(<a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentials.html">SorobanAddressCredentials</a>) and V2
+(<a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsV2.html">SorobanAddressCredentialsV2</a>) have identical fields; they differ only
+by XDR discriminant and by the signing payload used to produce <a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsBase.html#StellarDotnetSdk_Operations_SorobanAddressCredentialsBase_Signature">Signature</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsV2.html">SorobanAddressCredentialsV2</a></dt>
+      <dd><p>Protocol 27 (CAP-0071-02) address-bound credentials. Wire layout is identical to
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentials.html">SorobanAddressCredentials</a>, but the signature is computed over the
+address-bound preimage (<code>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</code>),
+preventing signature replay between accounts that share a private key.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates.html">SorobanAddressCredentialsWithDelegates</a></dt>
+      <dd><p>Protocol 27 (CAP-0071-01) delegated credentials: a root address credential plus an
+ordered set of delegate signatures that authenticate on its behalf.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorization.html">SorobanAuthorization</a></dt>
+      <dd><p>Helpers for constructing and signing Soroban authorization entries (Protocol 27).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
       <dd><p>Contains a tree of invocations with <code>rootInvocation</code> as a root.
 Building SorobanAuthorizedInvocation trees may be simplified by using the recording auth mode in Soroban's
-<a class="xref" href="StellarDotnetSdk.Soroban.SorobanServer.html#StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__System_Nullable_StellarDotnetSdk_Soroban_AuthMode__">SimulateTransaction(Transaction, uint?, AuthMode?)</a> mechanism.</p>
+<a class="xref" href="StellarDotnetSdk.Soroban.StellarRpcServer.html#StellarDotnetSdk_Soroban_StellarRpcServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__System_Nullable_StellarDotnetSdk_Soroban_AuthMode__System_Nullable_System_Boolean__">SimulateTransaction(Transaction, uint?, AuthMode?, bool?)</a> mechanism.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedContractFunction.html">SorobanAuthorizedContractFunction</a></dt>
-      <dd></dd>
+      <dd><p>Represents an authorized function that invokes a method on an existing Soroban smart contract.
+Wraps an <a class="xref" href="StellarDotnetSdk.Operations.InvokeContractHostFunction.html">InvokeContractHostFunction</a> for use within a <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a>
+tree.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedCreateContractFunction.html">SorobanAuthorizedCreateContractFunction</a></dt>
-      <dd></dd>
+      <dd><p>Represents an authorized function that creates a new Soroban smart contract.
+Wraps a <a class="xref" href="StellarDotnetSdk.Operations.CreateContractHostFunction.html">CreateContractHostFunction</a> for use within a <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a> tree.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedCreateContractV2Function.html">SorobanAuthorizedCreateContractV2Function</a></dt>
-      <dd></dd>
+      <dd><p>Represents an authorized function that creates a new Soroban smart contract using the V2 protocol,
+which supports passing constructor arguments during contract deployment.
+Wraps a <a class="xref" href="StellarDotnetSdk.Operations.CreateContractV2HostFunction.html">CreateContractV2HostFunction</a> for use within a <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a>
+tree.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedFunction.html">SorobanAuthorizedFunction</a></dt>
-      <dd></dd>
+      <dd><p>Abstract base class for authorized Soroban functions used within a
+<a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a> tree.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a></dt>
-      <dd></dd>
+      <dd><p>Represents a single authorized Soroban invocation within an authorization tree.
+Each invocation consists of the authorized function being called and an array of sub-invocations
+that represent nested contract calls requiring the same authorization.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentials.html">SorobanCredentials</a></dt>
-      <dd></dd>
+      <dd><p>Abstract base class for Soroban authorization credentials.
+Credentials identify and authenticate the entity authorizing a contract invocation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanDelegateSignature.html">SorobanDelegateSignature</a></dt>
+      <dd><p>High-level wrapper for a single delegate signature in a delegated authorization
+(Protocol 27, CAP-0071-01). Recursive: a delegate may itself carry nested delegates.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanDelegatedRoot.html">SorobanDelegatedRoot</a></dt>
+      <dd><p>The root address credential of a delegated authorization
+(<a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates.html">SorobanAddressCredentialsWithDelegates</a>): its bare
+address/nonce/expiration/signature fields. On the wire CAP-0071-01 embeds these as a
+discriminant-free <code>SorobanAddressCredentials</code> struct, and the signature is computed over the
+address-bound (delegated) payload. Unlike <a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentials.html">SorobanAddressCredentials</a> this type is
+deliberately NOT a serializable <a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentials.html">SorobanCredentials</a>: serializing the root on its
+own would emit a standalone credential the network rejects, so the type makes that misuse
+impossible to express rather than merely documenting against it.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanSourceAccountCredentials.html">SorobanSourceAccountCredentials</a></dt>
@@ -436,11 +522,33 @@ any additional payload.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.UploadContractHostFunction.html">UploadContractHostFunction</a></dt>
-      <dd></dd>
+      <dd><p>Represents a host function that uploads compiled smart contract Wasm bytecode to the Stellar network.
+The uploaded Wasm is stored on-chain and can be referenced by its hash when creating new contract instances.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Operations.UploadContractOperation.html">UploadContractOperation</a></dt>
-      <dd></dd>
+      <dd><p>Operation that invokes a Soroban host function to upload compiled smart contract Wasm bytecode
+to the Stellar network. The uploaded Wasm can subsequently be used to create contract instances
+via <a class="xref" href="StellarDotnetSdk.Operations.CreateContractOperation.html">CreateContractOperation</a>.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ISorobanEntrySigner.html">ISorobanEntrySigner</a></dt>
+      <dd><p>Signs a Soroban authorization payload. Implement this for custom (smart-contract)
+accounts whose <code>__check_auth</code> expects a non-Ed25519 signature format.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentialsVersion.html">SorobanCredentialsVersion</a></dt>
+      <dd><p>Selects which address-credential variant a signing operation produces.</p>
+</dd>
     </dl>
 
 

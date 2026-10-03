@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum TransactionInfo.TransactionStatus ">
       
-      
+      <meta name="description" content="Indicates the current status of a transaction retrieved from the Soroban RPC server.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,11 +94,13 @@ Enum TransactionInfo.TransactionStatus
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Indicates the current status of a transaction retrieved from the Soroban RPC server.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum TransactionInfo.TransactionStatus</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(TransactionStatusJsonConverter))]
+public enum TransactionInfo.TransactionStatus</code></pre>
   </div>
 
 
@@ -113,14 +115,29 @@ Enum TransactionInfo.TransactionStatus
 </h2>
   <dl class="parameters">
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_FAILED"><code>FAILED = 2</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction failed during execution.</p>
+</dd>
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_NOT_FOUND"><code>NOT_FOUND = 0</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction was not found in the ledger history.</p>
+</dd>
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_SUCCESS"><code>SUCCESS = 1</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction was successfully included in a ledger.</p>
+</dd>
   </dl>
 
 
+  <h2 id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>The type-level <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> is the third and weakest of the three places the
+strict converter is attached, and it covers the case the other two miss: the enum travelling on its
+own — a caller's own DTO field, a persisted status column, a queue message — under a
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a> that registers no converter for it. Without it
+the built-in enum handling maps a bare integer by ordinal, and ordinal 1 here is
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.TransactionStatus.html#StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_SUCCESS">SUCCESS</a> — so a corrupted stored record read as a confirmed transaction. See
+<a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a> for the full three-tier resolution order.</p>
+</div>
 
 </article>
 

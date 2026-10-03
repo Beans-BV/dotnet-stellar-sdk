@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Server ">
       
-      
+      <meta name="description" content="Provides access to the Stellar Horizon API server. Offers request builders for querying accounts, assets, transactions, and other Stellar resources, as well as methods for submitting transactions.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class Server
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Provides access to the Stellar Horizon API server. Offers request builders for querying accounts, assets,
+transactions, and other Stellar resources, as well as methods for submitting transactions.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -161,7 +163,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new instance with the provided URI and a default <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -171,7 +174,48 @@ Class Server
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>URL of the Horizon server.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Server__ctor_" data-uid="StellarDotnetSdk.Server.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Server__ctor_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_" data-uid="StellarDotnetSdk.Server.#ctor(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String)">
+  Server(string, HttpResilienceOptions?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a new instance that will interact with the provided URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Server(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL of the Horizon server.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+with no retries, circuit breaker, or timeout.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>(Optional) Bearer token in case the server requires it.</p>
+</dd>
   </dl>
 
 
@@ -192,7 +236,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new instance with the provided URI and a custom <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -202,9 +247,11 @@ Class Server
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>URL of the Horizon server.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>A custom <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> to use for requests.</p>
+</dd>
   </dl>
 
 
@@ -239,7 +286,7 @@ Class Server
     <dd><p>URL of the Horizon server.</p>
 </dd>
     <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Bearer token in case the server requires it.</p>
+    <dd><p>(Optional) Bearer token in case the server requires it.</p>
 </dd>
   </dl>
 
@@ -265,7 +312,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying accounts.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -296,7 +344,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -327,7 +376,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying claimable balances.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -358,7 +408,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying effects.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -389,7 +440,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying fee statistics.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -413,6 +465,38 @@ Class Server
 
 
 
+  <a id="StellarDotnetSdk_Server_Health_" data-uid="StellarDotnetSdk.Server.Health*"></a>
+
+  <h3 id="StellarDotnetSdk_Server_Health" data-uid="StellarDotnetSdk.Server.Health">
+  Health
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a request builder for querying health.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HealthRequestBuilder Health { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.HealthRequestBuilder.html">HealthRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Server_Ledgers_" data-uid="StellarDotnetSdk.Server.Ledgers*"></a>
 
   <h3 id="StellarDotnetSdk_Server_Ledgers" data-uid="StellarDotnetSdk.Server.Ledgers">
@@ -420,7 +504,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -451,7 +536,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying liquidity pools.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -482,7 +568,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying offers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -513,7 +600,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying operations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -544,7 +632,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying the order book.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -575,7 +664,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for strict-receive payment path queries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -606,7 +696,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for strict-send payment path queries.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -637,7 +728,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying payments.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -668,7 +760,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for the Stellar test network friendbot faucet.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -699,7 +792,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying trade aggregations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -730,7 +824,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying trades.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -761,7 +856,8 @@ Class Server
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a request builder for querying transactions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -837,7 +933,8 @@ It will sequentially load each destination account and check if it has the data 
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> pre-configured with Stellar SDK client headers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -849,7 +946,8 @@ public static HttpClient CreateHttpClient()</code></pre>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>A configured <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</dd>
   </dl>
 
 
@@ -869,7 +967,8 @@ public static HttpClient CreateHttpClient()</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> pre-configured with Stellar SDK client headers using the given handler.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -880,13 +979,15 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>handler</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpmessagehandler">HttpMessageHandler</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP message handler to use.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>A configured <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</dd>
   </dl>
 
 
@@ -906,7 +1007,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -932,7 +1034,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Fetches the root information from the Horizon server synchronously.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -943,7 +1046,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.RootResponse.html">RootResponse</a></dt>
-    <dd></dd>
+    <dd><p>The root response containing server metadata and supported protocol version.</p>
+</dd>
   </dl>
 
 
@@ -953,6 +1057,16 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.aggregateexception">AggregateException</a></dt>
+    <dd><p>Thrown when <a class="xref" href="StellarDotnetSdk.Server.html#StellarDotnetSdk_Server_RootAsync">RootAsync()</a> fails. This overload blocks on the asynchronous one, so every
+exception it documents — including the <a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a> raised for an empty
+body or one holding the JSON literal <code>null</code> — arrives wrapped here rather than on its own, and
+must be read from <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.aggregateexception.innerexceptions">InnerExceptions</a>. Prefer <a class="xref" href="StellarDotnetSdk.Server.html#StellarDotnetSdk_Server_RootAsync">RootAsync()</a>,
+which surfaces it directly.</p>
+</dd>
+  </dl>
 
 
 
@@ -963,7 +1077,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Fetches the root information from the Horizon server asynchronously.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -974,7 +1089,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.RootResponse.html">RootResponse</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The root response containing server metadata and supported protocol version.</p>
+</dd>
   </dl>
 
 
@@ -984,6 +1100,13 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
@@ -994,7 +1117,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Submit a fee bump transaction to the network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1004,7 +1128,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeBump</code> <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A signed fee bump transaction object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1030,7 +1155,8 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Submit a fee bump transaction to the network with the given options.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1040,9 +1166,11 @@ public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pr
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeBump</code> <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A signed fee bump transaction object.</p>
+</dd>
     <dt><code>options</code> <a class="xref" href="StellarDotnetSdk.Transactions.SubmitTransactionOptions.html">SubmitTransactionOptions</a></dt>
-    <dd></dd>
+    <dd><p>Options controlling memo-required checks and other submission behavior.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1227,7 +1355,8 @@ options to change this behaviour.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Submit a fee bump transaction asynchronously to the network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1237,7 +1366,8 @@ options to change this behaviour.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeBump</code> <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A signed fee bump transaction object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1263,7 +1393,8 @@ options to change this behaviour.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Submit a fee bump transaction asynchronously to the network with the given options.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1273,9 +1404,11 @@ options to change this behaviour.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>feeBump</code> <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
-    <dd></dd>
+    <dd><p>A signed fee bump transaction object.</p>
+</dd>
     <dt><code>options</code> <a class="xref" href="StellarDotnetSdk.Transactions.SubmitTransactionOptions.html">SubmitTransactionOptions</a></dt>
-    <dd></dd>
+    <dd><p>Options controlling memo-required checks and other submission behavior.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1433,9 +1566,11 @@ status of the submitted transaction.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>transactionEnvelopeBase64</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The base64-encoded transaction envelope XDR to submit.</p>
+</dd>
     <dt><code>options</code> <a class="xref" href="StellarDotnetSdk.Transactions.SubmitTransactionOptions.html">SubmitTransactionOptions</a></dt>
-    <dd></dd>
+    <dd><p>Options controlling the memo-required check and whether the envelope holds a fee bump transaction.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>

@@ -92,122 +92,159 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.AccountMergeOperationResponse.html">AccountMergeOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents an account_merge operation response.
+Merges one account into another, transferring all XLM balance and deleting the source account.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.html">AllowTrustOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents an allow_trust operation response (deprecated operation).
+Allows another account to hold an asset issued by the source account.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.BeginSponsoringFutureReservesOperationResponse.html">BeginSponsoringFutureReservesOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents a begin_sponsoring_future_reserves operation response.
+This operation establishes a sponsorship relationship where the source account
+sponsors the reserves (minimum balance requirements) for operations performed
+by another account until an end_sponsoring_future_reserves operation is encountered.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.BumpSequenceOperationResponse.html">BumpSequenceOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents a bump_sequence operation response.
+Bumps forward the sequence number of the source account to the specified value.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.html">ChangeTrustOperationResponse</a></dt>
-      <dd><p>Represents ChangeTrust operation response.</p>
+      <dd><p>Represents a change_trust operation response.
+Creates, updates, or deletes a trustline between accounts.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClaimClaimableBalanceOperationResponse.html">ClaimClaimableBalanceOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents a claim_claimable_balance operation response.
+Claims a claimable balance, transferring the balance to the claimant's account.
+The claimant must be one of the claimants specified when the balance was created,
+and their predicate conditions must be met.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClawbackClaimableBalanceOperationResponse.html">ClawbackClaimableBalanceOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a clawback_claimable_balance operation response.
+Claws back (destroys) a claimable balance, removing it from the network.
+This operation can only be performed by the asset issuer on claimable balances containing assets
+that have the clawback-enabled flag set. The claimable balance and its assets are permanently removed.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.html">ClawbackOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a clawback operation response.
+Claws back (burns) a specified amount of an asset from an account.
+This operation can only be performed by the asset issuer on assets that have the clawback-enabled flag set.
+The clawed back amount is permanently removed from circulation.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreateAccountOperationResponse.html">CreateAccountOperationResponse</a></dt>
-      <dd><p>Represents CreateAccount operation response.</p>
+      <dd><p>Represents a create_account operation response.
+Creates and funds a new account with a starting balance of XLM.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreateClaimableBalanceOperationResponse.html">CreateClaimableBalanceOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents a create_claimable_balance operation response.
+Creates a claimable balance that can be claimed by one or more claimants according to specified predicates.
+The balance is held by the network and can be claimed when the predicate conditions are met.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreatePassiveOfferOperationResponse.html">CreatePassiveOfferOperationResponse</a></dt>
-      <dd><p>Represents CreatePassiveOffer operation response.</p>
+      <dd><p>Represents a create_passive_sell_offer operation response.
+Creates an offer to sell an asset that does not take another offer of equal price when created.
+Unlike active offers, passive offers will not immediately match with existing offers at the same price.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.EndSponsoringFutureReservesOperationResponse.html">EndSponsoringFutureReservesOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents an end_sponsoring_future_reserves operation response.
+This operation terminates the current sponsorship relationship established by
+a begin_sponsoring_future_reserves operation. It must be submitted by the
+sponsored account to complete the sponsorship sandwich.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ExtendFootprintOperationResponse.html">ExtendFootprintOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents an extend_footprint_ttl operation response.
+Extends the time-to-live (TTL) of Soroban contract data entries.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.InflationOperationResponse.html">InflationOperationResponse</a></dt>
-      <dd><p>Represents Inflation operation response.</p>
+      <dd><p>Represents an inflation operation response (deprecated operation).
+Runs the weekly inflation process and distributes new lumens.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.html">InvokeHostFunctionOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents an invoke_host_function operation response.
+Invokes a Soroban smart contract function on the Stellar network.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.AssetContractBalanceChange.html">InvokeHostFunctionOperationResponse.AssetContractBalanceChange</a></dt>
-      <dd></dd>
+      <dd><p>Represents an asset balance change that occurred during contract execution.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.HostFunctionParameter.html">InvokeHostFunctionOperationResponse.HostFunctionParameter</a></dt>
-      <dd></dd>
+      <dd><p>Represents a parameter passed to a host function.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.LiquidityPoolDepositOperationResponse.html">LiquidityPoolDepositOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a liquidity_pool_deposit operation response.
+Deposits assets into a liquidity pool in exchange for pool shares.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.LiquidityPoolWithdrawOperationResponse.html">LiquidityPoolWithdrawOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a liquidity_pool_withdraw operation response.
+Withdraws assets from a liquidity pool by burning pool shares.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageBuyOfferOperationResponse.html">ManageBuyOfferOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a manage_buy_offer operation response.
+Creates, updates, or deletes an offer to buy a specific amount of an asset at a given price.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageDataOperationResponse.html">ManageDataOperationResponse</a></dt>
-      <dd><p>Represents ManageData operation response.</p>
+      <dd><p>Represents a manage_data operation response.
+Sets, modifies, or deletes a data entry (key-value pair) associated with an account.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageOfferOperationResponse.html">ManageOfferOperationResponse</a></dt>
-      <dd><p>Represents ManageOffer operation response.</p>
+      <dd><p>Represents a manage_offer operation response.
+Creates, updates, or deletes an offer to buy or sell assets on the Stellar decentralized exchange.
+This is the base class for both manage_sell_offer and manage_buy_offer operations.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageSellOfferOperationResponse.html">ManageSellOfferOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a manage_sell_offer operation response.
+Creates, updates, or deletes an offer to sell a specific amount of an asset at a given price.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.OperationResponse.html">OperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Base class for all operation responses.
+Operations are actions that mutate the ledger, such as creating accounts or making payments.
+See:
+<a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations">Operations</a></p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -223,46 +260,48 @@ to show you what parameters a give resource can take.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.PathPaymentStrictReceiveOperationResponse.html">PathPaymentStrictReceiveOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a path_payment_strict_receive operation response.
+Sends an amount in a specific asset to a destination account through a path of offers.
+The receive amount is specified, and the send amount can vary.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.html">PathPaymentStrictSendOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a path_payment_strict_send operation response.
+Sends an amount in a specific asset to a destination account through a path of offers.
+The send amount is specified, and the receive amount can vary.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.PaymentOperationResponse.html">PaymentOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a payment operation response.
+Sends an amount in a specific asset from one account to another.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.RestoreFootprintOperationResponse.html">RestoreFootprintOperationResponse</a></dt>
-      <dd></dd>
+      <dd><p>Represents a restore_footprint operation response.
+Restores archived Soroban contract data entries back to the active state.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.RevokeSponsorshipOperationResponse.html">RevokeSponsorshipOperationResponse</a></dt>
-      <dd><p>Represents AccountMerge operation response.</p>
+      <dd><p>Represents a revoke_sponsorship operation response.
+This operation removes or transfers sponsorship of reserves for various ledger entries
+(accounts, trustlines, offers, data, signers, or claimable balances).
+Only one set of fields will be populated depending on the type of sponsorship being revoked.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.SetOptionsOperationResponse.html">SetOptionsOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a set_options operation response.
+Sets various options for an account, such as signers, thresholds, flags, and home domain.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.SetTrustlineFlagsOperationResponse.html">SetTrustlineFlagsOperationResponse</a></dt>
-      <dd><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+      <dd><p>Represents a set_trustline_flags operation response.
+Sets flags on a trustline, controlling authorization states for an asset.</p>
 </dd>
     </dl>
     <h3 id="enums">
@@ -270,7 +309,8 @@ Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.AssetContractBalanceChange.MuxedIdType.html">InvokeHostFunctionOperationResponse.AssetContractBalanceChange.MuxedIdType</a></dt>
-      <dd></dd>
+      <dd><p>The type of muxed ID for the destination account.</p>
+</dd>
     </dl>
 
 

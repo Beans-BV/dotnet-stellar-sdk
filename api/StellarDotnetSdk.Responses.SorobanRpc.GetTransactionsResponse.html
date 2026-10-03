@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class GetTransactionsResponse ">
       
-      
+      <meta name="description" content="Represents the response from the Soroban RPC getTransactions method. Contains a list of transactions and ledger context information.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class GetTransactionsResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from the Soroban RPC <code>getTransactions</code> method.
+Contains a list of transactions and ledger context information.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,35 +146,33 @@ Class GetTransactionsResponse
 
 
 
-  <h2 class="section" id="constructors">Constructors
+  <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.#ctor*"></a>
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse_Cursor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.Cursor*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse__ctor_StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo___System_Int64_System_Int64_System_Int64_System_Int64_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.#ctor(StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo[],System.Int64,System.Int64,System.Int64,System.Int64)">
-  GetTransactionsResponse(TransactionInfo[]?, long, long, long, long)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse_Cursor" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.Cursor">
+  Cursor
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The cursor corresponding to the last returned transaction. Use this cursor to paginate forward by setting it
+as the cursor in the next request.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetTransactionsResponse(TransactionInfo[]? transactions, long latestLedger, long latestLedgerCloseTimestamp, long oldestLedger, long oldestLedgerCloseTimestamp)</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Cursor { get; init; }</code></pre>
   </div>
 
-  <h4 class="section">Parameters</h4>
+
+
+
+
+  <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><code>transactions</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.html">TransactionInfo</a>[]</dt>
-    <dd></dd>
-    <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-    <dt><code>latestLedgerCloseTimestamp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-    <dt><code>oldestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-    <dt><code>oldestLedgerCloseTimestamp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -183,14 +183,6 @@ Class GetTransactionsResponse
 
 
 
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse_LatestLedger_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.LatestLedger*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetTransactionsResponse_LatestLedger" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.LatestLedger">
@@ -198,12 +190,12 @@ Class GetTransactionsResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -230,12 +222,12 @@ Class GetTransactionsResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long LatestLedgerCloseTimestamp { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long LatestLedgerCloseTimestamp { get; init; }</code></pre>
   </div>
 
 
@@ -262,12 +254,12 @@ Class GetTransactionsResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the oldest ledger ingested by Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the oldest ledger ingested by Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long OldestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long OldestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -294,13 +286,13 @@ Class GetTransactionsResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the oldest ledger ingested by Soroban RPC at the time it handled the
+  <div class="markdown level1 summary"><p>The unix timestamp of the close time of the oldest ledger ingested by Stellar RPC at the time it handled the
 request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long OldestLedgerCloseTimestamp { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long OldestLedgerCloseTimestamp { get; init; }</code></pre>
   </div>
 
 
@@ -327,11 +319,12 @@ request.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The array of transactions matching the query criteria.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TransactionInfo[]? Transactions { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public TransactionInfo[]? Transactions { get; init; }</code></pre>
   </div>
 
 

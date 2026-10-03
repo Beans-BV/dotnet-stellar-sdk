@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum SendTransactionResponse.SendTransactionStatus ">
       
-      
+      <meta name="description" content="Indicates the status of a submitted transaction after being processed by the Soroban RPC server.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,11 +94,13 @@ Enum SendTransactionResponse.SendTransactionStatus
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Indicates the status of a submitted transaction after being processed by the Soroban RPC server.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum SendTransactionResponse.SendTransactionStatus</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SendTransactionStatusEnumJsonConverter))]
+public enum SendTransactionResponse.SendTransactionStatus</code></pre>
   </div>
 
 
@@ -113,16 +115,33 @@ Enum SendTransactionResponse.SendTransactionStatus
 </h2>
   <dl class="parameters">
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_DUPLICATE"><code>DUPLICATE = 1</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction is a duplicate of an already submitted transaction.</p>
+</dd>
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_ERROR"><code>ERROR = 3</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction was rejected due to an error.</p>
+</dd>
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_PENDING"><code>PENDING = 0</code></dt>
-    <dd></dd>
+  
+  <dd><p>The transaction has been accepted and is pending inclusion in a ledger.</p>
+</dd>
     <dt id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_TRY_AGAIN_LATER"><code>TRY_AGAIN_LATER = 2</code></dt>
-    <dd></dd>
+  
+  <dd><p>The server is busy; the client should retry the submission later.</p>
+</dd>
   </dl>
 
 
+  <h2 id="StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>The type-level <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> is the third and weakest of the three places the
+strict converter is attached, and it covers the case the other two miss: the enum travelling on its
+own — a caller's own DTO field, a persisted status column, a queue message — under a
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a> that registers no converter for it. Without it
+the built-in enum handling maps a bare integer by ordinal, and ordinal 0 here is
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus.html#StellarDotnetSdk_Responses_SorobanRpc_SendTransactionResponse_SendTransactionStatus_PENDING">PENDING</a>. See <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.EventFilterType.html">EventFilterType</a> for the full
+three-tier resolution order.</p>
+</div>
 
 </article>
 

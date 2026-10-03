@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SubmitTransactionAsyncResponse ">
       
-      
+      <meta name="description" content="Represents the response from an asynchronous transaction submission. Async submission is faster but requires polling for the final status.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class SubmitTransactionAsyncResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the response from an asynchronous transaction submission.
+Async submission is faster but requires polling for the final status.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SubmitTransactionAsyncResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SubmitTransactionAsyncResponse : Response</code></pre>
   </div>
 
 
@@ -118,15 +120,6 @@ Class SubmitTransactionAsyncResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -140,9 +133,6 @@ Class SubmitTransactionAsyncResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -168,7 +158,8 @@ Class SubmitTransactionAsyncResponse
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Present only if the submission status <code>TxStatus</code> is an ERROR.</p>
+  <div class="markdown level1 summary"><p>The error result if the submission failed (TxStatus is ERROR).
+Null if the transaction was successfully submitted.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -200,11 +191,12 @@ Class SubmitTransactionAsyncResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The hash of the submitted transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hash&quot;)]
 public string? Hash { get; init; }</code></pre>
   </div>
 
@@ -232,13 +224,14 @@ public string? Hash { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Status of the transaction submission.</p>
+  <div class="markdown level1 summary"><p>The status of the transaction submission.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;tx_status&quot;)]
-public SubmitTransactionAsyncResponse.TransactionStatus TxStatus { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;tx_status&quot;)]
+[JsonConverter(typeof(SubmitTransactionAsyncStatusJsonConverter))]
+public required SubmitTransactionAsyncResponse.TransactionStatus TxStatus { get; init; }</code></pre>
   </div>
 
 

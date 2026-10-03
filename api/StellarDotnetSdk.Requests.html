@@ -97,7 +97,8 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.AccountsRequestBuilder.AccountsRequestOptions.html">AccountsRequestBuilder.AccountsRequestOptions</a></dt>
-      <dd></dd>
+      <dd><p>Options for filtering accounts when querying the Horizon <code>/accounts</code> endpoint.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.AssetsRequestBuilder.html">AssetsRequestBuilder</a></dt>
@@ -105,59 +106,102 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.ClaimableBalancesRequestBuilder.html">ClaimableBalancesRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/claimable_balances</code> endpoint for retrieving
+claimable balance details and listing claimable balances.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.DefaultStellarSdkHttpClient.html">DefaultStellarSdkHttpClient</a></dt>
-      <dd></dd>
+      <dd><p>A preconfigured <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> for communicating with Stellar Horizon and Soroban RPC servers.
+Sets default request headers (client name, version, and optional bearer token) and optionally
+wraps the handler pipeline with <a class="xref" href="StellarDotnetSdk.Requests.RetryingHttpMessageHandler.html">RetryingHttpMessageHandler</a> when <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a>
+has any feature enabled (retries, circuit breaker, or timeout — see
+<a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_HasAnyResilienceFeatureEnabled">HasAnyResilienceFeatureEnabled</a>; status codes alone enable nothing).</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.EffectsRequestBuilder.html">EffectsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests connected to effects. Effects represent specific changes that occur in the ledger
+as a result of successful operations.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.FeeStatsRequestBuilder.html">FeeStatsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/fee_stats</code> endpoint, which provides information about
+per-operation fee statistics over the last 5 ledgers.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.FriendBotRequestBuilder.html">FriendBotRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Stellar Testnet Friendbot service, which funds accounts
+with test Lumens. Only available on test networks (not the public network).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.HealthRequestBuilder.html">HealthRequestBuilder</a></dt>
+      <dd><p>Builds requests connected to the Horizon health endpoint.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+      <dd><p>Configuration options for HTTP resilience behavior including retry, circuit breaker, and timeout policies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptionsPresets.html">HttpResilienceOptionsPresets</a></dt>
+      <dd><p>Provides preset configurations for common HTTP resilience scenarios.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.HttpResponseException.html">HttpResponseException</a></dt>
-      <dd></dd>
+      <dd><p>Represents an error returned by a Horizon server with an HTTP status code of 300 or higher.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.LedgersRequestBuilder.html">LedgersRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests connected to ledgers. Provides access to the Horizon <code>/ledgers</code> endpoint
+for retrieving ledger details and streaming ledger close events.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.LiquidityPoolsRequestBuilder.html">LiquidityPoolsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/liquidity_pools</code> endpoint for retrieving
+liquidity pool details and streaming pool events.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.OffersRequestBuilder.html">OffersRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Base class for request builders that execute requests and return a <a class="xref" href="StellarDotnetSdk.Responses.Page-1.html">Page&lt;T&gt;</a> of results.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.OffersRequestBuilder.OffersRequestOptions.html">OffersRequestBuilder.OffersRequestOptions</a></dt>
-      <dd></dd>
+      <dd><p>Options for filtering offers when querying the Horizon <code>/offers</code> endpoint.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests connected to operations. Provides access to the Horizon <code>/operations</code> endpoint
+for retrieving details about individual operations and streaming operation events.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.OrderBookRequestBuilder.html">OrderBookRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/order_book</code> endpoint for retrieving
+the current order book for a given asset pair.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictReceiveRequestBuilder.html">PathStrictReceiveRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/paths/strict-receive</code> endpoint for finding
+payment paths that deliver a specified amount of a destination asset.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.PathStrictSendRequestBuilder.html">PathStrictSendRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/paths/strict-send</code> endpoint for finding
+payment paths that send a specified amount of a source asset.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.PathsRequestBuilder.html">PathsRequestBuilder</a></dt>
@@ -171,11 +215,13 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderExecutePageable-2.html">RequestBuilderExecutePageable&lt;T, TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Base class for request builders that execute requests and return a <a class="xref" href="StellarDotnetSdk.Responses.Page-1.html">Page&lt;T&gt;</a> of results.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html">RequestBuilderStreamable&lt;T, TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Base class for request builders that support both paginated execution and Server-Sent Events (SSE) streaming.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html">RequestBuilder&lt;T&gt;</a></dt>
@@ -184,11 +230,41 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.ResponseHandler-1.html">ResponseHandler&lt;T&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Deserializes Horizon HTTP responses into strongly-typed objects and translates
+HTTP error status codes into appropriate SDK exceptions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.RetryAfterParser.html">RetryAfterParser</a></dt>
+      <dd><p>Parses HTTP <code>Retry-After</code> header values (RFC 7231 §7.1.3) into <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>.
+Supports both delay-seconds and HTTP-date forms.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Requests.RetryingHttpMessageHandler.html">RetryingHttpMessageHandler</a></dt>
+      <dd><p>HTTP message handler that implements retry logic for connection failures (network errors, DNS failures, etc.)
+and for configured HTTP status codes (see <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RetryHttpStatusCodes">RetryHttpStatusCodes</a>).
+Honors the <code>Retry-After</code> response header when <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html#StellarDotnetSdk_Requests_HttpResilienceOptions_RespectRetryAfter">RespectRetryAfter</a>
+is true. By default, only safe HTTP methods (GET, HEAD, OPTIONS) are retried on status codes;
+connection-failure (exception) retries apply to all methods.</p>
+<p>
+    Retries re-send the same <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestmessage">HttpRequestMessage</a> instance, so request bodies must be
+    re-readable, buffered content (<code>StringContent</code>, <code>ByteArrayContent</code>,
+    <code>FormUrlEncodedContent</code> — all of the SDK's own requests qualify). A non-seekable
+    <code>StreamContent</code> body fails on the second attempt.
+</p>
+<p>
+    Cancellations are never retried: when <code>HttpClient.Timeout</code> fires it cancels the request's
+    token, so the resulting <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.taskcanceledexception">TaskCanceledException</a> propagates
+    immediately, exactly like a user-initiated cancellation.
+</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests to the Horizon <code>/trade_aggregations</code> endpoint for retrieving
+aggregated trade statistics for a given asset pair.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
@@ -197,30 +273,39 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Builds requests connected to transactions. Provides access to the Horizon <code>/transactions</code> endpoint
+for retrieving transaction details and streaming new transactions.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.UriBuilderExtensions.html">UriBuilderExtensions</a></dt>
-      <dd></dd>
+      <dd><p>Extension methods for <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uribuilder">UriBuilder</a> to simplify query parameter and path manipulation.</p>
+</dd>
     </dl>
     <h3 id="interfaces">
 Interfaces
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.IPaymentsRequestBuilder.html">IPaymentsRequestBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Defines the streaming and pagination capabilities for payment requests,
+including the option to join transaction data in the response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.IPaymentsRequestInitialBuilder.html">IPaymentsRequestInitialBuilder</a></dt>
-      <dd></dd>
+      <dd><p>Extends <a class="xref" href="StellarDotnetSdk.Requests.IPaymentsRequestBuilder.html">IPaymentsRequestBuilder</a> with methods to scope payment queries
+by account, ledger, or transaction before execution.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilderExecutePageable-2.html">IRequestBuilderExecutePageable&lt;T, TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Extends <a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilder-1.html">IRequestBuilder&lt;T&gt;</a> with the ability to execute a request and return a paginated response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilderStreamable-1.html">IRequestBuilderStreamable&lt;TResponse&gt;</a></dt>
-      <dd></dd>
+      <dd><p>Defines the ability to open a Server-Sent Events (SSE) stream from a Horizon endpoint.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilder-1.html">IRequestBuilder&lt;T&gt;</a></dt>
@@ -232,7 +317,8 @@ Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Requests.OrderDirection.html">OrderDirection</a></dt>
-      <dd></dd>
+      <dd><p>Specifies the ordering direction for paginated Horizon responses.</p>
+</dd>
     </dl>
 
 

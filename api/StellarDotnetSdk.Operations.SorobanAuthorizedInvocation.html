@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SorobanAuthorizedInvocation ">
       
-      
+      <meta name="description" content="Represents a single authorized Soroban invocation within an authorization tree. Each invocation consists of the authorized function being called and an array of sub-invocations that represent nested contract calls requiring the same authorization.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class SorobanAuthorizedInvocation
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a single authorized Soroban invocation within an authorization tree.
+Each invocation consists of the authorized function being called and an array of sub-invocations
+that represent nested contract calls requiring the same authorization.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +158,8 @@ Class SorobanAuthorizedInvocation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,9 +169,11 @@ Class SorobanAuthorizedInvocation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>function</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedFunction.html">SorobanAuthorizedFunction</a></dt>
-    <dd></dd>
+    <dd><p>The authorized function being invoked.</p>
+</dd>
     <dt><code>subInvocations</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a>[]</dt>
-    <dd></dd>
+    <dd><p>Nested contract calls requiring the same authorization.</p>
+</dd>
   </dl>
 
 
@@ -192,7 +198,8 @@ Class SorobanAuthorizedInvocation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The authorized function being invoked at this node of the invocation tree.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -223,7 +230,8 @@ Class SorobanAuthorizedInvocation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Nested sub-invocations that are authorized under the same credentials as this invocation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -258,7 +266,9 @@ Class SorobanAuthorizedInvocation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a> from the given XDR
+<span class="xref">StellarDotnetSdk.Xdr.SorobanAuthorizedInvocation</span>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -268,13 +278,15 @@ Class SorobanAuthorizedInvocation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdr</code> <span class="xref">SorobanAuthorizedInvocation</span></dt>
-    <dd></dd>
+    <dd><p>The XDR object to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -294,7 +306,9 @@ Class SorobanAuthorizedInvocation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a> to its XDR
+<span class="xref">StellarDotnetSdk.Xdr.SorobanAuthorizedInvocation</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -305,7 +319,8 @@ Class SorobanAuthorizedInvocation
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">SorobanAuthorizedInvocation</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.SorobanAuthorizedInvocation</span> XDR object.</p>
+</dd>
   </dl>
 
 

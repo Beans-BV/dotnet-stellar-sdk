@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Base class for all operation responses. Operations are actions that mutate the ledger, such as creating accounts or making payments. See: Operations">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,10 @@ Class OperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Base class for all operation responses.
+Operations are actions that mutate the ledger, such as creating accounts or making payments.
+See:
+<a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations">Operations</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -196,6 +197,14 @@ public abstract class OperationResponse : Response, IPagingToken</code></pre>
 
 
 
+  <h2 id="StellarDotnetSdk_Responses_Operations_OperationResponse_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    <a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a>
+</p>
+<p>
+    <a class="xref" href="StellarDotnetSdk.Server.html">Server</a>
+</p>
+</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -209,12 +218,13 @@ public abstract class OperationResponse : Response, IPagingToken</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The date and time this operation was created.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;created_at&quot;)]
-public DateTime CreatedAt { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_at&quot;)]
+public required DateTimeOffset CreatedAt { get; init; }</code></pre>
   </div>
 
 
@@ -223,7 +233,7 @@ public DateTime CreatedAt { get; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -241,13 +251,13 @@ public DateTime CreatedAt { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>ID of the operation</p>
+  <div class="markdown level1 summary"><p>The unique identifier for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
-public long Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required long Id { get; init; }</code></pre>
   </div>
 
 
@@ -274,13 +284,13 @@ public long Id { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Links of Paging</p>
+  <div class="markdown level1 summary"><p>Navigation links to related resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
-public OperationResponseLinks Links { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required OperationResponseLinks Links { get; init; }</code></pre>
   </div>
 
 
@@ -307,13 +317,13 @@ public OperationResponseLinks Links { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Paging Token of Paging</p>
+  <div class="markdown level1 summary"><p>A cursor value for use in pagination.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
-public string PagingToken { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;paging_token&quot;)]
+public required string PagingToken { get; init; }</code></pre>
   </div>
 
 
@@ -340,13 +350,13 @@ public string PagingToken { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Source Account of Operation</p>
+  <div class="markdown level1 summary"><p>The account that originates the operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account&quot;)]
-public string SourceAccount { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_account&quot;)]
+public required string SourceAccount { get; init; }</code></pre>
   </div>
 
 
@@ -373,12 +383,13 @@ public string SourceAccount { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the source account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_muxed&quot;)]
-public string SourceAccountMuxed { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_account_muxed&quot;)]
+public string? SourceAccountMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -405,12 +416,13 @@ public string SourceAccountMuxed { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the source account, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_muxed_id&quot;)]
-public ulong? SourceAccountMuxedId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;source_account_muxed_id&quot;)]
+public ulong? SourceAccountMuxedId { get; init; }</code></pre>
   </div>
 
 
@@ -437,13 +449,14 @@ public ulong? SourceAccountMuxedId { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns the transaction this operation belongs to.</p>
+  <div class="markdown level1 summary"><p>The transaction that contains this operation.
+Only present when the operation is retrieved with the transaction included.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction&quot;)]
-public TransactionResponse? Transaction { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;transaction&quot;)]
+public TransactionResponse? Transaction { get; init; }</code></pre>
   </div>
 
 
@@ -470,13 +483,13 @@ public TransactionResponse? Transaction { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns transaction hash of transaction this operation belongs to.</p>
+  <div class="markdown level1 summary"><p>The hash of the transaction that contains this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction_hash&quot;)]
-public string TransactionHash { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;transaction_hash&quot;)]
+public required string TransactionHash { get; init; }</code></pre>
   </div>
 
 
@@ -503,13 +516,13 @@ public string TransactionHash { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns whether the operation transaction was successful.</p>
+  <div class="markdown level1 summary"><p>Indicates whether the transaction containing this operation was successful.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction_successful&quot;, DefaultValueHandling = DefaultValueHandling.Populate)]
-public bool TransactionSuccessful { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;transaction_successful&quot;)]
+public bool TransactionSuccessful { get; init; }</code></pre>
   </div>
 
 
@@ -536,24 +549,13 @@ public bool TransactionSuccessful { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns operation type. Possible types:
-crete_account
-payment
-allow_trust
-change_trust
-set_options
-account_merge
-manage_offer
-path_payments
-create_passive_offer
-inflation
-manage_data</p>
+  <div class="markdown level1 summary"><p>The operation type name (e.g., &quot;payment&quot;, &quot;create_account&quot;, &quot;manage_offer&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type&quot;)]
-public string Type { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+public required string Type { get; init; }</code></pre>
   </div>
 
 
@@ -580,12 +582,13 @@ public string Type { get; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type_i&quot;)]
-public virtual int TypeId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type_i&quot;)]
+public abstract int TypeId { get; }</code></pre>
   </div>
 
 

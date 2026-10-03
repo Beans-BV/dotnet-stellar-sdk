@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class FriendBotResponse.FriendBotResponseLinks ">
       
-      
+      <meta name="description" content="Links associated with the Friendbot response.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,12 @@ Class FriendBotResponse.FriendBotResponseLinks
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Links associated with the Friendbot response.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FriendBotResponse.FriendBotResponseLinks</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class FriendBotResponse.FriendBotResponseLinks</code></pre>
   </div>
 
 
@@ -129,9 +130,6 @@ Class FriendBotResponse.FriendBotResponseLinks
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -155,12 +153,13 @@ Class FriendBotResponse.FriendBotResponseLinks
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Link to the funding transaction details.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction&quot;)]
-public Link&lt;TransactionResponse&gt; Transaction { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;transaction&quot;)]
+public Link&lt;TransactionResponse&gt;? Transaction { get; init; }</code></pre>
   </div>
 
 

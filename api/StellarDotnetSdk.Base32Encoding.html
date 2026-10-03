@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Base32Encoding ">
       
-      
+      <meta name="description" content="Provides RFC 4648 Base32 encoding and decoding methods. Used internally by  for encoding and decoding Stellar keys and identifiers.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class Base32Encoding
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Provides RFC 4648 Base32 encoding and decoding methods. Used internally by <a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>
+for encoding and decoding Stellar keys and identifiers.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +157,8 @@ Class Base32Encoding
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a Base32-encoded string to its raw byte representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,13 +168,15 @@ Class Base32Encoding
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Base32-encoded string to decode.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The decoded byte array.</p>
+</dd>
   </dl>
 
 
@@ -191,7 +196,8 @@ Class Base32Encoding
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes a byte array to a Base32 string using the specified options.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -201,15 +207,18 @@ Class Base32Encoding
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The byte array to encode.</p>
+</dd>
     <dt><code>options</code> <a class="xref" href="StellarDotnetSdk.Base32Encoding.html">Base32Encoding</a>.<a class="xref" href="StellarDotnetSdk.Base32Encoding.Base32EncodingOptions.html">Base32EncodingOptions</a></dt>
-    <dd></dd>
+    <dd><p>The encoding options controlling padding behavior.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Base32-encoded string.</p>
+</dd>
   </dl>
 
 
@@ -229,7 +238,8 @@ Class Base32Encoding
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes a byte array to a Base32 string with optional configuration.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -239,15 +249,18 @@ Class Base32Encoding
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>The byte array to encode.</p>
+</dd>
     <dt><code>optionsFunc</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="StellarDotnetSdk.Base32Encoding.html">Base32Encoding</a>.<a class="xref" href="StellarDotnetSdk.Base32Encoding.Base32EncodingOptions.html">Base32EncodingOptions</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>An optional action to configure encoding options (e.g., padding).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The Base32-encoded string.</p>
+</dd>
   </dl>
 
 

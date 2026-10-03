@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SimulateTransactionResponse ">
       
-      <meta name="description" content="The response will include the anticipated affects the given transaction will have on the network. Additionally,         information needed to build, sign, and actually submit the transaction will be provided.          See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction/">
+      <meta name="description" content="The response will include the anticipated affects the given transaction will have on the network. Additionally,     information needed to build, sign, and actually submit the transaction will be provided.  See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction/">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -94,10 +94,10 @@ Class SimulateTransactionResponse
   </div>
 
   <div class="markdown summary"><p>
-        The response will include the anticipated affects the given transaction will have on the network. Additionally,
-        information needed to build, sign, and actually submit the transaction will be provided.
-    </p>
-    See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction/
+    The response will include the anticipated affects the given transaction will have on the network. Additionally,
+    information needed to build, sign, and actually submit the transaction will be provided.
+</p>
+<p>See <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction/">https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction/</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -149,55 +149,6 @@ Class SimulateTransactionResponse
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse__ctor_System_String_System_String_System_String___System_Nullable_System_Int64__System_Nullable_System_UInt32__StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble_StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SimulateInvokeHostFunctionResult___StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange___" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.#ctor(System.String,System.String,System.String[],System.Nullable{System.Int64},System.Nullable{System.UInt32},StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble,StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.SimulateInvokeHostFunctionResult[],StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange[])">
-  SimulateTransactionResponse(string?, string?, string[]?, long?, uint?, RestorePreamble?, SimulateInvokeHostFunctionResult[]?, LedgerEntryChange[])
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SimulateTransactionResponse(string? transactionData, string? error, string[]? events, long? latestLedger, uint? minResourceFee, SimulateTransactionResponse.RestorePreamble? restorePreambleInfo, SimulateTransactionResponse.SimulateInvokeHostFunctionResult[]? results, SimulateTransactionResponse.LedgerEntryChange[] stateChanges)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>transactionData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>error</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>events</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
-    <dd></dd>
-    <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-    <dt><code>minResourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
-    <dd></dd>
-    <dt><code>restorePreambleInfo</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html">SimulateTransactionResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.html">RestorePreamble</a></dt>
-    <dd></dd>
-    <dt><code>results</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.SimulateInvokeHostFunctionResult.html">SimulateInvokeHostFunctionResult</a>[]</dt>
-    <dd></dd>
-    <dt><code>stateChanges</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html">LedgerEntryChange</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -214,7 +165,7 @@ Class SimulateTransactionResponse
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? Error { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Error { get; init; }</code></pre>
   </div>
 
 
@@ -251,7 +202,8 @@ ordered by their emission time. (an array of serialized base64 strings).</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[]? Events { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SimulationEventsArrayJsonConverter))]
+public string[]? Events { get; init; }</code></pre>
   </div>
 
 
@@ -267,7 +219,22 @@ ordered by their emission time. (an array of serialized base64 strings).</p>
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_Events_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A <code>null</code> element is rejected, for the reason given on <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_StateChanges">StateChanges</a>: the
+non-nullable element type is otherwise unenforced against the array's <em>contents</em>, and
+<code>&quot;events&quot;:[null]</code> handed the caller an array whose first <code>Length</code> read threw
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a>.</p>
+</div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a></dt>
+    <dd><p>Thrown during deserialization when the array contains a <code>null</code> element.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a <code>null</code> element is assigned from C# rather than read from JSON.</p>
+</dd>
+  </dl>
 
 
 
@@ -278,12 +245,12 @@ ordered by their emission time. (an array of serialized base64 strings).</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? LatestLedger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long? LatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -312,15 +279,20 @@ ordered by their emission time. (an array of serialized base64 strings).</p>
 
   <div class="markdown level1 summary"><p>(Optional) Not present in case of error.</p>
 <p>
-    Recommended minimum resource fee to add when submitting the transaction. This fee is to be added on top of the
-    Stellar network fee.
+    Recommended minimum resource fee (in stroops) to add when submitting the transaction. This fee is to be added
+    on top of the Stellar network fee.
 </p>
-See https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies#network-fees-on-stellar.
+<p>
+    Stellar RPC declares this field as an <code>int64</code>, so it is modelled as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>: values above
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32.maxvalue">MaxValue</a> (~429 XLM) are reachable on large uploads and restores.
+</p>
+<p>See <a href="https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies#network-fees-on-stellar">https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies#network-fees-on-stellar</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint? MinResourceFee { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+public long? MinResourceFee { get; init; }</code></pre>
   </div>
 
 
@@ -329,13 +301,42 @@ See https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-stra
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
     <dd></dd>
   </dl>
 
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    Stellar RPC tags the field <code>json:"minResourceFee,string,omitempty"</code>, so when present it
+    arrives as a JSON <em>string</em> rather than a number.
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandlingattribute">JsonNumberHandlingAttribute</a> records that at the declaration instead of leaving it
+    to <a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html#StellarDotnetSdk_Converters_JsonOptions_DefaultOptions">DefaultOptions</a>'s ambient
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a>. This is a public response type with
+    public <code>init</code> accessors, so a caller can deserialize it with their own options — and one
+    whose options bind the wire name but not the number handling (for example
+    <code>PropertyNameCaseInsensitive</code> or a camelCase naming policy) got a
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a> on a conforming reply. Options that already imply
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a>, such as
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializerdefaults#system-text-json-jsonserializerdefaults-web">Web</a>, were never affected.
+</p>
+<p>
+    This relaxes the read rather than constraining it: the property now accepts a JSON string
+    <em>or</em> a bare number, so nothing that deserialized before is rejected. It is not the
+    read-side analogue of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a>, which rejects an absent field.
+</p>
+<p>
+    A property-level number-handling attribute replaces the ambient setting in <em>both</em>
+    directions, so it also fixes the write shape: this property is always written as a bare number,
+    even for a caller whose options set <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-writeasstring">WriteAsString</a>, and such a
+    caller can no longer opt these two properties into <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-strict">Strict</a>
+    reads. That is accepted deliberately — the alternative, adding
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-writeasstring">WriteAsString</a> here, would change the serialized shape for
+    every caller rather than for the few who configure that flag.
+</p>
+</div>
 
 
 
@@ -359,8 +360,8 @@ submission of the <code>InvokeHostFunction</code> operation. The <a class="xref"
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;restorePreamble&quot;)]
-public SimulateTransactionResponse.RestorePreamble? RestorePreambleInfo { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;restorePreamble&quot;)]
+public SimulateTransactionResponse.RestorePreamble? RestorePreambleInfo { get; init; }</code></pre>
   </div>
 
 
@@ -394,7 +395,8 @@ This will only contain a single element if present, because only a single
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SimulateTransactionResponse.SimulateInvokeHostFunctionResult[]? Results { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SimulationResultsArrayJsonConverter))]
+public SimulateTransactionResponse.SimulateInvokeHostFunctionResult[]? Results { get; init; }</code></pre>
   </div>
 
 
@@ -410,7 +412,24 @@ This will only contain a single element if present, because only a single
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_Results_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A <code>null</code> element is rejected, for the reason given on <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_StateChanges">StateChanges</a>.
+<code>&quot;results&quot;:[null]</code> previously deserialized cleanly and threw
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a> at the caller on the first <code>Results[0].Xdr</code>; it also made
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SorobanAuthorization">SorobanAuthorization</a> answer <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, which reads as <em>no
+authorization required</em> and is how the documented assemble-and-submit flow ends up sending a
+transaction with no auth entries.</p>
+</div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a></dt>
+    <dd><p>Thrown during deserialization when the array contains a <code>null</code> element.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a <code>null</code> element is assigned from C# rather than read from JSON.</p>
+</dd>
+  </dl>
 
 
 
@@ -421,11 +440,21 @@ This will only contain a single element if present, because only a single
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>(optional) Array of Soroban authorization entries required for the simulated transaction.
+Derived from the first result's auth entries.</p>
+<p>
+    The entries are decoded from server-supplied base64 on every read, so this property can throw and
+    each read returns a fresh object graph. A <code>SorobanAuthorization != null</code> guard is therefore not
+    a safe way to probe for their presence; check <code>Results?[0].Auth</code>, or handle
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.invaliddataexception">InvalidDataException</a>. Bind the value to a local rather than reading the property
+    twice, which decodes every entry twice.
+</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanAuthorizationEntry[]? SorobanAuthorization { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public SorobanAuthorizationEntry[]? SorobanAuthorization { get; }</code></pre>
   </div>
 
 
@@ -442,6 +471,16 @@ This will only contain a single element if present, because only a single
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.invaliddataexception">InvalidDataException</a></dt>
+    <dd><p>Thrown when any of the server-supplied auth entries is not decodable as a
+<code>SorobanAuthorizationEntry</code> XDR blob — including an unknown <code>SorobanCredentialsType</code>
+discriminant. The originating decoder exception is preserved as the inner exception. This is the failure
+this property reports for a malformed blob; it is not a guarantee that no other exception can escape
+(see <code>XdrDecodeFailure.IsDecodeFailure</code>).</p>
+</dd>
+  </dl>
 
 
 
@@ -455,11 +494,18 @@ This will only contain a single element if present, because only a single
   <div class="markdown level1 summary"><p>The recommended Soroban Transaction Data to use when submitting the simulated transaction. This data contains the
 refundable fee and resource usage information such as the ledger footprint and IO access data.</p>
 <p>Not present in case of error.</p>
+<p>
+    The blob is decoded from server-supplied base64 on every read, so this property can throw and each
+    read returns a fresh object graph. A <code>SorobanTransactionData != null</code> guard is therefore not a
+    safe way to probe for presence, and reading the property twice pays for two decodes — bind it to a
+    local instead.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanTransactionData? SorobanTransactionData { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public SorobanTransactionData? SorobanTransactionData { get; }</code></pre>
   </div>
 
 
@@ -476,6 +522,17 @@ refundable fee and resource usage information such as the ledger footprint and I
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.invaliddataexception">InvalidDataException</a></dt>
+    <dd><p>Thrown when the server-supplied <code>transactionData</code> is not decodable as a
+<code>SorobanTransactionData</code> XDR blob. Decoding happens on every read of this property, not during
+deserialization, so the failure surfaces here rather than at the originating
+<a class="xref" href="StellarDotnetSdk.Soroban.StellarRpcServer.html#StellarDotnetSdk_Soroban_StellarRpcServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__System_Nullable_StellarDotnetSdk_Soroban_AuthMode__System_Nullable_System_Boolean__">SimulateTransaction(Transaction, uint?, AuthMode?, bool?)</a> call. This is the failure this property reports for
+a malformed blob; it is not a guarantee that no other exception can escape (see
+<code>XdrDecodeFailure.IsDecodeFailure</code>).</p>
+</dd>
+  </dl>
 
 
 
@@ -486,11 +543,14 @@ refundable fee and resource usage information such as the ledger footprint and I
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>(optional) An array of state changes that would result from executing the simulated transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SimulateTransactionResponse.LedgerEntryChange[]? StateChanges { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;stateChanges&quot;)]
+[JsonConverter(typeof(StateChangesArrayJsonConverter))]
+public SimulateTransactionResponse.LedgerEntryChange[]? StateChanges { get; init; }</code></pre>
   </div>
 
 
@@ -506,7 +566,41 @@ refundable fee and resource usage information such as the ledger footprint and I
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_StateChanges_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    A <code>null</code> <em>element</em> is rejected. <code>RespectNullableAnnotations</code> constrains the
+    array reference, never its contents, so <code>"stateChanges":[null]</code> otherwise produced an array
+    whose element was <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> despite the non-nullable element type — and the very
+    loop <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Type">Type</a>'s <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a> was added to
+    protect, <code>foreach (var c in StateChanges) if (c.Type == "created")</code>, then threw
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a> instead of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>
+    every other malformed-payload path here reports.
+</p>
+<p>
+    The two entry points report differently, because they are different kinds of failure: a
+    malformed payload is a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a> raised by
+    <a class="xref" href="StellarDotnetSdk.Converters.NonNullElementArrayJsonConverter-1.html">NonNullElementArrayJsonConverter&lt;T&gt;</a> before the value is assigned, while passing a
+    null element from ordinary C# is a rejected <em>argument</em> and raises
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> — matching the convention the SDK's request types follow, and
+    keeping a caller's <code>catch (JsonException)</code> from swallowing a programming error.
+</p>
+<p>
+    This is a check at assignment, not a maintained invariant: the array is stored and returned by
+    reference rather than copied, so anything still holding the array can write a null back into it
+    afterwards. It guards what arrives from the wire, which is where a null element actually comes
+    from.
+</p>
+</div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a></dt>
+    <dd><p>Thrown during deserialization when the array contains a <code>null</code> element.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when a <code>null</code> element is assigned from C# rather than read from JSON.</p>
+</dd>
+  </dl>
 
 
 

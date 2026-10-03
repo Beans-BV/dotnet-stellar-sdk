@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class PaymentOperationResponse ">
       
-      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <meta name="description" content="Represents a payment operation response. Sends an amount in a specific asset from one account to another.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,9 +93,8 @@ Class PaymentOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Abstract class for operation responses.
-See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
-<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+  <div class="markdown summary"><p>Represents a payment operation response.
+Sends an amount in a specific asset from one account to another.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -211,13 +210,13 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Amount of the aforementioned asset to send.</p>
+  <div class="markdown level1 summary"><p>The amount of the asset to send.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;amount&quot;)]
-public string Amount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;amount&quot;)]
+public required string Amount { get; init; }</code></pre>
   </div>
 
 
@@ -244,12 +243,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account address that receives the payment.</p>
+  <div class="markdown level1 summary"><p>The asset that was sent in this payment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset Asset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Asset Asset { get; }</code></pre>
   </div>
 
 
@@ -276,13 +276,13 @@ public string Amount { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The asset code (Alpha4, Alpha12, etc.)</p>
+  <div class="markdown level1 summary"><p>The asset code (e.g., &quot;USD&quot;, &quot;BTC&quot;). Only present for non-native assets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_code&quot;)]
-public string AssetCode { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_code&quot;)]
+public string? AssetCode { get; init; }</code></pre>
   </div>
 
 
@@ -309,12 +309,13 @@ public string AssetCode { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account that issued the asset. Only present for non-native assets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_issuer&quot;)]
-public string AssetIssuer { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_issuer&quot;)]
+public string? AssetIssuer { get; init; }</code></pre>
   </div>
 
 
@@ -341,13 +342,13 @@ public string AssetIssuer { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>The asset type (USD, BTC, etc.)</p>
+  <div class="markdown level1 summary"><p>The type of asset being sent (e.g., &quot;native&quot;, &quot;credit_alphanum4&quot;, &quot;credit_alphanum12&quot;).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_type&quot;)]
-public string AssetType { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_type&quot;)]
+public required string AssetType { get; init; }</code></pre>
   </div>
 
 
@@ -374,13 +375,13 @@ public string AssetType { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Account address that is sending the payment.</p>
+  <div class="markdown level1 summary"><p>The account address that sent the payment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from&quot;)]
-public string From { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from&quot;)]
+public required string From { get; init; }</code></pre>
   </div>
 
 
@@ -407,12 +408,13 @@ public string From { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the sender, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from_muxed&quot;)]
-public string FromMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed&quot;)]
+public string? FromMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -439,11 +441,12 @@ public string FromMuxed { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the sender, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;from_muxed_id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_muxed_id&quot;)]
 public ulong? FromMuxedId { get; init; }</code></pre>
   </div>
 
@@ -471,12 +474,13 @@ public ulong? FromMuxedId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account address that received the payment.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;to&quot;)]
-public string To { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to&quot;)]
+public required string To { get; init; }</code></pre>
   </div>
 
 
@@ -503,12 +507,13 @@ public string To { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account representation of the receiver, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;to_muxed&quot;)]
-public string ToMuxed { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to_muxed&quot;)]
+public string? ToMuxed { get; init; }</code></pre>
   </div>
 
 
@@ -535,11 +540,12 @@ public string ToMuxed { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The muxed account ID of the receiver, if applicable.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;to_muxed_id&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;to_muxed_id&quot;)]
 public ulong? ToMuxedId { get; init; }</code></pre>
   </div>
 
@@ -567,7 +573,8 @@ public ulong? ToMuxedId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

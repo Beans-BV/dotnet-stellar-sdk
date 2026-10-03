@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TradeAggregationResponse ">
       
-      
+      <meta name="description" content="Represents aggregated trade data for a specific time period. Trade aggregations provide OHLC (Open, High, Low, Close) candlestick data for trading pairs on the Stellar DEX.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,14 @@ Class TradeAggregationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents aggregated trade data for a specific time period.
+Trade aggregations provide OHLC (Open, High, Low, Close) candlestick data
+for trading pairs on the Stellar DEX.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TradeAggregationResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TradeAggregationResponse : Response</code></pre>
   </div>
 
 
@@ -118,15 +121,6 @@ Class TradeAggregationResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -140,9 +134,6 @@ Class TradeAggregationResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -168,12 +159,13 @@ Class TradeAggregationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The weighted average price of counter asset in terms of base asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;avg&quot;)]
-public string Avg { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;avg&quot;)]
+public required string Avg { get; init; }</code></pre>
   </div>
 
 
@@ -200,12 +192,13 @@ public string Avg { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total volume of base asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;base_volume&quot;)]
-public string BaseVolume { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base_volume&quot;)]
+public required string BaseVolume { get; init; }</code></pre>
   </div>
 
 
@@ -232,12 +225,13 @@ public string BaseVolume { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The price as seen on last trade aggregated.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;close&quot;)]
-public string Close { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;close&quot;)]
+public required string Close { get; init; }</code></pre>
   </div>
 
 
@@ -257,6 +251,39 @@ public string Close { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_CloseR_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.CloseR*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_CloseR" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.CloseR">
+  CloseR
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The price as seen on last trade aggregated as a rational number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;close_r&quot;)]
+public required Price CloseR { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_CounterVolume_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.CounterVolume*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_CounterVolume" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.CounterVolume">
@@ -264,12 +291,13 @@ public string Close { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total volume of counter asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;counter_volume&quot;)]
-public string CounterVolume { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;counter_volume&quot;)]
+public required string CounterVolume { get; init; }</code></pre>
   </div>
 
 
@@ -296,12 +324,13 @@ public string CounterVolume { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The highest price for this time period.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;high&quot;)]
-public string High { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;high&quot;)]
+public required string High { get; init; }</code></pre>
   </div>
 
 
@@ -311,6 +340,39 @@ public string High { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_HighR_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.HighR*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_HighR" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.HighR">
+  HighR
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The highest price for this time period as a rational number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;high_r&quot;)]
+public required Price HighR { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
     <dd></dd>
   </dl>
 
@@ -328,12 +390,13 @@ public string High { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The lowest price for this time period.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;low&quot;)]
-public string Low { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;low&quot;)]
+public required string Low { get; init; }</code></pre>
   </div>
 
 
@@ -343,6 +406,39 @@ public string Low { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_LowR_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.LowR*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_LowR" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.LowR">
+  LowR
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The lowest price for this time period as a rational number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;low_r&quot;)]
+public required Price LowR { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
     <dd></dd>
   </dl>
 
@@ -360,12 +456,13 @@ public string Low { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The price as seen on first trade aggregated.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;open&quot;)]
-public string Open { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;open&quot;)]
+public required string Open { get; init; }</code></pre>
   </div>
 
 
@@ -385,6 +482,39 @@ public string Open { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_OpenR_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.OpenR*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_OpenR" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.OpenR">
+  OpenR
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The price as seen on first trade aggregated as a rational number.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;open_r&quot;)]
+public required Price OpenR { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Price.html">Price</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_TradeAggregationResponse_Timestamp_" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.Timestamp*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_TradeAggregationResponse_Timestamp" data-uid="StellarDotnetSdk.Responses.TradeAggregationResponse.Timestamp">
@@ -392,12 +522,13 @@ public string Open { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The start time for this trade aggregation. Represented as milliseconds since epoch.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;timestamp&quot;)]
-public string Timestamp { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;timestamp&quot;)]
+public required string Timestamp { get; init; }</code></pre>
   </div>
 
 
@@ -424,12 +555,13 @@ public string Timestamp { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The total number of trades aggregated.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trade_count&quot;)]
-public string TradeCount { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trade_count&quot;)]
+public required string TradeCount { get; init; }</code></pre>
   </div>
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class RootResponse ">
       
-      
+      <meta name="description" content="Represents the root endpoint response from a Horizon server. Contains version and network information about the Horizon instance.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class RootResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents the root endpoint response from a Horizon server.
+Contains version and network information about the Horizon instance.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RootResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class RootResponse : Response</code></pre>
   </div>
 
 
@@ -118,15 +120,6 @@ Class RootResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -140,9 +133,6 @@ Class RootResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -168,12 +158,13 @@ Class RootResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Stellar Core.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;core_latest_ledger&quot;)]
-public int CoreLatestLedger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;core_latest_ledger&quot;)]
+public required long CoreLatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -182,7 +173,7 @@ public int CoreLatestLedger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -200,12 +191,13 @@ public int CoreLatestLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum protocol version supported by the connected Stellar Core.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;core_supported_protocol_version&quot;)]
-public int CoreSupportedProtocolVersion { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;core_supported_protocol_version&quot;)]
+public required int CoreSupportedProtocolVersion { get; init; }</code></pre>
   </div>
 
 
@@ -232,12 +224,13 @@ public int CoreSupportedProtocolVersion { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The current protocol version in use on the network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;current_protocol_version&quot;)]
-public int CurrentProtocolVersion { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;current_protocol_version&quot;)]
+public required int CurrentProtocolVersion { get; init; }</code></pre>
   </div>
 
 
@@ -264,12 +257,13 @@ public int CurrentProtocolVersion { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the oldest ledger stored in Horizon's history database.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;history_elder_ledger&quot;)]
-public int HistoryElderLedger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;history_elder_ledger&quot;)]
+public required long HistoryElderLedger { get; init; }</code></pre>
   </div>
 
 
@@ -278,7 +272,7 @@ public int HistoryElderLedger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -296,12 +290,13 @@ public int HistoryElderLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The sequence number of the latest ledger stored in Horizon's history database.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;history_latest_ledger&quot;)]
-public int HistoryLatestLedger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;history_latest_ledger&quot;)]
+public required long HistoryLatestLedger { get; init; }</code></pre>
   </div>
 
 
@@ -310,7 +305,40 @@ public int HistoryLatestLedger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_RootResponse_HistoryLatestLedgerClosedAt_" data-uid="StellarDotnetSdk.Responses.RootResponse.HistoryLatestLedgerClosedAt*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_RootResponse_HistoryLatestLedgerClosedAt" data-uid="StellarDotnetSdk.Responses.RootResponse.HistoryLatestLedgerClosedAt">
+  HistoryLatestLedgerClosedAt
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The time the latest ledger was closed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;history_latest_ledger_closed_at&quot;)]
+public required DateTimeOffset HistoryLatestLedgerClosedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
     <dd></dd>
   </dl>
 
@@ -328,12 +356,13 @@ public int HistoryLatestLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The version of the Horizon server software.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;horizon_version&quot;)]
-public string HorizonVersion { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;horizon_version&quot;)]
+public required string HorizonVersion { get; init; }</code></pre>
   </div>
 
 
@@ -353,6 +382,39 @@ public string HorizonVersion { get; init; }</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_Responses_RootResponse_Links_" data-uid="StellarDotnetSdk.Responses.RootResponse.Links*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_RootResponse_Links" data-uid="StellarDotnetSdk.Responses.RootResponse.Links">
+  Links
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Links to related resources and endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;_links&quot;)]
+public required RootResponseLinks Links { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.RootResponseLinks.html">RootResponseLinks</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_Responses_RootResponse_NetworkPassphrase_" data-uid="StellarDotnetSdk.Responses.RootResponse.NetworkPassphrase*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_RootResponse_NetworkPassphrase" data-uid="StellarDotnetSdk.Responses.RootResponse.NetworkPassphrase">
@@ -360,12 +422,15 @@ public string HorizonVersion { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The network passphrase that identifies which Stellar network this Horizon is connected to.
+Common values are &quot;Public Global Stellar Network ; September 2015&quot; for mainnet
+and &quot;Test SDF Network ; September 2015&quot; for testnet.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;network_passphrase&quot;)]
-public string NetworkPassphrase { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;network_passphrase&quot;)]
+public required string NetworkPassphrase { get; init; }</code></pre>
   </div>
 
 
@@ -392,12 +457,13 @@ public string NetworkPassphrase { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The version of Stellar Core connected to this Horizon instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;core_version&quot;)]
-public string StellarCoreVersion { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;core_version&quot;)]
+public required string StellarCoreVersion { get; init; }</code></pre>
   </div>
 
 
@@ -407,6 +473,39 @@ public string StellarCoreVersion { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_RootResponse_SupportedProtocolVersion_" data-uid="StellarDotnetSdk.Responses.RootResponse.SupportedProtocolVersion*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_RootResponse_SupportedProtocolVersion" data-uid="StellarDotnetSdk.Responses.RootResponse.SupportedProtocolVersion">
+  SupportedProtocolVersion
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The maximum protocol version supported by the connected Stellar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;supported_protocol_version&quot;)]
+public required int SupportedProtocolVersion { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
   </dl>
 

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0012.Requests </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0012.Requests ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0012.Requests">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0012_Requests" data-uid="StellarDotnetSdk.Sep.Sep0012.Requests" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0012.Requests</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.DeleteCustomerRequest.html">DeleteCustomerRequest</a></dt>
+      <dd><p>Request for <code>DELETE /customer/[account]</code>: delete all personal information the anchor stores about a
+customer. The request must be authenticated as the owner of <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.DeleteCustomerRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_DeleteCustomerRequest_Account">Account</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerFilesRequest.html">GetCustomerFilesRequest</a></dt>
+      <dd><p>Request for <code>GET /customer/files</code>: fetch metadata of files uploaded with <code>POST /customer/files</code>.
+SEP-0012 requires one of <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerFilesRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_GetCustomerFilesRequest_FileId">FileId</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerFilesRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_GetCustomerFilesRequest_CustomerId">CustomerId</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.GetCustomerInfoRequest.html">GetCustomerInfoRequest</a></dt>
+      <dd><p>Request for <code>GET /customer</code>: fetch the fields the anchor needs to register a customer, or check the KYC
+status of a customer that may already be registered.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PostCustomerFileRequest.html">PostCustomerFileRequest</a></dt>
+      <dd><p>Request for <code>POST /customer/files</code>: upload a binary file on its own, so that <code>PUT /customer</code> can
+reference it by <code>file_id</code> (see <a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerInfoRequest_FileReferences">FileReferences</a>) — useful when the
+rest of the customer data is sent in a form that cannot carry files.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerCallbackRequest.html">PutCustomerCallbackRequest</a></dt>
+      <dd><p>Request for <code>PUT /customer/callback</code>: register a URL the anchor POSTs to whenever the customer's
+<code>status</code> changes, replacing any previously registered URL. The anchor stops once the status becomes
+<code>ACCEPTED</code> or <code>REJECTED</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html">PutCustomerInfoRequest</a></dt>
+      <dd><p>Request for <code>PUT /customer</code>: idempotently upload customer information to the anchor. Sent as
+<code>multipart/form-data</code>, with every text field before any binary field as SEP-0012 requires.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerVerificationRequest.html">PutCustomerVerificationRequest</a></dt>
+      <dd><p>Request for the <b>deprecated</b> <code>PUT /customer/verification</code> endpoint. SEP-0012 v1.12.0 replaced it with
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0012.Requests.PutCustomerInfoRequest.html#StellarDotnetSdk_Sep_Sep0012_Requests_PutCustomerInfoRequest_VerificationFields">VerificationFields</a> on <code>PUT /customer</code>; use this only with anchors
+that still require the old endpoint.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

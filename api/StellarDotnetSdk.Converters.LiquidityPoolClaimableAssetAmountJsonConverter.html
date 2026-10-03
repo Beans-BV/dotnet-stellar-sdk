@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolClaimableAssetAmountJsonConverter ">
       
-      
+      <meta name="description" content="JSON converter for LiquidityPoolClaimableAssetAmount. Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPoolClaimableAssetAmountJsonConverter
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>JSON converter for LiquidityPoolClaimableAssetAmount.
+Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -107,8 +109,8 @@ Class LiquidityPoolClaimableAssetAmountJsonConverter
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">JsonConverter</span></div>
-      <div><span class="xref">JsonConverter</span>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter">JsonConverter</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1">JsonConverter</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a>&gt;</div>
       <div><span class="xref">LiquidityPoolClaimableAssetAmountJsonConverter</span></div>
     </dd>
   </dl>
@@ -119,19 +121,19 @@ Class LiquidityPoolClaimableAssetAmountJsonConverter
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.WriteJson(JsonWriter, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.canconvert">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.CanConvert(Type)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.ReadJson(JsonReader, Type, object, JsonSerializer)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.readaspropertyname">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.ReadAsPropertyName(ref Utf8JsonReader, Type, JsonSerializerOptions)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.CanConvert(Type)</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.writeaspropertyname">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.WriteAsPropertyName(Utf8JsonWriter, LiquidityPoolClaimableAssetAmount, JsonSerializerOptions)</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanRead</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.handlenull">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.HandleNull</a>
     </div>
     <div>
-      <span class="xref">JsonConverter.CanWrite</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverter-1.type">JsonConverter&lt;LiquidityPoolClaimableAssetAmount&gt;.Type</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -159,44 +161,52 @@ Class LiquidityPoolClaimableAssetAmountJsonConverter
 
 
 
+  <h2 id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Duplicate JSON property names are always rejected with a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a>, matched
+case-insensitively. This is intentional hardening for financial fields and does not honor the
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a> passed to <a class="xref" href="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.html#StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_">Read(ref Utf8JsonReader, Type, JsonSerializerOptions)</a> — neither
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.allowduplicateproperties">AllowDuplicateProperties</a> nor
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamecaseinsensitive">PropertyNameCaseInsensitive</a> changes it.</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_ReadJson_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.ReadJson*"></a>
+  <a id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_Read_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.Read*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_StellarDotnetSdk_Responses_Effects_LiquidityPoolClaimableAssetAmount_System_Boolean_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount,System.Boolean,Newtonsoft.Json.JsonSerializer)">
-  ReadJson(JsonReader, Type, LiquidityPoolClaimableAssetAmount?, bool, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+  Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Reads and converts the JSON to type <a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override LiquidityPoolClaimableAssetAmount ReadJson(JsonReader reader, Type objectType, LiquidityPoolClaimableAssetAmount? existingValue, bool hasExistingValue, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override LiquidityPoolClaimableAssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>reader</code> <span class="xref">JsonReader</span></dt>
-    <dd></dd>
-    <dt><code>objectType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
-    <dd></dd>
-    <dt><code>existingValue</code> <a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a></dt>
-    <dd></dd>
-    <dt><code>hasExistingValue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dt><code>reader</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonreader">Utf8JsonReader</a></dt>
+    <dd><p>The reader.</p>
+</dd>
+    <dt><code>typeToConvert</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The type to convert.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a></dt>
-    <dd></dd>
+    <dd><p>The converted value.</p>
+</dd>
   </dl>
 
 
@@ -209,28 +219,32 @@ Class LiquidityPoolClaimableAssetAmountJsonConverter
 
 
 
-  <a id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_WriteJson_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.WriteJson*"></a>
+  <a id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_Write_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.Write*"></a>
 
-  <h3 id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_WriteJson_Newtonsoft_Json_JsonWriter_StellarDotnetSdk_Responses_Effects_LiquidityPoolClaimableAssetAmount_Newtonsoft_Json_JsonSerializer_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount,Newtonsoft.Json.JsonSerializer)">
-  WriteJson(JsonWriter, LiquidityPoolClaimableAssetAmount?, JsonSerializer)
+  <h3 id="StellarDotnetSdk_Converters_LiquidityPoolClaimableAssetAmountJsonConverter_Write_System_Text_Json_Utf8JsonWriter_StellarDotnetSdk_Responses_Effects_LiquidityPoolClaimableAssetAmount_System_Text_Json_JsonSerializerOptions_" data-uid="StellarDotnetSdk.Converters.LiquidityPoolClaimableAssetAmountJsonConverter.Write(System.Text.Json.Utf8JsonWriter,StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount,System.Text.Json.JsonSerializerOptions)">
+  Write(Utf8JsonWriter, LiquidityPoolClaimableAssetAmount, JsonSerializerOptions)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Writes a specified value as JSON.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void WriteJson(JsonWriter writer, LiquidityPoolClaimableAssetAmount? value, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void Write(Utf8JsonWriter writer, LiquidityPoolClaimableAssetAmount value, JsonSerializerOptions options)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>writer</code> <span class="xref">JsonWriter</span></dt>
-    <dd></dd>
+    <dt><code>writer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.utf8jsonwriter">Utf8JsonWriter</a></dt>
+    <dd><p>The writer to write to.</p>
+</dd>
     <dt><code>value</code> <a class="xref" href="StellarDotnetSdk.Responses.Effects.LiquidityPoolClaimableAssetAmount.html">LiquidityPoolClaimableAssetAmount</a></dt>
-    <dd></dd>
-    <dt><code>serializer</code> <span class="xref">JsonSerializer</span></dt>
-    <dd></dd>
+    <dd><p>The value to convert to JSON.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions">JsonSerializerOptions</a></dt>
+    <dd><p>An object that specifies serialization options to use.</p>
+</dd>
   </dl>
 
 

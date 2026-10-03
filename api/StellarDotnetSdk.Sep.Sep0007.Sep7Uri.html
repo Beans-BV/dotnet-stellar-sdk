@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Sep7Uri </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Sep7Uri ">
+      
+      <meta name="description" content="A parsed and validated SEP-7 request (web+stellar:tx?... or web+stellar:pay?...). Instances come from  or , so every parameter has already passed the checks described there. Parameter values are URL-decoded.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri" class="text-break">
+Class Sep7Uri  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.html">Sep0007</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A parsed and validated SEP-7 request (<code>web+stellar:tx?...</code> or <code>web+stellar:pay?...</code>).
+Instances come from <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_ParseUri_System_String_">ParseUri(string)</a> or <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_TryParseUri_System_String_StellarDotnetSdk_Sep_Sep0007_Sep7Uri__">TryParseUri(string?, out Sep7Uri?)</a>, so every
+parameter has already passed the checks described there. Parameter values are URL-decoded.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class Sep7Uri</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Sep7Uri</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Amount_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Amount*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Amount" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Amount">
+  Amount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The amount to pay (<code>amount</code>); <code>pay</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Amount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_AssetCode_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.AssetCode*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_AssetCode" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.AssetCode">
+  AssetCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The code of the asset to pay (<code>asset_code</code>); <code>pay</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? AssetCode { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_AssetIssuer_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.AssetIssuer*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_AssetIssuer" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.AssetIssuer">
+  AssetIssuer
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The issuer of the asset to pay (<code>asset_issuer</code>); <code>pay</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? AssetIssuer { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Callback_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Callback*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Callback" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Callback">
+  Callback
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The raw <code>callback</code> value, including its <code>url:</code> prefix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Callback { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_CallbackUrl_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.CallbackUrl*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_CallbackUrl" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.CallbackUrl">
+  CallbackUrl
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The URL to POST the signed transaction to: <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Callback">Callback</a> without its <code>url:</code> prefix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CallbackUrl { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Chain_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Chain*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Chain" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Chain">
+  Chain
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The raw embedded SEP-7 request (<code>chain</code>); <code>tx</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Chain { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_ChainedUri_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.ChainedUri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_ChainedUri" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.ChainedUri">
+  ChainedUri
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The embedded SEP-7 request, parsed; <code>null</code> when there is no <code>chain</code> parameter. It is parsed,
+not verified: its <code>origin_domain</code> signature is not checked, so do not show its
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OriginDomain">OriginDomain</a> as trusted without running
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a> on <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Chain">Chain</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Sep7Uri? ChainedUri { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html">Sep7Uri</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Destination_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Destination*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Destination" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Destination">
+  Destination
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The account id, muxed account, contract id or federation address (<code>name*domain</code>, which the wallet
+resolves) to pay (<code>destination</code>); <code>pay</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Destination { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Memo_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Memo*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Memo" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Memo">
+  Memo
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The memo value (<code>memo</code>) as sent: text, a decimal id, or base64 for hash memos; <code>pay</code> requests
+only. See <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetMemo">GetMemo()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Memo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_MemoType_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.MemoType*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_MemoType" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.MemoType">
+  MemoType
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The memo type (<code>memo_type</code>), one of the <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7MemoType.html">Sep7MemoType</a> values; <code>pay</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? MemoType { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Message_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Message*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Message" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Message">
+  Message
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The message for the user (<code>msg</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Message { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_NetworkPassphrase_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.NetworkPassphrase*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_NetworkPassphrase" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.NetworkPassphrase">
+  NetworkPassphrase
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The network passphrase (<code>network_passphrase</code>); <code>null</code> means the public network. See
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetNetwork">GetNetwork()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? NetworkPassphrase { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OperationType_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.OperationType*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OperationType" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.OperationType">
+  OperationType
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The requested operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Sep7OperationType OperationType { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7OperationType.html">Sep7OperationType</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OriginDomain_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.OriginDomain*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_OriginDomain" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.OriginDomain">
+  OriginDomain
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The domain the request claims to come from (<code>origin_domain</code>). Do not show it to the user before
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.UriScheme.html#StellarDotnetSdk_Sep_Sep0007_UriScheme_VerifyOriginDomainSignatureAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyOriginDomainSignatureAsync(string, string?, CancellationToken)</a> has verified the request signature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? OriginDomain { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Parameters_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Parameters*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Parameters" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Parameters">
+  Parameters
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Every query parameter of the URI, URL-decoded, keyed by parameter name. Includes parameters this SDK
+does not know about, which SEP-7 leaves room for as future extensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;string, string&gt; Parameters { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_PublicKey_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_PublicKey" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.PublicKey">
+  PublicKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The public key the requester wants the transaction signed with (<code>pubkey</code>); <code>tx</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? PublicKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Replace_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Replace*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Replace" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Replace">
+  Replace
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The raw <code>replace</code> value; <code>tx</code> requests only. See <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Replacements">Replacements</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Replace { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Replacements_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Replacements*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Replacements" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Replacements">
+  Replacements
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The fields of the transaction the requester wants the wallet to fill in, parsed from <code>replace</code>;
+empty when there is none.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;Sep7Replacement&gt; Replacements { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Replacement.html">Sep7Replacement</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Signature_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Signature*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Signature" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Signature">
+  Signature
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The base64 request signature (<code>signature</code>), URL-decoded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Signature { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Uri_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Uri*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Uri" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Uri">
+  Uri
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The URI exactly as it was parsed. Request signatures cover this literal string (minus the
+<code>signature</code> parameter), so it is kept as-is rather than re-serialized.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Uri { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Xdr_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Xdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_Xdr" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.Xdr">
+  Xdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The base64 XDR transaction envelope (<code>xdr</code>); <code>tx</code> requests only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Xdr { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetAsset_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetAsset*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetAsset" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetAsset">
+  GetAsset()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The asset a <code>pay</code> request asks for: native XLM when <code>asset_code</code> and <code>asset_issuer</code> are
+absent, as SEP-7 specifies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Asset GetAsset()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd><p>The asset to pay with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown for a <code>tx</code> request.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetMemo_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetMemo*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetMemo" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetMemo">
+  GetMemo()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes the memo of a <code>pay</code> request. A <code>memo</code> without <code>memo_type</code> is read as
+<code>MEMO_TEXT</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Memo? GetMemo()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Memos.Memo.html">Memo</a></dt>
+    <dd><p>The memo, or <code>null</code> when the request has none.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetNetwork_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetNetwork*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetNetwork" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetNetwork">
+  GetNetwork()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The network the request is for: <a class="xref" href="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.html#StellarDotnetSdk_Sep_Sep0007_Sep7Uri_NetworkPassphrase">NetworkPassphrase</a> when present, otherwise the public
+network, as SEP-7 specifies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Network GetNetwork()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network to sign for.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetTransaction_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetTransaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_GetTransaction" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.GetTransaction">
+  GetTransaction()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes the transaction envelope of a <code>tx</code> request. Each call returns a new instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionBase GetTransaction()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></dt>
+    <dd><p>The transaction to sign.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown for a <code>pay</code> request.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_ToString_" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.ToString*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0007_Sep7Uri_ToString" data-uid="StellarDotnetSdk.Sep.Sep0007.Sep7Uri.ToString">
+  ToString()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

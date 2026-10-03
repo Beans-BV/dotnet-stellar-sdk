@@ -151,43 +151,6 @@ containing the
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble__ctor_System_String_System_Int64_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.#ctor(System.String,System.Int64)">
-  RestorePreamble(string, long)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RestorePreamble(string transactionData, long minResourceFee)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>transactionData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>minResourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -206,7 +169,9 @@ top of the Stellar network fee.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long MinResourceFee { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonRequired]
+[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+public required long MinResourceFee { get; init; }</code></pre>
   </div>
 
 
@@ -222,6 +187,49 @@ top of the Stellar network fee.</p>
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble_MinResourceFee_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonrequiredattribute">JsonRequiredAttribute</a> stops a preamble that omits the field entirely from
+    reading as a free restore. This is a value type, so nothing else enforces presence: an object
+    with no <code>minResourceFee</code> silently yielded <code>0</code>, and a caller following the documented
+    "use <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble_MinResourceFee">MinResourceFee</a> and <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble_SorobanTransactionData">SorobanTransactionData</a> to submit a
+    RestoreFootprint operation" flow would then submit it underfunded. Stellar RPC declares the
+    field <code>json:"minResourceFee,string"</code> with no <code>omitempty</code>, so a conforming server
+    always sends it and requiring it rejects nothing.
+</p>
+<p>
+    This enforces <em>presence only</em>, not plausibility: an explicit <code>"0"</code> or a negative
+    <code>"-500"</code> both satisfy the attribute and still describe a restore this SDK would submit
+    underfunded. Nothing here range-checks the value, and <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.RestorePreamble.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_RestorePreamble_SorobanTransactionData">SorobanTransactionData</a>
+    — the other half of the documented flow — carries no presence requirement at all, so a
+    preamble consisting of nothing but a fee still deserializes. That matches the wire contract
+    rather than a guarantee: Stellar RPC tags it <code>json:"transactionData,omitempty"</code> and sends
+    <code>transactionDataJson</code> in its place when a request asks for JSON-format XDR. This SDK never
+    asks for that, so a server replying to it includes <code>transactionData</code> in every preamble;
+    the field is left optional to match the upstream contract and the top-level
+    <code>transactionData</code>, not because a reply to this SDK can lack it. Callers who act on a
+    preamble should check both fields rather than assume deserialization vouched for them.
+</p>
+<p>
+    <code>required</code> carries the guarantee to the other entry point, for the reason given on
+    <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.LedgerEntryChange.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_LedgerEntryChange_Type">Type</a>: the attribute binds only the deserializer, so without it
+    <code>new RestorePreamble()</code> still produced the silent <code>0</code> this remark opens by
+    describing.
+</p>
+<p>
+    The <code>,string</code> in the tag quoted above is not decoration: the value arrives as a JSON
+    string, and the SDK read it only because <a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html#StellarDotnetSdk_Converters_JsonOptions_DefaultOptions">DefaultOptions</a> sets
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandling#system-text-json-serialization-jsonnumberhandling-allowreadingfromstring">AllowReadingFromString</a> globally. This is a public type with
+    public <code>init</code> accessors, so a caller whose own options bind the wire name but not the
+    number handling got a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonexception">JsonException</a> on a conforming reply —
+    independently of <code>required</code>, which governs an <em>absent</em> field rather than a
+    string-shaped one. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonnumberhandlingattribute">JsonNumberHandlingAttribute</a> records the wire form here so
+    it no longer depends on the ambient option; see the remarks on
+    <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee">MinResourceFee</a> for its effect on the write
+    direction. It relaxes the read — a bare number still reads — so nothing that deserialized
+    before is rejected.
+</p>
+</div>
 
 
 
@@ -234,11 +242,13 @@ top of the Stellar network fee.</p>
   </h3>
 
   <div class="markdown level1 summary"><p>The recommended Soroban Transaction Data to use when submitting the <code>RestoreFootprint</code> operation.</p>
+<p>Null if the preamble carried no transaction data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanTransactionData SorobanTransactionData { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public SorobanTransactionData? SorobanTransactionData { get; }</code></pre>
   </div>
 
 
@@ -255,6 +265,15 @@ top of the Stellar network fee.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.invaliddataexception">InvalidDataException</a></dt>
+    <dd><p>Thrown when the server-supplied <code>transactionData</code> is not decodable as a
+<code>SorobanTransactionData</code> XDR blob, matching
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_SorobanTransactionData">SorobanTransactionData</a>. Decoding happens on every read of
+this property, not during deserialization.</p>
+</dd>
+  </dl>
 
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Network ">
       
-      
+      <meta name="description" content="Represents a Stellar network identified by its unique passphrase. The passphrase is hashed to produce the network ID, which is used to distinguish transactions on different networks (e.g., public mainnet vs. testnet).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class Network
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Stellar network identified by its unique passphrase.
+The passphrase is hashed to produce the network ID, which is used to distinguish
+transactions on different networks (e.g., public mainnet vs. testnet).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -155,7 +158,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> instance with the given passphrase.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -165,7 +169,8 @@ Class Network
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>networkPassphrase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The network passphrase used to generate the network ID.</p>
+</dd>
   </dl>
 
 
@@ -189,7 +194,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The passphrase for the Stellar public (mainnet) network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -219,7 +225,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The passphrase for the Stellar test network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -254,7 +261,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the currently active network. Must be set before signing transactions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -285,7 +293,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the SHA-256 hash of the network passphrase, used as the network ID in transaction signing.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -316,7 +325,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the passphrase that identifies this network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -351,7 +361,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks whether the given network is the Stellar public (mainnet) network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -361,13 +372,15 @@ Class Network
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd></dd>
+    <dd><p>The network to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if the network uses the public passphrase; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 
@@ -387,7 +400,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> instance for the Stellar public (mainnet) network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -398,7 +412,8 @@ Class Network
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> configured with the public network passphrase.</p>
+</dd>
   </dl>
 
 
@@ -418,7 +433,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> instance for the Stellar test network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -429,7 +445,8 @@ Class Network
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> configured with the testnet passphrase.</p>
+</dd>
   </dl>
 
 
@@ -449,7 +466,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the current active network used for signing transactions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -459,7 +477,8 @@ Class Network
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
-    <dd></dd>
+    <dd><p>The network to use, or <code>null</code> to clear the current network.</p>
+</dd>
   </dl>
 
 
@@ -480,7 +499,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the current active network to the Stellar public (mainnet) network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -506,7 +526,8 @@ Class Network
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the current active network to the Stellar test network.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

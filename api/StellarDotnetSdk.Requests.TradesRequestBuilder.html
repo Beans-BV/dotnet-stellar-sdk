@@ -195,7 +195,8 @@ Class TradesRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -205,9 +206,11 @@ Class TradesRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -232,7 +235,8 @@ Class TradesRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Filters trades by the specified base asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -242,13 +246,15 @@ Class TradesRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The base asset to filter trades by.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -268,7 +274,8 @@ Class TradesRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Filters trades by the specified counter asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,13 +285,15 @@ Class TradesRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The counter asset to filter trades by.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -314,7 +323,91 @@ Class TradesRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>accountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Account for which to get trades</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
     <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TradesRequestBuilder_ForLiquidityPool_" data-uid="StellarDotnetSdk.Requests.TradesRequestBuilder.ForLiquidityPool*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TradesRequestBuilder_ForLiquidityPool_System_String_" data-uid="StellarDotnetSdk.Requests.TradesRequestBuilder.ForLiquidityPool(System.String)">
+  ForLiquidityPool(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds request to</p>
+<pre><code class="lang-csharp">GET /liquidity_pools/{liquidity_pool_id}/trades</code></pre>
+<a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-trades">
+    Trades for
+    Liquidity Pool
+</a>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TradesRequestBuilder ForLiquidityPool(string liquidityPoolId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>liquidityPoolId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Liquidity pool for which to get trades</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TradesRequestBuilder_ForOffer_" data-uid="StellarDotnetSdk.Requests.TradesRequestBuilder.ForOffer*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TradesRequestBuilder_ForOffer_System_String_" data-uid="StellarDotnetSdk.Requests.TradesRequestBuilder.ForOffer(System.String)">
+  ForOffer(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds request to</p>
+<pre><code class="lang-csharp">GET /offers/{offer_id}/trades</code></pre>
+<p><a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-trades-by-offer-id">Trades for Offer</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TradesRequestBuilder ForOffer(string offerId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Offer for which to get trades</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -340,7 +433,8 @@ Class TradesRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Filters trades by the specified offer ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -350,13 +444,15 @@ Class TradesRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The offer ID to filter trades by.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesRequestBuilder.html">TradesRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 

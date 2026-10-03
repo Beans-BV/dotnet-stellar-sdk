@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TradesAggregationRequestBuilder ">
       
-      
+      <meta name="description" content="Builds requests to the Horizon /trade_aggregations endpoint for retrieving aggregated trade statistics for a given asset pair.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class TradesAggregationRequestBuilder
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds requests to the Horizon <code>/trade_aggregations</code> endpoint for retrieving
+aggregated trade statistics for a given asset pair.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +196,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,9 +207,11 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The base Horizon server URI.</p>
+</dd>
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client used for sending requests.</p>
+</dd>
   </dl>
 
 
@@ -231,7 +236,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the base asset for the trade aggregation query.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -241,13 +247,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The base asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -267,7 +275,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the counter asset for the trade aggregation query.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -277,13 +286,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The counter asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -303,7 +314,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the upper time boundary for the aggregation range (exclusive), as a Unix timestamp in milliseconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -313,13 +325,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>endTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The end time in milliseconds since epoch.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -339,7 +353,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the offset for each aggregation bucket, in milliseconds. Must be less than the resolution.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -349,13 +364,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The offset in milliseconds applied to each aggregation bucket.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -375,7 +392,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the segment duration for each aggregation bucket, in milliseconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -385,13 +403,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>resolution</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The resolution in milliseconds (e.g. 300000 for 5 minutes).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 
@@ -411,7 +431,8 @@ Class TradesAggregationRequestBuilder
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the lower time boundary for the aggregation range (inclusive), as a Unix timestamp in milliseconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -421,13 +442,15 @@ Class TradesAggregationRequestBuilder
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>startTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The start time in milliseconds since epoch.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p>The current <a class="xref" href="StellarDotnetSdk.Requests.TradesAggregationRequestBuilder.html">TradesAggregationRequestBuilder</a> instance for chaining.</p>
+</dd>
   </dl>
 
 

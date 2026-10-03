@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TransactionPreconditions ">
       
-      <meta name="description" content="Preconditions are checked first.      All preconditions are optional. Time bounds are encouraged, but the other preconditions are used in more     specialized circumstances. You can set multiple preconditions as long as the combination is logically sound.  See:      Preconditions">
+      <meta name="description" content="Preconditions are checked first.      All preconditions are optional. Time bounds are encouraged, but the other preconditions are used in more     specialized circumstances. You can set multiple preconditions as long as the combination is logically sound.  See:  Preconditions">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -98,10 +98,10 @@ Class TransactionPreconditions
     All preconditions are optional. Time bounds are encouraged, but the other preconditions are used in more
     specialized circumstances. You can set multiple preconditions as long as the combination is logically sound.
 </p>
-See:
+<p>See:
 <a href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/operations-and-transactions#preconditions-optional">
-    Preconditions
-</a>
+Preconditions
+</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -163,7 +163,8 @@ See:
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constant representing an infinite timeout (no time bound restriction). Value is 0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -198,7 +199,8 @@ See:
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the optional list of extra signer keys that must have signed the transaction (maximum 2).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -229,7 +231,8 @@ See:
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the optional ledger bounds, restricting the transaction to a range of ledger sequence numbers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -293,7 +296,9 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the optional minimum number of ledgers that must have elapsed since the source account's sequence number
+changed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -324,7 +329,8 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the optional minimum source account sequence number this transaction requires to be valid.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -391,7 +397,9 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Transactions.TransactionPreconditions.html">TransactionPreconditions</a> from its XDR <span class="xref">StellarDotnetSdk.Xdr.Preconditions</span> representation.
+Returns <code>null</code> for <code>PRECOND_NONE</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -401,13 +409,15 @@ age.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>preconditions</code> <span class="xref">Preconditions</span></dt>
-    <dd></dd>
+    <dd><p>The XDR preconditions object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionPreconditions.html">TransactionPreconditions</a></dt>
-    <dd></dd>
+    <dd><p>The deserialized preconditions, or <code>null</code> if none are set.</p>
+</dd>
   </dl>
 
 
@@ -427,7 +437,9 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether any version 2 precondition fields are set (ledger bounds, sequence constraints, or extra
+signers).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -438,7 +450,8 @@ age.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if any V2 precondition is present; otherwise, <code>false</code>.</p>
+</dd>
   </dl>
 
 
@@ -458,7 +471,9 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Validates that the preconditions are well-formed. Throws if constraints are violated (e.g., too many extra
+signers).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -474,6 +489,12 @@ age.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.FormatException.html">FormatException</a></dt>
+    <dd><p>Thrown when preconditions are invalid.</p>
+</dd>
+  </dl>
 
 
 
@@ -484,7 +505,10 @@ age.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this instance to its XDR <span class="xref">StellarDotnetSdk.Xdr.Preconditions</span> representation.
+Uses <code>PRECOND_V2</code> when any V2 fields are set, <code>PRECOND_TIME</code> when only time bounds are present,
+or <code>PRECOND_NONE</code> otherwise.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -495,7 +519,8 @@ age.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Preconditions</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.Preconditions</span> XDR object corresponding to the active precondition fields.</p>
+</dd>
   </dl>
 
 

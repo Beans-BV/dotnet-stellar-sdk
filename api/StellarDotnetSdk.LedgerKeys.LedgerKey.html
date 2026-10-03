@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LedgerKey ">
       
-      
+      <meta name="description" content="Base class for all ledger key types on the Stellar network. A ledger key uniquely identifies a specific entry in the Stellar ledger by its type and associated fields.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LedgerKey
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Base class for all ledger key types on the Stellar network.
+A ledger key uniquely identifies a specific entry in the Stellar ledger by its type and associated fields.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -170,7 +172,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies an account entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -180,7 +183,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>account</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The key pair of the account.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -244,7 +248,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a network configuration setting entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -254,7 +259,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>settingId</code> <span class="xref">ConfigSettingID</span></dt>
-    <dd></dd>
+    <dd><p>The configuration setting identifier.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -280,7 +286,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a Soroban contract code (WASM bytecode) entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -290,7 +297,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The hex-encoded SHA-256 hash of the contract WASM bytecode.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -316,7 +324,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a Soroban contract data entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -326,11 +335,14 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>contractId</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
-    <dd></dd>
+    <dd><p>The address of the smart contract.</p>
+</dd>
     <dt><code>key</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a></dt>
-    <dd></dd>
+    <dd><p>The key of the data entry within the contract's storage.</p>
+</dd>
     <dt><code>durability</code> <span class="xref">ContractDataDurability</span></dt>
-    <dd></dd>
+    <dd><p>The durability type (persistent or temporary) of the data entry.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -356,7 +368,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a data entry attached to an account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -366,9 +379,11 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>account</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The key pair of the account that owns the data entry.</p>
+</dd>
     <dt><code>dataName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The name of the data entry (max 64 characters).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -394,7 +409,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Deserializes a <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html">LedgerKey</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -404,7 +420,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdr</code> <span class="xref">LedgerKey</span></dt>
-    <dd></dd>
+    <dd><p>The XDR ledger key object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -468,7 +485,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a liquidity pool entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -478,7 +496,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>poolId</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the liquidity pool.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -504,7 +523,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies an offer entry on the order book.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -514,9 +534,11 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seller</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The key pair of the account that created the offer.</p>
+</dd>
     <dt><code>offerId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
-    <dd></dd>
+    <dd><p>The unique identifier of the offer.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -542,7 +564,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Serializes this ledger key to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -605,7 +628,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a trustline entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -615,9 +639,11 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>account</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The key pair of the account that holds the trustline.</p>
+</dd>
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>The trustline asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -643,7 +669,8 @@ Class LedgerKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a ledger key that identifies a time-to-live (TTL) entry for Soroban contract data or code.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -653,7 +680,8 @@ Class LedgerKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A base64-encoded 32-byte hash of the associated contract data or code entry.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>

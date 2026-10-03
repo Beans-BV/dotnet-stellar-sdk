@@ -182,7 +182,8 @@ Liquidity pool deposit
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new <code>LiquidityPoolDepositOperation</code> from asset amounts, automatically deriving the pool ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -192,15 +193,20 @@ Liquidity pool deposit
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>assetAmountA</code> <a class="xref" href="StellarDotnetSdk.Assets.AssetAmount.html">AssetAmount</a></dt>
-    <dd></dd>
+    <dd><p>The first asset and its maximum deposit amount.</p>
+</dd>
     <dt><code>assetAmountB</code> <a class="xref" href="StellarDotnetSdk.Assets.AssetAmount.html">AssetAmount</a></dt>
-    <dd></dd>
+    <dd><p>The second asset and its maximum deposit amount.</p>
+</dd>
     <dt><code>minPrice</code> <a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
-    <dd></dd>
+    <dd><p>Minimum depositA/depositB price.</p>
+</dd>
     <dt><code>maxPrice</code> <a class="xref" href="StellarDotnetSdk.Price.html">Price</a></dt>
-    <dd></dd>
+    <dd><p>Maximum depositA/depositB price.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
-    <dd></dd>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
   </dl>
 
 
@@ -437,7 +443,8 @@ Liquidity pool deposit
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolDepositOperation.html">LiquidityPoolDepositOperation</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -447,13 +454,15 @@ Liquidity pool deposit
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>liquidityPoolDepositOp</code> <span class="xref">LiquidityPoolDepositOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR LiquidityPoolDepositOp object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolDepositOperation.html">LiquidityPoolDepositOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolDepositOperation.html">LiquidityPoolDepositOperation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -473,7 +482,7 @@ Liquidity pool deposit
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -485,7 +494,7 @@ Liquidity pool deposit
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

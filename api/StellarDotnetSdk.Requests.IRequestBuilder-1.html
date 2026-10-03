@@ -129,7 +129,8 @@ Interface IRequestBuilder&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the fully resolved request URI as a string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -164,12 +165,7 @@ Interface IRequestBuilder&lt;T&gt;
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Allows to stream SSE events from horizon.
-Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-This mode will keep the connection to horizon open and horizon will continue to return
-<a href="http://www.w3.org/TR/eventsource/">http://www.w3.org/TR/eventsource/</a>
-&quot;https://www.stellar.org/developers/horizon/learn/responses.html
-responses as ledgers close.</p>
+  <div class="markdown level1 summary"><p>Builds the request URI from the server URI, the path segments and the query parameters set so far.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -181,7 +177,7 @@ responses as ledgers close.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd><p>EventSource object, so you can close() connection when not needed anymore</p>
+    <dd><p>The request URI.</p>
 </dd>
   </dl>
 
@@ -202,10 +198,14 @@ responses as ledgers close.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets <pre><code class="lang-csharp">cursor</code></pre> parameter on the request.
+  <div class="markdown level1 summary"><pre><code>   Sets 
+
+   &lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;cursor&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>parameter on the request.
 A cursor is a value that points to a specific location in a collection of resources.
 The cursor attribute itself is an opaque value meaning that users should not try to parse it.
-Read <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html">https://www.stellar.org/developers/horizon/reference/resources/page.html</a> for more information.
+Read <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html">https://www.stellar.org/developers/horizon/reference/resources/page.html</a> for more information.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -242,7 +242,8 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Executes an HTTP GET request to the specified URI and deserializes the response.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -252,19 +253,22 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The URI to send the request to.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TZ&gt;</dt>
-    <dd></dd>
+    <dd><p>The deserialized response object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>TZ</code></dt>
-    <dd></dd>
+    <dd><p>The response type to deserialize into.</p>
+</dd>
   </dl>
 
 
@@ -273,6 +277,13 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
@@ -283,9 +294,13 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets <pre><code class="lang-csharp">limit</code></pre> parameter on the request.
+  <div class="markdown level1 summary"><pre><code>   Sets 
+
+   &lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;limit&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<p>parameter on the request.
 It defines maximum number of records to return.
-For range and default values check documentation of the endpoint requested.
+For range and default values check documentation of the endpoint requested.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

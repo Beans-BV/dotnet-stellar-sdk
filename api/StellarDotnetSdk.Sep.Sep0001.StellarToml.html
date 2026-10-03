@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class StellarToml </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class StellarToml ">
+      
+      <meta name="description" content="Parses and provides access to stellar.toml files as defined in SEP-0001. The stellar.toml file is a standardized configuration file that organizations publish at https://DOMAIN/.well-known/stellar.toml to provide information about their Stellar integration, including service endpoints, validators, currencies, and organizational details. See SEP-0001      HttpClient Usage: For production code, it is strongly recommended to pass a shared      instance to the static methods     (     and     ,     each with an overload that also takes resilience options). If no HttpClient is provided, a new instance     will be created and disposed for each call, which is inefficient and can lead to socket exhaustion under     load. Create and reuse a single HttpClient instance (or use IHttpClientFactory) for multiple calls     to these methods.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0001_StellarToml" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml" class="text-break">
+Class StellarToml  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.html">Sep0001</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Parses and provides access to stellar.toml files as defined in SEP-0001.
+The stellar.toml file is a standardized configuration file that organizations
+publish at <code>https://DOMAIN/.well-known/stellar.toml</code> to provide information
+about their Stellar integration, including service endpoints, validators,
+currencies, and organizational details.
+See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001</a></p>
+<p>
+    <strong>HttpClient Usage:</strong> For production code, it is strongly recommended to pass a shared
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> instance to the static methods
+    (<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.StellarToml.html#StellarDotnetSdk_Sep_Sep0001_StellarToml_FromDomainAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_">FromDomainAsync</a>
+    and
+    <a class="xref" href="StellarDotnetSdk.Sep.Sep0001.StellarToml.html#StellarDotnetSdk_Sep_Sep0001_StellarToml_CurrencyFromUrlAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_">CurrencyFromUrlAsync</a>,
+    each with an overload that also takes resilience options). If no HttpClient is provided, a new instance
+    will be created and disposed for each call, which is inefficient and can lead to socket exhaustion under
+    load. Create and reuse a single HttpClient instance (or use <code>IHttpClientFactory</code>) for multiple calls
+    to these methods.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class StellarToml</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">StellarToml</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml__ctor_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.#ctor(System.String)">
+  StellarToml(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a StellarToml instance by parsing raw TOML content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StellarToml(string toml)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>toml</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Raw TOML content string to parse</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when TOML parsing fails</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Currencies_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Currencies*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Currencies" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Currencies">
+  Currencies
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Currencies from the CURRENCIES list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;Currency&gt;? Currencies { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Currency.html">Currency</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Documentation_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Documentation*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Documentation" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Documentation">
+  Documentation
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Organization documentation from the DOCUMENTATION table.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Documentation? Documentation { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Documentation.html">Documentation</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_GeneralInformation_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.GeneralInformation*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_GeneralInformation" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.GeneralInformation">
+  GeneralInformation
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>General information from the stellar.toml file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeneralInformation GeneralInformation { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.GeneralInformation.html">GeneralInformation</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_PointsOfContact_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.PointsOfContact*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_PointsOfContact" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.PointsOfContact">
+  PointsOfContact
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Points of contact from the PRINCIPALS list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;PointOfContact&gt;? PointsOfContact { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.PointOfContact.html">PointOfContact</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Validators_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Validators*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_Validators" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.Validators">
+  Validators
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validators from the VALIDATORS list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;Validator&gt;? Validators { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Validator.html">Validator</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_CurrencyFromUrlAsync_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.CurrencyFromUrlAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_CurrencyFromUrlAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.CurrencyFromUrlAsync(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  CurrencyFromUrlAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads detailed currency information from an external TOML file.
+Instead of embedding complete currency information directly in stellar.toml,
+organizations can link to separate TOML files for each currency.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;Currency&gt; CurrencyFromUrlAsync(string tomlUrl, HttpResilienceOptions? resilienceOptions, string? bearerToken, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tomlUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The full URL to the currency TOML file</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+with no retries, circuit breaker, or timeout.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>(Optional) Bearer token in case the server requires it.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+for production use to avoid creating a new client per call. If null, a new HttpClient will be
+created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom HTTP headers to include in the request</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Currency.html">Currency</a>&gt;</dt>
+    <dd><p>Currency instance containing the complete currency information</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the currency TOML file is not found or cannot be parsed</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when the operation is cancelled via the cancellation token</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_CurrencyFromUrlAsync_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.CurrencyFromUrlAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_CurrencyFromUrlAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.CurrencyFromUrlAsync(System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  CurrencyFromUrlAsync(string, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads detailed currency information from an external TOML file.
+Instead of embedding complete currency information directly in stellar.toml,
+organizations can link to separate TOML files for each currency.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;Currency&gt; CurrencyFromUrlAsync(string tomlUrl, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tomlUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The full URL to the currency TOML file</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+for production use to avoid creating a new client per call. If null, a new HttpClient will be
+created and disposed after the request completes.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom HTTP headers to include in the request</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Currency.html">Currency</a>&gt;</dt>
+    <dd><p>Currency instance containing the complete currency information</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the currency TOML file is not found or cannot be parsed</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_FromDomainAsync_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.FromDomainAsync(System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fetches and parses stellar.toml from a domain's well-known location.
+Automatically constructs the standard stellar.toml URL for the given domain
+and fetches the content via HTTPS. The standard location is always:
+<code>https://DOMAIN/.well-known/stellar.toml</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;StellarToml&gt; FromDomainAsync(string domain, HttpResilienceOptions? resilienceOptions, string? bearerToken, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The domain name (without protocol). E.g., &quot;example.com&quot;</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+with no retries, circuit breaker, or timeout.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>(Optional) Bearer token in case the server requires it.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+for production use to avoid creating a new client per call. If null, a new HttpClient will be
+created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom HTTP headers to include in the request</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.StellarToml.html">StellarToml</a>&gt;</dt>
+    <dd><p>StellarToml instance containing the parsed stellar.toml data</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the stellar.toml file is not found or cannot be parsed</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p>Thrown when the operation is cancelled via the cancellation token</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0001_StellarToml_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0001_StellarToml_FromDomainAsync_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Threading_CancellationToken_" data-uid="StellarDotnetSdk.Sep.Sep0001.StellarToml.FromDomainAsync(System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+  FromDomainAsync(string, HttpClient?, Dictionary&lt;string, string&gt;?, CancellationToken)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fetches and parses stellar.toml from a domain's well-known location.
+Automatically constructs the standard stellar.toml URL for the given domain
+and fetches the content via HTTPS. The standard location is always:
+<code>https://DOMAIN/.well-known/stellar.toml</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;StellarToml&gt; FromDomainAsync(string domain, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The domain name (without protocol). E.g., &quot;example.com&quot;</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+for production use to avoid creating a new client per call. If null, a new HttpClient will be
+created and disposed after the request completes.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional custom HTTP headers to include in the request</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token to cancel the operation</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0001.StellarToml.html">StellarToml</a>&gt;</dt>
+    <dd><p>StellarToml instance containing the parsed stellar.toml data</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException.html">StellarTomlException</a></dt>
+    <dd><p>Thrown when the stellar.toml file is not found or cannot be parsed</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

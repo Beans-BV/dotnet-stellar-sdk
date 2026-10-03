@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class FeeStatsResponse ">
       
-      
+      <meta name="description" content="Represents fee statistics for the Stellar network. Provides information about transaction fees across recent ledgers to help with fee estimation.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,11 +93,13 @@ Class FeeStatsResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents fee statistics for the Stellar network.
+Provides information about transaction fees across recent ledgers to help with fee estimation.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FeeStatsResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class FeeStatsResponse : Response</code></pre>
   </div>
 
 
@@ -118,15 +120,6 @@ Class FeeStatsResponse
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
-    </div>
-    <div>
-      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
     </div>
     <div>
@@ -140,9 +133,6 @@ Class FeeStatsResponse
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -168,12 +158,13 @@ Class FeeStatsResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Information about the fee charged for transactions in the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_charged&quot;)]
-public FeeStatsResponse.FeeStatsResponseData FeeCharged { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fee_charged&quot;)]
+public required FeeStatsResponse.FeeStatsResponseData FeeCharged { get; init; }</code></pre>
   </div>
 
 
@@ -200,12 +191,13 @@ public FeeStatsResponse.FeeStatsResponseData FeeCharged { get; init; }</code></p
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The last ledger's sequence number.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;last_ledger&quot;)]
-public uint LastLedger { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_ledger&quot;)]
+public required long LastLedger { get; init; }</code></pre>
   </div>
 
 
@@ -214,7 +206,7 @@ public uint LastLedger { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -232,12 +224,13 @@ public uint LastLedger { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The base fee as defined in the last ledger.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;last_ledger_base_fee&quot;)]
-public long LastLedgerBaseFee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_ledger_base_fee&quot;)]
+public required long LastLedgerBaseFee { get; init; }</code></pre>
   </div>
 
 
@@ -264,12 +257,13 @@ public long LastLedgerBaseFee { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The average capacity usage over the last 5 ledgers (0 is no usage, 1.0 is completely full ledgers).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;ledger_capacity_usage&quot;)]
-public decimal LedgerCapacityUsage { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ledger_capacity_usage&quot;)]
+public required double LedgerCapacityUsage { get; init; }</code></pre>
   </div>
 
 
@@ -278,7 +272,7 @@ public decimal LedgerCapacityUsage { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.decimal">decimal</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
     <dd></dd>
   </dl>
 
@@ -296,12 +290,13 @@ public decimal LedgerCapacityUsage { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Information about max fee bid for transactions over the last 5 ledgers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max_fee&quot;)]
-public FeeStatsResponse.FeeStatsResponseData MaxFee { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_fee&quot;)]
+public required FeeStatsResponse.FeeStatsResponseData MaxFee { get; init; }</code></pre>
   </div>
 
 

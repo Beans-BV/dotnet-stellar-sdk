@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class BumpSequenceOperationResponse ">
       
-      <meta name="description" content="Represents AccountMerge operation response.">
+      <meta name="description" content="Represents a bump_sequence operation response. Bumps forward the sequence number of the source account to the specified value.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,8 @@ Class BumpSequenceOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents AccountMerge operation response.</p>
+  <div class="markdown summary"><p>Represents a bump_sequence operation response.
+Bumps forward the sequence number of the source account to the specified value.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -209,12 +210,13 @@ Class BumpSequenceOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The new sequence number for the source account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;bump_to&quot;)]
-public long BumpTo { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bump_to&quot;)]
+public required long BumpTo { get; init; }</code></pre>
   </div>
 
 
@@ -241,7 +243,8 @@ public long BumpTo { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

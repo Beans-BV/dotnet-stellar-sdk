@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ClaimPredicateBeforeAbsoluteTime ">
       
-      
+      <meta name="description" content="Represents a claim predicate that is valid only before a specified absolute point in time. The claimable balance can be claimed only before the given Unix timestamp.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ClaimPredicateBeforeAbsoluteTime
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a claim predicate that is valid only before a specified absolute point in time.
+The claimable balance can be claimed only before the given Unix timestamp.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -186,7 +188,9 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> class
+with an XDR <span class="xref">StellarDotnetSdk.Xdr.TimePoint</span> value.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -196,7 +200,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>timePoint</code> <span class="xref">TimePoint</span></dt>
-    <dd></dd>
+    <dd><p>The XDR time point representing the deadline as a Unix timestamp.</p>
+</dd>
   </dl>
 
 
@@ -217,7 +222,9 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> class
+with a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a> representing the deadline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -227,7 +234,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>dateTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
-    <dd></dd>
+    <dd><p>The absolute point in time before which the balance can be claimed.</p>
+</dd>
   </dl>
 
 
@@ -248,7 +256,9 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Claimants.ClaimPredicateBeforeAbsoluteTime.html">ClaimPredicateBeforeAbsoluteTime</a> class
+with a Unix timestamp in seconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -258,7 +268,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>timePoint</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
-    <dd></dd>
+    <dd><p>The Unix timestamp (in seconds) before which the balance can be claimed.</p>
+</dd>
   </dl>
 
 
@@ -283,7 +294,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the absolute deadline as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>, converted from the underlying Unix timestamp.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -314,7 +326,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the XDR time point representing the absolute deadline as a Unix timestamp.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -349,7 +362,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this claim predicate to its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -360,7 +374,8 @@ Class ClaimPredicateBeforeAbsoluteTime
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ClaimPredicate</span></dt>
-    <dd></dd>
+    <dd><p>An XDR <span class="xref">StellarDotnetSdk.Xdr.ClaimPredicate</span> object.</p>
+</dd>
   </dl>
 
 

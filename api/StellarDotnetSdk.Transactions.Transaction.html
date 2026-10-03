@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Transaction ">
       
-      
+      <meta name="description" content="Represents a Stellar transaction containing one or more operations, a source account, memo, and optional preconditions.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class Transaction
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a Stellar transaction containing one or more operations, a source account, memo, and optional
+preconditions.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -186,7 +188,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the total fee (in stroops) for this transaction. This is the per-operation fee multiplied by the number
+of operations, plus any additional resource fees.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -217,7 +221,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the memo attached to this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -248,7 +253,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the array of operations included in this transaction (1 to 100 operations).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -279,7 +285,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the optional preconditions (time bounds, ledger bounds, sequence constraints, extra signers) for this
+transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -310,7 +318,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the sequence number of this transaction. Each transaction must use the next sequential value from the
+source account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -341,7 +351,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the Soroban-specific transaction data (resource footprint and fees), typically populated from
+simulation results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -372,7 +384,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the source account that initiated this transaction and whose sequence number is consumed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -403,7 +416,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the time bounds from the preconditions, if set. This is a convenience accessor.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -433,22 +447,26 @@ Class Transaction
 
   <a id="StellarDotnetSdk_Transactions_Transaction_AddResourceFee_" data-uid="StellarDotnetSdk.Transactions.Transaction.AddResourceFee*"></a>
 
-  <h3 id="StellarDotnetSdk_Transactions_Transaction_AddResourceFee_System_UInt32_" data-uid="StellarDotnetSdk.Transactions.Transaction.AddResourceFee(System.UInt32)">
-  AddResourceFee(uint)
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_AddResourceFee_System_Int64_" data-uid="StellarDotnetSdk.Transactions.Transaction.AddResourceFee(System.Int64)">
+  AddResourceFee(long)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Adds an additional resource fee (in stroops) to the transaction fee, typically from Soroban simulation results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddResourceFee(uint resourceFee)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddResourceFee(long resourceFee)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>resourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dt><code>resourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>The resource fee in stroops to add. Declared as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a> to accept
+<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html#StellarDotnetSdk_Responses_SorobanRpc_SimulateTransactionResponse_MinResourceFee">MinResourceFee</a> at its full <code>int64</code> wire
+width.</p>
+</dd>
   </dl>
 
 
@@ -459,6 +477,16 @@ Class Transaction
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">resourceFee</code> is negative.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.overflowexception">OverflowException</a></dt>
+    <dd><p>Thrown when the resulting fee would exceed <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32.maxvalue">MaxValue</a>, the largest value the transaction
+envelope's <code>uint32</code> fee field can carry. The fee is left unchanged.</p>
+</dd>
+  </dl>
 
 
 
@@ -469,7 +497,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> from a <span class="xref">StellarDotnetSdk.Xdr.TransactionEnvelope</span> XDR object.
+Supports both V0 and V1 envelope types.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -479,13 +509,15 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <span class="xref">TransactionEnvelope</span></dt>
-    <dd></dd>
+    <dd><p>The XDR transaction envelope.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a>.</p>
+</dd>
   </dl>
 
 
@@ -495,6 +527,12 @@ Class Transaction
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the envelope type is not V0 or V1.</p>
+</dd>
+  </dl>
 
 
 
@@ -505,7 +543,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> from a base64-encoded transaction envelope XDR string.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -515,13 +554,15 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The base64-encoded XDR transaction envelope.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a>.</p>
+</dd>
   </dl>
 
 
@@ -541,7 +582,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> from a V0 transaction envelope.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -551,13 +593,15 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <span class="xref">TransactionV0Envelope</span></dt>
-    <dd></dd>
+    <dd><p>The V0 transaction envelope XDR object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> with its signatures.</p>
+</dd>
   </dl>
 
 
@@ -577,7 +621,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> from a V1 transaction envelope.
+V1 envelopes support muxed accounts and full preconditions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -587,13 +633,15 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>envelope</code> <span class="xref">TransactionV1Envelope</span></dt>
-    <dd></dd>
+    <dd><p>The V1 transaction envelope XDR object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
-    <dd></dd>
+    <dd><p>The decoded <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a> with its signatures and Soroban data if present.</p>
+</dd>
   </dl>
 
 
@@ -613,7 +661,8 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the Soroban authorization entries on all invoke host function operations within this transaction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -623,7 +672,8 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>auth</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a>[]</dt>
-    <dd></dd>
+    <dd><p>The authorization entries to set.</p>
+</dd>
   </dl>
 
 
@@ -644,7 +694,9 @@ Class Transaction
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets the Soroban transaction data (resource footprint and fees) on this transaction, typically from simulation
+results.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -654,7 +706,8 @@ Class Transaction
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>sorobanTransactionData</code> <a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionData.html">SorobanTransactionData</a></dt>
-    <dd></dd>
+    <dd><p>The Soroban transaction data to set.</p>
+</dd>
   </dl>
 
 

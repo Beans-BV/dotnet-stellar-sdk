@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class InclusionFee ">
       
-      
+      <meta name="description" content="Represents inclusion fee distribution statistics, including percentile breakdowns, for transactions over a range of recent ledgers.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class InclusionFee
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents inclusion fee distribution statistics, including percentile breakdowns,
+for transactions over a range of recent ledgers.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -144,71 +146,6 @@ Class InclusionFee
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_InclusionFee__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.InclusionFee.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_InclusionFee__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Int32_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.InclusionFee.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32)">
-  InclusionFee(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InclusionFee(string max, string min, string mode, string p10, string p20, string p30, string p40, string p50, string p60, string p70, string p80, string p90, string p95, string p99, string transactionCount, int ledgerCount)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>max</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>min</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>mode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p10</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p20</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p30</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p40</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p50</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p60</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p70</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p80</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p90</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p95</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>p99</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>transactionCount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>ledgerCount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -224,7 +161,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int LedgerCount { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int LedgerCount { get; init; }</code></pre>
   </div>
 
 
@@ -255,7 +192,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Max { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Max { get; init; }</code></pre>
   </div>
 
 
@@ -286,7 +223,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Min { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Min { get; init; }</code></pre>
   </div>
 
 
@@ -317,7 +254,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Mode { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Mode { get; init; }</code></pre>
   </div>
 
 
@@ -348,7 +285,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P10 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P10 { get; init; }</code></pre>
   </div>
 
 
@@ -379,7 +316,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P20 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P20 { get; init; }</code></pre>
   </div>
 
 
@@ -410,7 +347,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P30 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P30 { get; init; }</code></pre>
   </div>
 
 
@@ -441,7 +378,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P40 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P40 { get; init; }</code></pre>
   </div>
 
 
@@ -472,7 +409,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P50 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P50 { get; init; }</code></pre>
   </div>
 
 
@@ -503,7 +440,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P60 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P60 { get; init; }</code></pre>
   </div>
 
 
@@ -534,7 +471,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P70 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P70 { get; init; }</code></pre>
   </div>
 
 
@@ -565,7 +502,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P80 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P80 { get; init; }</code></pre>
   </div>
 
 
@@ -596,7 +533,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P90 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P90 { get; init; }</code></pre>
   </div>
 
 
@@ -627,7 +564,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P95 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P95 { get; init; }</code></pre>
   </div>
 
 
@@ -658,7 +595,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string P99 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string P99 { get; init; }</code></pre>
   </div>
 
 
@@ -689,7 +626,7 @@ Class InclusionFee
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string TransactionCount { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string TransactionCount { get; init; }</code></pre>
   </div>
 
 

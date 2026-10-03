@@ -193,11 +193,14 @@ Class InvokeContractOperation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>contractAddress</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
-    <dd></dd>
+    <dd><p>The address of the contract to invoke.</p>
+</dd>
     <dt><code>functionName</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCSymbol.html">SCSymbol</a></dt>
-    <dd></dd>
+    <dd><p>The name of the contract function to invoke.</p>
+</dd>
     <dt><code>args</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a>[]</dt>
-    <dd></dd>
+    <dd><p>(Optional) The arguments to pass to the contract function. Null means no arguments.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
     <dd><p>(Optional) Source account of the operation.</p>
 </dd>
@@ -232,11 +235,14 @@ Class InvokeContractOperation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>contractAddress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The ID of the contract to invoke, as a <code>C...</code> strkey.</p>
+</dd>
     <dt><code>functionName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The name of the contract function to invoke.</p>
+</dd>
     <dt><code>args</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a>[]</dt>
-    <dd></dd>
+    <dd><p>(Optional) The arguments to pass to the contract function. Null means no arguments.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
     <dd><p>(Optional) Source account of the operation.</p>
 </dd>
@@ -264,7 +270,8 @@ Class InvokeContractOperation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The host function containing the contract address, function name, and arguments for the invocation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -299,7 +306,8 @@ Class InvokeContractOperation
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Operations.InvokeContractOperation.html">InvokeContractOperation</a> from the given XDR <span class="xref">StellarDotnetSdk.Xdr.InvokeHostFunctionOp</span>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -309,13 +317,15 @@ Class InvokeContractOperation
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>invokeHostFunctionOp</code> <span class="xref">InvokeHostFunctionOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR object to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeContractOperation.html">InvokeContractOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.InvokeContractOperation.html">InvokeContractOperation</a> instance.</p>
+</dd>
   </dl>
 
 

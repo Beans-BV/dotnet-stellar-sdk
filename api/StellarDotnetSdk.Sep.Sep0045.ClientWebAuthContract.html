@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ClientWebAuthContract </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ClientWebAuthContract ">
+      
+      <meta name="description" content="Client-side implementation of SEP-45 (Web Authentication for Contract Accounts). Orchestrates challenge fetching, validation, signing, and submission.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract">
+
+
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract" class="text-break">
+Class ClientWebAuthContract  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<span class="xref">Sep</span>.<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.html">Sep0045</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Client-side implementation of SEP-45 (Web Authentication for Contract Accounts).
+Orchestrates challenge fetching, validation, signing, and submission.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ClientWebAuthContract : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ClientWebAuthContract</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract__ctor_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract__ctor_System_String_System_String_StellarDotnetSdk_Network_System_String_System_String_System_String_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_Nullable_System_UInt32__StellarDotnetSdk_Requests_HttpResilienceOptions_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.#ctor(System.String,System.String,StellarDotnetSdk.Network,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.UInt32},StellarDotnetSdk.Requests.HttpResilienceOptions)">
+  ClientWebAuthContract(string, string, Network, string, string, string, string?, HttpClient?, Dictionary&lt;string, string&gt;?, uint?, HttpResilienceOptions?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new instance with explicit configuration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ClientWebAuthContract(string authEndpoint, string webAuthContractId, Network network, string serverSigningKey, string serverHomeDomain, string sorobanRpcUrl, string? webAuthDomain = null, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, uint? signatureExpirationLedgers = null, HttpResilienceOptions? resilienceOptions = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>authEndpoint</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The SEP-45 auth endpoint (stellar.toml <code>WEB_AUTH_FOR_CONTRACTS_ENDPOINT</code>). It must be an absolute
+<code>https</code> URI; plain <code>http</code> is allowed only for loopback addresses.</p>
+</dd>
+    <dt><code>webAuthContractId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The web auth contract ID as a <code>C...</code> strkey (stellar.toml <code>WEB_AUTH_CONTRACT_ID</code>).</p>
+</dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The Stellar network the challenge is bound to.</p>
+</dd>
+    <dt><code>serverSigningKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The server's signing key as a <code>G...</code> account ID (stellar.toml <code>SIGNING_KEY</code>). The server's
+signature on the challenge is verified against it.</p>
+</dd>
+    <dt><code>serverHomeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The server's home domain. A challenge is validated against it when a request names no home domain.</p>
+</dd>
+    <dt><code>sorobanRpcUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The Stellar RPC URL used to read the latest ledger, from which the client signature expiration is
+computed.</p>
+</dd>
+    <dt><code>webAuthDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>web_auth_domain</code> the server binds challenges to. Servers configure this independently
+of the endpoint URL (the reference server uses the home domain; anchor-platform uses a dedicated
+config value), so it is taken as configuration here rather than derived from
+<code class="paramref">authEndpoint</code>. Defaults to <code class="paramref">serverHomeDomain</code> when null.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>Optional HTTP client to reuse. Credentials placed in this client's
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient.defaultrequestheaders">DefaultRequestHeaders</a> are sent to <em>every</em> host
+it contacts — including a client domain's stellar.toml (a different origin) during client-domain
+verification. To send credentials only to the auth server, use
+<code class="paramref">httpRequestHeaders</code> instead; the SDK does not forward those across origins.</p>
+</dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Optional headers sent with requests to the auth server. The SDK does NOT forward these to the
+client domain's stellar.toml fetch, so they are the safe place for auth-server credentials.</p>
+</dd>
+    <dt><code>signatureExpirationLedgers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dd><p>How many ledgers after the latest ledger the client signature expires. Defaults to
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_DefaultSignatureExpirationLedgers">DefaultSignatureExpirationLedgers</a> when null.</p>
+</dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd><p>Optional retry/timeout options for the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> the SDK creates. Ignored when
+<code class="paramref">httpClient</code> is supplied — that client is used as-is.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_DefaultSignatureExpirationLedgers" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.DefaultSignatureExpirationLedgers">
+  DefaultSignatureExpirationLedgers
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Default number of ledgers added to the latest ledger to compute signature expiration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const uint DefaultSignatureExpirationLedgers = 10</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_Dispose" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes the internal HttpClient if it was created by this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_Dispose_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_Dispose_System_Boolean_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.Dispose(System.Boolean)">
+  Dispose(bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Disposes this instance and optionally the internally-owned HttpClient.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void Dispose(bool disposing)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>disposing</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_FromDomainAsync_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.FromDomainAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_FromDomainAsync_System_String_StellarDotnetSdk_Network_System_String_StellarDotnetSdk_Requests_HttpResilienceOptions_System_String_System_Net_Http_HttpClient_System_Collections_Generic_Dictionary_System_String_System_String__System_String_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.FromDomainAsync(System.String,StellarDotnetSdk.Network,System.String,StellarDotnetSdk.Requests.HttpResilienceOptions,System.String,System.Net.Http.HttpClient,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+  FromDomainAsync(string, Network, string, HttpResilienceOptions?, string?, HttpClient?, Dictionary&lt;string, string&gt;?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Discovers configuration from the domain's stellar.toml and constructs an instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;ClientWebAuthContract&gt; FromDomainAsync(string domain, Network network, string sorobanRpcUrl, HttpResilienceOptions? resilienceOptions = null, string? bearerToken = null, HttpClient? httpClient = null, Dictionary&lt;string, string&gt;? httpRequestHeaders = null, string? webAuthDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>domain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd></dd>
+    <dt><code>sorobanRpcUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>resilienceOptions</code> <a class="xref" href="StellarDotnetSdk.Requests.HttpResilienceOptions.html">HttpResilienceOptions</a></dt>
+    <dd></dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd></dd>
+    <dt><code>httpRequestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>webAuthDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html">ClientWebAuthContract</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_GetChallengeAsync_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.GetChallengeAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_GetChallengeAsync_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.GetChallengeAsync(System.String,System.String,System.String)">
+  GetChallengeAsync(string, string?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fetches a SEP-45 challenge from the configured server for a contract account.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ChallengeForContractsResponse&gt; GetChallengeAsync(string clientAccountId, string? homeDomain = null, string? clientDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>clientAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The contract account being authenticated (C... address).</p>
+</dd>
+    <dt><code>homeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional home domain if the auth server serves multiple domains.</p>
+</dd>
+    <dt><code>clientDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional client domain for client-domain verification.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ChallengeForContractsResponse.html">ChallengeForContractsResponse</a>&gt;</dt>
+    <dd><p>The parsed <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ChallengeForContractsResponse.html">ChallengeForContractsResponse</a> from the server.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0045.Exceptions.ChallengeForContractsRequestErrorException.html">ChallengeForContractsRequestErrorException</a></dt>
+    <dd><p>Thrown if the server returns a non-2xx status, or the body is malformed/unparseable.</p>
+</dd>
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0045.Exceptions.MissingAuthorizationEntriesInChallengeResponseException.html">MissingAuthorizationEntriesInChallengeResponseException</a></dt>
+    <dd><p>Thrown when the server returned a valid JSON body but without an <code>authorization_entries</code> field.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.JwtTokenAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.JwtTokenAsync(System.String,System.Collections.Generic.ICollection{StellarDotnetSdk.Accounts.KeyPair},System.String,System.String,StellarDotnetSdk.Accounts.KeyPair,StellarDotnetSdk.Sep.Sep0045.ClientDomainEntrySigningDelegate)">
+  JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>End-to-end SEP-45 flow: fetch challenge, validate, sign, submit, return JWT.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; JwtTokenAsync(string clientAccountId, ICollection&lt;KeyPair&gt; signers, string? homeDomain = null, string? clientDomain = null, KeyPair? clientDomainAccountKeyPair = null, ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>clientAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Contract account being authenticated (C... address).</p>
+</dd>
+    <dt><code>signers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</dt>
+    <dd><p>Keypairs that authorize the client (contract) entry. May be empty for a contract whose
+<code>__check_auth</code> requires no signatures (per SEP-45).</p>
+</dd>
+    <dt><code>homeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional home domain override (for auth servers serving multiple home domains).</p>
+</dd>
+    <dt><code>clientDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional client domain.</p>
+</dd>
+    <dt><code>clientDomainAccountKeyPair</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>Optional local client-domain signing keypair.</p>
+</dd>
+    <dt><code>clientDomainSigningDelegate</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientDomainEntrySigningDelegate.html">ClientDomainEntrySigningDelegate</a></dt>
+    <dd><p>Optional remote client-domain signing delegate. Requires <code class="paramref">clientDomain</code> to
+be supplied so the SDK can resolve the client's signing public key from its stellar.toml.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The JWT session token issued by the server.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Intentionally does NOT perform SEP-45's client-side transaction simulation / footprint check
+(the &quot;simulate the signed entries and verify the <code>read_write</code> footprint contains only the
+expected <code>ledger_key_nonce</code> entries&quot; step in the spec's authentication flow). That step is
+defense-in-depth: the spec (a draft) writes it as a descriptive flow step rather than an
+RFC-2119 MUST, the structural validation already pins the invocation (contract id, function
+name, no sub-invocations, identical invocation across entries, validated args), and no peer SDK
+implements it. Omitted deliberately; revisit if the spec promotes it to a hard requirement.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_SendSignedChallengeAsync_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.SendSignedChallengeAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_SendSignedChallengeAsync_System_String_System_Boolean_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.SendSignedChallengeAsync(System.String,System.Boolean)">
+  SendSignedChallengeAsync(string, bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>POSTs the signed authorization entries XDR to the SEP-45 server and returns the JWT.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; SendSignedChallengeAsync(string signedAuthorizationEntriesXdr, bool useFormUrlEncoded = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signedAuthorizationEntriesXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base64 XDR of fully-signed authorization entries.</p>
+</dd>
+    <dt><code>useFormUrlEncoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>If true (default), posts as <code>application/x-www-form-urlencoded</code> with key
+<code>authorization_entries</code>. If false, posts JSON <code>{&quot;authorization_entries&quot;:&quot;...&quot;}</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The JWT token on success.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_SignAuthorizationEntriesAsync_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.SignAuthorizationEntriesAsync*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_SignAuthorizationEntriesAsync_System_String_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.SignAuthorizationEntriesAsync(System.String,System.String,System.Collections.Generic.ICollection{StellarDotnetSdk.Accounts.KeyPair},StellarDotnetSdk.Accounts.KeyPair,StellarDotnetSdk.Sep.Sep0045.ClientDomainEntrySigningDelegate,System.String)">
+  SignAuthorizationEntriesAsync(string, string, ICollection&lt;KeyPair&gt;, KeyPair?, ClientDomainEntrySigningDelegate?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Signs SEP-45 authorization entries: the client (contract) entry with every supplied signer,
+and optionally the client-domain entry with a local keypair or a remote signing delegate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; SignAuthorizationEntriesAsync(string authorizationEntriesXdr, string clientAccountId, ICollection&lt;KeyPair&gt; signers, KeyPair? clientDomainAccountKeyPair = null, ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null, string? clientDomainAccountId = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>authorizationEntriesXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base64 XDR of the challenge's authorization entries.</p>
+</dd>
+    <dt><code>clientAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The client account (C... contract address) being authenticated. The entry whose credentials
+address equals this value is signed with every keypair in <code class="paramref">signers</code>.</p>
+</dd>
+    <dt><code>signers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</dt>
+    <dd><p>Keypairs that authorize the client (contract) entry; a contract may require several. May be
+empty for a contract whose <code>__check_auth</code> requires no signatures (per SEP-45): the client
+entry is then returned with its signature-expiration ledger stamped but no signatures appended.
+An empty collection is intentional and is deliberately not rejected.</p>
+</dd>
+    <dt><code>clientDomainAccountKeyPair</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>Optional local client-domain signing keypair. Self-sufficient: it carries its own account id,
+so <code class="paramref">clientDomainAccountId</code> is not needed when this is supplied.</p>
+</dd>
+    <dt><code>clientDomainSigningDelegate</code> <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientDomainEntrySigningDelegate.html">ClientDomainEntrySigningDelegate</a></dt>
+    <dd><p>Optional async delegate invoked to sign the client-domain entry when the keypair isn't
+available locally (typically for remote signing). Must be paired with
+<code class="paramref">clientDomainAccountId</code> (which locates the entry to sign, since it cannot be
+derived from the delegate) — supplying one without the other throws
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.Exceptions.InvalidArgumentsException.html">InvalidArgumentsException</a>. Ignored if <code class="paramref">clientDomainAccountKeyPair</code>
+is provided.</p>
+</dd>
+    <dt><code>clientDomainAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The client-domain signing account (G... address) used to locate the client-domain entry when
+signing it via <code class="paramref">clientDomainSigningDelegate</code>. Required with — and only
+meaningful alongside — that delegate.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>Base64 XDR of the re-encoded, signed authorization entries.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_SignAuthorizationEntriesAsync_System_String_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Does NOT validate the challenge (server signature, contract id, function name, domain bindings).
+Call <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_ValidateChallenge_System_String_System_String_System_String_System_String_System_String_">ValidateChallenge(string, string, string?, string?, string?)</a> first, or use the end-to-end <a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)</a>
+which validates before signing — signing an unvalidated challenge can authorize a hostile
+server's entry.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0045.Exceptions.InvalidArgumentsException.html">InvalidArgumentsException</a></dt>
+    <dd><p>Thrown if <code class="paramref">clientDomainSigningDelegate</code> and
+<code class="paramref">clientDomainAccountId</code> are not supplied together (absent a local keypair), or
+if an authorization entry's address matches neither the server, the client account, nor the
+client-domain account — i.e. no supplied signer can cover it. Failing here surfaces a clear
+local error instead of letting the server reject the half-signed challenge with an opaque message.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_ValidateChallenge_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.ValidateChallenge*"></a>
+
+  <h3 id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_ValidateChallenge_System_String_System_String_System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.ValidateChallenge(System.String,System.String,System.String,System.String,System.String)">
+  ValidateChallenge(string, string, string?, string?, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validates a SEP-45 challenge: decodes the XDR, enforces structural + map-key rules
+via <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">ReadChallenge(string, string, string, string[], string)</a>, confirms the client account matches,
+enforces the client-domain invariant, and verifies the server's Ed25519 signature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ChallengeAuthorizationEntries ValidateChallenge(string authorizationEntriesXdr, string clientAccountId, string? clientDomainAccountId = null, string? clientDomain = null, string? homeDomain = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>authorizationEntriesXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base64-encoded XDR of the challenge's authorization entries.</p>
+</dd>
+    <dt><code>clientAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The expected client contract account ID (C... address).</p>
+</dd>
+    <dt><code>clientDomainAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional expected client-domain signing account. If null, the challenge must not contain
+client-domain keys.</p>
+</dd>
+    <dt><code>clientDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional client domain that was requested. When supplied, the challenge's <code>client_domain</code>
+string is validated against it — SEP-45 requires the client to confirm the returned
+<code>client_domain</code> matches the one it asked for, not just <code>client_domain_account</code>.</p>
+</dd>
+    <dt><code>homeDomain</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional home domain the challenge was requested for. Defaults to the configured server home
+domain; supply this when the auth server serves multiple home domains so the challenge's
+<code>home_domain</code> is validated against the one actually requested.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ChallengeAuthorizationEntries.html">ChallengeAuthorizationEntries</a></dt>
+    <dd><p>The parsed, validated challenge (entries + extracted fields + the located server entry).</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_ValidateChallenge_System_String_System_String_System_String_System_String_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Does not validate the challenge's <code>network_passphrase</code> — that field is on the HTTP response
+(<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ChallengeForContractsResponse.html#StellarDotnetSdk_Sep_Sep0045_ChallengeForContractsResponse_NetworkPassphrase">NetworkPassphrase</a>), not the XDR, and is checked by
+<a class="xref" href="StellarDotnetSdk.Sep.Sep0045.ClientWebAuthContract.html#StellarDotnetSdk_Sep_Sep0045_ClientWebAuthContract_JwtTokenAsync_System_String_System_Collections_Generic_ICollection_StellarDotnetSdk_Accounts_KeyPair__System_String_System_String_StellarDotnetSdk_Accounts_KeyPair_StellarDotnetSdk_Sep_Sep0045_ClientDomainEntrySigningDelegate_">JwtTokenAsync(string, ICollection&lt;KeyPair&gt;, string?, string?, KeyPair?, ClientDomainEntrySigningDelegate?)</a>. A caller using the manual fetch/validate/sign/submit path should
+compare it themselves.</p>
+</div>
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

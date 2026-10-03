@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TrustlineAsset ">
       
-      
+      <meta name="description" content="Represents an asset that can appear in a trustline on the Stellar network. This includes standard assets (native, credit_alphanum4, credit_alphanum12) and liquidity pool shares.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class TrustlineAsset
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an asset that can appear in a trustline on the Stellar network.
+This includes standard assets (native, credit_alphanum4, credit_alphanum12) and liquidity pool shares.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -159,7 +161,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the asset type string (e.g., <code>&quot;native&quot;</code>, <code>&quot;credit_alphanum4&quot;</code>, <code>&quot;credit_alphanum12&quot;</code>, or <code>&quot;pool_share&quot;</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -194,7 +197,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this trustline asset to another for ordering.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -204,13 +208,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>The trustline asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value for ordering.</p>
+</dd>
   </dl>
 
 
@@ -230,7 +236,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> by wrapping an existing <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -240,13 +247,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to wrap.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> wrapping the given asset.</p>
+</dd>
   </dl>
 
 
@@ -266,7 +275,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> from a <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.html">ChangeTrustAsset.Wrapper</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -276,13 +286,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>wrapper</code> <a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.html">ChangeTrustAsset</a>.<a class="xref" href="StellarDotnetSdk.Assets.ChangeTrustAsset.Wrapper.html">Wrapper</a></dt>
-    <dd></dd>
+    <dd><p>The change trust asset wrapper containing the underlying asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> wrapping the underlying asset.</p>
+</dd>
   </dl>
 
 
@@ -302,7 +314,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> from a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -312,13 +325,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>share</code> <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareChangeTrustAsset.html">LiquidityPoolShareChangeTrustAsset</a></dt>
-    <dd></dd>
+    <dd><p>The liquidity pool share change trust asset.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> using the pool parameters from the change trust asset.</p>
+</dd>
   </dl>
 
 
@@ -338,7 +353,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> from a pool ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -348,13 +364,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>id</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolId.html">LiquidityPoolId</a></dt>
-    <dd></dd>
+    <dd><p>The liquidity pool ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> referencing the given pool.</p>
+</dd>
   </dl>
 
 
@@ -374,7 +392,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> from liquidity pool parameters.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -384,13 +403,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters.html">LiquidityPoolParameters</a></dt>
-    <dd></dd>
+    <dd><p>The liquidity pool parameters.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.LiquidityPoolShareTrustlineAsset.html">LiquidityPoolShareTrustlineAsset</a> for the given pool.</p>
+</dd>
   </dl>
 
 
@@ -410,7 +431,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> from its canonical string form.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -420,13 +442,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>canonicalForm</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The canonical asset string (e.g., <code>&quot;native&quot;</code> or <code>&quot;USD:GABC...&quot;</code>).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> wrapping the parsed asset.</p>
+</dd>
   </dl>
 
 
@@ -446,7 +470,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> from an asset type, code, and issuer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -456,17 +481,21 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset type (e.g., <code>&quot;native&quot;</code>).</p>
+</dd>
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset code.</p>
+</dd>
     <dt><code>issuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The issuer account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> wrapping the created asset.</p>
+</dd>
   </dl>
 
 
@@ -486,7 +515,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> for a non-native credit asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -496,15 +526,18 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>code</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The asset code.</p>
+</dd>
     <dt><code>issuer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The issuer account ID.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> wrapping the credit asset.</p>
+</dd>
   </dl>
 
 
@@ -560,7 +593,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a> from an XDR <span class="xref">StellarDotnetSdk.Xdr.TrustLineAsset</span> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -570,13 +604,15 @@ Class TrustlineAsset
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>trustLineAssetXdr</code> <span class="xref">TrustLineAsset</span></dt>
-    <dd></dd>
+    <dd><p>The XDR trustline asset to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>The deserialized <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a>.</p>
+</dd>
   </dl>
 
 
@@ -586,6 +622,12 @@ Class TrustlineAsset
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when the asset type is unknown.</p>
+</dd>
+  </dl>
 
 
 
@@ -596,7 +638,8 @@ Class TrustlineAsset
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this trustline asset to its XDR <span class="xref">StellarDotnetSdk.Xdr.TrustLineAsset</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -607,7 +650,8 @@ Class TrustlineAsset
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">TrustLineAsset</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.TrustLineAsset</span> XDR object corresponding to the concrete asset type.</p>
+</dd>
   </dl>
 
 
@@ -617,6 +661,12 @@ Class TrustlineAsset
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the trustline asset type is not recognized.</p>
+</dd>
+  </dl>
 
 
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LiquidityPoolDepositOperationResponse ">
       
-      
+      <meta name="description" content="Represents a liquidity_pool_deposit operation response. Deposits assets into a liquidity pool in exchange for pool shares.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class LiquidityPoolDepositOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a liquidity_pool_deposit operation response.
+Deposits assets into a liquidity pool in exchange for pool shares.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -208,12 +210,13 @@ Class LiquidityPoolDepositOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The ID of the liquidity pool.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;liquidity_pool_id&quot;)]
-public LiquidityPoolId LiquidityPoolId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;liquidity_pool_id&quot;)]
+public required LiquidityPoolId LiquidityPoolId { get; init; }</code></pre>
   </div>
 
 
@@ -240,12 +243,13 @@ public LiquidityPoolId LiquidityPoolId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum price (as a ratio) the depositor is willing to accept.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;max_price&quot;)]
-public string MaxPrice { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_price&quot;)]
+public required string MaxPrice { get; init; }</code></pre>
   </div>
 
 
@@ -272,12 +276,13 @@ public string MaxPrice { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The minimum price (as a ratio) the depositor is willing to accept.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;min_price&quot;)]
-public string MinPrice { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;min_price&quot;)]
+public required string MinPrice { get; init; }</code></pre>
   </div>
 
 
@@ -304,12 +309,13 @@ public string MinPrice { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The actual amount of each reserve that was deposited.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;reserves_deposited&quot;)]
-public List&lt;Reserve&gt; ReservesDeposited { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;reserves_deposited&quot;)]
+public required List&lt;Reserve&gt; ReservesDeposited { get; init; }</code></pre>
   </div>
 
 
@@ -336,12 +342,13 @@ public List&lt;Reserve&gt; ReservesDeposited { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The maximum amount of each reserve the depositor is willing to deposit.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;reserves_max&quot;)]
-public List&lt;Reserve&gt; ReservesMax { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;reserves_max&quot;)]
+public required List&lt;Reserve&gt; ReservesMax { get; init; }</code></pre>
   </div>
 
 
@@ -368,12 +375,13 @@ public List&lt;Reserve&gt; ReservesMax { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The number of pool shares received in exchange for the deposit.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;shares_received&quot;)]
-public string SharesReceived { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;shares_received&quot;)]
+public required string SharesReceived { get; init; }</code></pre>
   </div>
 
 
@@ -400,7 +408,8 @@ public string SharesReceived { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>SEP-0001: stellar.toml </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="SEP-0001: stellar.toml ">
+      
+      
+      <link rel="icon" href="../../favicon">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="sep-0001-stellartoml">SEP-0001: stellar.toml</h1>
+
+<p>This guide demonstrates how to work with stellar.toml files using the Stellar .NET SDK. The stellar.toml file is a standardized configuration file that organizations publish at <code>https://DOMAIN/.well-known/stellar.toml</code> to provide information about their Stellar integration.</p>
+<h2 id="understanding-stellartoml">Understanding stellar.toml</h2>
+<p>The stellar.toml file serves several critical purposes:</p>
+<ul>
+<li><strong>Service Endpoints</strong>: Declares service endpoints for SEP implementations (WebAuth, Transfer, KYC, etc.)</li>
+<li><strong>Organization Information</strong>: Publishes organization information and contact details for transparency</li>
+<li><strong>Currencies</strong>: Lists supported currencies/assets with their properties</li>
+<li><strong>Validators</strong>: Declares validator nodes and their configuration</li>
+<li><strong>Account Linking</strong>: Links Stellar accounts to a domain for identity verification</li>
+</ul>
+<h2 id="fetching-stellartoml-from-a-domain">Fetching stellar.toml from a Domain</h2>
+<p>The primary way to discover a domain's Stellar integration information is to fetch their stellar.toml file:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Sep.Sep0001;
+
+// Fetch and parse stellar.toml from a domain
+var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+// Access general information
+Console.WriteLine($&quot;WebAuth endpoint: {stellarToml.GeneralInformation.WebAuthEndpoint}&quot;);
+Console.WriteLine($&quot;Transfer server: {stellarToml.GeneralInformation.TransferServer}&quot;);
+Console.WriteLine($&quot;Federation server: {stellarToml.GeneralInformation.FederationServer}&quot;);
+</code></pre>
+<h2 id="parsing-stellartoml-from-a-string">Parsing stellar.toml from a String</h2>
+<p>You can also parse stellar.toml content directly from a string:</p>
+<pre><code class="lang-csharp">var tomlContent = @&quot;
+VERSION=&quot;&quot;2.0.0&quot;&quot;
+NETWORK_PASSPHRASE=&quot;&quot;Public Global Stellar Network ; September 2015&quot;&quot;
+WEB_AUTH_ENDPOINT=&quot;&quot;https://example.com/auth&quot;&quot;
+SIGNING_KEY=&quot;&quot;GBWMCCC3NHSKLAOJDBKKYW7SSH2PFTTNVFKWSGLWGDLEBKLOVP5JLBBP&quot;&quot;
+
+[DOCUMENTATION]
+ORG_NAME=&quot;&quot;Example Organization&quot;&quot;
+ORG_URL=&quot;&quot;https://example.com&quot;&quot;
+&quot;;
+
+var stellarToml = new StellarToml(tomlContent);
+Console.WriteLine(stellarToml.GeneralInformation.WebAuthEndpoint);
+</code></pre>
+<h2 id="accessing-organization-documentation">Accessing Organization Documentation</h2>
+<p>The <code>Documentation</code> section contains information about the organization:</p>
+<pre><code class="lang-csharp">var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+if (stellarToml.Documentation != null)
+{
+    var doc = stellarToml.Documentation;
+    Console.WriteLine($&quot;Organization: {doc.OrgName}&quot;);
+    Console.WriteLine($&quot;DBA: {doc.OrgDba}&quot;);
+    Console.WriteLine($&quot;URL: {doc.OrgUrl}&quot;);
+    Console.WriteLine($&quot;Support email: {doc.OrgSupportEmail}&quot;);
+    Console.WriteLine($&quot;Official email: {doc.OrgOfficialEmail}&quot;);
+    Console.WriteLine($&quot;Description: {doc.OrgDescription}&quot;);
+}
+</code></pre>
+<h2 id="working-with-currencies">Working with Currencies</h2>
+<p>The <code>Currencies</code> list contains information about all supported assets:</p>
+<pre><code class="lang-csharp">var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+if (stellarToml.Currencies != null)
+{
+    foreach (var currency in stellarToml.Currencies)
+    {
+        Console.WriteLine($&quot;Currency: {currency.Code}&quot;);
+        Console.WriteLine($&quot;Issuer: {currency.Issuer}&quot;);
+        Console.WriteLine($&quot;Display decimals: {currency.DisplayDecimals}&quot;);
+        
+        if (currency.IsAssetAnchored == true)
+        {
+            Console.WriteLine($&quot;Anchored to: {currency.AnchorAsset}&quot;);
+            Console.WriteLine($&quot;Anchor type: {currency.AnchorAssetType}&quot;);
+        }
+        
+        if (!string.IsNullOrEmpty(currency.Desc))
+        {
+            Console.WriteLine($&quot;Description: {currency.Desc}&quot;);
+        }
+    }
+}
+</code></pre>
+<h2 id="loading-linked-currency-information">Loading Linked Currency Information</h2>
+<p>Some currencies may link to external TOML files for more detailed information:</p>
+<pre><code class="lang-csharp">var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+if (stellarToml.Currencies != null)
+{
+    foreach (var currency in stellarToml.Currencies)
+    {
+        // Check if this currency links to an external TOML file
+        if (!string.IsNullOrEmpty(currency.Toml))
+        {
+            // Load the full currency details from the external file
+            var fullCurrency = await StellarToml.CurrencyFromUrlAsync(currency.Toml);
+            
+            Console.WriteLine($&quot;Full currency details for {fullCurrency.Code}:&quot;);
+            Console.WriteLine($&quot;Description: {fullCurrency.Desc}&quot;);
+            Console.WriteLine($&quot;Issuer: {fullCurrency.Issuer}&quot;);
+            
+            if (fullCurrency.IsAssetAnchored == true)
+            {
+                Console.WriteLine($&quot;Anchored to: {fullCurrency.AnchorAsset}&quot;);
+            }
+        }
+    }
+}
+</code></pre>
+<h2 id="accessing-validator-information">Accessing Validator Information</h2>
+<p>The <code>Validators</code> list contains information about validator nodes:</p>
+<pre><code class="lang-csharp">var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+if (stellarToml.Validators != null)
+{
+    foreach (var validator in stellarToml.Validators)
+    {
+        Console.WriteLine($&quot;Validator: {validator.DisplayName}&quot;);
+        Console.WriteLine($&quot;Alias: {validator.Alias}&quot;);
+        Console.WriteLine($&quot;Public Key: {validator.PublicKey}&quot;);
+        Console.WriteLine($&quot;Host: {validator.Host}&quot;);
+        Console.WriteLine($&quot;History: {validator.History}&quot;);
+    }
+}
+</code></pre>
+<h2 id="accessing-points-of-contact">Accessing Points of Contact</h2>
+<p>The <code>PointsOfContact</code> list contains information about principals:</p>
+<pre><code class="lang-csharp">var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+
+if (stellarToml.PointsOfContact != null)
+{
+    foreach (var contact in stellarToml.PointsOfContact)
+    {
+        Console.WriteLine($&quot;Name: {contact.Name}&quot;);
+        Console.WriteLine($&quot;Email: {contact.Email}&quot;);
+        Console.WriteLine($&quot;Keybase: {contact.Keybase}&quot;);
+        Console.WriteLine($&quot;Twitter: {contact.Twitter}&quot;);
+        Console.WriteLine($&quot;Github: {contact.Github}&quot;);
+    }
+}
+</code></pre>
+<h2 id="using-custom-httpclient">Using Custom HttpClient</h2>
+<p>For testing or when you need custom HTTP configuration, you can provide your own <code>HttpClient</code>:</p>
+<pre><code class="lang-csharp">using System.Net.Http;
+
+// Create a custom HttpClient with timeout
+var httpClient = new HttpClient
+{
+    Timeout = TimeSpan.FromSeconds(30)
+};
+
+// Use it when fetching stellar.toml
+var stellarToml = await StellarToml.FromDomainAsync(
+    &quot;example.com&quot;,
+    httpClient: httpClient
+);
+</code></pre>
+<h2 id="error-handling">Error Handling</h2>
+<p>The SDK throws <code>StellarTomlException</code> when there are issues fetching or parsing stellar.toml files:</p>
+<pre><code class="lang-csharp">try
+{
+    var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+    // Use stellar.toml...
+}
+catch (StellarTomlException ex)
+{
+    Console.WriteLine($&quot;Failed to fetch or parse stellar.toml: {ex.Message}&quot;);
+    // Handle error...
+}
+</code></pre>
+<h2 id="complete-example">Complete Example</h2>
+<p>Here's a complete example that fetches and displays all available information:</p>
+<pre><code class="lang-csharp">using StellarDotnetSdk.Sep.Sep0001;
+
+try
+{
+    var stellarToml = await StellarToml.FromDomainAsync(&quot;example.com&quot;);
+    
+    // General Information
+    var info = stellarToml.GeneralInformation;
+    Console.WriteLine($&quot;Version: {info.Version}&quot;);
+    Console.WriteLine($&quot;Network: {info.NetworkPassphrase}&quot;);
+    Console.WriteLine($&quot;WebAuth: {info.WebAuthEndpoint}&quot;);
+    Console.WriteLine($&quot;Transfer Server: {info.TransferServer}&quot;);
+    Console.WriteLine($&quot;Federation Server: {info.FederationServer}&quot;);
+    
+    if (info.Accounts.Count &gt; 0)
+    {
+        Console.WriteLine(&quot;Accounts:&quot;);
+        foreach (var account in info.Accounts)
+        {
+            Console.WriteLine($&quot;  - {account}&quot;);
+        }
+    }
+    
+    // Organization Documentation
+    if (stellarToml.Documentation != null)
+    {
+        var doc = stellarToml.Documentation;
+        Console.WriteLine($&quot;\nOrganization: {doc.OrgName}&quot;);
+        Console.WriteLine($&quot;URL: {doc.OrgUrl}&quot;);
+        Console.WriteLine($&quot;Support: {doc.OrgSupportEmail}&quot;);
+    }
+    
+    // Currencies
+    if (stellarToml.Currencies != null &amp;&amp; stellarToml.Currencies.Count &gt; 0)
+    {
+        Console.WriteLine(&quot;\nCurrencies:&quot;);
+        foreach (var currency in stellarToml.Currencies)
+        {
+            Console.WriteLine($&quot;  - {currency.Code} ({currency.Issuer})&quot;);
+        }
+    }
+    
+    // Validators
+    if (stellarToml.Validators != null &amp;&amp; stellarToml.Validators.Count &gt; 0)
+    {
+        Console.WriteLine(&quot;\nValidators:&quot;);
+        foreach (var validator in stellarToml.Validators)
+        {
+            Console.WriteLine($&quot;  - {validator.DisplayName} ({validator.Alias})&quot;);
+        }
+    }
+}
+catch (StellarTomlException ex)
+{
+    Console.WriteLine($&quot;Error: {ex.Message}&quot;);
+}
+</code></pre>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001 Specification</a></li>
+<li><a href="https://anchor-tests.stellar.org/">Stellar Anchor Validator</a> - Tool to validate your stellar.toml file</li>
+<li><a href="https://stellar.sui.li">stellar.toml Checker</a> - Community-supported checker</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

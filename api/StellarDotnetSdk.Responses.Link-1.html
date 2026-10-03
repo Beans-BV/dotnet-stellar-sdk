@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Link&lt;TResponse&gt; ">
       
-      
+      <meta name="description" content="Represents a typed HAL hypermedia link that can be followed to retrieve a resource. Supports both direct links and URI templates.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,13 @@ Class Link&lt;TResponse&gt;
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a typed HAL hypermedia link that can be followed to retrieve a resource.
+Supports both direct links and URI templates.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(LinkJsonConverter))]
-public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre>
+    <pre><code class="lang-csharp hljs">public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre>
   </div>
 
 
@@ -106,7 +107,8 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>TResponse</code></dt>
-    <dd></dd>
+    <dd><p>The type of response expected when following this link.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">
@@ -166,41 +168,6 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="StellarDotnetSdk_Responses_Link_1__ctor_" data-uid="StellarDotnetSdk.Responses.Link`1.#ctor*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_Link_1__ctor_System_String_" data-uid="StellarDotnetSdk.Responses.Link`1.#ctor(System.String)">
-  Link(string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Link(string href)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>href</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -212,7 +179,8 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a Link or TemplatedLink based on the templated flag.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -222,15 +190,18 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>href</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The URL or URI template.</p>
+</dd>
     <dt><code>templated</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>Whether the href is a URI template.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Responses.Link-1.html">Link</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>A Link or TemplatedLink instance.</p>
+</dd>
   </dl>
 
 
@@ -250,7 +221,7 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Follow the Link, retrieving the linked resource.</p>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource using a new HttpClient.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -262,7 +233,8 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -272,34 +244,43 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
   <a id="StellarDotnetSdk_Responses_Link_1_Follow_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Follow_System_Collections_Generic_IDictionary_System_String_System_Object__" data-uid="StellarDotnetSdk.Responses.Link`1.Follow(System.Collections.Generic.IDictionary{System.String,System.Object})">
-  Follow(IDictionary&lt;string, object&gt;)
+  Follow(IDictionary&lt;string, object&gt;?)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Follow the Link, retrieving the linked resource.</p>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource using a new HttpClient.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(IDictionary&lt;string, object&gt; parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(IDictionary&lt;string, object&gt;? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2">IDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A dictionary of parameter names and values for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -309,6 +290,13 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
@@ -319,7 +307,7 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Follow the Link, retrieving the linked resource.</p>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -330,13 +318,15 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client to use for the request.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -346,36 +336,46 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
   <a id="StellarDotnetSdk_Responses_Link_1_Follow_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Follow_System_Net_Http_HttpClient_System_Collections_Generic_IDictionary_System_String_System_Object__" data-uid="StellarDotnetSdk.Responses.Link`1.Follow(System.Net.Http.HttpClient,System.Collections.Generic.IDictionary{System.String,System.Object})">
-  Follow(HttpClient, IDictionary&lt;string, object&gt;)
+  Follow(HttpClient, IDictionary&lt;string, object&gt;?)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Follow the Link, retrieving the linked resource.</p>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(HttpClient httpClient, IDictionary&lt;string, object&gt; parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(HttpClient httpClient, IDictionary&lt;string, object&gt;? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client to use for the request.</p>
+</dd>
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2">IDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A dictionary of parameter names and values for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -385,35 +385,46 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
   <a id="StellarDotnetSdk_Responses_Link_1_Follow_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Follow_System_Net_Http_HttpClient_System_Object_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow(System.Net.Http.HttpClient,System.Object)">
-  Follow(HttpClient, object)
+  Follow(HttpClient, object?)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(HttpClient httpClient, object parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(HttpClient httpClient, object? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
-    <dd></dd>
+    <dd><p>The HTTP client to use for the request.</p>
+</dd>
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>An object whose properties are used for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -423,34 +434,43 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
   <a id="StellarDotnetSdk_Responses_Link_1_Follow_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Follow_System_Object_" data-uid="StellarDotnetSdk.Responses.Link`1.Follow(System.Object)">
-  Follow(object)
+  Follow(object?)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Follow the Link, retrieving the linked resource.</p>
+  <div class="markdown level1 summary"><p>Follows the link to retrieve the linked resource using a new HttpClient.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(object parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TResponse&gt; Follow(object? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>An object whose properties are used for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResponse&gt;</dt>
-    <dd></dd>
+    <dd><p>The linked resource.</p>
+</dd>
   </dl>
 
 
@@ -460,6 +480,13 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Exceptions.ClientProtocolException.html">ClientProtocolException</a></dt>
+    <dd><p>Thrown when the response body is empty, or holds the JSON literal <code>null</code> and so
+deserializes to no object.</p>
+</dd>
+  </dl>
 
 
 
@@ -470,7 +497,7 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Resolve template Uri by performing variables substitution.</p>
+  <div class="markdown level1 summary"><p>Resolves the link URI. For non-templated links, returns the URI directly.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -482,7 +509,8 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The resolved URI.</p>
+</dd>
   </dl>
 
 
@@ -498,27 +526,31 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <a id="StellarDotnetSdk_Responses_Link_1_Resolve_" data-uid="StellarDotnetSdk.Responses.Link`1.Resolve*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Resolve_System_Collections_Generic_IDictionary_System_String_System_Object__" data-uid="StellarDotnetSdk.Responses.Link`1.Resolve(System.Collections.Generic.IDictionary{System.String,System.Object})">
-  Resolve(IDictionary&lt;string, object&gt;)
+  Resolve(IDictionary&lt;string, object&gt;?)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Resolves the link URI with the given parameters.
+For non-templated links, parameters are ignored.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual Uri Resolve(IDictionary&lt;string, object&gt; parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Uri Resolve(IDictionary&lt;string, object&gt;? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2">IDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A dictionary of parameter names and values for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The resolved URI.</p>
+</dd>
   </dl>
 
 
@@ -534,27 +566,31 @@ public class Link&lt;TResponse&gt; : Link where TResponse : Response</code></pre
   <a id="StellarDotnetSdk_Responses_Link_1_Resolve_" data-uid="StellarDotnetSdk.Responses.Link`1.Resolve*"></a>
 
   <h3 id="StellarDotnetSdk_Responses_Link_1_Resolve_System_Object_" data-uid="StellarDotnetSdk.Responses.Link`1.Resolve(System.Object)">
-  Resolve(object)
+  Resolve(object?)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Resolves the link URI with the given parameters.
+For non-templated links, parameters are ignored.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual Uri Resolve(object parameters)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Uri Resolve(object? parameters)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameters</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>An object whose properties are used for template substitution.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd></dd>
+    <dd><p>The resolved URI.</p>
+</dd>
   </dl>
 
 

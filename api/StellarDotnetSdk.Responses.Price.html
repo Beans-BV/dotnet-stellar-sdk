@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Price ">
       
-      <meta name="description" content="Represents prices response.">
+      <meta name="description" content="Represents a price ratio in Horizon API responses.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,12 +93,12 @@ Class Price
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents prices response.</p>
+  <div class="markdown summary"><p>Represents a price ratio in Horizon API responses.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Price</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class Price</code></pre>
   </div>
 
 
@@ -130,9 +130,6 @@ Class Price
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -143,6 +140,23 @@ Class Price
 
 
 
+  <h2 id="StellarDotnetSdk_Responses_Price_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+    This class is specifically designed for deserializing price data from Horizon API responses.
+    It uses <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a> for numerator and denominator to accommodate values that may exceed
+    the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> range returned by some Horizon endpoints (e.g., trade aggregations).
+</p>
+<p>
+    The Horizon API has inconsistencies in how it returns price data - sometimes as JSON numbers,
+    sometimes as strings. The SDK's <a class="xref" href="StellarDotnetSdk.Converters.JsonOptions.html#StellarDotnetSdk_Converters_JsonOptions_DefaultOptions">DefaultOptions</a> handles
+    both formats automatically via <code>JsonNumberHandling.AllowReadingFromString</code>.
+</p>
+<p>
+    <strong>Important:</strong> This class is for response deserialization only. For building
+    transactions and operations, use <a class="xref" href="StellarDotnetSdk.Price.html">Price</a> instead, which uses
+    <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> values as required by the Stellar XDR protocol.
+</p>
+</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -156,12 +170,13 @@ Class Price
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The denominator of the price ratio.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;d&quot;)]
-public string Denominator { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;d&quot;)]
+public required long Denominator { get; init; }</code></pre>
   </div>
 
 
@@ -170,7 +185,7 @@ public string Denominator { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -188,12 +203,13 @@ public string Denominator { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numerator of the price ratio.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;n&quot;)]
-public string Numerator { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;n&quot;)]
+public required long Numerator { get; init; }</code></pre>
   </div>
 
 
@@ -202,7 +218,7 @@ public string Numerator { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
   </dl>
 
@@ -213,6 +229,10 @@ public string Numerator { get; init; }</code></pre>
 
 
 
+  <h2 id="seealso">See Also</h2>
+  <div class="seealso">
+      <div><a class="xref" href="StellarDotnetSdk.Price.html">Price</a></div>
+  </div>
 
 </article>
 

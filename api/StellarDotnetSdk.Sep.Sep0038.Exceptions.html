@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0038.Exceptions </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0038.Exceptions ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0038_Exceptions" data-uid="StellarDotnetSdk.Sep.Sep0038.Exceptions" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0038.Exceptions</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.BadRequestException.html">BadRequestException</a></dt>
+      <dd><p>The anchor's SEP-38 quote server answered <code>400 Bad Request</code>: the request was invalid in some way, for
+example an unsupported asset or a missing required parameter.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.NoAnchorQuoteServerFoundException.html">NoAnchorQuoteServerFoundException</a></dt>
+      <dd><p>The domain's stellar.toml does not declare a usable <code>ANCHOR_QUOTE_SERVER</code>: either the key is missing, so
+the anchor does not advertise SEP-38 support, or its value is not an address <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a>
+accepts (<a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.NoAnchorQuoteServerFoundException.html#StellarDotnetSdk_Sep_Sep0038_Exceptions_NoAnchorQuoteServerFoundException_DeclaredAddress">DeclaredAddress</a> holds it, and the message says why).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.PermissionDeniedException.html">PermissionDeniedException</a></dt>
+      <dd><p>The anchor's SEP-38 quote server answered <code>403 Permission Denied</code>: no <code>Authorization</code> header was
+provided or its JWT was not accepted, or the anchor denied access (for example to an account that is not
+KYC'ed).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerException.html">QuoteServerException</a></dt>
+      <dd><p>Base type of the errors <a class="xref" href="StellarDotnetSdk.Sep.Sep0038.QuoteService.html">QuoteService</a> raises for a response from an anchor's SEP-38 quote
+server, or for a stellar.toml that declares no usable one. Catch this to handle all of them.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.QuoteServerNotFoundException.html">QuoteServerNotFoundException</a></dt>
+      <dd><p>The anchor's SEP-38 quote server answered <code>404 Not Found</code>: the resource does not exist. For <code>GET
+/quote/:id</code>, no quote with that id is visible to the authenticated account; some anchors (the Anchor
+Platform among them) also answer 404 to <code>GET /price</code> or <code>GET /prices</code> for an asset they do not
+list, which the specification does not define.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0038.Exceptions.UnexpectedResponseException.html">UnexpectedResponseException</a></dt>
+      <dd><p>The anchor's SEP-38 quote server sent a response the client cannot use: a status code other than
+<code>400</code>, <code>403</code> or <code>404</code> outside the 2xx range, a body larger than the size limit, or a success
+body that is not a valid response — malformed JSON, a duplicated property, a missing required field, or an
+amount that cannot be represented exactly.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

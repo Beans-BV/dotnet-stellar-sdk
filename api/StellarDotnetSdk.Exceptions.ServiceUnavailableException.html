@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ServiceUnavailableException ">
       
-      
+      <meta name="description" content="The exception that is thrown when the Stellar Horizon server returns an HTTP 503 Service Unavailable response, indicating the server is temporarily overloaded or undergoing maintenance.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ServiceUnavailableException
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>The exception that is thrown when the Stellar Horizon server returns an HTTP 503 Service Unavailable response,
+indicating the server is temporarily overloaded or undergoing maintenance.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -192,7 +194,8 @@ Class ServiceUnavailableException
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="StellarDotnetSdk.Exceptions.ServiceUnavailableException.html">ServiceUnavailableException</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -202,7 +205,12 @@ Class ServiceUnavailableException
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>retryAfter</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
+    <dd><p>The value of the Retry-After header from the HTTP response. Can be an int/long (delay-seconds), a
+string in delay-seconds or HTTP-date (RFC 1123, RFC 850, asctime, or ISO 8601) form, or a typed
+TimeSpan, DateTime, DateTimeOffset, or RetryConditionHeaderValue; any other object is parsed from
+its ToString() form.
+Non-positive or unparseable values leave both properties null.</p>
+</dd>
   </dl>
 
 
@@ -227,7 +235,8 @@ Class ServiceUnavailableException
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the number of seconds to wait before retrying, parsed from the Retry-After header.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -241,6 +250,41 @@ Class ServiceUnavailableException
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Exceptions_ServiceUnavailableException_RetryAfterDelay_" data-uid="StellarDotnetSdk.Exceptions.ServiceUnavailableException.RetryAfterDelay*"></a>
+
+  <h3 id="StellarDotnetSdk_Exceptions_ServiceUnavailableException_RetryAfterDelay" data-uid="StellarDotnetSdk.Exceptions.ServiceUnavailableException.RetryAfterDelay">
+  RetryAfterDelay
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>Retry-After</code> value parsed as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>, or null if absent or unparseable.
+Supports both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) and preserves the full value,
+whereas <a class="xref" href="StellarDotnetSdk.Exceptions.ServiceUnavailableException.html#StellarDotnetSdk_Exceptions_ServiceUnavailableException_RetryAfter">RetryAfter</a> exposes whole seconds only. Parsed once when the exception is
+created; for the HTTP-date form this is the delay that remained at that moment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? RetryAfterDelay { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
     <dd></dd>
   </dl>
 

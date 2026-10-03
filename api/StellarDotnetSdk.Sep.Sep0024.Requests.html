@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Sep.Sep0024.Requests </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Sep.Sep0024.Requests ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Sep.Sep0024.Requests">
+
+  <h1 id="StellarDotnetSdk_Sep_Sep0024_Requests" data-uid="StellarDotnetSdk.Sep.Sep0024.Requests" class="text-break">Namespace StellarDotnetSdk.Sep.Sep0024.Requests</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Requests.DepositRequest.html">DepositRequest</a></dt>
+      <dd><p>Request to initiate an interactive deposit flow with an anchor.
+A deposit allows a user to send external assets (fiat via bank transfer, BTC,
+USD cash, etc.) to an anchor, which then sends an equivalent amount of the
+Stellar asset (minus fees) to the user's Stellar account.
+The deposit endpoint returns an interactive URL where the user completes KYC,
+provides payment details, and receives instructions for sending their off-chain
+assets to the anchor.
+Authentication: Always required. Must provide a SEP-10 JWT token.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Requests.FeeRequest.html">FeeRequest</a></dt>
+      <dd><p>Request to query the anchor's fee schedule for deposit or withdrawal operations.
+This request allows clients to query the exact fee that would be charged for
+a specific deposit or withdrawal operation. This endpoint is optional for anchors
+that can fully express their fee structure in the /info response using fee_fixed,
+fee_percent, and fee_minimum fields.
+Authentication: Required if feeEndpointInfo.authenticationRequired is true in
+the /info response. Provide a SEP-10 JWT token in the Jwt property.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Requests.TransactionRequest.html">TransactionRequest</a></dt>
+      <dd><p>Request to query or validate a specific transaction with the anchor.
+This endpoint allows clients to retrieve detailed information about a single
+transaction. The anchor must verify that the SEP-10 JWT includes the Stellar
+account (and optional memo) used when making the original deposit/withdraw request.
+At least one of Id, StellarTransactionId, or ExternalTransactionId must be provided.
+Authentication: Always required. Must provide a SEP-10 JWT token.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Requests.TransactionsRequest.html">TransactionsRequest</a></dt>
+      <dd><p>Request to query transaction history for deposits and withdrawals.
+This endpoint allows clients to fetch the status and history of transactions
+with the anchor. It returns transactions associated with the account encoded
+in the authenticated SEP-10 JWT token.
+Authentication: Always required. Must provide a SEP-10 JWT token.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Sep.Sep0024.Requests.WithdrawRequest.html">WithdrawRequest</a></dt>
+      <dd><p>Request to initiate an interactive withdrawal flow with an anchor.
+A withdrawal allows a user to redeem a Stellar asset for the real-world asset
+(fiat via bank transfer, BTC, USD cash, etc.) via the anchor. The user sends
+the Stellar asset to the anchor, and the anchor sends the equivalent off-chain
+asset (minus fees) to the user.
+The withdrawal endpoint returns an interactive URL where the user completes KYC,
+provides bank account or wallet details, and receives instructions for the withdrawal.
+Authentication: Always required. Must provide a SEP-10 JWT token.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

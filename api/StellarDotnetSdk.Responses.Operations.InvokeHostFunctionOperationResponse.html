@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class InvokeHostFunctionOperationResponse ">
       
-      
+      <meta name="description" content="Represents an invoke_host_function operation response. Invokes a Soroban smart contract function on the Stellar network.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class InvokeHostFunctionOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents an invoke_host_function operation response.
+Invokes a Soroban smart contract function on the Stellar network.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -208,12 +210,13 @@ Class InvokeHostFunctionOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The contract address being invoked. Only present for contract invocations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;address&quot;)]
-public string Address { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;address&quot;)]
+public string? Address { get; init; }</code></pre>
   </div>
 
 
@@ -240,12 +243,13 @@ public string Address { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Array of asset balance changes that occurred during contract execution.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;asset_balance_changes&quot;)]
-public InvokeHostFunctionOperationResponse.AssetContractBalanceChange[] AssetBalanceChanges { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;asset_balance_changes&quot;)]
+public InvokeHostFunctionOperationResponse.AssetContractBalanceChange[]? AssetBalanceChanges { get; init; }</code></pre>
   </div>
 
 
@@ -272,12 +276,13 @@ public InvokeHostFunctionOperationResponse.AssetContractBalanceChange[] AssetBal
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The host function type being invoked (e.g., &quot;HostFunctionTypeHostFunctionTypeInvokeContract&quot;).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;function&quot;)]
-public string Function { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;function&quot;)]
+public required string Function { get; init; }</code></pre>
   </div>
 
 
@@ -304,12 +309,13 @@ public string Function { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Array of parameters passed to the host function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;parameters&quot;)]
-public InvokeHostFunctionOperationResponse.HostFunctionParameter[] Parameters { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;parameters&quot;)]
+public InvokeHostFunctionOperationResponse.HostFunctionParameter[]? Parameters { get; init; }</code></pre>
   </div>
 
 
@@ -336,12 +342,13 @@ public InvokeHostFunctionOperationResponse.HostFunctionParameter[] Parameters { 
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The salt value used for contract deployment. Only present for contract deployments.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;salt&quot;)]
-public string Salt { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;salt&quot;)]
+public string? Salt { get; init; }</code></pre>
   </div>
 
 
@@ -368,7 +375,8 @@ public string Salt { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

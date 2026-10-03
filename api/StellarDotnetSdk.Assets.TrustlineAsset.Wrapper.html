@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TrustlineAsset.Wrapper ">
       
-      
+      <meta name="description" content="Wraps a standard  instance as a , enabling non-pool-share assets to be used where a trustline asset is required.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class TrustlineAsset.Wrapper
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Wraps a standard <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.Wrapper.html#StellarDotnetSdk_Assets_TrustlineAsset_Wrapper_Asset">Asset</a> instance as a <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a>,
+enabling non-pool-share assets to be used where a trustline asset is required.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -183,7 +185,8 @@ Class TrustlineAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.Wrapper.html">TrustlineAsset.Wrapper</a> around the specified asset.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -193,7 +196,8 @@ Class TrustlineAsset.Wrapper
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset to wrap. Must not be null.</p>
+</dd>
   </dl>
 
 
@@ -204,6 +208,12 @@ Class TrustlineAsset.Wrapper
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">asset</code> is null.</p>
+</dd>
+  </dl>
 
 
 
@@ -218,7 +228,8 @@ Class TrustlineAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the underlying <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -249,7 +260,8 @@ Class TrustlineAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the asset type string (e.g., <code>&quot;native&quot;</code>, <code>&quot;credit_alphanum4&quot;</code>, <code>&quot;credit_alphanum12&quot;</code>, or <code>&quot;pool_share&quot;</code>).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -284,7 +296,8 @@ Class TrustlineAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Compares this trustline asset to another for ordering.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -294,13 +307,15 @@ Class TrustlineAsset.Wrapper
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.TrustlineAsset.html">TrustlineAsset</a></dt>
-    <dd></dd>
+    <dd><p>The trustline asset to compare with.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dd><p>A negative value, zero, or positive value for ordering.</p>
+</dd>
   </dl>
 
 
@@ -356,7 +371,8 @@ Class TrustlineAsset.Wrapper
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts the wrapped asset to its XDR <span class="xref">StellarDotnetSdk.Xdr.TrustLineAsset</span> representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -367,7 +383,8 @@ Class TrustlineAsset.Wrapper
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">TrustLineAsset</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.TrustLineAsset</span> XDR object with the discriminant and asset data from the wrapped asset.</p>
+</dd>
   </dl>
 
 

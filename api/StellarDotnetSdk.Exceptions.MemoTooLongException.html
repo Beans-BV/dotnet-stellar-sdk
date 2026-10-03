@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class MemoTooLongException ">
       
-      
+      <meta name="description" content="The exception that is thrown when a transaction memo exceeds the maximum allowed length (28 bytes for text memos, 32 bytes for hash and return memos).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class MemoTooLongException
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>The exception that is thrown when a transaction memo exceeds the maximum allowed length
+(28 bytes for text memos, 32 bytes for hash and return memos).</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -193,7 +195,8 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -219,7 +222,8 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> class with serialized data.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -229,9 +233,11 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>info</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a> that holds the serialized object data about the exception being thrown.</p>
+</dd>
     <dt><code>context</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a> that contains contextual information about the source or destination.</p>
+</dd>
   </dl>
 
 
@@ -242,6 +248,15 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">info</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationexception">SerializationException</a></dt>
+    <dd><p>The class name is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.hresult">HResult</a> is zero (0).</p>
+</dd>
+  </dl>
 
 
 
@@ -252,7 +267,8 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> class with a specified error message.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -262,7 +278,8 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The message that describes the error.</p>
+</dd>
   </dl>
 
 
@@ -283,7 +300,8 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> class with a specified error message and a reference to the inner exception that is the cause of this exception.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -293,9 +311,11 @@ public class MemoTooLongException : Exception, ISerializable</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The error message that explains the reason for the exception.</p>
+</dd>
     <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
-    <dd></dd>
+    <dd><p>The exception that is the cause of the current exception, or a null reference (<code>Nothing</code> in Visual Basic) if no inner exception is specified.</p>
+</dd>
   </dl>
 
 

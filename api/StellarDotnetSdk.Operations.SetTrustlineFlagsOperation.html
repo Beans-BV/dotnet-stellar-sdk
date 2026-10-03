@@ -193,13 +193,17 @@ Set trustline flags
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>asset</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
-    <dd></dd>
+    <dd><p>The asset of the trustline whose flags are modified.</p>
+</dd>
     <dt><code>trustor</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
-    <dd></dd>
+    <dd><p>The account that established the trustline.</p>
+</dd>
     <dt><code>setFlags</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The flags to set, combined with bitwise OR. See <a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html#StellarDotnetSdk_Operations_SetTrustlineFlagsOperation_SetFlags">SetFlags</a>.</p>
+</dd>
     <dt><code>clearFlags</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
+    <dd><p>The flags to clear, combined with bitwise OR. See <a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html#StellarDotnetSdk_Operations_SetTrustlineFlagsOperation_ClearFlags">ClearFlags</a>.</p>
+</dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
     <dd><p>(Optional) Source account of the operation.</p>
 </dd>
@@ -363,7 +367,8 @@ to maintain offers but not to perform other transactions.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html">SetTrustlineFlagsOperation</a> from its XDR representation.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -373,13 +378,15 @@ to maintain offers but not to perform other transactions.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>setTrustLineFlagsOp</code> <span class="xref">SetTrustLineFlagsOp</span></dt>
-    <dd></dd>
+    <dd><p>The XDR SetTrustLineFlagsOp object.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html">SetTrustlineFlagsOperation</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html">SetTrustlineFlagsOperation</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -399,7 +406,7 @@ to maintain offers but not to perform other transactions.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+  <div class="markdown level1 summary"><p>Generates the XDR operation body for this operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -411,7 +418,7 @@ to maintain offers but not to perform other transactions.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
-    <dd><p>OperationBody XDR object.</p>
+    <dd><p>The XDR operation body.</p>
 </dd>
   </dl>
 

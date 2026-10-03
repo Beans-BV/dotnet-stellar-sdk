@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class MuxedAccountMed25519 ">
       
-      
+      <meta name="description" content="Represents a multiplexed (muxed) Stellar account that combines an Ed25519 public key with a 64-bit numeric identifier. Muxed accounts allow a single Stellar account to distinguish between multiple virtual accounts (e.g., for custodial services) without requiring separate on-ledger accounts. Addresses for muxed accounts start with &amp;quot;M&amp;quot;.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,11 @@ Class MuxedAccountMed25519
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a multiplexed (muxed) Stellar account that combines an Ed25519 public key with
+a 64-bit numeric identifier. Muxed accounts allow a single Stellar account to distinguish
+between multiple virtual accounts (e.g., for custodial services) without requiring separate
+on-ledger accounts. Addresses for muxed accounts start with &quot;M&quot;.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -263,7 +267,8 @@ Class MuxedAccountMed25519
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the 64-bit numeric identifier that distinguishes this muxed account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -294,7 +299,9 @@ Class MuxedAccountMed25519
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this account is a muxed (multiplexed) account.
+Always returns <code>true</code> for <a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html">MuxedAccountMed25519</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -325,7 +332,8 @@ Class MuxedAccountMed25519
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the underlying Ed25519 <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> of the muxed account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -388,7 +396,8 @@ Class MuxedAccountMed25519
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the raw Ed25519 public key bytes of the underlying account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

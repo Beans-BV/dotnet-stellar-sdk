@@ -94,23 +94,23 @@
 <li><strong>Contract Code</strong>: Smart contract code uploaded to the Soroban platform</li>
 <li><strong>Contract Data</strong>: Data associated with deployed smart contracts</li>
 </ul>
-<p>The Soroban RPC server provides specialized endpoints to query these ledger entries directly.</p>
+<p>The Stellar RPC server provides specialized endpoints to query these ledger entries directly.</p>
 <h2 id="setting-up-the-connection">Setting Up the Connection</h2>
-<p>First, establish a connection to the Soroban RPC server:</p>
+<p>First, establish a connection to the Stellar RPC server:</p>
 <pre><code class="lang-csharp">// Define the Soroban testnet URL
 private const string TestNetSorobanUrl = &quot;https://soroban-testnet.stellar.org&quot;;
 
 // Create a new Soroban server instance
-SorobanServer server = new(TestNetSorobanUrl);
+StellarRpcServer server = new(TestNetSorobanUrl);
 </code></pre>
 <blockquote>
-<p>📝 <strong>Note</strong>: For Horizon-related ledger entries, you can also use a Horizon server connection, but Soroban RPC provides more comprehensive ledger entry access.</p>
+<p>📝 <strong>Note</strong>: For Horizon-related ledger entries, you can also use a Horizon server connection, but Stellar RPC provides more comprehensive ledger entry access.</p>
 </blockquote>
 <h2 id="querying-account-entries">Querying Account Entries</h2>
 <p>Account entries contain fundamental information about accounts on the Stellar network, including balances, signers, and more:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryAccount(string accountId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyAccount = new LedgerKeyAccount(accountId);
     var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyAccount]);
@@ -152,7 +152,7 @@ SorobanServer server = new(TestNetSorobanUrl);
 <p>Claimable balances are funds set aside for specific claimants to claim under certain conditions:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryClaimableBalance(string balanceId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
     Console.WriteLine($&quot;Get ledger entry details for claimable balance {balanceId}&quot;);
@@ -188,7 +188,7 @@ SorobanServer server = new(TestNetSorobanUrl);
 <p>Contract code entries contain the WebAssembly (WASM) code of uploaded smart contracts:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryContractCode(string contractWasmId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractCodes = new LedgerKey[]
     {
@@ -217,7 +217,7 @@ SorobanServer server = new(TestNetSorobanUrl);
 <p>Contract data entries store the state data of deployed smart contract instances:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryContractData(string contractId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractData = CreateLedgerKeyContractData(contractId);
     var contractCodeResponse = await server.GetLedgerEntries([ledgerKeyContractData]);
@@ -256,7 +256,7 @@ private static LedgerKey CreateLedgerKeyContractData(string contractId)
 <p>Trustlines represent relationships between accounts and assets they trust. Here's how to query trustline entries:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryTrustline(string accountId, string assetCode, string issuerAccountId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     // Create a non-native asset object
     var asset = Asset.CreateNonNativeAsset(assetCode, issuerAccountId);
@@ -308,7 +308,7 @@ private static LedgerKey CreateLedgerKeyContractData(string contractId)
 <p>Offers represent orders on Stellar's decentralized exchange. Here's how to query offer entries:</p>
 <pre><code class="lang-csharp">private static async Task GetLedgerEntryOffer(string sellerAccountId, string offerId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     
     // Create an offer ledger key
@@ -345,7 +345,7 @@ private static LedgerKey CreateLedgerKeyContractData(string contractId)
 <p>You can also query multiple ledger entries of different types in a single request:</p>
 <pre><code class="lang-csharp">private static async Task GetMultipleLedgerEntries(string accountId, string contractId, string balanceId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     // Create multiple ledger keys of different types
     var ledgerKeys = new LedgerKey[]
@@ -392,7 +392,7 @@ private static LedgerKey CreateLedgerKeyContractData(string contractId)
 <h2 id="additional-resources">Additional Resources</h2>
 <ul>
 <li><a href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers">Stellar Ledger Documentation</a></li>
-<li><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods">Soroban RPC API Reference</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods">Stellar RPC API Reference</a></li>
 </ul>
 
 </article>

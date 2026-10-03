@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ContractIdAddressPreimage ">
       
-      
+      <meta name="description" content="Represents a contract ID preimage derived from an account address and a 32-byte salt. The contract ID is deterministically computed from the address and salt combination.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,9 @@ Class ContractIdAddressPreimage
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Represents a contract ID preimage derived from an account address and a 32-byte salt.
+The contract ID is deterministically computed from the address and salt combination.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -162,7 +164,8 @@ Class ContractIdAddressPreimage
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a new <a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -172,9 +175,11 @@ Class ContractIdAddressPreimage
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>address</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The account address used to derive the contract ID.</p>
+</dd>
     <dt><code>salt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>(Optional) A 32-byte salt. If not provided, a cryptographically random salt is generated.</p>
+</dd>
   </dl>
 
 
@@ -199,7 +204,8 @@ Class ContractIdAddressPreimage
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account address used to derive the contract ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -230,7 +236,8 @@ Class ContractIdAddressPreimage
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The 32-byte salt used together with <a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html#StellarDotnetSdk_Operations_ContractIdAddressPreimage_Address">Address</a> to derive the contract ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -265,7 +272,9 @@ Class ContractIdAddressPreimage
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a> from the given XDR
+<span class="xref">StellarDotnetSdk.Xdr.ContractIDPreimage</span>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -275,13 +284,15 @@ Class ContractIdAddressPreimage
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>xdrContractIdPreimage</code> <span class="xref">ContractIDPreimage</span></dt>
-    <dd></dd>
+    <dd><p>The XDR object to deserialize.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdPreimage.html">ContractIdPreimage</a></dt>
-    <dd></dd>
+    <dd><p>A new <a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a> instance.</p>
+</dd>
   </dl>
 
 
@@ -301,7 +312,9 @@ Class ContractIdAddressPreimage
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts this <a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a> to its XDR <span class="xref">StellarDotnetSdk.Xdr.ContractIDPreimage</span> representation
+using the <code>CONTRACT_ID_PREIMAGE_FROM_ADDRESS</code> variant.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -312,7 +325,8 @@ Class ContractIdAddressPreimage
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">ContractIDPreimage</span></dt>
-    <dd></dd>
+    <dd><p>A <span class="xref">StellarDotnetSdk.Xdr.ContractIDPreimage</span> XDR object.</p>
+</dd>
   </dl>
 
 

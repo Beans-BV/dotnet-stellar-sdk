@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class RevokeSponsorshipOperationResponse ">
       
-      <meta name="description" content="Represents AccountMerge operation response.">
+      <meta name="description" content="Represents a revoke_sponsorship operation response. This operation removes or transfers sponsorship of reserves for various ledger entries (accounts, trustlines, offers, data, signers, or claimable balances). Only one set of fields will be populated depending on the type of sponsorship being revoked.">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,10 @@ Class RevokeSponsorshipOperationResponse
   <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents AccountMerge operation response.</p>
+  <div class="markdown summary"><p>Represents a revoke_sponsorship operation response.
+This operation removes or transfers sponsorship of reserves for various ledger entries
+(accounts, trustlines, offers, data, signers, or claimable balances).
+Only one set of fields will be populated depending on the type of sponsorship being revoked.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -209,12 +212,14 @@ Class RevokeSponsorshipOperationResponse
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID whose sponsorship is being revoked.
+Present when revoking sponsorship of an account.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_id&quot;)]
-public string AccountId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;account_id&quot;)]
+public string? AccountId { get; init; }</code></pre>
   </div>
 
 
@@ -241,12 +246,14 @@ public string AccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The claimable balance ID whose sponsorship is being revoked.
+Present when revoking sponsorship of a claimable balance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;claimable_balance_id&quot;)]
-public string ClaimableBalanceId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;claimable_balance_id&quot;)]
+public string? ClaimableBalanceId { get; init; }</code></pre>
   </div>
 
 
@@ -273,12 +280,14 @@ public string ClaimableBalanceId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID that holds the data entry whose sponsorship is being revoked.
+Present when revoking sponsorship of a data entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;data_account_id&quot;)]
-public string DataAccountId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;data_account_id&quot;)]
+public string? DataAccountId { get; init; }</code></pre>
   </div>
 
 
@@ -305,12 +314,14 @@ public string DataAccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The name of the data entry whose sponsorship is being revoked.
+Present when revoking sponsorship of a data entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;data_name&quot;)]
-public string DataName { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;data_name&quot;)]
+public string? DataName { get; init; }</code></pre>
   </div>
 
 
@@ -337,12 +348,14 @@ public string DataName { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The offer ID whose sponsorship is being revoked.
+Present when revoking sponsorship of an offer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;offer_id&quot;)]
-public string OfferId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;offer_id&quot;)]
+public string? OfferId { get; init; }</code></pre>
   </div>
 
 
@@ -369,12 +382,14 @@ public string OfferId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID that holds the signer whose sponsorship is being revoked.
+Present when revoking sponsorship of a signer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signer_account_id&quot;)]
-public string SignerAccountId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signer_account_id&quot;)]
+public string? SignerAccountId { get; init; }</code></pre>
   </div>
 
 
@@ -401,12 +416,14 @@ public string SignerAccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The signer key whose sponsorship is being revoked.
+Present when revoking sponsorship of a signer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signer_key&quot;)]
-public string SignerKey { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;signer_key&quot;)]
+public string? SignerKey { get; init; }</code></pre>
   </div>
 
 
@@ -433,12 +450,14 @@ public string SignerKey { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The account ID that holds the trustline whose sponsorship is being revoked.
+Present when revoking sponsorship of a trustline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustline_account_id&quot;)]
-public string TrustlineAccountId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustline_account_id&quot;)]
+public string? TrustlineAccountId { get; init; }</code></pre>
   </div>
 
 
@@ -465,12 +484,14 @@ public string TrustlineAccountId { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The asset of the trustline whose sponsorship is being revoked.
+Present when revoking sponsorship of a trustline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;trustline_asset&quot;)]
-public string TrustlineAsset { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trustline_asset&quot;)]
+public string? TrustlineAsset { get; init; }</code></pre>
   </div>
 
 
@@ -497,7 +518,8 @@ public string TrustlineAsset { get; init; }</code></pre>
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The numeric identifier for the operation type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
