@@ -1,8 +1,8 @@
 # .NET MAUI compatibility
 
-Validation of the SDK in .NET MAUI apps (SCF Q3 2026 deliverable 2, "MAUI Validation"). Validated against `main` @ `83303a27` on 2026-10-02, on an Android emulator, four physical Android devices and a Linux desktop, and against the published NuGet package 15.1.0.
+Validation of the SDK in .NET MAUI apps (SCF Q3 2026 deliverable 2, "MAUI Validation"). Android: validated against `main` @ `83303a27` on 2026-10-02, on an Android emulator, four physical Android devices and a Linux desktop, and against the published NuGet package 15.1.0. Apple platforms: validated on 2026-10-03 on macOS with Xcode 27.0, against `main` @ `9440e88e` and the published NuGet package 16.0.0 (§3.4).
 
-The multi-target build of `main` is **not published yet**. The newest release on nuget.org, 15.1.0, targets only `net8.0`, and it does not work on Android without the workaround below (§1). §5 lists what the SCF deliverable asked for and what was not done.
+The multi-target build is **published** as 16.0.0 (`net10.0`, `net8.0`, `netstandard2.1`; 16.0.0 is built from `9440e88e`). The Android runs predate it and used `main` and 15.1.0. 15.1.0 targets only `net8.0`, and it does not work on Android without the workaround below (§1). §5 lists what the SCF deliverable asked for and what was not done.
 
 **Summary**
 
@@ -11,14 +11,16 @@ The multi-target build of `main` is **not published yet**. The newest release on
 | Android, x86_64 emulator (API 28), SDK built from `main` | **Works**, with one limitation: with the default HTTP handler, SSE streaming events arrive about 50 s late and can be lost if the connection drops. A small consumer-side workaround fixes both on Android (§3.3). §3.3 also describes a loss case that applies to every platform. Crypto, Horizon queries, transaction submit and Soroban simulate pass in a trimmed Release build. |
 | Android, x86_64 emulator (API 28), NuGet package 15.1.0 | **Fails** at the first crypto call with `PlatformNotSupportedException`. Works with an added `NSec.Cryptography` 26.4.0 reference (§1). |
 | Android, arm64 physical devices (API 29, 35, 36), SDK built from `main` | **Works**, with the same SSE limitation and workaround as the emulator. Four devices from three vendors, under `TrimMode=full` with the workaround, and one of them also under the MAUI default `TrimMode=partial`: crypto, Horizon queries, transaction submit and Soroban simulate pass; the SDK's default SSE stream is 46–48 s late (50.7 s in the `partial` run), and the `SocketsHttpHandler` stream delivers in 2–4 s (§3.1). |
-| iOS device (AOT-only) | **Not exercised.** No macOS host was available. The desk check says it should work (§1); it is unverified (§4). |
-| iOS Simulator | **Not exercised; expected not to work**: libsodium has no simulator build (desk check, §1). |
-| Mac Catalyst | Not exercised; expected to work (§1). |
+| iOS device: iPhone 15 Pro, iOS 26.6.2 (AOT-only), SDK built from `main` and NuGet 16.0.0 | **Works.** All six checks pass under `TrimMode=full` with the workaround, with no JIT (`dynamicCode=False`). libsodium is statically linked into the app. SSE events arrive promptly with the default HTTP handler (§3.4). |
+| iOS Simulator (iOS 27.0, arm64) | **Fails to link** with the package's libsodium, which has no simulator build (§1). **Works** with a simulator libsodium built by `build-libsodium-simulator.sh` (§3.4). |
+| Mac Catalyst (macOS 26.6, arm64), SDK built from `main` and NuGet 16.0.0 | **Works.** All six checks pass (§3.4). |
 
 Workarounds consumers need today:
 
 - Android with the published package (15.1.0): add `<PackageReference Include="NSec.Cryptography" Version="26.4.0" />` to the app (§1). The same reference fixes MAUI 9 apps, which get the same `net8.0` assembly even from `main`.
 - `TrimMode=full`: add the workaround in §3.2. On Android the MAUI default (`TrimMode=partial`) needs nothing, but a plain .NET for Android app created with `dotnet new android` uses `TrimMode=full` by default.
+- iOS Simulator: build libsodium for the simulator and link it in place of the package's library (§3.4). Devices and Mac Catalyst need nothing.
+- iOS 27: adopt the UIScene lifecycle. A MAUI app without `UIApplicationSceneManifest` in `Info.plist` is stopped at launch on the iOS 27 simulator. This is a MAUI app requirement, not an SDK one (§3.4).
 - SSE on Android: give the stream `SocketsHttpHandler` (§3.3). Whatever the platform, do not rely on a stream alone for payments: resume from a saved paging token and reconcile with a query (§3.3).
 
 ## 1. Desk check: does the Ed25519 backend load on iOS and Android?
@@ -73,8 +75,8 @@ Details checked on the binaries themselves:
 The premise that neither backend ships native libsodium for the mobile RIDs does not hold for the dependency set on `main`. It still holds for the published 15.1.0 package and for the `net8.0` path (item 4):
 
 1. **Android, MAUI 10, SDK built from `main`: expected to work unchanged.** NSec 26.4.0 with libsodium 1.0.22 ships `android-arm64` and `android-x64` binaries, and they are 16 KB page aligned. This is verified on an emulator and on four physical arm64 devices in section 3.1.
-2. **iOS device, MAUI 10: expected to work unchanged.** NSec ships iOS-specific assemblies that bind to `__Internal`, and libsodium ships a device static library. This relies on the .NET for iOS build statically linking `runtimes/ios-arm64/native/libsodium.a` from the package. It needs a macOS host and a physical device to confirm (see section 4).
-3. **iOS Simulator: expected not to work (not run).** There is no simulator slice. NuGet resolves `iossimulator-arm64` to the device library through RID fallback (`runtimes/ios-arm64/native/libsodium.a`), which the linker should reject because it is built for iOS, not the simulator. `iossimulator-x64` resolves no native library at all, so the `__Internal` symbols would be missing at run time. This affects development and CI only, not shipped apps. Mac Catalyst is covered.
+2. **iOS device, MAUI 10: works unchanged.** NSec ships iOS-specific assemblies that bind to `__Internal`, and libsodium ships a device static library. The .NET for iOS build links `runtimes/ios-arm64/native/libsodium.a` from the package statically: the app binary exports the `crypto_sign_ed25519_*` symbols. Verified on an iPhone 15 Pro (§3.4).
+3. **iOS Simulator: does not work with the package.** There is no simulator slice. NuGet resolves `iossimulator-arm64` to the device library through RID fallback, and the linker rejects it: `ld: building for 'iOS-simulator', but linking in object file (.../libsodium/1.0.22/runtimes/ios-arm64/native/libsodium.a[arm64]...) built for 'iOS'`. `iossimulator-x64` resolves no native library, and the link fails on the undefined `_crypto_sign_ed25519_*` symbols. This affects development and CI only, not shipped apps. Mac Catalyst is covered and verified (§3.4).
 4. **Android with the `net8.0` assembly does not work: MAUI 9 with `main`, and every MAUI version with the published 15.1.0.** That path pins libsodium 1.0.20.1, which has no Android binaries. NuGet falls back from the `android-*` RIDs to `linux-*` and packs the glibc builds of `libsodium.so`, which Android cannot load. The first crypto call throws `PlatformNotSupportedException` ("Could not initialize platform-specific components") with an inner `DllNotFoundException: libsodium`. Verified on the emulator with 15.1.0 (§3.1). The `net9.0-android` workload is already out of support in the .NET 10 SDK (warning NETSDK1202).
 5. **Sodium.Core (`netstandard2.1`) is irrelevant to MAUI.** It would also work on Android and iOS devices through the same libsodium 1.0.22 package.
 
@@ -82,7 +84,7 @@ The premise that neither backend ships native libsodium for the mobile RIDs does
 
 **Keep NSec as the only backend on the MAUI path. Do not bundle libsodium ourselves, and do not add a managed Ed25519 fallback for this deliverable.** Document the two gaps with their workarounds:
 
-- **iOS Simulator:** run on a physical device or on Mac Catalyst. Alternatively, an app can supply its own simulator build of libsodium as a `NativeReference`; that is unsupported by the SDK.
+- **iOS Simulator:** run on a physical device or on Mac Catalyst. Alternatively, an app can supply its own simulator build of libsodium as a `NativeReference`; that is unsupported by the SDK. The validation app does this (`build-libsodium-simulator.sh`, §3.4), and it passes on the iOS 27 simulator.
 - **Android with the `net8.0` assembly (15.1.0 on any MAUI version, or MAUI 9):** add `<PackageReference Include="NSec.Cryptography" Version="26.4.0" />` to the app. NuGet then resolves NSec 26.4.0 and libsodium 1.0.22, which ships the Android binaries; the SDK's `NSec.Cryptography >= 25.4.0` dependency allows it, so there is no NU1608 warning. Verified on the emulator with 15.1.0 (§3.1). NSec 26.4.0 needs `net9.0` or later, so MAUI 8 has no workaround. Referencing libsodium 1.0.22 alone does **not** work: NSec 25.4.0 checks the library version at startup and throws `InvalidOperationException` ("Expected libsodium 1.0.20 but found 1.0.22").
 
 Options considered:
@@ -110,7 +112,7 @@ Reopen this decision if a supported target appears that no upstream libsodium pa
 | Android SDK | platform `android-36`, build-tools 36.0.0, platform-tools 37.0.0, cmdline-tools 20.0 | Only `android-36` (the target API of Android pack 36.1.69) is required. |
 | Android Emulator | 36.6.11, started with `-gpu swangle_indirect` | With the default SwiftShader renderer (`-gpu swiftshader_indirect`, `guest`) it segfaults in `lib64/gles_swiftshader/libGLESv2.so` about 20–60 s after start on this host. |
 | Emulator image | `system-images;android-28;google_apis;x86_64` rev 11 | The minimum the app supports is API 21. A current image (API 35/36) was not downloaded for this run. |
-| Xcode (iOS / Mac Catalyst) | **Xcode 27.0 or later** (the minimum in the iOS workload 27.0.10722's `WorkloadDependencies.json`); Xcode's own macOS requirement applies | Not available here; see §4. |
+| Xcode (iOS / Mac Catalyst) | **Xcode 27.0 or later** (the minimum in the iOS workload 27.0.10722's `WorkloadDependencies.json`); Xcode's own macOS requirement applies | Not on this host. The Apple runs used a Mac (below). |
 | Host | Fedora 44, kernel 7.2.5, x86_64, KVM | |
 
 ### Reproducing the Android run
@@ -152,9 +154,40 @@ dotnet run --project Desktop
 
 It exits 0 when every check passed, except the checks in `KNOWN_FAILURES` that failed for their known reason, which it reports as `KNOWN FAIL`. Only a check whose known reason is defined in the script can be listed there; any other name stops the script with an error before the build, because excusing a check by name alone would also hide unrelated failures of it. The default is `horizon.submit-and-sse-stream` failing with "SSE event arrived … after submit": the SDK's SSE stream with the default Android handler is late because of the SDK limitation in §3.3. Any other failure of that check (a submit error, a timeout, a second inconclusive measurement) still fails the run. The same stream with the workaround is its own check and must pass. Set `KNOWN_FAILURES=""` to make that failure fatal, for example after the SDK is fixed; the script also notes when a known failure starts passing. The app's own `RESULT` line counts every check, so it reads `RESULT FAIL 5/6` on Android.
 
-### Reproducing on macOS (iOS, Mac Catalyst): not done
+### Reproducing on macOS (iOS, Mac Catalyst)
 
-On a Mac with Xcode 27.0: `dotnet workload install maui-ios maui-maccatalyst --version 10.0.401.1`. Then build `-f net10.0-ios -r ios-arm64 -c Release` for a device (needs a provisioning profile) or `-f net10.0-maccatalyst`. The project only adds the Apple TFMs when built on macOS, and they have never been built. The app writes the same `STELLAR-MAUI-VALIDATION` lines to standard output, which is expected to appear in the device console (Console.app, or `xcrun devicectl device process launch --console`); this is unverified.
+Versions used for the Apple runs (2026-10-03):
+
+| Component | Version |
+|-----------|---------|
+| Host | Apple silicon Mac, macOS 26.6 |
+| Xcode | 27.0 (27A266a), selected with `xcode-select`. With Xcode 26.5 the build stops: "This version of .NET for MacCatalyst (27.0.10722) requires Xcode 27.0". Skipping that check with `-p:ValidateXcodeVersion=false` does not help: the link then fails on APIs introduced in the 27.0 SDKs. |
+| .NET SDK | 10.0.103, workload set 10.0.112.1 (`maui` workload: `Microsoft.NET.Sdk.Maui` 10.0.110, iOS / Mac Catalyst 27.0.10722) |
+| Microsoft.Maui.Controls | 10.0.110 |
+| iOS device | iPhone 15 Pro (`iPhone16,1`), iOS 26.6.2, Developer Mode on, USB |
+| iOS Simulator | iPhone 18 Pro, iOS 27.0 runtime, arm64 |
+| Signing | an Apple Development certificate and a wildcard team provisioning profile (`iOS Team Provisioning Profile: *`) |
+
+```bash
+cd StellarDotnetSdk.MauiValidation
+
+# Mac Catalyst (no signing needed). The app writes the validation lines to standard output.
+dotnet build -f net10.0-maccatalyst -c Release
+"bin/Release/net10.0-maccatalyst/Stellar SDK MAUI Validation.app/Contents/MacOS/Stellar SDK MAUI Validation"
+
+# iOS device. CodesignKey names the signing certificate; the build picks a matching provisioning profile.
+dotnet build -f net10.0-ios -c Release -r ios-arm64 "-p:CodesignKey=Apple Development: <name> (<id>)"
+xcrun devicectl device install app --device <udid> bin/Release/net10.0-ios/ios-arm64/StellarDotnetSdk.MauiValidation.app
+xcrun devicectl device process launch --device <udid> --console --terminate-existing io.github.beansbv.dotnetstellarsdk.mauivalidation
+
+# iOS Simulator: build the simulator libsodium once (needs minisign), then build and run.
+./build-libsodium-simulator.sh
+dotnet build -f net10.0-ios -c Release -r iossimulator-arm64
+xcrun simctl install booted bin/Release/net10.0-ios/iossimulator-arm64/StellarDotnetSdk.MauiValidation.app
+xcrun simctl launch --console booted io.github.beansbv.dotnetstellarsdk.mauivalidation
+```
+
+Add `-p:StellarDotnetSdkPackageVersion=16.0.0` to any build to test the published package. After a change to `Info.plist`, delete `bin/Release/net10.0-ios` and `obj/Release/net10.0-ios` first: an incremental build kept the old `Info.plist` in the app bundle.
 
 ## 3. Validation results
 
@@ -262,7 +295,7 @@ where `ILLink.Descriptors.xml` roots the SDK assembly:
 
 With it, every check passes under full trimming except the known SSE failure (§3.3).
 
-**iOS and Mac Catalyst (read from the iOS SDK 27.0.10722 targets, not run):** the iOS SDK sets `JsonSerializerIsReflectionEnabledByDefault=true` in every trim mode, and its default link mode for devices (`SdkOnly`) maps to `TrimMode=partial`. Full trimming comes from `MtouchLink=Full` or from `PublishAot=true` (NativeAOT); an app that uses either still needs the descriptor. Reflection-based System.Text.Json under iOS NativeAOT is untested.
+**iOS and Mac Catalyst (read from the iOS SDK 27.0.10722 targets; the runs in §3.4 used `TrimMode=full` with the workaround):** the iOS SDK sets `JsonSerializerIsReflectionEnabledByDefault=true` in every trim mode, and its default link mode for devices (`SdkOnly`) maps to `TrimMode=partial`. Full trimming comes from `MtouchLink=Full` or from `PublishAot=true` (NativeAOT); an app that uses either still needs the descriptor. Reflection-based System.Text.Json under iOS NativeAOT is untested.
 
 Trim warnings with the SDK built from `main` at `83303a27`. MSBuild prints each warning several times, so they are counted once per source location and message; counting by message alone gives a few fewer (118 here), because one message can occur at several places in a file. The counts come from the `dotnet publish` output of `run-android.sh full`:
 
@@ -340,12 +373,43 @@ Consequences and options:
 
 Starting an SDK stream (`Connect()`) from the UI thread works; the check asserts that it runs there. LaunchDarkly then reads the response on thread-pool threads, so this covers starting a stream on the UI thread, not reading on it. While the harness was being written, a bare `HttpClient` that read a response stream on the UI thread failed with a Java `RuntimeException` from `AndroidMessageHandler`; the committed app does not repeat that experiment. The SDK's HTTP calls started from the UI thread all passed.
 
+### 3.4 iOS and Mac Catalyst: results (Release, `TrimMode=full` + workaround, 2026-10-03)
+
+One run per configuration, with the SDK built from `main` @ `9440e88e` and with the published NuGet package 16.0.0, which is built from the same commit. SSE times are after the submit returned.
+
+| Check | iPhone 15 Pro, iOS 26.6.2 | iOS Simulator, iOS 27.0 (simulator libsodium) | Mac Catalyst, macOS 26.6 |
+|-------|:---:|:---:|:---:|
+| `crypto.rfc8032` | pass | pass | pass |
+| `crypto.random-keypair` | pass | pass | pass |
+| `horizon.friendbot-and-account` | pass | pass | pass |
+| `horizon.submit-and-sse-stream` | pass (1.8 s) | pass (2.7 s) | pass (3.8 s) |
+| `horizon.sse-stream-sockets-handler` | pass (2.2 s) | pass (2.7 s) | pass (4.0 s) |
+| `soroban.simulate` | pass | pass | pass |
+| App result, `main` | `RESULT PASS 6/6` | `RESULT PASS 6/6` | `RESULT PASS 6/6` |
+| App result, NuGet 16.0.0 | `RESULT PASS 6/6` | not run | `RESULT PASS 6/6` |
+| Runtime line | `rid=ios-arm64 dynamicCode=False` | `rid=iossimulator-arm64 dynamicCode=False` | `rid=maccatalyst-arm64 dynamicCode=False` |
+
+Findings:
+
+- **The device run is AOT-only.** `dynamicCode=False` means no JIT: everything ran precompiled, including NSec's `[LibraryImport]` calls into the statically linked libsodium. This closes the main iOS risk from §1.
+- **SSE has no Android-style delay.** With the platform default handler, the SDK's stream and every raw reader got the event within about 2 s of the submit on the iPhone. The `StreamReader` stall in §3.3 is specific to `AndroidMessageHandler`. The loss case for `Cursor("now")` streams in §3.3 still applies to every platform.
+- **NSec's iOS 18.0 platform attribute does not matter on iOS 26.** NSec's iOS assembly declares `SupportedOSPlatform` iOS 18.0; the app targets iOS 15.0 and ran on 26.6.2. iOS 15 to 17 were not run (§4).
+- **Trim warnings:** 224 unique on iOS and Mac Catalyst, against 124 on Android. The SDK, Nett and Common.Logging warnings are the same as in §3.2. The additional ones come from the trimmer itself (78 × IL2037) and from MAUI (13 × IL2026 for `HybridWebViewHandler`); they were not analyzed further, and no check failed.
+- **iOS Simulator** needs a simulator build of libsodium (§1). `build-libsodium-simulator.sh` builds libsodium 1.0.22 from the signed release tarball (checked with minisign) for arm64 and x86_64 simulators, into `native/iossimulator/libsodium.a` (not committed). For `iossimulator-*` builds the project adds it as a `NativeReference` and removes the package's device library from the link. Without that file the build stops with an error that names the script.
+- **iOS 27 requires the UIScene lifecycle.** Without `UIApplicationSceneManifest` in `Info.plist`, the app was stopped at launch on the iOS 27 simulator with `EXC_BREAKPOINT` in `_UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`, before any SDK code ran. The fix is a scene manifest with MAUI's default configuration name `__MAUI_DEFAULT_SCENE_CONFIGURATION__` and a `SceneDelegate : MauiUISceneDelegate` class (`Platforms/iOS`, `Platforms/MacCatalyst`). The MAUI 10.0.110 `maui` template's `Info.plist` has no scene manifest either, so new MAUI apps need the same change. The iPhone on iOS 26.6.2 ran fine without it. A physical iOS 27 device was not run.
+
+Project file fixes found by the first Apple builds:
+
+- The Mac Catalyst platform floor was 15.0. The Mac Catalyst pack 27.0.10722 requires at least 17.0 (`MacCatalystMinSupportedOSPlatformVersion`); it is now 17.0. iOS stays at 15.0, which the iOS pack accepts.
+- `PublishTrimmed=true` made the Mac Catalyst build fail with NETSDK1102 in the outer build that merges the arm64 and x64 apps. It is now set for Android only. iOS and Mac Catalyst Release builds trim without it, and `TrimMode` still applies.
+
 ## 4. Residual risk: what was not validated
 
-- **iOS was not exercised at all.** There was no macOS host, so no simulator, no device and no Mac Catalyst run. The iOS conclusion in §1 comes from package inspection only. In particular it is **unverified** that the .NET for iOS build statically links `runtimes/ios-arm64/native/libsodium.a` from the libsodium package, and that the `__Internal` P/Invokes of NSec's iOS assembly resolve under full AOT. Even a simulator run would not cover AOT-only behaviour, and the simulator cannot run the crypto at all (§1). **A physical iOS device run is needed** before claiming iOS support.
+- **iOS coverage is one physical device**: an iPhone 15 Pro on iOS 26.6.2, one run each with `main` and with 16.0.0, under `TrimMode=full` with the workaround. The MAUI default trimming on iOS (`partial`, from `MtouchLink=SdkOnly`) and NativeAOT (`PublishAot=true`) were not run. No physical iOS 27 device was run; the UIScene requirement was seen on the iOS 27 simulator only.
 - **Physical Android coverage is four devices, one full-trimming run each.** The arm64-v8a build ran on API 29, 35 and 36 (§3.1) with full trimming, and with `TrimMode=partial` on one device (API 35) only; the published 15.1.0 package ran on the emulator only. No 16 KB page-size device was run: all four use 4 KB pages, so the 16 KB alignment of the binaries (§1) was checked statically only.
 - **Mono only.** The CoreCLR runtime for Android (opt-in in .NET 10) was not tested.
-- **The iOS and Mac Catalyst project files have never been built.** Their `Info.plist`, entitlements and platform floors (iOS 15, Mac Catalyst 15) are untested. NSec's iOS and Mac Catalyst assemblies declare `SupportedOSPlatform` iOS 18.0 / Mac Catalyst 18.0; what that means for devices on iOS 15 to 17 is unverified.
+- **Old Apple OS versions.** The app's floors are iOS 15 and Mac Catalyst 17. NSec's iOS and Mac Catalyst assemblies declare `SupportedOSPlatform` iOS 18.0 / Mac Catalyst 18.0; devices on iOS 15 to 17 were not run. Mac Catalyst ran on an arm64 Mac only, not on Intel.
+- **Android with 16.0.0.** The published multi-target package was run on Apple platforms only. On Android it gives the app the same `net10.0` assembly and dependency graph as the `main` runs in §3.1, but that was not run.
 - **The `SocketsHttpHandler` workaround (§3.3)** was validated only against Horizon testnet, on the emulator and the four physical devices.
 - **Scope of the checks.** Only the listed flows ran. Other Horizon endpoints and response types, SEP-1/6/9/10/24/45 flows, federation (Nett TOML parsing) and Soroban transaction submission were not exercised on a device. Under `TrimMode=full` they depend entirely on the descriptor in §3.2, and their trim warnings are listed there but unverified at runtime.
 - **MAUI 9 on Android** was not built. The same `net8.0` dependency path was run on the emulator through the published 15.1.0 package on `net10.0-android`, with and without the NSec workaround (§3.1).
@@ -359,14 +423,15 @@ What the deliverable committed to, and what this report covers. Items not delive
 |------------|--------|
 | Desk check: do NSec and Sodium.Core load on iOS and Android; pick a fallback | Done (§1), on 2026-09-30, not in the first week of July as planned. Decision: no fallback needed for the dependency set on `main`. |
 | Environment: Android SDK, emulator image, MAUI workloads, pinned versions, reproducible | Done for Android on a Linux host (§2), with one emulator image (API 28). |
-| Environment: macOS host with Xcode and iOS simulators | **Not done.** No macOS host was available. |
-| Environment: signing and provisioning configuration | **Not done** for iOS. Android uses the default debug signing. |
+| Environment: macOS host with Xcode and iOS simulators | Done on 2026-10-03 (§2): Xcode 27.0, iOS 27.0 simulator runtime. |
+| Environment: signing and provisioning configuration | Done for iOS with a development certificate and a team provisioning profile (§2). Android uses the default debug signing. |
 | Minimal MAUI validation app, Release builds with trimming | Done: `StellarDotnetSdk.MauiValidation/`, with partial and full trimming. |
 | Core flows: key pair generation and signing, Horizon query, transaction submit, Soroban simulate | Done on the Android emulator and four physical Android devices (§3.1). |
 | Ed25519 native library loading, HTTP/SSE behaviour, trimming compatibility | Done on the Android emulator (§3.1–3.3), and on four physical devices: all four with full trimming, one also with partial trimming (§3.1). The SSE validation found an SDK limitation, with a workaround. |
 | Android emulator | Done (x86_64, API 28). |
 | At least one physical Android device | Done: four arm64 devices, API 29, 35 and 36 (§3.1), on 2026-10-02. |
-| iOS simulator | **Not done.** Expected not to work with the current libsodium package (§1). |
-| iOS device smoke test, if provisioning allows | **Not done.** Physical-iOS behaviour, where AOT is enforced and there is no JIT, remains unvalidated risk (§4). |
-| Validation after the multi-target package is published | The multi-target build is not published yet. `main` was validated, and so was the published 15.1.0 package (§3.1). |
+| iOS simulator | Done (§3.4). Fails to link with the libsodium package, as the desk check predicted; passes 6/6 with a simulator libsodium built by `build-libsodium-simulator.sh`. |
+| iOS device smoke test, if provisioning allows | Done (§3.4): iPhone 15 Pro, iOS 26.6.2, AOT-only, 6/6 with `main` and with 16.0.0. |
+| Mac Catalyst | Done (§3.4): 6/6 with `main` and with 16.0.0. |
+| Validation after the multi-target package is published | Done on iOS and Mac Catalyst with 16.0.0 (§3.4). Not run on Android with 16.0.0 (§4). |
 | Compatibility report with workarounds and residual risk | This document. |

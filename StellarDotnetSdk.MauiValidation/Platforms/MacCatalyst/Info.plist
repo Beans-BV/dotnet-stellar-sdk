@@ -8,5 +8,26 @@
     </array>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.developer-tools</string>
+    <!--
+        UIScene lifecycle. iOS 27 stops apps that do not adopt it: without this manifest the app traps at launch in
+        _UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption. MAUI picks the scene configuration by name.
+    -->
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+        <key>UISceneConfigurations</key>
+        <dict>
+            <key>UIWindowSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneConfigurationName</key>
+                    <string>__MAUI_DEFAULT_SCENE_CONFIGURATION__</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>SceneDelegate</string>
+                </dict>
+            </array>
+        </dict>
+    </dict>
 </dict>
 </plist>

@@ -4,7 +4,7 @@
         Minimal .NET MAUI app that exercises the SDK on mobile runtimes in trimmed Release builds. It is a validation
         harness, not a product sample. It is deliberately NOT part of stellar-dotnet-sdk.sln, so building the solution
         never requires the MAUI workloads. Setup and run instructions: docs/maui-compatibility.md.
-        The iOS and Mac Catalyst targets have not been built yet (no macOS host was available).
+        The iOS and Mac Catalyst targets need Xcode 27; the iOS Simulator also needs build-libsodium-simulator.sh.
     -->
     <PropertyGroup>
         <TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -26,7 +26,7 @@
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">17.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <!--
@@ -47,7 +47,11 @@
     -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <ValidationTrimMode Condition="'$(ValidationTrimMode)' == ''">full</ValidationTrimMode>
-        <PublishTrimmed>true</PublishTrimmed>
+        <!--
+            iOS and Mac Catalyst trim Release builds without it, and the Mac Catalyst outer build that merges the
+            per-RID builds into one app fails with NETSDK1102 when it is set.
+        -->
+        <PublishTrimmed Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">true</PublishTrimmed>
         <TrimMode>$(ValidationTrimMode)</TrimMode>
         <!-- Report each trim warning individually instead of one summary warning per assembly. -->
         <TrimmerSingleWarn>false</TrimmerSingleWarn>
@@ -74,6 +78,25 @@
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidKeyStore>false</AndroidKeyStore>
     </PropertyGroup>
+
+    <!--
+        iOS Simulator: the libsodium NuGet package has no simulator build (docs/maui-compatibility.md §1). For
+        iossimulator-arm64 NuGet falls back to the device library, which the linker rejects; for iossimulator-x64 it
+        finds none. Link a simulator libsodium built by build-libsodium-simulator.sh instead, and drop the package's
+        device library from the link.
+    -->
+    <PropertyGroup>
+        <ValidationSimulatorLibsodium>$(MSBuildProjectDirectory)/native/iossimulator/libsodium.a</ValidationSimulatorLibsodium>
+    </PropertyGroup>
+    <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('iossimulator-'))">
+        <NativeReference Include="$(ValidationSimulatorLibsodium)" Kind="Static" />
+    </ItemGroup>
+    <Target Name="ValidationUseSimulatorLibsodium" AfterTargets="ComputeResolvedFilesToPublishList" Condition="$(RuntimeIdentifier.StartsWith('iossimulator-'))">
+        <Error Condition="!Exists('$(ValidationSimulatorLibsodium)')" Text="The libsodium NuGet package has no iOS Simulator build. Run StellarDotnetSdk.MauiValidation/build-libsodium-simulator.sh first (docs/maui-compatibility.md §1)." />
+        <ItemGroup>
+            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.NuGetPackageId)' == 'libsodium' And '%(ResolvedFileToPublish.Extension)' == '.a'" />
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
