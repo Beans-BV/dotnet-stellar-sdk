@@ -6,7 +6,15 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
-> **Breaking changes below require the next release to be a major version bump.**
+## [16.0.0] - 2026-10-03
+
+> **Major release; recompile required.** Protocol 27 (CAP-71) Soroban authorization, now defaulting to
+> address-bound v2 credentials; Protocol 28 (CAP-85 external executable references, CAP-83); SEP-45 web
+> authentication for contract accounts; new SEP-7 (URI scheme), SEP-12 (KYC API) and SEP-38 (anchor RFQ)
+> clients; multi-target packages (`net10.0`, `net8.0`, `netstandard2.1`), validated on .NET MAUI for Android; an
+> HTTP retry overhaul; and a Soroban RPC wire-format correctness sweep, plus stricter `System.Text.Json` and XDR
+> decoding. This section covers everything since 15.1.0, including the changes first previewed in 16.0.0-beta.
+> Protocol 29 (on Mainnet since 2026-10-01) changes no XDR, so this release reads Protocol 29 networks as well.
 
 ### Added
 
@@ -88,6 +96,25 @@ All notable changes to this project are documented here. The format is based on
   application compiled against an earlier release that drops in this assembly without recompiling throws
   `MissingMethodException` at the call site. Recompiling is enough; no source change is needed
   ([#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206)).
+- **SEP-45 (Web Authentication for Contract Accounts)** ([#190](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/190), implements [#160](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/160)):
+  - `ClientWebAuthContract` — end-to-end client flow: `FromDomainAsync`, `GetChallengeAsync`,
+    `ValidateChallenge`, `SignAuthorizationEntriesAsync`, `SendSignedChallengeAsync`, `JwtTokenAsync`.
+  - `Sep45Challenge` — parse, validate, verify, and build challenges, including the `web_auth_verify`
+    invocation hash that signers sign.
+  - Hostile-server hardening: the challenge decoder caps input size (`MaxChallengeXdrBytes`, 64 KiB)
+    and entry count to bound decode-time allocation.
+  - Typed validation exceptions (`InvalidServerSignatureException`, `InvalidNonceException`,
+    `InvalidWebAuthDomainException`, `InvalidClientDomainException`, …).
+- **HTTP retry** ([#184](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/184)): new `ForSoroban()` and
+  `ForHorizon()` presets; configurable `RetryHttpStatusCodes` and `RetryHttpMethods`; `Retry-After`
+  support (`RespectRetryAfter`, `MaxRetryAfterDelay`); new `TooManyRequestsException` (HTTP 429) and
+  `ServiceUnavailableException` (HTTP 503).
+- Integration test suite — Testnet-backed `StellarDotnetSdk.IntegrationTests` project, run in CI on every
+  push to `main` and on release tags (development-only; not shipped in the NuGet package)
+  ([#185](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/185),
+  [#196](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/196)).
+- SEP compatibility matrices for SEP-1, 6, 9, 10, 24, and 45
+  ([#191](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/191)).
 - **Multi-target NuGet packages: `net10.0`, `net8.0`, and `netstandard2.1`**
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195), implements
   [#162](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/162)):
@@ -304,9 +331,9 @@ All notable changes to this project are documented here. The format is based on
     server-side default.
   - The simulation opt-out is transitional: under SDF's tentative plan, RPC flips its server-side default to v2
     (planned for protocol 29), at which point `useUpgradedAuth: false` becomes a no-op and stops returning
-    legacy credentials, and later disables the flag altogether (planned for protocol 30). Stellar Testnet was
-    already on protocol 29 with RPC 29.0.0 in September 2026 and still defaulted to v1, so the protocol numbers
-    are not firm.
+    legacy credentials, and later disables the flag altogether (planned for protocol 30). Protocol 29 reached
+    Mainnet on 2026-10-01 without that flip: RPC 29.0.0 still returns v1 when the flag is absent (checked on
+    Testnet, which runs the same RPC build), so the protocol numbers are not firm.
 - **Breaking (behavioral):** Protocol 28 XDR ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207), [#252](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/252)).
   `SCValType`, `ContractExecutableType` and `StellarValueType` gain members (`SCV_EXECUTABLE_TAG`,
   `CONTRACT_EXECUTABLE_EXTERNAL_REF`, `STELLAR_VALUE_EMPTY_TX_SET`), so values that used to fail to decode with
@@ -456,10 +483,36 @@ All notable changes to this project are documented here. The format is based on
   simulating an operation other than `InvokeHostFunction`
   ([#229](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/229)).
 - **Breaking:** `SorobanCredentials.ToXdr()` is now `abstract` (was a concrete method that switched on
-  the runtime type). External subclasses of `SorobanCredentials` must now override `ToXdr()`.
+  the runtime type). External subclasses of `SorobanCredentials` must now override `ToXdr()`
+  ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)).
 - The `SorobanCredentials`, `SorobanSourceAccountCredentials`, and `SorobanAddressCredentials` classes
   moved from `InvokeHostFunctionOperation.cs` to a new `SorobanCredentials.cs` file. They remain in the
-  `StellarDotnetSdk.Operations` namespace, so `using`/fully-qualified references are unaffected.
+  `StellarDotnetSdk.Operations` namespace, so `using`/fully-qualified references are unaffected
+  ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)).
+- **Breaking:** the `ForSoroban()` / `ForHorizon()` presets now retry transient HTTP status codes
+  (408/429/500/502/503/504) on POST — Stellar RPC JSON-RPC calls and Horizon `SubmitTransaction()` —
+  not just connection failures. Safe because Stellar submission is idempotent (keyed by transaction
+  hash + source-account sequence). Do not wire these presets into SEP service clients: SEP-10
+  `POST /auth`, SEP-24 interactive POSTs, and SEP-6 are not idempotent
+  ([#184](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/184)).
+- **Breaking:** 429 and 503 responses now throw the new `TooManyRequestsException` and
+  `ServiceUnavailableException` respectively; code that caught the generic HTTP exception for those
+  statuses must be updated ([#184](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/184)).
+- **Breaking:** `XdrDataInputStream` scalar reads now throw `EndOfStreamException` (was
+  `IndexOutOfRangeException`) on truncated input
+  ([#189](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/189), addresses [#165](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/165)).
+- **Breaking:** duplicate JSON properties are now rejected (`AllowDuplicateProperties = false`) —
+  duplicate keys throw `JsonException` instead of silently using the last value
+  ([#181](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/181), addresses [#166](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/166)).
+  The `System.Text.Json` entry below extends this to every target framework.
+- **Breaking:** the shared `JsonSerializerOptions` are frozen via `MakeReadOnly()`; mutating them at
+  runtime throws `InvalidOperationException` — clone them before modifying
+  ([#183](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/183), addresses [#168](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/168)).
+- Enable `RespectNullableAnnotations` for JSON deserialization — non-nullable reference-type properties
+  are enforced during deserialization
+  ([#182](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/182), addresses [#167](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/167)).
+- Use `FrozenDictionary` for static lookup tables in the JSON converters (internal; no API change)
+  ([#180](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/180), addresses [#164](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/164)).
 - **Breaking:** the SDK references the standalone `System.Text.Json` 10.0.6 package on `net8.0` and
   `netstandard2.1` (`net10.0` uses the built-in STJ 10), so `AllowDuplicateProperties = false` and
   `RespectNullableAnnotations = true` on `JsonOptions.DefaultOptions` / `KycJsonOptions.Default`
@@ -613,18 +666,31 @@ All notable changes to this project are documented here. The format is based on
   surrogate pair, so a truncated astral character is dropped whole rather than reported as a bare
   surrogate code unit.
 
+### Deprecated
+
+- `ForSorobanPolling()` — now an `[Obsolete]` alias for `ForSoroban()`. `ForSoroban()` additionally
+  retries transient HTTP status codes on POST, which the original connection-failure-only
+  `ForSorobanPolling()` did not ([#184](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/184)).
+
 ### Removed
 
 - **Breaking:** `SorobanSourceAccountCredentials.ToSorobanCredentialsXdr()` and
   `SorobanAddressCredentials.ToSorobanCredentialsXdr()`. Use `ToXdr()` instead (it now produces the same
-  XDR via the `abstract`/`override` pair).
+  XDR via the `abstract`/`override` pair) ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)).
 
 ### Fixed
 
+- The assemblies now carry the release version. Releases were packed with only the package version set, so the
+  15.x `StellarDotnetSdk.dll` reported assembly, file and product version 12.0.0 and `StellarDotnetSdk.Xdr.dll`
+  10.0.0, and every request sent `X-Client-Version: 12.0.0.0` to Horizon and Stellar RPC. Releases now set all
+  of them from the release tag, so 16.0.0 reports 16.0.0 throughout, including in that header.
 - A `getLedgerEntries` response whose `entries` array holds a `null` element now fails to deserialize with
   `JsonException` (via the new `LedgerEntryResultsArrayJsonConverter`), as the `simulateTransaction` arrays do.
   Before, `GetLedgerEntries` returned a response whose `LedgerEntries` and `LedgerKeys` getters threw
   `NullReferenceException`, and `GetAccount` threw it directly.
+- Handle `contract_credited` / `contract_debited` effects in responses
+  ([#179](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/179), fixes [#172](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/172)).
+- Documentation build ([#178](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/178)).
 - `StellarRpcServer` now surfaces JSON-RPC error responses instead of discarding them
   ([#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197)). Stellar RPC reports request-scoped
   failures — an out-of-range `startLedger`, a TTL ledger key queried directly, malformed parameters — as a
@@ -694,7 +760,7 @@ All notable changes to this project are documented here. The format is based on
   carry their own pins). Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still throws
   `ArgumentOutOfRangeException` — that is a rejected *argument*, raised at assignment, and is unchanged.
   This entry is deliberately not marked breaking: the `ArgumentOutOfRangeException` it replaces never
-  shipped, because `EventFilterType` and its converter are themselves new in this same unreleased section,
+  shipped, because `EventFilterType` and its converter are themselves new in this same release,
   so no released version ever exhibited the old behaviour.
 - **Breaking:** `SimulateTransactionResponse.SorobanAuthorization` is now `[JsonIgnore]`, matching the
   `SorobanTransactionData` property beside it. Serialization reads every property, so a response
@@ -946,9 +1012,9 @@ All notable changes to this project are documented here. The format is based on
   the shape Stellar RPC requires, since it rejects a cursor combined with a ledger range — failed with
   `-32602 startLedger must be positive`. One consequence is newly visible rather than fixed: a caller
   that sets both `StartLedger` and a cursor now gets `-32602 ledger ranges and cursor cannot both be
-  set`, where the dropped cursor previously let the call succeed. Until
-  [#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197) is fixed, that error surfaces as a
-  `null` result rather than an exception. The change is source-compatible for object-initializer and
+  set`, where the dropped cursor previously let the call succeed; with the JSON-RPC error handling above
+  ([#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197)), that error surfaces as a
+  `SorobanRpcException`. The change is source-compatible for object-initializer and
   property-access callers but binary-breaking (a field load is not a property call), so consumers must
   recompile against this version. The top-level `PaginationOptions` used by `GetTransactionsRequest`
   and `GetLedgersRequest` always declared both members as properties and was never affected
@@ -996,3 +1062,6 @@ All notable changes to this project are documented here. The format is based on
 - SEP-45 `ClientWebAuthContract` now accepts a challenge or token response that starts with a UTF-8 byte order
   mark; it was rejected as invalid JSON. It reads response bodies through the size-bounded reader the SEP-12
   `KycService` uses, so a fix to that reader reaches both clients.
+
+[Unreleased]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/16.0.0...HEAD
+[16.0.0]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/15.1.0...16.0.0
