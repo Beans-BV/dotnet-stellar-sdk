@@ -811,7 +811,8 @@ public class TransferServerService : IDisposable
         string? type;
         try
         {
-            using var document = JsonDocument.Parse(errorJson);
+            using var document = JsonDocument.Parse(errorJson,
+                new JsonDocumentOptions { AllowDuplicateProperties = false });
             if (!document.RootElement.TryGetProperty("type", out var typeProperty))
             {
                 return;

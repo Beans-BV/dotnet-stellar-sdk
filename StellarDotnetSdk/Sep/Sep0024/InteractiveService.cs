@@ -779,7 +779,8 @@ public class InteractiveService : IDisposable
     {
         try
         {
-            using var doc = JsonDocument.Parse(responseBody);
+            using var doc = JsonDocument.Parse(responseBody,
+                new JsonDocumentOptions { AllowDuplicateProperties = false });
             if (doc.RootElement.TryGetProperty("type", out var typeElement))
             {
                 var type = typeElement.GetString();
@@ -799,7 +800,8 @@ public class InteractiveService : IDisposable
     {
         try
         {
-            using var doc = JsonDocument.Parse(responseBody);
+            using var doc = JsonDocument.Parse(responseBody,
+                new JsonDocumentOptions { AllowDuplicateProperties = false });
             if (doc.RootElement.TryGetProperty("error", out var errorElement))
             {
                 var errorMessage = errorElement.GetString();

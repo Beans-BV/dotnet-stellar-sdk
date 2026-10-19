@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Security
+
+- The SEP-6 `TransferServerService` and SEP-24 `InteractiveService` error handlers now reject error bodies that
+  repeat a property, as `QuoteService` already does for SEP-38
+  ([#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205)). They read the `type` of a 403 body (and,
+  in SEP-24, the `error` of any error body) through `JsonDocument`, which kept the last of a duplicated key, so
+  a body such as `{"type":"other","type":"authentication_required"}` threw `AuthenticationRequiredException`. A
+  body with a duplicated property is now treated like any other malformed body: SEP-6 falls back to
+  `HttpResponseException` and SEP-24 to `HttpRequestException` with the status code.
+
 ## [16.0.0] - 2026-10-03
 
 > **Major release; recompile required.** Protocol 27 (CAP-71) Soroban authorization, now defaulting to

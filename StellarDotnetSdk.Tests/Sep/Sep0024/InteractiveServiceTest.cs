@@ -360,6 +360,28 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
+    [ExpectedException(typeof(HttpRequestException))]
+    public async Task FeeAsync_WithDuplicateTypeForbiddenResponse_ThrowsHttpRequestException()
+    {
+        // Arrange
+        // Duplicate properties make the body malformed, so the last "type" must not select
+        // AuthenticationRequiredException
+        using var httpClient = CreateMockHttpClient("{\"type\":\"other\",\"type\":\"authentication_required\"}",
+            HttpStatusCode.Forbidden);
+        var service = new InteractiveService(TestTransferServerUrl, httpClient);
+        var request = new FeeRequest
+        {
+            Operation = "deposit",
+            AssetCode = "USD",
+            Amount = 100.0m,
+            Jwt = TestJwt,
+        };
+
+        // Act
+        await service.FeeAsync(request);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(RequestException))]
     public async Task FeeAsync_WithErrorResponse_ThrowsRequestException()
     {
@@ -1489,6 +1511,23 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     {
         // Arrange
         using var httpClient = CreateMockHttpClient("not valid json", HttpStatusCode.BadRequest);
+        var service = new InteractiveService(TestTransferServerUrl, httpClient);
+        var request = new DepositRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+        };
+
+        // Act
+        await service.DepositAsync(request);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(HttpRequestException))]
+    public async Task DepositAsync_WithDuplicateErrorPropertyResponse_ThrowsHttpRequestException()
+    {
+        // Arrange
+        using var httpClient = CreateMockHttpClient("{\"error\":\"a\",\"error\":\"b\"}", HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
         var request = new DepositRequest
         {
