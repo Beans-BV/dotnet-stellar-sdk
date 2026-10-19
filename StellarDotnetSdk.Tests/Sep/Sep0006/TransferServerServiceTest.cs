@@ -1452,6 +1452,28 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
     }
 
     /// <summary>
+    ///     Verifies HandleForbiddenResponse rejects a duplicated type property instead of using the last value.
+    /// </summary>
+    [TestMethod]
+    public async Task DepositAsync_ForbiddenDuplicateType_ThrowsHttpResponseException()
+    {
+        // Arrange - Duplicate properties make the JSON malformed, so the last type must not be used
+        const string duplicateTypeJson = "{\"type\":\"other\",\"type\":\"authentication_required\"}";
+        using var httpClient = CreateMockHttpClient(duplicateTypeJson, HttpStatusCode.Forbidden);
+        var service = new TransferServerService(ServiceAddress, httpClient);
+        var request = new DepositRequest
+        {
+            AssetCode = "USD",
+            Account = AccountId,
+            Jwt = JwtToken,
+        };
+
+        // Act & Assert - Should fall through to generic HTTP error handling
+        await Assert.ThrowsExceptionAsync<HttpResponseException>(async () =>
+            await service.DepositAsync(request));
+    }
+
+    /// <summary>
     ///     Verifies HandleForbiddenResponse handles empty type property gracefully.
     /// </summary>
     [TestMethod]
