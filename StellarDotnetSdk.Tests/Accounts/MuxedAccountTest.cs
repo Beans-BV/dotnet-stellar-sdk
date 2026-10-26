@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 
@@ -59,6 +60,6 @@ public class MuxedAccountTest
     public void FromMuxedAccountId_WithNonMuxedAccountId_ThrowsArgumentException(string id)
     {
         // Act & Assert
-        Assert.ThrowsException<System.ArgumentException>(() => MuxedAccountMed25519.FromMuxedAccountId(id));
+        Assert.ThrowsException<ArgumentException>(() => MuxedAccountMed25519.FromMuxedAccountId(id));
     }
 }
