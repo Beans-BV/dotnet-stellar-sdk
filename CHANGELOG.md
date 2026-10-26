@@ -6,6 +6,28 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Fixed
+
+- `ScMuxedAccountId` encoded and decoded `SC_ADDRESS_TYPE_MUXED_ACCOUNT` with the strkey payload (key, then ID)
+  copied straight into the XDR struct (ID, then key). `ToXdr()` produced an unrelated account and ID, so a
+  contract call that passed `new ScMuxedAccountId("M...")` (for example as a SAC `transfer` destination)
+  addressed the wrong account, and `FromXdr` returned the wrong `M...` strkey for muxed addresses read from
+  events or return values. Round-tripping through the SDK hid the bug. `SCAddress` XDR built by `ToXdr()`
+  and `M...` strkeys returned by `FromXdr` in 14.0.0 through 16.0.0 differ from what this release produces for
+  the same address, so re-derive any you stored; `M...` strkeys that did not come from `FromXdr` were always
+  right.
+- The `[Obsolete]` messages on `StrKey.EncodeStellarMuxedAccount` and `StrKey.DecodeStellarMuxedAccount`
+  pointed to `EncodeMed25519PublicKey`, which is not a drop-in replacement (it takes the SEP-23 payload, key then
+  ID, not XDR), and to `DecodeMuxedEd25519PublicKey`, which does not exist. They now point to
+  `MuxedAccount.FromXdrMuxedAccount`, `MuxedAccountMed25519.FromMuxedAccountId` and `KeyPair.FromAccountId`, and
+  the `EncodeMed25519PublicKey` / `DecodeMed25519PublicKey` docs describe the payload layout.
+- `MuxedAccountMed25519.FromMuxedAccountId` threw `NullReferenceException` for a `G...` address and
+  `FormatException` or `IndexOutOfRangeException` for other non-`M...` input. It now throws
+  `ArgumentException`. It and `MuxedAccountMed25519.Address` no longer call the obsolete `StrKey` muxed-account
+  methods.
+- `StrKey` decoding threw `IndexOutOfRangeException` for a strkey whose last character is not ASCII. It now
+  throws `ArgumentException`, like any other invalid character.
+
 ## [16.0.0] - 2026-10-03
 
 > **Major release; recompile required.** Protocol 27 (CAP-71) Soroban authorization, now defaulting to

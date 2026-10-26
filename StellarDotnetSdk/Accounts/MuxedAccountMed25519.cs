@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Accounts;
@@ -56,7 +57,7 @@ public class MuxedAccountMed25519 : IAccountId
     /// <summary>
     ///     Get the MuxedAccount address, starting with M.
     /// </summary>
-    public string Address => StrKey.EncodeStellarMuxedAccount(MuxedAccount);
+    public string Address => StrKey.EncodeMed25519PublicKey(Key.PublicKey.Concat(Util.ToByteArray(Id)).ToArray());
 
     /// <summary>
     ///     Get the MuxedAccount account id, starting with M.
@@ -93,8 +94,10 @@ public class MuxedAccountMed25519 : IAccountId
     /// <returns></returns>
     public static MuxedAccountMed25519 FromMuxedAccountId(string muxedAccountId)
     {
-        var muxedAccount = StrKey.DecodeStellarMuxedAccount(muxedAccountId);
-        var key = KeyPair.FromPublicKey(muxedAccount.Med25519.Ed25519.InnerValue);
-        return new MuxedAccountMed25519(key, muxedAccount.Med25519.Id.InnerValue);
+        // The M... strkey payload is the key followed by the ID. DecodeMed25519PublicKey only accepts M..., so
+        // any other strkey throws ArgumentException.
+        var payload = new XdrDataInputStream(StrKey.DecodeMed25519PublicKey(muxedAccountId));
+        var key = KeyPair.FromPublicKey(Uint256.Decode(payload).InnerValue);
+        return new MuxedAccountMed25519(key, Uint64.Decode(payload).InnerValue);
     }
 }
