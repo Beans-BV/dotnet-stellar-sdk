@@ -7,6 +7,7 @@ public static class Constants
 {
     public const int CONTRACT_COST_COUNT_LIMIT = 1024;
     public const int SC_SPEC_DOC_LIMIT = 1024;
+    public const int SC_SPEC_TYPE_NAME_LIMIT = 1024;
     public const int SCSYMBOL_LIMIT = 32;
     public const int MASK_ACCOUNT_FLAGS = 0x7;
     public const int MASK_ACCOUNT_FLAGS_V17 = 0xF;

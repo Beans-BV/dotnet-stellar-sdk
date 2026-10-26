@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Xdr;
 
 //  struct SCSpecTypeUDT
 //  {
-//      string name<60>;
+//      string name<SC_SPEC_TYPE_NAME_LIMIT>;
 //  };
 
 //  ===========================================================================

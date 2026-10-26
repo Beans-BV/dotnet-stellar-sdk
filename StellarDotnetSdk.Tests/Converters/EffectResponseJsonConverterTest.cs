@@ -405,6 +405,53 @@ public class EffectResponseJsonConverterTest
 
         // Computed Asset property - exercises the native branch of Asset.Create(type, code, issuer)
         Assert.IsInstanceOfType(credited.Asset, typeof(AssetTypeNative));
+
+        // CAP-84 fields are absent for a plain contract destination
+        Assert.IsNull(credited.ContractMuxed);
+        Assert.IsNull(credited.ContractMuxedId);
+    }
+
+    /// <summary>
+    ///     Tests deserialization of a contract_credited effect for a SAC transfer to a muxed contract (CAP-84).
+    ///     Horizon adds <c>contract_muxed</c> and <c>contract_muxed_id</c>, the latter as a decimal string. The
+    ///     detail values are taken verbatim from stellar-horizon's own fixture (stellar-horizon#237).
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithContractCreditedToMuxedContract_BindsContractMuxedFields()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "_links": {
+                    "operation": {"href": "https://horizon-testnet.stellar.org/operations/1"},
+                    "succeeds": {"href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=1-2"},
+                    "precedes": {"href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=1-2"}
+                },
+                "id": "0000000000000000001-0000000002",
+                "paging_token": "1-2",
+                "account": "GCE4HENKZ3ZIHQY4VEYCVX5ZE5LNDIN3FH4MHZCWFKXQZGQIOGAO77CN",
+                "type": "contract_credited",
+                "type_i": 96,
+                "created_at": "2026-11-03T17:00:00Z",
+                "amount": "40.0000000",
+                "asset_type": "native",
+                "contract": "CAA3QKIP2SNVXUJTB4HKOGF55JTSSMQGED3FZYNHMNSXYV3DRRMAWA3Y",
+                "contract_muxed": "WAA3QKIP2SNVXUJTB4HKOGF55JTSSMQGED3FZYNHMNSXYV3DRRMAWDNU3JPX55ASWEDNS",
+                "contract_muxed_id": "987654321987654321"
+            }
+            """;
+
+        // Act
+        var credited = (ContractCreditedEffectResponse)JsonSerializer.Deserialize<EffectResponse>(json, _options)!;
+
+        // Assert
+        Assert.AreEqual("CAA3QKIP2SNVXUJTB4HKOGF55JTSSMQGED3FZYNHMNSXYV3DRRMAWA3Y", credited.Contract);
+        Assert.AreEqual(
+            "WAA3QKIP2SNVXUJTB4HKOGF55JTSSMQGED3FZYNHMNSXYV3DRRMAWDNU3JPX55ASWEDNS",
+            credited.ContractMuxed);
+        Assert.AreEqual(987654321987654321UL, credited.ContractMuxedId);
+        Assert.IsNull(credited.AccountMuxed);
     }
 
     /// <summary>

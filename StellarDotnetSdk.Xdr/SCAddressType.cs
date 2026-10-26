@@ -14,7 +14,8 @@ namespace StellarDotnetSdk.Xdr;
 //      SC_ADDRESS_TYPE_CONTRACT = 1,
 //      SC_ADDRESS_TYPE_MUXED_ACCOUNT = 2,
 //      SC_ADDRESS_TYPE_CLAIMABLE_BALANCE = 3,
-//      SC_ADDRESS_TYPE_LIQUIDITY_POOL = 4
+//      SC_ADDRESS_TYPE_LIQUIDITY_POOL = 4,
+//      SC_ADDRESS_TYPE_MUXED_CONTRACT = 5
 //  };
 
 //  ===========================================================================
@@ -27,6 +28,7 @@ public class SCAddressType
         SC_ADDRESS_TYPE_MUXED_ACCOUNT = 2,
         SC_ADDRESS_TYPE_CLAIMABLE_BALANCE = 3,
         SC_ADDRESS_TYPE_LIQUIDITY_POOL = 4,
+        SC_ADDRESS_TYPE_MUXED_CONTRACT = 5,
     }
 
     public SCAddressTypeEnum InnerValue { get; set; }
@@ -51,6 +53,7 @@ public class SCAddressType
             case 2: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT);
             case 3: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE);
             case 4: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL);
+            case 5: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_CONTRACT);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

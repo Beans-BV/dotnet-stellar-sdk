@@ -12,7 +12,7 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      string lib<80>;
-//      SCSymbol name;
+//      string name<SC_SPEC_TYPE_NAME_LIMIT>;
 //      SCSymbol prefixTopics<2>;
 //      SCSpecEventParamV0 params<>;
 //      SCSpecEventDataFormat dataFormat;
@@ -23,7 +23,7 @@ public class SCSpecEventV0
 {
     public string Doc { get; set; }
     public string Lib { get; set; }
-    public SCSymbol Name { get; set; }
+    public string Name { get; set; }
     public SCSymbol[] PrefixTopics { get; set; }
     public SCSpecEventParamV0[] Params { get; set; }
     public SCSpecEventDataFormat DataFormat { get; set; }
@@ -32,7 +32,7 @@ public class SCSpecEventV0
     {
         stream.WriteString(encodedSCSpecEventV0.Doc);
         stream.WriteString(encodedSCSpecEventV0.Lib);
-        SCSymbol.Encode(stream, encodedSCSpecEventV0.Name);
+        stream.WriteString(encodedSCSpecEventV0.Name);
         var prefixTopicsSize = encodedSCSpecEventV0.PrefixTopics.Length;
         if (prefixTopicsSize > 2)
             throw new ArgumentException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
@@ -58,7 +58,7 @@ public class SCSpecEventV0
         var decodedSCSpecEventV0 = new SCSpecEventV0();
         decodedSCSpecEventV0.Doc = stream.ReadString();
         decodedSCSpecEventV0.Lib = stream.ReadString();
-        decodedSCSpecEventV0.Name = SCSymbol.Decode(stream, maxDepth);
+        decodedSCSpecEventV0.Name = stream.ReadString();
         var prefixTopicsSize = stream.ReadInt();
         if (prefixTopicsSize < 0)
             throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " is negative");
