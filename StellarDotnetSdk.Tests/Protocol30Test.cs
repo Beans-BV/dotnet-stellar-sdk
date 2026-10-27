@@ -137,6 +137,33 @@ public class Protocol30Test
     }
 
     /// <summary>
+    ///     <see cref="StrKey.EncodeMuxedContractId" /> only encodes a 40-byte payload, so it cannot produce a
+    ///     W... strkey that <see cref="StrKey.DecodeMuxedContractId" /> rejects.
+    /// </summary>
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(32)]
+    [DataRow(39)]
+    [DataRow(41)]
+    public void EncodeMuxedContractId_WithPayloadNot40Bytes_ThrowsArgumentException(int length)
+    {
+        // Act & Assert
+        var ex = Assert.ThrowsException<ArgumentException>(() => StrKey.EncodeMuxedContractId(new byte[length]));
+        Assert.AreEqual("data", ex.ParamName);
+    }
+
+    /// <summary>
+    ///     A null payload is rejected as a null argument, not dereferenced.
+    /// </summary>
+    [TestMethod]
+    public void EncodeMuxedContractId_WithNullPayload_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => StrKey.EncodeMuxedContractId(null!));
+        Assert.AreEqual("data", ex.ParamName);
+    }
+
+    /// <summary>
     ///     A W... strkey is not accepted where a C... or M... strkey is expected, and vice versa.
     /// </summary>
     [TestMethod]

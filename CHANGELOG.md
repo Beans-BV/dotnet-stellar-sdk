@@ -22,7 +22,9 @@ All notable changes to this project are documented here. The format is based on
     failed with the 16.0.0 XDR. Only the `TEST_FEATURE` block is still stripped from the schemas.
   - `W...` strkeys for muxed contracts (SEP-23): `StrKey.VersionByte.MUXED_CONTRACT`,
     `StrKey.EncodeMuxedContractId`, `DecodeMuxedContractId` and `IsValidMuxedContractId`. The payload is the
-    32-byte contract ID followed by the 8-byte big-endian muxed ID.
+    32-byte contract ID followed by the 8-byte big-endian muxed ID. Unlike the other byte-array `StrKey.Encode*`
+    methods, `EncodeMuxedContractId` checks the payload length and throws `ArgumentException` for anything but
+    40 bytes, so it cannot produce a `W...` strkey that `DecodeMuxedContractId` rejects.
   - `ScMuxedContractId`, the `ScAddress` for `SC_ADDRESS_TYPE_MUXED_CONTRACT`, built from a `W...` strkey or
     from a contract ID and a muxed ID, with `ContractId` and `Id` accessors. Contract values, events and
     authorization entries holding a muxed contract previously threw `InvalidDataException` on decode.

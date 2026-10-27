@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using StellarDotnetSdk.Compatibility;
 using FormatException = StellarDotnetSdk.Exceptions.FormatException;
 using xdrSDK = StellarDotnetSdk.Xdr;
 
@@ -196,8 +197,17 @@ public static class StrKey
     /// </summary>
     /// <param name="data">The 32-byte contract ID followed by the 8-byte big-endian muxed ID.</param>
     /// <returns>Base32-encoded representation (W...) of the provided data.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="data" /> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="data" /> is not 40 bytes long.</exception>
     public static string EncodeMuxedContractId(byte[] data)
     {
+        Throw.IfNull(data, nameof(data));
+        if (data.Length != 40)
+        {
+            throw new ArgumentException("Muxed contract bytes must be 40 bytes long, got " + data.Length,
+                nameof(data));
+        }
+
         return EncodeCheck(VersionByte.MUXED_CONTRACT, data);
     }
 
