@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Soroban;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
@@ -190,5 +191,70 @@ public class AddressTest
 
         // Assert
         Assert.AreEqual(muxedAccountId.InnerValue, decodedMuxedAccountId.InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that ScMuxedAccountId puts the same account and ID into the XDR as MuxedAccountMed25519, for the
+    ///     SEP-23 muxed account vectors. The M... payload is the key followed by the ID, while the XDR struct
+    ///     <c>MuxedEd25519Account</c> carries the ID first, so copying one into the other yields an unrelated account
+    ///     and ID. The round-trip test above cannot see that, because the swap cancels out.
+    /// </summary>
+    [TestMethod]
+    [DataRow("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ", 0UL)]
+    [DataRow("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", 9223372036854775808UL)]
+    public void ToXdr_WithSep23MuxedAccountId_MatchesMuxedAccountMed25519(string id, ulong muxedId)
+    {
+        // Arrange
+        var account = MuxedAccountMed25519.FromMuxedAccountId(id);
+
+        // Act
+        var xdr = new ScMuxedAccountId(id).ToXdr().MuxedAccount;
+
+        // Assert
+        Assert.AreEqual("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
+            StrKey.EncodeEd25519PublicKey(xdr.Ed25519.InnerValue));
+        Assert.AreEqual(muxedId, xdr.Id.InnerValue);
+        Assert.AreEqual(account.Key.AccountId, StrKey.EncodeEd25519PublicKey(xdr.Ed25519.InnerValue));
+        Assert.AreEqual(account.Id, xdr.Id.InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that ScMuxedAccountId encodes to, and decodes from, the same <c>SCV_ADDRESS</c> XDR as the Go
+    ///     reference SDK. The constant is <c>xdr.MarshalBase64</c> of an <c>ScVal</c> holding
+    ///     <c>MuxedEd25519Account{Id: 9223372036854775808, Ed25519: GA7QYNF7...}</c>, from go-stellar-sdk v0.8.0.
+    /// </summary>
+    [TestMethod]
+    public void ToXdrBase64_WithMuxedAccountId_MatchesReferenceVector()
+    {
+        // Arrange
+        const string id = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        const string xdrBase64 = "AAAAEgAAAAKAAAAAAAAAAD8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia";
+
+        // Act & Assert
+        Assert.AreEqual(xdrBase64, new ScMuxedAccountId(id).ToXdrBase64());
+        Assert.AreEqual(id, ((ScMuxedAccountId)SCVal.FromXdrBase64(xdrBase64)).InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that ScMuxedAccountId.ToXdr throws ArgumentException, as in 16.0.0, when InnerValue was set to
+    ///     something other than a muxed account ID after construction.
+    /// </summary>
+    [TestMethod]
+    [DataRow("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", DisplayName = "Valid account ID")]
+    [DataRow("CA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAXE", DisplayName = "Valid contract ID")]
+    [DataRow("ZZZZZZZZ", DisplayName = "Invalid version byte")]
+    [DataRow("M", DisplayName = "Too short")]
+    [DataRow("", DisplayName = "Empty")]
+    public void ToXdr_WithInnerValueSetToNonMuxedAccountId_ThrowsArgumentException(string value)
+    {
+        // Arrange
+        var muxedAccountId =
+            new ScMuxedAccountId("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ")
+            {
+                InnerValue = value,
+            };
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() => muxedAccountId.ToXdr());
     }
 }

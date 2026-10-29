@@ -299,7 +299,7 @@ public class ScMuxedAccountId : ScAddress
     /// <param name="publicKey">A base32-encoded Muxed Ed25519 public key (M...).</param>
     public ScMuxedAccountId(string publicKey)
     {
-        if (!StrKey.IsValidMuxedAccount(publicKey))
+        if (!StrKey.IsValidMed25519PublicKey(publicKey))
         {
             throw new ArgumentException($"Invalid muxed Ed25519 public key {publicKey}.");
         }
@@ -319,12 +319,12 @@ public class ScMuxedAccountId : ScAddress
     /// <returns>A <see cref="ScMuxedAccountId" /> instance.</returns>
     public static ScMuxedAccountId FromXdr(SCAddress xdr)
     {
-        var writer = new XdrDataOutputStream();
-        MuxedEd25519Account.Encode(writer, xdr.MuxedAccount);
-        var bytes = writer.ToArray();
-        return new ScMuxedAccountId(
-            StrKey.EncodeMed25519PublicKey(bytes)
-        );
+        // The XDR struct puts the ID first, but the M... strkey payload is the key followed by the ID;
+        // MuxedAccountMed25519 converts between the two.
+        var account = new MuxedAccountMed25519(
+            KeyPair.FromPublicKey(xdr.MuxedAccount.Ed25519.InnerValue),
+            xdr.MuxedAccount.Id.InnerValue);
+        return new ScMuxedAccountId(account.Address);
     }
 
     /// <summary>
@@ -333,15 +333,22 @@ public class ScMuxedAccountId : ScAddress
     /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
-        var decoded = StrKey.DecodeMed25519PublicKey(InnerValue);
-        var muxedEd25519Account = MuxedEd25519Account.Decode(new XdrDataInputStream(decoded));
+        // The M... strkey payload is the key followed by the ID, while the XDR struct puts the ID first.
+        // DecodeMed25519PublicKey only accepts M..., so a G... set through InnerValue throws ArgumentException.
+        var payload = new XdrDataInputStream(StrKey.DecodeMed25519PublicKey(InnerValue));
+        var ed25519 = Uint256.Decode(payload);
+        var id = Uint64.Decode(payload);
         return new SCAddress
         {
             Discriminant = new SCAddressType
             {
                 InnerValue = SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT,
             },
-            MuxedAccount = muxedEd25519Account,
+            MuxedAccount = new MuxedEd25519Account
+            {
+                Id = id,
+                Ed25519 = ed25519,
+            },
         };
     }
 }
