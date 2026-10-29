@@ -348,9 +348,9 @@ public class Protocol28Test
     }
 
     /// <summary>
-    ///     stellar-xdr v28.0 gates CAP-84 (muxed contract addresses) and a <c>TEST_FEATURE</c> type behind
-    ///     <c>#ifdef</c>s that are not part of Protocol 28. The generator has no preprocessor, so they are stripped
-    ///     from the schemas by hand; none of them may reach the generated code.
+    ///     stellar-xdr gates a <c>TEST_FEATURE</c> type behind an <c>#ifdef</c> that is not part of any protocol.
+    ///     The generator has no preprocessor, so it is stripped from the schemas by hand and may not reach the
+    ///     generated code. (CAP-84, gated in v28.0, is ungated in v30.0; see <see cref="Protocol30Test" />.)
     /// </summary>
     [TestMethod]
     public void XdrGeneratedCode_ContainsNoFeatureGatedDefinitions()
@@ -359,14 +359,7 @@ public class Protocol28Test
         var assembly = typeof(xdrSDK.SCAddress).Assembly;
 
         // Act & Assert
-        CollectionAssert.DoesNotContain(Enum.GetNames(typeof(xdrSDK.SCAddressType.SCAddressTypeEnum)),
-            "SC_ADDRESS_TYPE_MUXED_CONTRACT");
-        Assert.AreEqual(5, Enum.GetValues(typeof(xdrSDK.SCAddressType.SCAddressTypeEnum)).Length);
-        Assert.IsNull(typeof(xdrSDK.SCAddress).GetProperty("MuxedContract"));
-        Assert.IsNull(assembly.GetType("StellarDotnetSdk.Xdr.MuxedContract"));
         Assert.IsNull(assembly.GetType("StellarDotnetSdk.Xdr.TestNextType"));
-        Assert.ThrowsException<System.IO.InvalidDataException>(() =>
-            xdrSDK.SCAddressType.Decode(new xdrSDK.XdrDataInputStream([0, 0, 0, 5])));
     }
 
     // ---------------------------------------------------------------------------------------------

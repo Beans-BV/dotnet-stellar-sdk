@@ -12,7 +12,7 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      string lib<80>;
-//      string name<60>;
+//      string name<SC_SPEC_TYPE_NAME_LIMIT>;
 //      SCSpecUDTEnumCaseV0 cases<>;
 //  };
 

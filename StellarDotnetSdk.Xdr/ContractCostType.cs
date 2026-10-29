@@ -191,7 +191,25 @@ namespace StellarDotnetSdk.Xdr;
 //       // Cost of performing BN254 scalar element inversion
 //      Bn254FrInv = 84,
 //      // Cost of performing BN254 G1 multi-scalar multiplication (MSM)
-//      Bn254G1Msm = 85
+//      Bn254G1Msm = 85,
+//      // Cost of decoding and expanding an ML-DSA-44 verifying key
+//      MlDsa44DecodeVerifyingKey = 86,
+//      // Cost of decoding and expanding an ML-DSA-65 verifying key
+//      MlDsa65DecodeVerifyingKey = 87,
+//      // Cost of decoding and expanding an ML-DSA-87 verifying key
+//      MlDsa87DecodeVerifyingKey = 88,
+//      // Cost of decoding an ML-DSA-44 signature
+//      MlDsa44DecodeSignature = 89,
+//      // Cost of decoding an ML-DSA-65 signature
+//      MlDsa65DecodeSignature = 90,
+//      // Cost of decoding an ML-DSA-87 signature
+//      MlDsa87DecodeSignature = 91,
+//      // Cost of verifying an ML-DSA-44 signature, linear in message + context length
+//      VerifyMlDsa44Sig = 92,
+//      // Cost of verifying an ML-DSA-65 signature, linear in message + context length
+//      VerifyMlDsa65Sig = 93,
+//      // Cost of verifying an ML-DSA-87 signature, linear in message + context length
+//      VerifyMlDsa87Sig = 94
 //  };
 
 //  ===========================================================================
@@ -285,6 +303,15 @@ public class ContractCostType
         Bn254FrPow = 83,
         Bn254FrInv = 84,
         Bn254G1Msm = 85,
+        MlDsa44DecodeVerifyingKey = 86,
+        MlDsa65DecodeVerifyingKey = 87,
+        MlDsa87DecodeVerifyingKey = 88,
+        MlDsa44DecodeSignature = 89,
+        MlDsa65DecodeSignature = 90,
+        MlDsa87DecodeSignature = 91,
+        VerifyMlDsa44Sig = 92,
+        VerifyMlDsa65Sig = 93,
+        VerifyMlDsa87Sig = 94,
     }
 
     public ContractCostTypeEnum InnerValue { get; set; }
@@ -390,6 +417,15 @@ public class ContractCostType
             case 83: return Create(ContractCostTypeEnum.Bn254FrPow);
             case 84: return Create(ContractCostTypeEnum.Bn254FrInv);
             case 85: return Create(ContractCostTypeEnum.Bn254G1Msm);
+            case 86: return Create(ContractCostTypeEnum.MlDsa44DecodeVerifyingKey);
+            case 87: return Create(ContractCostTypeEnum.MlDsa65DecodeVerifyingKey);
+            case 88: return Create(ContractCostTypeEnum.MlDsa87DecodeVerifyingKey);
+            case 89: return Create(ContractCostTypeEnum.MlDsa44DecodeSignature);
+            case 90: return Create(ContractCostTypeEnum.MlDsa65DecodeSignature);
+            case 91: return Create(ContractCostTypeEnum.MlDsa87DecodeSignature);
+            case 92: return Create(ContractCostTypeEnum.VerifyMlDsa44Sig);
+            case 93: return Create(ContractCostTypeEnum.VerifyMlDsa65Sig);
+            case 94: return Create(ContractCostTypeEnum.VerifyMlDsa87Sig);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

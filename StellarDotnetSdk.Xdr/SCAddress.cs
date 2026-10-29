@@ -20,6 +20,8 @@ namespace StellarDotnetSdk.Xdr;
 //      ClaimableBalanceID claimableBalanceId;
 //  case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
 //      PoolID liquidityPoolId;
+//  case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+//      MuxedContract muxedContract;
 //  };
 
 //  ===========================================================================
@@ -32,6 +34,7 @@ public class SCAddress
     public MuxedEd25519Account MuxedAccount { get; set; }
     public ClaimableBalanceID ClaimableBalanceId { get; set; }
     public PoolID LiquidityPoolId { get; set; }
+    public MuxedContract MuxedContract { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCAddress encodedSCAddress)
     {
@@ -52,6 +55,9 @@ public class SCAddress
                 break;
             case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL:
                 PoolID.Encode(stream, encodedSCAddress.LiquidityPoolId);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_CONTRACT:
+                MuxedContract.Encode(stream, encodedSCAddress.MuxedContract);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedSCAddress.Discriminant.InnerValue);
@@ -82,6 +88,9 @@ public class SCAddress
                 break;
             case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL:
                 decodedSCAddress.LiquidityPoolId = PoolID.Decode(stream, maxDepth);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_CONTRACT:
+                decodedSCAddress.MuxedContract = MuxedContract.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

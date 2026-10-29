@@ -44,6 +44,19 @@ public sealed class ContractCreditedEffectResponse : EffectResponse
     public required string Contract { get; init; }
 
     /// <summary>
+    ///     The muxed contract address (W...) that was credited, when a SAC transfer or mint went to a muxed
+    ///     contract (CAP-84). <see cref="Contract" /> still holds the base contract address (C...).
+    /// </summary>
+    [JsonPropertyName("contract_muxed")]
+    public string? ContractMuxed { get; init; }
+
+    /// <summary>
+    ///     The muxed ID of <see cref="ContractMuxed" />, if applicable.
+    /// </summary>
+    [JsonPropertyName("contract_muxed_id")]
+    public ulong? ContractMuxedId { get; init; }
+
+    /// <summary>
     ///     The credited asset.
     /// </summary>
     [JsonIgnore]

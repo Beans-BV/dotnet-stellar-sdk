@@ -6,6 +6,52 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+
+- **Protocol 30 support** (implements [#258](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/258) and
+  [#266](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/266)):
+  - XDR regenerated from stellar-xdr `v30.0` (`4f524bb`): CAP-88 `STELLAR_VALUE_SIGNED_MS` and
+    `STELLAR_VALUE_EMPTY_TX_SET_MS` (each with a `TimePointMs closeTimeMs`), CAP-84
+    `SC_ADDRESS_TYPE_MUXED_CONTRACT` (`MuxedContract`), CAP-87 `ContractCostType` values 86 to 94 (ML-DSA), and
+    the schema bound on contract spec type and event names widened to `SC_SPEC_TYPE_NAME_LIMIT` (1024). The
+    generated code does not enforce inline `string<N>` bounds
+    ([#250](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/250)), so for type names the wider bound
+    changes only the schema, not what encodes or decodes (for `SCSpecEventV0.Name`, see **Changed**). Every
+    ledger after the Protocol 30 upgrade uses one of the new `StellarValue` arms, so decoding a `LedgerHeader`
+    or `LedgerCloseMeta` (the `headerXdr` and `metadataXdr` that Stellar RPC returns, Horizon's `header_xdr`)
+    failed with the 16.0.0 XDR. Only the `TEST_FEATURE` block is still stripped from the schemas.
+  - `W...` strkeys for muxed contracts (SEP-23): `StrKey.VersionByte.MUXED_CONTRACT`,
+    `StrKey.EncodeMuxedContractId`, `DecodeMuxedContractId` and `IsValidMuxedContractId`. The payload is the
+    32-byte contract ID followed by the 8-byte big-endian muxed ID. Unlike the other byte-array `StrKey.Encode*`
+    methods, `EncodeMuxedContractId` checks the payload length and throws `ArgumentException` for anything but
+    40 bytes, so it cannot produce a `W...` strkey that `DecodeMuxedContractId` rejects.
+  - `ScMuxedContractId`, the `ScAddress` for `SC_ADDRESS_TYPE_MUXED_CONTRACT`, built from a `W...` strkey or
+    from a contract ID and a muxed ID, with `ContractId` and `Id` accessors. Contract values, events and
+    authorization entries holding a muxed contract previously threw `InvalidDataException` on decode.
+    `ScContractId` and `ScMuxedAccountId` reject `W...` strkeys.
+  - `ContractCreditedEffectResponse.ContractMuxed` and `ContractMuxedId`, which Horizon sets when a SAC
+    `transfer` or `mint` goes to a muxed contract.
+  - Encodings are verified byte-for-byte against go-stellar-sdk v0.8.0 via the known-answer vectors in
+    `StellarDotnetSdk.Tests/TestData/generate-p30-kat.go`, and the strkeys against the SEP-23 test vectors.
+
+### Changed
+
+- **Breaking:** `StellarDotnetSdk.Xdr.SCSpecEventV0.Name` is now a `string` instead of an `SCSymbol`,
+  following stellar-xdr#312, which widened contract event names to `string<1024>`. Code that reads or sets it
+  needs a recompile and, where it used `SCSymbol`, a source change. As an inline string it no longer enforces
+  the 32-byte `SCSymbol` limit (nor the new 1024-byte one, see
+  [#250](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/250)), and like the other inline strings it
+  decodes non-UTF-8 bytes to U+FFFD, so such a name no longer re-encodes to its original bytes
+  ([#247](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/247)).
+- **Breaking (behavioral):** Protocol 30 XDR and strkeys. `SCAddressType`, `StellarValueType` and
+  `ContractCostType` gain members (`SC_ADDRESS_TYPE_MUXED_CONTRACT`, `STELLAR_VALUE_SIGNED_MS`,
+  `STELLAR_VALUE_EMPTY_TX_SET_MS`, `MlDsa44DecodeVerifyingKey` to `VerifyMlDsa87Sig`) and `StrKey.VersionByte`
+  gains `MUXED_CONTRACT`, so values that used to fail to decode with `InvalidDataException` now decode, and
+  code that switches over these enums or over `ScAddress` subclasses meets cases it has not seen
+  (`ScMuxedContractId`). `StrKey.DecodeVersionByte` returns `MUXED_CONTRACT` for a `W...` strkey instead of
+  throwing `FormatException`, so `ServerWebAuth.BuildChallengeTransaction` now rejects a `W...`
+  `clientAccountId` with `InvalidWebAuthenticationException`, as it already did for `C...` and `M...`.
+
 ### Fixed
 
 - `ScMuxedAccountId` encoded and decoded `SC_ADDRESS_TYPE_MUXED_ACCOUNT` with the strkey payload (key, then ID)

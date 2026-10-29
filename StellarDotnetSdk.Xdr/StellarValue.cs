@@ -35,6 +35,21 @@ namespace StellarDotnetSdk.Xdr;
 //              uint32 previousLedgerVersion;
 //              LedgerCloseValueSignature lcValueSignature;
 //          } proposedValue;
+//      case STELLAR_VALUE_SIGNED_MS:
+//          struct
+//          {
+//              TimePointMs closeTimeMs; // closeTime == closeTimeMs / 1000
+//              LedgerCloseValueSignature lcValueSignature;
+//          } signedMsValue;
+//      case STELLAR_VALUE_EMPTY_TX_SET_MS:
+//          struct
+//          {
+//              TimePointMs closeTimeMs; // closeTime == closeTimeMs / 1000
+//              Hash txSetHash;
+//              Hash previousLedgerHash;
+//              uint32 previousLedgerVersion;
+//              LedgerCloseValueSignature lcValueSignature;
+//          } proposedMsValue;
 //      }
 //      ext;
 //  };
@@ -98,6 +113,8 @@ public class StellarValue
 
         public LedgerCloseValueSignature LcValueSignature { get; set; }
         public StellarValueProposedValue ProposedValue { get; set; }
+        public StellarValueSignedMsValue SignedMsValue { get; set; }
+        public StellarValueProposedMsValue ProposedMsValue { get; set; }
 
         public static void Encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt)
         {
@@ -111,6 +128,12 @@ public class StellarValue
                     break;
                 case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET:
                     StellarValueProposedValue.Encode(stream, encodedStellarValueExt.ProposedValue);
+                    break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_SIGNED_MS:
+                    StellarValueSignedMsValue.Encode(stream, encodedStellarValueExt.SignedMsValue);
+                    break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET_MS:
+                    StellarValueProposedMsValue.Encode(stream, encodedStellarValueExt.ProposedMsValue);
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + encodedStellarValueExt.Discriminant.InnerValue);
@@ -134,6 +157,12 @@ public class StellarValue
                     break;
                 case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET:
                     decodedStellarValueExt.ProposedValue = StellarValueProposedValue.Decode(stream, maxDepth);
+                    break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_SIGNED_MS:
+                    decodedStellarValueExt.SignedMsValue = StellarValueSignedMsValue.Decode(stream, maxDepth);
+                    break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET_MS:
+                    decodedStellarValueExt.ProposedMsValue = StellarValueProposedMsValue.Decode(stream, maxDepth);
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
@@ -176,6 +205,71 @@ public class StellarValue
             }
 
             public static StellarValueProposedValue Decode(XdrDataInputStream stream)
+            {
+                return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
+            }
+        }
+
+        public class StellarValueSignedMsValue
+        {
+            public TimePointMs CloseTimeMs { get; set; }
+            public LedgerCloseValueSignature LcValueSignature { get; set; }
+
+            public static void Encode(XdrDataOutputStream stream, StellarValueSignedMsValue encodedStellarValueSignedMsValue)
+            {
+                TimePointMs.Encode(stream, encodedStellarValueSignedMsValue.CloseTimeMs);
+                LedgerCloseValueSignature.Encode(stream, encodedStellarValueSignedMsValue.LcValueSignature);
+            }
+
+            public static StellarValueSignedMsValue Decode(XdrDataInputStream stream, int maxDepth)
+            {
+                if (maxDepth <= 0)
+                    throw new InvalidDataException("Maximum decoding depth reached while decoding StellarValueSignedMsValue");
+                maxDepth -= 1;
+                var decodedStellarValueSignedMsValue = new StellarValueSignedMsValue();
+                decodedStellarValueSignedMsValue.CloseTimeMs = TimePointMs.Decode(stream, maxDepth);
+                decodedStellarValueSignedMsValue.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
+                return decodedStellarValueSignedMsValue;
+            }
+
+            public static StellarValueSignedMsValue Decode(XdrDataInputStream stream)
+            {
+                return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
+            }
+        }
+
+        public class StellarValueProposedMsValue
+        {
+            public TimePointMs CloseTimeMs { get; set; }
+            public Hash TxSetHash { get; set; }
+            public Hash PreviousLedgerHash { get; set; }
+            public Uint32 PreviousLedgerVersion { get; set; }
+            public LedgerCloseValueSignature LcValueSignature { get; set; }
+
+            public static void Encode(XdrDataOutputStream stream, StellarValueProposedMsValue encodedStellarValueProposedMsValue)
+            {
+                TimePointMs.Encode(stream, encodedStellarValueProposedMsValue.CloseTimeMs);
+                Hash.Encode(stream, encodedStellarValueProposedMsValue.TxSetHash);
+                Hash.Encode(stream, encodedStellarValueProposedMsValue.PreviousLedgerHash);
+                Uint32.Encode(stream, encodedStellarValueProposedMsValue.PreviousLedgerVersion);
+                LedgerCloseValueSignature.Encode(stream, encodedStellarValueProposedMsValue.LcValueSignature);
+            }
+
+            public static StellarValueProposedMsValue Decode(XdrDataInputStream stream, int maxDepth)
+            {
+                if (maxDepth <= 0)
+                    throw new InvalidDataException("Maximum decoding depth reached while decoding StellarValueProposedMsValue");
+                maxDepth -= 1;
+                var decodedStellarValueProposedMsValue = new StellarValueProposedMsValue();
+                decodedStellarValueProposedMsValue.CloseTimeMs = TimePointMs.Decode(stream, maxDepth);
+                decodedStellarValueProposedMsValue.TxSetHash = Hash.Decode(stream, maxDepth);
+                decodedStellarValueProposedMsValue.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
+                decodedStellarValueProposedMsValue.PreviousLedgerVersion = Uint32.Decode(stream, maxDepth);
+                decodedStellarValueProposedMsValue.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
+                return decodedStellarValueProposedMsValue;
+            }
+
+            public static StellarValueProposedMsValue Decode(XdrDataInputStream stream)
             {
                 return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
             }

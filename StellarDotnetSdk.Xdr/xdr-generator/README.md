@@ -45,7 +45,7 @@ Upstream wraps unreleased or test-only definitions in C preprocessor blocks such
 
 `generate.rb` refuses to run, and the snapshot suite fails (`test_schemes_have_no_preprocessor_directives`), if any `schemes/*.x` still contains a preprocessor directive.
 
-For v28.0 the stripped blocks are the three `CAP_0084_MUXED_CONTRACT` blocks in `Stellar-contract.x` (`SC_ADDRESS_TYPE_MUXED_CONTRACT`, `struct MuxedContract`, and the matching `SCAddress` arm) and the `TEST_FEATURE` block in `Stellar-types.x` (`struct TestNextType`).
+For v30.0 the only stripped block is the `TEST_FEATURE` block in `Stellar-types.x` (`struct TestNextType`). (v28.0 also gated CAP-84 behind `CAP_0084_MUXED_CONTRACT`; v30.0 ungates it.)
 
 ### String typedefs keep their raw bytes
 

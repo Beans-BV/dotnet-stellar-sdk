@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Soroban;
 /// <summary>
 ///     <c>ScAddress</c> represents a single address in the Stellar network that can be
 ///     inputted to or outputted by a smart contract. An address can represent an
-///     account, muxed account, contract, claimable balance, or a liquidity pool
+///     account, muxed account, contract, muxed contract, claimable balance, or a liquidity pool
 ///     (the latter two can only be present as the *output* of Core in the form
 ///     of an event, never an input to a smart contract).
 /// </summary>
@@ -33,6 +33,8 @@ public abstract class ScAddress : SCVal
                 ScClaimableBalanceId.FromXdr(xdrScAddress),
             SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL =>
                 ScLiquidityPoolId.FromXdr(xdrScAddress),
+            SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_CONTRACT =>
+                ScMuxedContractId.FromXdr(xdrScAddress),
             _ => throw new ArgumentOutOfRangeException(nameof(xdrScAddress), "Invalid address type."),
         };
     }
@@ -348,6 +350,94 @@ public class ScMuxedAccountId : ScAddress
             {
                 Id = id,
                 Ed25519 = ed25519,
+            },
+        };
+    }
+}
+
+/// <summary>
+///     Represents a Soroban address wrapping a muxed contract address (W... address, CAP-84).
+/// </summary>
+/// <remarks>
+///     A muxed contract address is only meaningful where a muxed account (M...) is accepted, such as the
+///     <c>to</c> argument of a Stellar Asset Contract <c>transfer</c>.
+/// </remarks>
+public class ScMuxedContractId : ScAddress
+{
+    /// <summary>
+    ///     Creates an ScMuxedContractId instance from a muxed contract address (W...).
+    /// </summary>
+    /// <param name="muxedContractId">A base32-encoded muxed contract address (W...).</param>
+    public ScMuxedContractId(string muxedContractId)
+    {
+        if (!StrKey.IsValidMuxedContractId(muxedContractId))
+        {
+            throw new ArgumentException($"Invalid muxed contract ID {muxedContractId}.");
+        }
+
+        InnerValue = muxedContractId;
+    }
+
+    /// <summary>
+    ///     Creates an ScMuxedContractId instance from a contract ID (C...) and a muxed ID.
+    /// </summary>
+    /// <param name="contractId">A base32-encoded contract ID (C...).</param>
+    /// <param name="id">The muxed ID.</param>
+    public ScMuxedContractId(string contractId, ulong id)
+    {
+        if (!StrKey.IsValidContractId(contractId))
+        {
+            throw new ArgumentException($"Invalid contract ID {contractId}.");
+        }
+
+        InnerValue = StrKey.EncodeMuxedContractId(StrKey.ToRawMuxedContractId(StrKey.DecodeContractId(contractId), id));
+    }
+
+    /// <summary>
+    ///     The muxed contract address (W...).
+    /// </summary>
+    public string InnerValue { get; }
+
+    /// <summary>
+    ///     The underlying contract ID (C...).
+    /// </summary>
+    public string ContractId =>
+        StrKey.EncodeContractId(StrKey.FromRawMuxedContractId(StrKey.DecodeMuxedContractId(InnerValue)).ContractId);
+
+    /// <summary>
+    ///     The muxed ID.
+    /// </summary>
+    public ulong Id => StrKey.FromRawMuxedContractId(StrKey.DecodeMuxedContractId(InnerValue)).Id;
+
+    /// <summary>
+    ///     Creates a new <see cref="ScMuxedContractId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScMuxedContractId" /> instance.</returns>
+    public static ScMuxedContractId FromXdr(SCAddress xdr)
+    {
+        // The XDR struct puts the ID first, but the W... strkey payload is the contract ID followed by the ID.
+        return new ScMuxedContractId(
+            StrKey.EncodeMuxedContractId(
+                StrKey.ToRawMuxedContractId(
+                    xdr.MuxedContract.ContractId.InnerValue.InnerValue, xdr.MuxedContract.Id.InnerValue))
+        );
+    }
+
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
+    public override SCAddress ToXdr()
+    {
+        var (contractId, id) = StrKey.FromRawMuxedContractId(StrKey.DecodeMuxedContractId(InnerValue));
+        return new SCAddress
+        {
+            Discriminant = SCAddressType.Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_CONTRACT),
+            MuxedContract = new MuxedContract
+            {
+                Id = new Uint64(id),
+                ContractId = new ContractID(new Hash(contractId)),
             },
         };
     }
