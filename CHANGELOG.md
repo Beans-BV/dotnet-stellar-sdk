@@ -6,9 +6,19 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [17.0.0] - 2026-10-29
+
+> **Major release; recompile required.** Protocol 30 support: XDR regenerated from stellar-xdr `v30.0` (CAP-84
+> muxed contracts, CAP-87 ML-DSA cost types, CAP-88 millisecond close times), `W...` muxed-contract strkeys and
+> `ScMuxedContractId`, plus a fix for `ScMuxedAccountId`, which encoded and decoded muxed-account `SCAddress`
+> values with the wrong byte order since 14.0.0. Every ledger after the Protocol 30 upgrade fails to decode
+> with the 16.0.0 XDR, so upgrade before your network does. The MAUI harness is now also validated on iOS, the
+> iOS Simulator and Mac Catalyst ([#256](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/256)).
+
 ### Added
 
-- **Protocol 30 support** (implements [#258](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/258) and
+- **Protocol 30 support** ([#269](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/269); implements
+  [#258](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/258) and
   [#266](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/266)):
   - XDR regenerated from stellar-xdr `v30.0` (`4f524bb`): CAP-88 `STELLAR_VALUE_SIGNED_MS` and
     `STELLAR_VALUE_EMPTY_TX_SET_MS` (each with a `TimePointMs closeTimeMs`), CAP-84
@@ -61,7 +71,7 @@ All notable changes to this project are documented here. The format is based on
   events or return values. Round-tripping through the SDK hid the bug. `SCAddress` XDR built by `ToXdr()`
   and `M...` strkeys returned by `FromXdr` in 14.0.0 through 16.0.0 differ from what this release produces for
   the same address, so re-derive any you stored; `M...` strkeys that did not come from `FromXdr` were always
-  right.
+  right ([#267](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/267)).
 - The `[Obsolete]` messages on `StrKey.EncodeStellarMuxedAccount` and `StrKey.DecodeStellarMuxedAccount`
   pointed to `EncodeMed25519PublicKey`, which is not a drop-in replacement (it takes the SEP-23 payload, key then
   ID, not XDR), and to `DecodeMuxedEd25519PublicKey`, which does not exist. They now point to
@@ -1144,5 +1154,6 @@ All notable changes to this project are documented here. The format is based on
   mark; it was rejected as invalid JSON. It reads response bodies through the size-bounded reader the SEP-12
   `KycService` uses, so a fix to that reader reaches both clients.
 
-[Unreleased]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/16.0.0...HEAD
+[Unreleased]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/17.0.0...HEAD
+[17.0.0]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/16.0.0...17.0.0
 [16.0.0]: https://github.com/Beans-BV/dotnet-stellar-sdk/compare/15.1.0...16.0.0
