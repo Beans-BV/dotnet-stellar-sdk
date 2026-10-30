@@ -20918,6 +20918,32 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.Contract
   nameWithType: ContractCreditedEffectResponse.Contract
+- uid: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed
+  name: ContractMuxed
+  href: api/StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.html#StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_ContractMuxed
+  commentId: P:StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed
+  fullName: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed
+  nameWithType: ContractCreditedEffectResponse.ContractMuxed
+- uid: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed*
+  name: ContractMuxed
+  href: api/StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.html#StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_ContractMuxed_
+  commentId: Overload:StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxed
+  nameWithType: ContractCreditedEffectResponse.ContractMuxed
+- uid: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId
+  name: ContractMuxedId
+  href: api/StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.html#StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_ContractMuxedId
+  commentId: P:StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId
+  fullName: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId
+  nameWithType: ContractCreditedEffectResponse.ContractMuxedId
+- uid: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId*
+  name: ContractMuxedId
+  href: api/StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.html#StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_ContractMuxedId_
+  commentId: Overload:StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.ContractMuxedId
+  nameWithType: ContractCreditedEffectResponse.ContractMuxedId
 - uid: StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.TypeId
   name: TypeId
   href: api/StellarDotnetSdk.Responses.Effects.ContractCreditedEffectResponse.html#StellarDotnetSdk_Responses_Effects_ContractCreditedEffectResponse_TypeId
@@ -55555,6 +55581,105 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.Soroban.ScMuxedAccountId.ToXdr
   nameWithType: ScMuxedAccountId.ToXdr
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId
+  name: ScMuxedContractId
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html
+  commentId: T:StellarDotnetSdk.Soroban.ScMuxedContractId
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId
+  nameWithType: ScMuxedContractId
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor(System.String)
+  name: ScMuxedContractId(string)
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId__ctor_System_String_
+  commentId: M:StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor(System.String)
+  name.vb: New(String)
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ScMuxedContractId(string)
+  fullName.vb: StellarDotnetSdk.Soroban.ScMuxedContractId.New(String)
+  nameWithType: ScMuxedContractId.ScMuxedContractId(string)
+  nameWithType.vb: ScMuxedContractId.New(String)
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor(System.String,System.UInt64)
+  name: ScMuxedContractId(string, ulong)
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId__ctor_System_String_System_UInt64_
+  commentId: M:StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor(System.String,System.UInt64)
+  name.vb: New(String, ULong)
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ScMuxedContractId(string, ulong)
+  fullName.vb: StellarDotnetSdk.Soroban.ScMuxedContractId.New(String, ULong)
+  nameWithType: ScMuxedContractId.ScMuxedContractId(string, ulong)
+  nameWithType.vb: ScMuxedContractId.New(String, ULong)
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor*
+  name: ScMuxedContractId
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId__ctor_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ScMuxedContractId
+  fullName.vb: StellarDotnetSdk.Soroban.ScMuxedContractId.New
+  nameWithType: ScMuxedContractId.ScMuxedContractId
+  nameWithType.vb: ScMuxedContractId.New
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId
+  name: ContractId
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_ContractId
+  commentId: P:StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId
+  nameWithType: ScMuxedContractId.ContractId
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId*
+  name: ContractId
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_ContractId_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ContractId
+  nameWithType: ScMuxedContractId.ContractId
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr(StellarDotnetSdk.Xdr.SCAddress)
+  name: FromXdr(SCAddress)
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_FromXdr_StellarDotnetSdk_Xdr_SCAddress_
+  commentId: M:StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr(StellarDotnetSdk.Xdr.SCAddress)
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr(StellarDotnetSdk.Xdr.SCAddress)
+  nameWithType: ScMuxedContractId.FromXdr(SCAddress)
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr*
+  name: FromXdr
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_FromXdr_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.FromXdr
+  nameWithType: ScMuxedContractId.FromXdr
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.Id
+  name: Id
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_Id
+  commentId: P:StellarDotnetSdk.Soroban.ScMuxedContractId.Id
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.Id
+  nameWithType: ScMuxedContractId.Id
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.Id*
+  name: Id
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_Id_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.Id
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.Id
+  nameWithType: ScMuxedContractId.Id
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue
+  name: InnerValue
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_InnerValue
+  commentId: P:StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue
+  nameWithType: ScMuxedContractId.InnerValue
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue*
+  name: InnerValue
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_InnerValue_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.InnerValue
+  nameWithType: ScMuxedContractId.InnerValue
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr
+  name: ToXdr()
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_ToXdr
+  commentId: M:StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr()
+  nameWithType: ScMuxedContractId.ToXdr()
+- uid: StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr*
+  name: ToXdr
+  href: api/StellarDotnetSdk.Soroban.ScMuxedContractId.html#StellarDotnetSdk_Soroban_ScMuxedContractId_ToXdr_
+  commentId: Overload:StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr
+  isSpec: "True"
+  fullName: StellarDotnetSdk.Soroban.ScMuxedContractId.ToXdr
+  nameWithType: ScMuxedContractId.ToXdr
 - uid: StellarDotnetSdk.Soroban.SorobanResourceExtensionV0
   name: SorobanResourceExtensionV0
   href: api/StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html
@@ -56743,6 +56868,22 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.StrKey.DecodeMed25519PublicKey
   nameWithType: StrKey.DecodeMed25519PublicKey
+- uid: StellarDotnetSdk.StrKey.DecodeMuxedContractId(System.String)
+  name: DecodeMuxedContractId(string)
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_DecodeMuxedContractId_System_String_
+  commentId: M:StellarDotnetSdk.StrKey.DecodeMuxedContractId(System.String)
+  name.vb: DecodeMuxedContractId(String)
+  fullName: StellarDotnetSdk.StrKey.DecodeMuxedContractId(string)
+  fullName.vb: StellarDotnetSdk.StrKey.DecodeMuxedContractId(String)
+  nameWithType: StrKey.DecodeMuxedContractId(string)
+  nameWithType.vb: StrKey.DecodeMuxedContractId(String)
+- uid: StellarDotnetSdk.StrKey.DecodeMuxedContractId*
+  name: DecodeMuxedContractId
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_DecodeMuxedContractId_
+  commentId: Overload:StellarDotnetSdk.StrKey.DecodeMuxedContractId
+  isSpec: "True"
+  fullName: StellarDotnetSdk.StrKey.DecodeMuxedContractId
+  nameWithType: StrKey.DecodeMuxedContractId
 - uid: StellarDotnetSdk.StrKey.DecodePreAuthTx(System.String)
   name: DecodePreAuthTx(string)
   href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_DecodePreAuthTx_System_String_
@@ -56967,6 +57108,22 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.StrKey.EncodeMed25519PublicKey
   nameWithType: StrKey.EncodeMed25519PublicKey
+- uid: StellarDotnetSdk.StrKey.EncodeMuxedContractId(System.Byte[])
+  name: EncodeMuxedContractId(byte[])
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_EncodeMuxedContractId_System_Byte___
+  commentId: M:StellarDotnetSdk.StrKey.EncodeMuxedContractId(System.Byte[])
+  name.vb: EncodeMuxedContractId(Byte())
+  fullName: StellarDotnetSdk.StrKey.EncodeMuxedContractId(byte[])
+  fullName.vb: StellarDotnetSdk.StrKey.EncodeMuxedContractId(Byte())
+  nameWithType: StrKey.EncodeMuxedContractId(byte[])
+  nameWithType.vb: StrKey.EncodeMuxedContractId(Byte())
+- uid: StellarDotnetSdk.StrKey.EncodeMuxedContractId*
+  name: EncodeMuxedContractId
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_EncodeMuxedContractId_
+  commentId: Overload:StellarDotnetSdk.StrKey.EncodeMuxedContractId
+  isSpec: "True"
+  fullName: StellarDotnetSdk.StrKey.EncodeMuxedContractId
+  nameWithType: StrKey.EncodeMuxedContractId
 - uid: StellarDotnetSdk.StrKey.EncodePreAuthTx(System.Byte[])
   name: EncodePreAuthTx(byte[])
   href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_EncodePreAuthTx_System_Byte___
@@ -57169,6 +57326,22 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.StrKey.IsValidMuxedAccount
   nameWithType: StrKey.IsValidMuxedAccount
+- uid: StellarDotnetSdk.StrKey.IsValidMuxedContractId(System.String)
+  name: IsValidMuxedContractId(string)
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_IsValidMuxedContractId_System_String_
+  commentId: M:StellarDotnetSdk.StrKey.IsValidMuxedContractId(System.String)
+  name.vb: IsValidMuxedContractId(String)
+  fullName: StellarDotnetSdk.StrKey.IsValidMuxedContractId(string)
+  fullName.vb: StellarDotnetSdk.StrKey.IsValidMuxedContractId(String)
+  nameWithType: StrKey.IsValidMuxedContractId(string)
+  nameWithType.vb: StrKey.IsValidMuxedContractId(String)
+- uid: StellarDotnetSdk.StrKey.IsValidMuxedContractId*
+  name: IsValidMuxedContractId
+  href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_IsValidMuxedContractId_
+  commentId: Overload:StellarDotnetSdk.StrKey.IsValidMuxedContractId
+  isSpec: "True"
+  fullName: StellarDotnetSdk.StrKey.IsValidMuxedContractId
+  nameWithType: StrKey.IsValidMuxedContractId
 - uid: StellarDotnetSdk.StrKey.TryDecodeEd25519PublicKey(System.String,System.Byte[]@)
   name: TryDecodeEd25519PublicKey(string, out byte[])
   href: api/StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_TryDecodeEd25519PublicKey_System_String_System_Byte____
@@ -57231,6 +57404,12 @@ references:
   commentId: F:StellarDotnetSdk.StrKey.VersionByte.LIQUIDITY_POOL
   fullName: StellarDotnetSdk.StrKey.VersionByte.LIQUIDITY_POOL
   nameWithType: StrKey.VersionByte.LIQUIDITY_POOL
+- uid: StellarDotnetSdk.StrKey.VersionByte.MUXED_CONTRACT
+  name: MUXED_CONTRACT
+  href: api/StellarDotnetSdk.StrKey.VersionByte.html#StellarDotnetSdk_StrKey_VersionByte_MUXED_CONTRACT
+  commentId: F:StellarDotnetSdk.StrKey.VersionByte.MUXED_CONTRACT
+  fullName: StellarDotnetSdk.StrKey.VersionByte.MUXED_CONTRACT
+  nameWithType: StrKey.VersionByte.MUXED_CONTRACT
 - uid: StellarDotnetSdk.StrKey.VersionByte.MUXED_ED25519
   name: MUXED_ED25519
   href: api/StellarDotnetSdk.StrKey.VersionByte.html#StellarDotnetSdk_StrKey_VersionByte_MUXED_ED25519

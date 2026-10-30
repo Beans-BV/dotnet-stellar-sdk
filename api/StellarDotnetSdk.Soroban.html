@@ -337,7 +337,7 @@ persistent contract data entry on the owner contract, it names the entry that ho
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
       <dd><p><code>ScAddress</code> represents a single address in the Stellar network that can be
 inputted to or outputted by a smart contract. An address can represent an
-account, muxed account, contract, claimable balance, or a liquidity pool
+account, muxed account, contract, muxed contract, claimable balance, or a liquidity pool
 (the latter two can only be present as the <em>output</em> of Core in the form
 of an event, never an input to a smart contract).</p>
 </dd>
@@ -360,6 +360,11 @@ of an event, never an input to a smart contract).</p>
     <dl class="jumplist">
       <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScMuxedAccountId.html">ScMuxedAccountId</a></dt>
       <dd><p>Represents a Soroban address wrapping a muxed account ID (M... address).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Soroban.ScMuxedContractId.html">ScMuxedContractId</a></dt>
+      <dd><p>Represents a Soroban address wrapping a muxed contract address (W... address, CAP-84).</p>
 </dd>
     </dl>
     <dl class="jumplist">

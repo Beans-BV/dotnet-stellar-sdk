@@ -14043,7 +14043,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "StellarDotnetSdk.Soroban.ScAddress",
-      "Summary": "<p sourcefile=\"api/StellarDotnetSdk.Soroban.ScAddress.yml\" sourcestartlinenumber=\"1\"><code>ScAddress</code> represents a single address in the Stellar network that can be\ninputted to or outputted by a smart contract. An address can represent an\naccount, muxed account, contract, claimable balance, or a liquidity pool\n(the latter two can only be present as the <em sourcefile=\"api/StellarDotnetSdk.Soroban.ScAddress.yml\" sourcestartlinenumber=\"4\">output</em> of Core in the form\nof an event, never an input to a smart contract).</p>\n"
+      "Summary": "<p sourcefile=\"api/StellarDotnetSdk.Soroban.ScAddress.yml\" sourcestartlinenumber=\"1\"><code>ScAddress</code> represents a single address in the Stellar network that can be\ninputted to or outputted by a smart contract. An address can represent an\naccount, muxed account, contract, muxed contract, claimable balance, or a liquidity pool\n(the latter two can only be present as the <em sourcefile=\"api/StellarDotnetSdk.Soroban.ScAddress.yml\" sourcestartlinenumber=\"4\">output</em> of Core in the form\nof an event, never an input to a smart contract).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -14100,6 +14100,20 @@
       "IsMRef": true,
       "Title": "StellarDotnetSdk.Soroban.ScMuxedAccountId",
       "Summary": "<p sourcefile=\"api/StellarDotnetSdk.Soroban.ScMuxedAccountId.yml\" sourcestartlinenumber=\"1\">Represents a Soroban address wrapping a muxed account ID (M... address).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScMuxedContractId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScMuxedContractId.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "StellarDotnetSdk.Soroban.ScMuxedContractId",
+      "Summary": "<p sourcefile=\"api/StellarDotnetSdk.Soroban.ScMuxedContractId.yml\" sourcestartlinenumber=\"1\">Represents a Soroban address wrapping a muxed contract address (W... address, CAP-84).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -14309,7 +14323,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "StellarDotnetSdk.StrKey",
-      "Summary": "<p sourcefile=\"api/StellarDotnetSdk.StrKey.yml\" sourcestartlinenumber=\"1\">Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a\nversion byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar\nidentifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).</p>\n"
+      "Summary": "<p sourcefile=\"api/StellarDotnetSdk.StrKey.yml\" sourcestartlinenumber=\"1\">Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a\nversion byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar\nidentifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), muxed accounts (M...)\nand muxed contracts (W...).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -14521,11 +14535,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -14564,11 +14578,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""
@@ -14707,11 +14721,11 @@
       "type": "Toc",
       "source_relative_path": "tutorials/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "tutorials/toc.html"
-        },
         ".json": {
           "relative_path": "tutorials/toc.json"
+        },
+        ".html": {
+          "relative_path": "tutorials/toc.html"
         }
       },
       "version": ""

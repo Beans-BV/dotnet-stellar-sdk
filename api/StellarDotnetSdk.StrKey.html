@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class StrKey ">
       
-      <meta name="description" content="Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).">
+      <meta name="description" content="Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), muxed accounts (M...) and muxed contracts (W...).">
       <link rel="icon" href="../favicon">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -95,7 +95,8 @@ Class StrKey
 
   <div class="markdown summary"><p>Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a
 version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar
-identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).</p>
+identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), muxed accounts (M...)
+and muxed contracts (W...).</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -413,7 +414,52 @@ identifiers including account IDs (G...), secret seeds (S...), contract IDs (C..
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd><p>Raw bytes of the provided Muxed_Ed25519 public key.</p>
+    <dd><p>The 40-byte payload: the Ed25519 public key, then the big-endian muxed ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="StellarDotnetSdk_StrKey_DecodeMed25519PublicKey_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The result is the SEP-23 payload: the 32-byte Ed25519 public key followed by the 8-byte big-endian muxed
+ID. This is not the XDR encoding of <code>MuxedEd25519Account</code> or <code>MuxedAccount.MuxedAccountMed25519</code>,
+which put the ID first, so do not pass it to their <code>Decode</code> methods. To get the account and ID, use
+<a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html#StellarDotnetSdk_Accounts_MuxedAccountMed25519_FromMuxedAccountId_System_String_">FromMuxedAccountId(string)</a> instead.</p>
+</div>
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeMuxedContractId_" data-uid="StellarDotnetSdk.StrKey.DecodeMuxedContractId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeMuxedContractId_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeMuxedContractId(System.String)">
+  DecodeMuxedContractId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes a muxed contract address (CAP-84) to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeMuxedContractId(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded muxed contract address (W...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The 32-byte contract ID followed by the 8-byte big-endian muxed ID.</p>
 </dd>
   </dl>
 
@@ -597,7 +643,7 @@ Supports both Ed25519 (G...) and muxed Ed25519 (M...) addresses.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use DecodeMuxedEd25519PublicKey instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use MuxedAccountMed25519.FromMuxedAccountId(address).MuxedAccount for M... addresses, or KeyPair.FromAccountId(address).MuxedAccount for G... addresses, instead.&quot;)]
 public static MuxedAccount DecodeStellarMuxedAccount(string data)</code></pre>
   </div>
 
@@ -959,7 +1005,7 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd><p>A raw byte array.</p>
+    <dd><p>The 40-byte payload: the Ed25519 public key, then the big-endian muxed ID.</p>
 </dd>
   </dl>
 
@@ -976,7 +1022,61 @@ public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_StrKey_EncodeMed25519PublicKey_System_Byte____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The payload is the SEP-23 layout: the 32-byte Ed25519 public key followed by the 8-byte big-endian muxed
+ID. This is not the XDR encoding of <code>MuxedEd25519Account</code> or <code>MuxedAccount.MuxedAccountMed25519</code>,
+which put the ID first. To encode an account and ID, use
+<a class="xref" href="StellarDotnetSdk.Accounts.MuxedAccountMed25519.html#StellarDotnetSdk_Accounts_MuxedAccountMed25519_Address">Address</a> instead.</p>
+</div>
 
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeMuxedContractId_" data-uid="StellarDotnetSdk.StrKey.EncodeMuxedContractId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeMuxedContractId_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeMuxedContractId(System.Byte[])">
+  EncodeMuxedContractId(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a muxed contract address (CAP-84).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeMuxedContractId(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The 32-byte contract ID followed by the 8-byte big-endian muxed ID.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (W...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">data</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">data</code> is not 40 bytes long.</p>
+</dd>
+  </dl>
 
 
 
@@ -1149,7 +1249,7 @@ public static string EncodeStellarAccountId(byte[] data)</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use EncodeMed25519PublicKey instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use Accounts.MuxedAccount.FromXdrMuxedAccount(muxedAccount).Address instead, which returns a MuxedAccountMed25519 for M... addresses. EncodeMed25519PublicKey is not a drop-in replacement: it takes the SEP-23 payload, not XDR.&quot;)]
 public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)</code></pre>
   </div>
 
@@ -1491,6 +1591,45 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
 
 
 
+  <a id="StellarDotnetSdk_StrKey_IsValidMuxedContractId_" data-uid="StellarDotnetSdk.StrKey.IsValidMuxedContractId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_IsValidMuxedContractId_System_String_" data-uid="StellarDotnetSdk.StrKey.IsValidMuxedContractId(System.String)">
+  IsValidMuxedContractId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Checks validity of a muxed contract address (CAP-84).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsValidMuxedContractId(string muxedContractId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>muxedContractId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The muxed contract address (W...) to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the given muxed contract address is valid, false otherwise.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_StrKey_TryDecodeEd25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.TryDecodeEd25519PublicKey*"></a>
 
   <h3 id="StellarDotnetSdk_StrKey_TryDecodeEd25519PublicKey_System_String_System_Byte____" data-uid="StellarDotnetSdk.StrKey.TryDecodeEd25519PublicKey(System.String,System.Byte[]@)">
@@ -1554,7 +1693,8 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
     <dd><p>The StrKey-encoded muxed public key.</p>
 </dd>
     <dt><code>decoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd><p>When this method returns, contains the decoded bytes if successful.</p>
+    <dd><p>When this method returns, contains the 40-byte payload (the Ed25519 public key, then the big-endian muxed
+ID) if successful.</p>
 </dd>
   </dl>
 
@@ -1571,6 +1711,9 @@ public static bool IsValidMuxedAccount(string publicKey)</code></pre>
 
 
 
+  <h4 class="section" id="StellarDotnetSdk_StrKey_TryDecodeMed25519PublicKey_System_String_System_Byte_____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The decoded bytes use the layout described on <a class="xref" href="StellarDotnetSdk.StrKey.html#StellarDotnetSdk_StrKey_DecodeMed25519PublicKey_System_String_">DecodeMed25519PublicKey(string)</a>.</p>
+</div>
 
 
 
