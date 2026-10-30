@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using StellarDotnetSdk.Accounts;
-using StellarDotnetSdk.Sep.Sep0045;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
+using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
 using Uint32 = StellarDotnetSdk.Xdr.Uint32;
 using SCVal = StellarDotnetSdk.Xdr.SCVal;
@@ -15,6 +15,9 @@ using SCBytes = StellarDotnetSdk.Xdr.SCBytes;
 using SCVec = StellarDotnetSdk.Xdr.SCVec;
 using SCMap = StellarDotnetSdk.Xdr.SCMap;
 using SCMapEntry = StellarDotnetSdk.Xdr.SCMapEntry;
+using SdkSorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
+using SorobanAddressCredentialsBase = StellarDotnetSdk.Operations.SorobanAddressCredentialsBase;
+using SorobanAuthorization = StellarDotnetSdk.Operations.SorobanAuthorization;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0045.Fixtures;
 
@@ -45,7 +48,10 @@ internal static class TestChallengeBuilder
         long? clientNonce = null,
         long? clientDomainNonce = null,
         Network? network = null,
-        bool signServer = true)
+        bool signServer = true,
+        CredentialsType credentialsType = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
+        CredentialsType? serverCredentialsType = null,
+        CredentialsType? clientCredentialsType = null)
     {
         network ??= Network.Test();
         homeDomain ??= DefaultHomeDomain;
@@ -104,14 +110,17 @@ internal static class TestChallengeBuilder
             SubInvocations = Array.Empty<SorobanAuthorizedInvocation>(),
         };
 
-        var serverEntry = BuildEntry(serverKp.AccountId, serverNonce ?? 1, signatureExpirationLedger, invocation);
-        var clientEntry = BuildEntry(clientCid, clientNonce ?? 2, signatureExpirationLedger, invocation);
+        // credentialsType applies to every entry; the per-entry overrides build mixed V1/V2 challenges.
+        var serverEntry = BuildEntry(serverCredentialsType ?? credentialsType, serverKp.AccountId,
+            serverNonce ?? 1, signatureExpirationLedger, invocation);
+        var clientEntry = BuildEntry(clientCredentialsType ?? credentialsType, clientCid, clientNonce ?? 2,
+            signatureExpirationLedger, invocation);
 
         var entries = new List<SorobanAuthorizationEntry> { serverEntry, clientEntry };
         if (clientDomain != null)
         {
-            var cdEntry = BuildEntry(clientDomainKeyPair!.AccountId, clientDomainNonce ?? 3, signatureExpirationLedger,
-                invocation);
+            var cdEntry = BuildEntry(credentialsType, clientDomainKeyPair!.AccountId, clientDomainNonce ?? 3,
+                signatureExpirationLedger, invocation);
             entries.Add(cdEntry);
         }
 
@@ -162,10 +171,47 @@ internal static class TestChallengeBuilder
         return result;
     }
 
-    /// <summary>Sign an entry in place; installs the signature as an SCV_VEC of maps {public_key, signature}.</summary>
+    /// <summary>
+    ///     The payload a signer of <paramref name="entry" /> must sign, computed by the SDK's public
+    ///     <see cref="SorobanAuthorization.BuildAuthorizationEntryPreimageHash" /> (itself pinned to the JS SDK by
+    ///     known-answer vectors). Tests use it as an oracle independent of
+    ///     <c>Sep45Challenge.ComputeAuthorizationHash</c>, the implementation under test: legacy
+    ///     <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</c> for ADDRESS entries, the address-bound
+    ///     <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c> for ADDRESS_V2 entries.
+    /// </summary>
+    public static byte[] ReferenceAuthorizationHash(SorobanAuthorizationEntry entry, Network network)
+    {
+        var sdkEntry = SdkSorobanAuthorizationEntry.FromXdr(entry);
+        var expiration = ((SorobanAddressCredentialsBase)sdkEntry.Credentials).SignatureExpirationLedger;
+        return SorobanAuthorization.BuildAuthorizationEntryPreimageHash(sdkEntry, expiration, network);
+    }
+
+    /// <summary>
+    ///     The address credentials of either address arm (the XDR union keeps ADDRESS and ADDRESS_V2 in
+    ///     separate fields).
+    /// </summary>
+    public static SorobanAddressCredentials AddressCredentials(SorobanAuthorizationEntry entry)
+    {
+        return entry.Credentials.Discriminant.InnerValue switch
+        {
+            CredentialsType.SOROBAN_CREDENTIALS_ADDRESS => entry.Credentials.Address,
+            CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2 => entry.Credentials.AddressV2,
+            var other => throw new ArgumentException($"Not an address credential arm: {other}", nameof(entry)),
+        };
+    }
+
+    /// <summary>
+    ///     Sign an entry in place over <see cref="ReferenceAuthorizationHash" />; installs the signature as an
+    ///     SCV_VEC of maps {public_key, signature}.
+    /// </summary>
     public static void SignEntryInPlace(SorobanAuthorizationEntry entry, KeyPair signer, Network network)
     {
-        var hash = Sep45Challenge.ComputeAuthorizationHash(entry, network);
+        SignEntryInPlace(entry, signer, ReferenceAuthorizationHash(entry, network));
+    }
+
+    /// <summary>Sign an entry in place over an explicit payload (e.g. a deliberately wrong preimage).</summary>
+    public static void SignEntryInPlace(SorobanAuthorizationEntry entry, KeyPair signer, byte[] hash)
+    {
         var sig = signer.Sign(hash);
         var pubKey = signer.PublicKey;
 
@@ -179,7 +225,7 @@ internal static class TestChallengeBuilder
             }),
         };
 
-        entry.Credentials.Address.Signature = new SCVal
+        AddressCredentials(entry).Signature = new SCVal
         {
             Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
             Vec = new SCVec(new[] { sigMap }),
@@ -189,28 +235,39 @@ internal static class TestChallengeBuilder
     // ---- Private builders ----
 
     private static SorobanAuthorizationEntry BuildEntry(
-        string address, long nonce, uint expirationLedger, SorobanAuthorizedInvocation invocation)
+        CredentialsType credentialsType, string address, long nonce, uint expirationLedger,
+        SorobanAuthorizedInvocation invocation)
     {
+        var addressCredentials = new SorobanAddressCredentials
+        {
+            Address = AddressToXdr(address),
+            Nonce = new Int64(nonce),
+            SignatureExpirationLedger = new Uint32(expirationLedger),
+            Signature = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
+                Vec = new SCVec(Array.Empty<SCVal>()),
+            },
+        };
+        var credentials = new SorobanCredentials
+        {
+            Discriminant = new SorobanCredentialsType { InnerValue = credentialsType },
+        };
+        switch (credentialsType)
+        {
+            case CredentialsType.SOROBAN_CREDENTIALS_ADDRESS:
+                credentials.Address = addressCredentials;
+                break;
+            case CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2:
+                credentials.AddressV2 = addressCredentials;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(credentialsType), credentialsType,
+                    "SEP-45 challenge entries use ADDRESS or ADDRESS_V2 credentials.");
+        }
         return new SorobanAuthorizationEntry
         {
-            Credentials = new SorobanCredentials
-            {
-                Discriminant = new SorobanCredentialsType
-                {
-                    InnerValue = SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS,
-                },
-                Address = new SorobanAddressCredentials
-                {
-                    Address = AddressToXdr(address),
-                    Nonce = new Int64(nonce),
-                    SignatureExpirationLedger = new Uint32(expirationLedger),
-                    Signature = new SCVal
-                    {
-                        Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
-                        Vec = new SCVec(Array.Empty<SCVal>()),
-                    },
-                },
-            },
+            Credentials = credentials,
             RootInvocation = invocation,
         };
     }

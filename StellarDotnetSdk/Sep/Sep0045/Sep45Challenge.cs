@@ -50,9 +50,43 @@ public static class Sep45Challenge
     private const int MaxAuthorizationEntries = 100;
 
     /// <summary>
-    ///     Build the SHA-256 hash that signers of a SorobanAuthorizationEntry sign
-    ///     (HashIDPreimage of type ENVELOPE_TYPE_SOROBAN_AUTHORIZATION).
+    ///     Returns the address credentials of a SEP-45 challenge entry, or <c>null</c> when the entry carries
+    ///     credentials a SEP-45 challenge cannot hold. Both address arms are accepted: the legacy
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS</c> and the Protocol 27 address-bound
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02), which peer servers issue on protocol 27+
+    ///     networks (e.g. the Java SDK from 5.0.0). The two arms share one payload type and differ only in the
+    ///     preimage their signatures cover (see <see cref="ComputeAuthorizationHash" />). Source-account
+    ///     credentials have no address to authenticate, and <c>SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES</c>
+    ///     is not part of SEP-45 (the spec describes only <c>credentials.address</c>), so both yield <c>null</c>.
     /// </summary>
+    internal static SorobanAddressCredentials? GetAddressCredentials(SorobanAuthorizationEntry entry)
+    {
+        return entry.Credentials.Discriminant.InnerValue switch
+        {
+            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS =>
+                entry.Credentials.Address,
+            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2 =>
+                entry.Credentials.AddressV2,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    ///     Build the SHA-256 hash that signers of a SorobanAuthorizationEntry sign, selecting the preimage by
+    ///     the entry's credential arm: <c>SOROBAN_CREDENTIALS_ADDRESS</c> signs the legacy
+    ///     <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</c> preimage, <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> the
+    ///     <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c> preimage bound to the entry's own credential
+    ///     address.
+    /// </summary>
+    /// <remarks>
+    ///     This mirrors <see cref="Operations.SorobanAuthorization.BuildAuthorizationEntryPreimageHash" /> (the
+    ///     unit tests pin the two to the same bytes for both arms) rather than calling it, because that helper
+    ///     takes the SDK entry model. Converting a challenge entry into it would hash a re-encoding of the
+    ///     invocation rebuilt from the model instead of the decoded XDR the server signed. It would also throw
+    ///     the model's <see cref="ArgumentException" /> for shapes the model rejects, such as an <c>SCV_MAP</c>
+    ///     without a body. <see cref="ClientWebAuthContract.SignAuthorizationEntriesAsync" /> reaches this
+    ///     method without prior validation, so those exceptions would escape the SEP-45 exception contract.
+    /// </remarks>
     internal static byte[] ComputeAuthorizationHash(
         SorobanAuthorizationEntry entry,
         Network network)
@@ -60,29 +94,44 @@ public static class Sep45Challenge
         Throw.IfNull(entry, nameof(entry));
         Throw.IfNull(network, nameof(network));
 
-        if (entry.Credentials.Discriminant.InnerValue !=
-            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
-        {
-            throw new InvalidOperationException(
-                "Cannot compute authorization hash for non-address credentials.");
-        }
+        var addressCreds = GetAddressCredentials(entry) ?? throw new InvalidOperationException(
+            "Cannot compute authorization hash for credentials other than SOROBAN_CREDENTIALS_ADDRESS or " +
+            "SOROBAN_CREDENTIALS_ADDRESS_V2.");
 
-        var addressCreds = entry.Credentials.Address;
-
-        var preimage = new HashIDPreimage
-        {
-            Discriminant = new EnvelopeType
+        var networkId = new Hash(Util.Hash(Encoding.UTF8.GetBytes(network.NetworkPassphrase)));
+        var nonce = new Int64(addressCreds.Nonce.InnerValue);
+        var signatureExpirationLedger = new Uint32(addressCreds.SignatureExpirationLedger.InnerValue);
+        var preimage = entry.Credentials.Discriminant.InnerValue ==
+                       SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2
+            ? new HashIDPreimage
             {
-                InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION,
-            },
-            SorobanAuthorization = new HashIDPreimage.HashIDPreimageSorobanAuthorization
+                Discriminant = new EnvelopeType
+                {
+                    InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS,
+                },
+                SorobanAuthorizationWithAddress = new HashIDPreimage.HashIDPreimageSorobanAuthorizationWithAddress
+                {
+                    NetworkID = networkId,
+                    Nonce = nonce,
+                    SignatureExpirationLedger = signatureExpirationLedger,
+                    Address = addressCreds.Address,
+                    Invocation = entry.RootInvocation,
+                },
+            }
+            : new HashIDPreimage
             {
-                NetworkID = new Hash(Util.Hash(Encoding.UTF8.GetBytes(network.NetworkPassphrase))),
-                Nonce = new Int64(addressCreds.Nonce.InnerValue),
-                SignatureExpirationLedger = new Uint32(addressCreds.SignatureExpirationLedger.InnerValue),
-                Invocation = entry.RootInvocation,
-            },
-        };
+                Discriminant = new EnvelopeType
+                {
+                    InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION,
+                },
+                SorobanAuthorization = new HashIDPreimage.HashIDPreimageSorobanAuthorization
+                {
+                    NetworkID = networkId,
+                    Nonce = nonce,
+                    SignatureExpirationLedger = signatureExpirationLedger,
+                    Invocation = entry.RootInvocation,
+                },
+            };
 
         var stream = new XdrDataOutputStream();
         HashIDPreimage.Encode(stream, preimage);
@@ -106,14 +155,8 @@ public static class Sep45Challenge
         Throw.IfNullOrEmpty(serverAccountId, nameof(serverAccountId));
         Throw.IfNull(network, nameof(network));
 
-        if (serverEntry.Credentials.Discriminant.InnerValue !=
-            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
-        {
-            throw new InvalidServerSignatureException(
-                "Server entry credentials are not SOROBAN_CREDENTIALS_ADDRESS.");
-        }
-
-        var creds = serverEntry.Credentials.Address;
+        var creds = GetAddressCredentials(serverEntry) ?? throw new InvalidServerSignatureException(
+            "Server entry credentials are not SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2.");
         var signatureContainer = creds.Signature;
 
         if (signatureContainer?.Discriminant?.InnerValue != SCValType.SCValTypeEnum.SCV_VEC ||
@@ -257,11 +300,11 @@ public static class Sep45Challenge
                 throw new InvalidArgumentsException("Argument must be an SCMap.");
             }
 
-            // 6) Credentials type
-            if (entry.Credentials.Discriminant.InnerValue !=
-                SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
+            // 6) Credentials type: either address arm (see GetAddressCredentials); entries may mix them
+            if (GetAddressCredentials(entry) == null)
             {
-                throw new InvalidArgumentsException("Credentials must be SOROBAN_CREDENTIALS_ADDRESS.");
+                throw new InvalidArgumentsException(
+                    "Credentials must be SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2.");
             }
 
             // 7) All entries share the same invocation (encode each once; compare against the first's bytes)
@@ -316,7 +359,8 @@ public static class Sep45Challenge
         var sawClientDomainEntry = false;
         foreach (var entry in entries)
         {
-            var credAddress = AddressToStrKey(entry.Credentials.Address.Address);
+            // Non-null: the first loop rejected every entry without address credentials.
+            var credAddress = AddressToStrKey(GetAddressCredentials(entry)!.Address);
             if (!allowedAddresses.Contains(credAddress))
             {
                 throw new InvalidArgumentsException(
@@ -408,7 +452,9 @@ public static class Sep45Challenge
             }),
         };
 
-        var creds = entry.Credentials.Address;
+        var creds = GetAddressCredentials(entry) ?? throw new InvalidOperationException(
+            "Cannot append a signature to credentials other than SOROBAN_CREDENTIALS_ADDRESS or " +
+            "SOROBAN_CREDENTIALS_ADDRESS_V2.");
         SCVal[] combined;
         if (creds.Signature?.Discriminant?.InnerValue == SCValType.SCValTypeEnum.SCV_VEC &&
             creds.Signature.Vec != null)
