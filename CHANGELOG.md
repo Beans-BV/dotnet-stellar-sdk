@@ -12,8 +12,11 @@ All notable changes to this project are documented here. The format is based on
 > muxed contracts, CAP-87 ML-DSA cost types, CAP-88 millisecond close times), `W...` muxed-contract strkeys and
 > `ScMuxedContractId`, plus a fix for `ScMuxedAccountId`, which encoded and decoded muxed-account `SCAddress`
 > values with the wrong byte order since 14.0.0. Every ledger after the Protocol 30 upgrade fails to decode
-> with the 16.0.0 XDR, so upgrade before your network does. The MAUI harness is now also validated on iOS, the
-> iOS Simulator and Mac Catalyst ([#256](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/256)).
+> with the 16.0.0 XDR, so upgrade before your network does. The SEP-45 client now accepts CAP-71
+> `SOROBAN_CREDENTIALS_ADDRESS_V2` challenge entries, which the Java and Python SDKs issue by default on
+> Protocol 27+ networks ([#271](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/271)). The MAUI harness is
+> now also validated on iOS, the iOS Simulator and Mac Catalyst
+> ([#256](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/256)).
 
 ### Added
 
@@ -83,19 +86,19 @@ All notable changes to this project are documented here. The format is based on
   methods.
 - `StrKey` decoding threw `IndexOutOfRangeException` for a strkey whose last character is not ASCII. It now
   throws `ArgumentException`, like any other invalid character.
-- The SEP-45 client (`ClientWebAuthContract`) now accepts challenges whose authorization entries carry
-  Protocol 27 `SOROBAN_CREDENTIALS_ADDRESS_V2` credentials (CAP-0071-02), alongside the legacy
-  `SOROBAN_CREDENTIALS_ADDRESS` ([#240](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/240)). Challenge
-  validation, server-signature verification and client signing all rejected the V2 arm, so the client could
-  not authenticate against an anchor built on the Java SDK 5.0.0 or the Python SDK 16.0.0, both of which issue
-  V2 challenge entries by default on protocol 27+ networks. A V2 entry is verified and signed over the
-  address-bound `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage, bound to that entry's own
-  credential address, and a V1 entry still uses the legacy `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION` preimage.
-  Challenges that mix the two arms are accepted, and signing never changes an entry's arm. A
-  `ClientDomainEntrySigningDelegate` that returns the client-domain entry under a different arm is now
-  rejected with `InvalidArgumentsException`. Source-account and `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES`
-  credentials are still rejected, because SEP-45 defines challenge entries by their `credentials.address`
-  only.
+- The SEP-45 client (`ClientWebAuthContract`) now accepts challenges whose authorization entries carry Protocol
+  27 `SOROBAN_CREDENTIALS_ADDRESS_V2` credentials (CAP-0071-02), alongside the legacy
+  `SOROBAN_CREDENTIALS_ADDRESS` ([#271](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/271); fixes
+  [#240](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/240)). Challenge validation, server-signature
+  verification and client signing all rejected the V2 arm, so the client could not authenticate against an
+  anchor built on the Java SDK 5.0.0 or the Python SDK 16.0.0, both of which issue V2 challenge entries by
+  default on protocol 27+ networks. A V2 entry is verified and signed over the address-bound
+  `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage, bound to that entry's own credential address, and
+  a V1 entry still uses the legacy `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION` preimage. Challenges that mix the two
+  arms are accepted, and signing never changes an entry's arm. A `ClientDomainEntrySigningDelegate` that returns
+  the client-domain entry under a different arm is now rejected with `InvalidArgumentsException`. Source-account
+  and `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` credentials are still rejected, because SEP-45 defines
+  challenge entries by their `credentials.address` only.
 
 ## [16.0.0] - 2026-10-03
 
