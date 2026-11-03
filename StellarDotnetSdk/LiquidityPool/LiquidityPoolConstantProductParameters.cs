@@ -16,7 +16,7 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
 {
     /// <summary>
     ///     Constructs a <c>LiquidityPoolConstantProductParameters</c> with the two assets and fee.
-    ///     Assets must be in lexicographic order (Asset A &lt; Asset B).
+    ///     Assets must be in lexicographic order (Asset A &lt; Asset B), as defined by <see cref="Asset.CompareTo" />.
     /// </summary>
     /// <param name="assetA">The first asset in the pool (must be lexicographically less than assetB).</param>
     /// <param name="assetB">The second asset in the pool.</param>

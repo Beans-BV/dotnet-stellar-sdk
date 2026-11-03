@@ -1,8 +1,6 @@
-﻿using System;
-using StellarDotnetSdk.Accounts;
+﻿using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Xdr;
-using static System.String;
 
 namespace StellarDotnetSdk.Assets;
 
@@ -64,10 +62,6 @@ public class AssetTypeCreditAlphaNum4 : AssetTypeCreditAlphaNum
                 return 1;
         }
 
-        var other = (AssetTypeCreditAlphaNum)asset;
-
-        return Code != other.Code
-            ? Compare(Code, other.Code, StringComparison.Ordinal)
-            : Compare(Issuer, other.Issuer, StringComparison.Ordinal);
+        return CompareCodeAndIssuer((AssetTypeCreditAlphaNum)asset);
     }
 }

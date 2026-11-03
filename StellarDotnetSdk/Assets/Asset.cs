@@ -127,10 +127,16 @@ public abstract class Asset
     public abstract string CanonicalName();
 
     /// <summary>
-    ///     Compares this asset to another <see cref="Asset" /> for ordering.
-    ///     Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12.
+    ///     Compares this asset to another <see cref="Asset" /> for ordering, in the order stellar-core uses (for
+    ///     example, for the assets of a liquidity pool).
+    ///     Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12. Credit assets of the same type are
+    ///     ordered by code, then by the raw bytes of the issuer's public key (not the <c>G...</c> strkey text).
     /// </summary>
     /// <param name="asset">The asset to compare with.</param>
     /// <returns>A negative value, zero, or positive value if this asset is less than, equal to, or greater than <paramref name="asset" />.</returns>
+    /// <exception cref="ArgumentException">
+    ///     Both assets are credit assets of the same type with the same code and different issuers, and one of the
+    ///     issuers is not a valid account ID.
+    /// </exception>
     public abstract int CompareTo(Asset asset);
 }
