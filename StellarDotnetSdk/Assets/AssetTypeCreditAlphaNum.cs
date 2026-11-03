@@ -66,4 +66,28 @@ public abstract class AssetTypeCreditAlphaNum : Asset
     {
         return $"{Code}:{Issuer}";
     }
+
+    /// <summary>
+    ///     Compares the code, then the issuer, in the order stellar-core uses for assets of the same type.
+    /// </summary>
+    /// <param name="other">An asset of the same type as this one.</param>
+    private protected int CompareCodeAndIssuer(AssetTypeCreditAlphaNum other)
+    {
+        if (Code != other.Code)
+        {
+            // stellar-core compares the zero-padded code arrays. For valid (ASCII alphanumeric) codes that is the
+            // same as ordinal order, since a shorter code's padding byte sorts before any character.
+            return string.Compare(Code, other.Code, StringComparison.Ordinal);
+        }
+
+        if (Issuer == other.Issuer)
+        {
+            return 0;
+        }
+
+        // stellar-core compares the raw 32-byte keys. The strkey text sorts differently: base32 puts the digits
+        // 2-7 after 'Z', but in ASCII they come before 'A'.
+        return StrKey.DecodeEd25519PublicKey(Issuer).AsSpan()
+            .SequenceCompareTo(StrKey.DecodeEd25519PublicKey(other.Issuer));
+    }
 }

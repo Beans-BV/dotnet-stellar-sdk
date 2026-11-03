@@ -6,6 +6,18 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Fixed
+
+- `Asset.CompareTo` ordered two credit assets with the same code by their issuers' `G...` strkey text, while
+  stellar-core orders them by the issuers' raw 32-byte keys. The two orders disagree whenever the issuers first
+  differ at a letter and a digit (base32 puts `2` to `7` after `Z`, ASCII puts them before `A`), which is common.
+  For those pairs, `LiquidityPoolConstantProductParameters` and `LiquidityPoolId` threw on the asset order the
+  network requires and accepted the reverse one, which the network rejects as malformed and which gives the
+  wrong pool ID. `CompareTo` now compares the issuers' key bytes, matching stellar-core and the JS and Go SDKs. If
+  you swapped the assets to work around the exception, swap them back: the order you passed is now rejected.
+  Comparing two such assets now throws `ArgumentException` if either issuer is not a valid account ID
+  ([#257](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/257)).
+
 ## [17.0.0] - 2026-10-29
 
 > **Major release; recompile required.** Protocol 30 support: XDR regenerated from stellar-xdr `v30.0` (CAP-84
