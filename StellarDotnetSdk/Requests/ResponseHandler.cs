@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -26,7 +27,24 @@ public class ResponseHandler<T> where T : class
     ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
     ///     deserializes to no object.
     /// </exception>
-    public async Task<T> HandleResponse(HttpResponseMessage response)
+    public Task<T> HandleResponse(HttpResponseMessage response)
+    {
+        return HandleResponse(response, null, null);
+    }
+
+    /// <summary>
+    ///     Processes an HTTP response like <see cref="HandleResponse(HttpResponseMessage)" />, and records on the
+    ///     deserialized <see cref="Response" /> the client that sent the request and the URI it was sent to.
+    /// </summary>
+    /// <param name="response">The HTTP response message to process.</param>
+    /// <param name="httpClient">The client that sent the request, or <c>null</c> when unknown.</param>
+    /// <param name="requestUri">The URI the request was sent to, or <c>null</c> when unknown.</param>
+    /// <returns>The deserialized response object of type <typeparamref name="T" />.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
+    internal async Task<T> HandleResponse(HttpResponseMessage response, HttpClient? httpClient, Uri? requestUri)
     {
         var statusCode = response.StatusCode;
         var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -63,6 +81,8 @@ public class ResponseHandler<T> where T : class
         if (responseObj is Response responseInstance)
         {
             responseInstance.SetHeaders(response.Headers);
+            responseInstance.HttpClient = httpClient;
+            responseInstance.RequestUri = requestUri;
         }
 
         return responseObj;

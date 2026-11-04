@@ -31,17 +31,61 @@ public sealed class Page<T> : Response
     /// <summary>
     ///     The previous page of results or null when there is no more results
     /// </summary>
+    /// <remarks>
+    ///     The request goes through the <see cref="System.Net.Http.HttpClient" /> that fetched this page, so its
+    ///     authentication, default headers and resilience pipeline apply to every page, and it can fail the same
+    ///     ways the request for this page could. It goes to the scheme, host and port this page was fetched from,
+    ///     whatever the link's href names, so a response cannot send the client's credentials to another host or
+    ///     over plain HTTP. A page the SDK did not fetch (for example, one you deserialized yourself) is followed
+    ///     with a new client, to the href as it is.
+    /// </remarks>
+    /// <exception cref="System.ObjectDisposedException">
+    ///     Thrown by the returned task when the client that fetched this page has been disposed. A
+    ///     <see cref="Server" /> disposes a client it created when it is disposed, so page through before
+    ///     disposing it, or before disposing a client you passed to it or to <c>Link.Follow</c>.
+    /// </exception>
+    /// <exception cref="Exceptions.ClientProtocolException">
+    ///     Thrown by the returned task when the response body is empty, or holds the JSON literal <c>null</c>.
+    /// </exception>
     public Task<Page<T>>? PreviousPage()
     {
-        return Links?.Prev.Follow();
+        return Follow(Links?.Prev);
     }
 
     /// <summary>
     ///     The next page of results or null when there is no more results
     /// </summary>
+    /// <remarks>
+    ///     The request goes through the <see cref="System.Net.Http.HttpClient" /> that fetched this page, so its
+    ///     authentication, default headers and resilience pipeline apply to every page, and it can fail the same
+    ///     ways the request for this page could. It goes to the scheme, host and port this page was fetched from,
+    ///     whatever the link's href names, so a response cannot send the client's credentials to another host or
+    ///     over plain HTTP. A page the SDK did not fetch (for example, one you deserialized yourself) is followed
+    ///     with a new client, to the href as it is.
+    /// </remarks>
+    /// <exception cref="System.ObjectDisposedException">
+    ///     Thrown by the returned task when the client that fetched this page has been disposed. A
+    ///     <see cref="Server" /> disposes a client it created when it is disposed, so page through before
+    ///     disposing it, or before disposing a client you passed to it or to <c>Link.Follow</c>.
+    /// </exception>
+    /// <exception cref="Exceptions.ClientProtocolException">
+    ///     Thrown by the returned task when the response body is empty, or holds the JSON literal <c>null</c>.
+    /// </exception>
     public Task<Page<T>>? NextPage()
     {
-        return Links?.Next.Follow();
+        return Follow(Links?.Next);
+    }
+
+    private Task<Page<T>>? Follow(Link<Page<T>>? link)
+    {
+        if (link is null)
+        {
+            return null;
+        }
+
+        return HttpClient is null || RequestUri is null
+            ? link.Follow()
+            : link.FollowOnOrigin(HttpClient, RequestUri);
     }
 
     /// <summary>

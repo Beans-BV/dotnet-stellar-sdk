@@ -6,6 +6,28 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking (behavioral):** `Page<T>.NextPage()` and `PreviousPage()` now page with the client that fetched
+  the page (see Fixed), so they fail with `ObjectDisposedException` once that client is disposed, where they
+  used to page on with a new client. A `Server` disposes a client it created when it is disposed, so code that
+  returns a page from a `using` block around its `Server`, or disposes a client it passed to `Server` or to
+  `Link.Follow(HttpClient)`, must page through first
+  ([#193](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/193)).
+
+### Fixed
+
+- `Page<T>.NextPage()` and `PreviousPage()` followed the `next`/`prev` link with a new, unconfigured
+  `HttpClient`, so every page after the first went out without the bearer token, the `X-Client-Name` and
+  `X-Client-Version` headers and the configured retry, timeout and circuit-breaker pipeline. Against an
+  authenticated Horizon provider, paging could fail with `401`/`403` after the first page. They now use the
+  client that fetched the page, whether it came from a request builder or from `Link.Follow(HttpClient)`, and
+  no longer allocate a client per call. The request goes to the scheme, host and port the page was fetched
+  from, whatever the link's href names (as js-stellar-sdk does), so a response cannot send the client's
+  credentials to another host or over plain HTTP. A page the SDK did not fetch (for example, one you
+  deserialized yourself) still follows its link as it is, with a new client
+  ([#193](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/193)).
+
 ## [17.0.0] - 2026-10-29
 
 > **Major release; recompile required.** Protocol 30 support: XDR regenerated from stellar-xdr `v30.0` (CAP-84
