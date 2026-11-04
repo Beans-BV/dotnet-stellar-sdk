@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Tests.Requests;
+using StellarDotnetSdk.Tests.Sep.Sep0007.Fixtures;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
@@ -72,7 +74,7 @@ public class PageTest
 
     /// <summary>
     ///     Verifies that NextPage and PreviousPage send their request to the scheme, host and port the page was
-    ///     fetched from, whatever the response's link names, so a response cannot route the bearer token to another
+    ///     fetched from, whatever the response's link names, so a link cannot route the bearer token to another
     ///     host, to another port or over plain HTTP. The path and query of the link are kept as they are.
     /// </summary>
     [TestMethod]
@@ -272,6 +274,32 @@ public class PageTest
     }
 
     /// <summary>
+    ///     Verifies that a page fetched through <see cref="IRequestBuilder{T}.Execute{TZ}(Uri)" /> with a relative
+    ///     URI, which <see cref="HttpClient" /> resolves against its <see cref="HttpClient.BaseAddress" />, records
+    ///     the origin the request went to, so NextPage pages on instead of failing on the relative URI.
+    /// </summary>
+    [TestMethod]
+    public async Task NextPage_OnPageFromRelativeExecuteUri_UsesTheResolvedOrigin()
+    {
+        // Arrange
+        var handler = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Ok(PageJson),
+            ScriptedHttpMessageHandler.Ok(PageJson));
+        using var httpClient = new HttpClient(handler) { BaseAddress = new Uri(HorizonUri + "/") };
+        using var server = new Server(HorizonUri, httpClient);
+
+        // Act
+        var firstPage = await server.Transactions.Execute<Page<TransactionResponse>>(
+            new Uri("transactions?limit=2", UriKind.Relative));
+        await firstPage.NextPage()!;
+
+        // Assert
+        Assert.AreEqual(2, handler.CallCount);
+        Assert.AreEqual(HorizonUri + "/transactions?limit=2", handler.Requests[0].RequestUri!.AbsoluteUri);
+        Assert.AreEqual(NextHref, handler.Requests[1].RequestUri!.AbsoluteUri);
+    }
+
+    /// <summary>
     ///     Verifies that a page stays bound to the client that fetched it: once that client is disposed (as a
     ///     <see cref="Server" /> does with a client it created), NextPage throws instead of quietly following
     ///     with a new, unauthenticated client.
@@ -293,17 +321,71 @@ public class PageTest
 
     /// <summary>
     ///     Verifies that a page the SDK did not fetch (here, deserialized directly) has no client to reuse and
-    ///     still follows its link with a new one. The link points at an unresolvable host, so the new client
-    ///     fails with <see cref="HttpRequestException" />.
+    ///     still follows its link, as it is, with a new client: the request reaches the loopback server the link
+    ///     names, over a real <see cref="HttpClient" />. Like the other loopback tests, it needs 127.0.0.1 exempt
+    ///     from any proxy environment variable.
     /// </summary>
     [TestMethod]
     public async Task NextPage_OnPageNotFetchedBySdk_FollowsWithNewHttpClient()
     {
         // Arrange
-        var page = JsonSerializer.Deserialize<Page<TransactionResponse>>(PageJson, JsonOptions.DefaultOptions)!;
+        using var loopback = new LoopbackHttpServer((_, stream, cancellationToken) =>
+            LoopbackHttpServer.WriteAsync(stream, OkResponse(PageJson), cancellationToken));
+        var json = PageJsonWithLinks($"http://127.0.0.1:{loopback.Port}/transactions?cursor=200", PrevHref);
+        var page = JsonSerializer.Deserialize<Page<TransactionResponse>>(json, JsonOptions.DefaultOptions)!;
 
-        // Act & Assert
-        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => page.NextPage()!);
+        // Act
+        var nextPage = await page.NextPage()!;
+
+        // Assert
+        Assert.AreEqual("GET /transactions?cursor=200 HTTP/1.1", loopback.Requests.Single());
+        Assert.IsNotNull(nextPage.Links);
+    }
+
+    /// <summary>
+    ///     Verifies that the origin a page's follows go to is the one the request was sent to, not the one a
+    ///     redirect took it to: with a real handler following a 302 from the configured server to another server,
+    ///     NextPage still goes to the configured server, so a redirect cannot move the client's credentials. Like
+    ///     the other loopback tests, it needs 127.0.0.1 exempt from any proxy environment variable.
+    /// </summary>
+    [TestMethod]
+    public async Task NextPage_AfterRedirectOnFirstRequest_StaysOnRequestedOrigin()
+    {
+        // Arrange: the other server's page links to the other server itself.
+        LoopbackHttpServer? other = null;
+        using var otherServer = other = new LoopbackHttpServer((_, stream, cancellationToken) =>
+            LoopbackHttpServer.WriteAsync(stream,
+                OkResponse(PageJsonWithLinks($"http://127.0.0.1:{other!.Port}/transactions?cursor=200", PrevHref)),
+                cancellationToken));
+        using var configured = new LoopbackHttpServer((requestLine, stream, cancellationToken) =>
+            LoopbackHttpServer.WriteAsync(stream, requestLine.StartsWith("GET /transactions?cursor=200")
+                ? OkResponse(PageJson)
+                : RedirectResponse($"http://127.0.0.1:{otherServer.Port}/transactions"), cancellationToken));
+        using var httpClient = new HttpClient(new HttpClientHandler());
+        using var server = new Server($"http://127.0.0.1:{configured.Port}", httpClient);
+
+        // Act
+        var firstPage = await server.Transactions.Execute();
+        await firstPage.NextPage()!;
+
+        // Assert
+        CollectionAssert.AreEqual(
+            new[] { "GET /transactions HTTP/1.1", "GET /transactions?cursor=200 HTTP/1.1" },
+            configured.Requests.ToArray());
+        CollectionAssert.AreEqual(new[] { "GET /transactions HTTP/1.1" }, otherServer.Requests.ToArray());
+    }
+
+    /// <summary>A raw HTTP/1.1 200 response carrying <paramref name="body" /> as JSON.</summary>
+    private static string OkResponse(string body)
+    {
+        return "HTTP/1.1 200 OK\r\nContent-Type: application/hal+json; charset=utf-8\r\n" +
+               $"Content-Length: {Encoding.UTF8.GetByteCount(body)}\r\nConnection: close\r\n\r\n{body}";
+    }
+
+    /// <summary>A raw HTTP/1.1 302 response pointing at <paramref name="location" />.</summary>
+    private static string RedirectResponse(string location)
+    {
+        return $"HTTP/1.1 302 Found\r\nLocation: {location}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n";
     }
 
     private static string PageJsonWithLinks(string nextHref, string prevHref)

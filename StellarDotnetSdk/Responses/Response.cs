@@ -44,8 +44,9 @@ public abstract class Response
     internal HttpClient? HttpClient { get; set; }
 
     /// <summary>
-    ///     The URI of the request that fetched this response, recorded together with <see cref="HttpClient" />.
-    ///     <see cref="Page{T}" /> sends its follows to this URI's scheme, host and port.
+    ///     The absolute URI of the request that fetched this response (a relative request URI resolved against
+    ///     the client's base address), recorded together with <see cref="HttpClient" />. <see cref="Page{T}" />
+    ///     sends its follows to this URI's scheme, host and port.
     /// </summary>
     [JsonIgnore]
     internal Uri? RequestUri { get; set; }

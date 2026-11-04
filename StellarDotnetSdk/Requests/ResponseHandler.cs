@@ -82,9 +82,28 @@ public class ResponseHandler<T> where T : class
         {
             responseInstance.SetHeaders(response.Headers);
             responseInstance.HttpClient = httpClient;
-            responseInstance.RequestUri = requestUri;
+            responseInstance.RequestUri = ResolveRequestUri(httpClient, requestUri);
         }
 
         return responseObj;
+    }
+
+    /// <summary>
+    ///     Returns the absolute URI the request went to. <see cref="HttpClient" /> resolves a relative request URI
+    ///     against its <see cref="HttpClient.BaseAddress" /> before sending, and <see cref="Page{T}" /> follows its
+    ///     links on the recorded URI's origin, so the recorded URI has to be the resolved one.
+    /// </summary>
+    /// <returns>
+    ///     <paramref name="requestUri" /> when it is absolute, the resolved URI when it is relative and the client
+    ///     has a base address, or <c>null</c> when it cannot be resolved (the request could not have been sent).
+    /// </returns>
+    private static Uri? ResolveRequestUri(HttpClient? httpClient, Uri? requestUri)
+    {
+        if (requestUri is null || requestUri.IsAbsoluteUri)
+        {
+            return requestUri;
+        }
+
+        return httpClient?.BaseAddress is { } baseAddress ? new Uri(baseAddress, requestUri) : null;
     }
 }

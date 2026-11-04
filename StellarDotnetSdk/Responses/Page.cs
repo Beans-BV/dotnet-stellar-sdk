@@ -35,9 +35,12 @@ public sealed class Page<T> : Response
     ///     The request goes through the <see cref="System.Net.Http.HttpClient" /> that fetched this page, so its
     ///     authentication, default headers and resilience pipeline apply to every page, and it can fail the same
     ///     ways the request for this page could. It goes to the scheme, host and port this page was fetched from,
-    ///     whatever the link's href names, so a response cannot send the client's credentials to another host or
-    ///     over plain HTTP. A page the SDK did not fetch (for example, one you deserialized yourself) is followed
-    ///     with a new client, to the href as it is.
+    ///     whatever the link's href names, so a link cannot send the client's credentials to another host or over
+    ///     plain HTTP. A redirect from that server is followed by the client's handler as for any other request,
+    ///     with the client's default headers other than <c>Authorization</c>, which the .NET handlers drop on a
+    ///     redirect; give the client a handler with <c>AllowAutoRedirect = false</c> to refuse redirects. A page
+    ///     the SDK did not fetch (for example, one you deserialized yourself) is followed with a new client, to the
+    ///     href as it is.
     /// </remarks>
     /// <exception cref="System.ObjectDisposedException">
     ///     Thrown by the returned task when the client that fetched this page has been disposed. A
@@ -59,9 +62,12 @@ public sealed class Page<T> : Response
     ///     The request goes through the <see cref="System.Net.Http.HttpClient" /> that fetched this page, so its
     ///     authentication, default headers and resilience pipeline apply to every page, and it can fail the same
     ///     ways the request for this page could. It goes to the scheme, host and port this page was fetched from,
-    ///     whatever the link's href names, so a response cannot send the client's credentials to another host or
-    ///     over plain HTTP. A page the SDK did not fetch (for example, one you deserialized yourself) is followed
-    ///     with a new client, to the href as it is.
+    ///     whatever the link's href names, so a link cannot send the client's credentials to another host or over
+    ///     plain HTTP. A redirect from that server is followed by the client's handler as for any other request,
+    ///     with the client's default headers other than <c>Authorization</c>, which the .NET handlers drop on a
+    ///     redirect; give the client a handler with <c>AllowAutoRedirect = false</c> to refuse redirects. A page
+    ///     the SDK did not fetch (for example, one you deserialized yourself) is followed with a new client, to the
+    ///     href as it is.
     /// </remarks>
     /// <exception cref="System.ObjectDisposedException">
     ///     Thrown by the returned task when the client that fetched this page has been disposed. A

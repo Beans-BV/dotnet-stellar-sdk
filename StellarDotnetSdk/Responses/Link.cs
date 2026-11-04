@@ -185,8 +185,9 @@ public class Link<TResponse> : Link where TResponse : Response
 
     /// <summary>
     ///     Follows the link with <paramref name="httpClient" />, sending the request to the scheme, host and port
-    ///     of <paramref name="origin" /> whatever the link's href names, so the client's credentials only go to the
-    ///     server that <paramref name="origin" /> points at.
+    ///     of <paramref name="origin" /> whatever the link's href names, so the link cannot send the client's
+    ///     credentials elsewhere. A redirect from that server is followed by the client's handler as for any other
+    ///     request, with the client's default headers other than <c>Authorization</c>.
     /// </summary>
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <param name="origin">A URI on the server to send the request to; only its scheme, host and port are used.</param>

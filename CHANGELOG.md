@@ -23,10 +23,12 @@ All notable changes to this project are documented here. The format is based on
   authenticated Horizon provider, paging could fail with `401`/`403` after the first page. They now use the
   client that fetched the page, whether it came from a request builder or from `Link.Follow(HttpClient)`, and
   no longer allocate a client per call. The request goes to the scheme, host and port the page was fetched
-  from, whatever the link's href names (as js-stellar-sdk does), so a response cannot send the client's
-  credentials to another host or over plain HTTP. A page the SDK did not fetch (for example, one you
-  deserialized yourself) still follows its link as it is, with a new client
-  ([#193](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/193)).
+  from, whatever the link's href names (as js-stellar-sdk does), so a link cannot send the client's
+  credentials to another host or over plain HTTP. A redirect from that server is followed by the client's
+  handler as for any other request, with the client's default headers other than `Authorization`, which
+  the .NET handlers drop on a redirect; give the client a handler with `AllowAutoRedirect = false` to refuse
+  redirects. A page the SDK did not fetch (for example, one you deserialized yourself) still follows its link
+  as it is, with a new client ([#193](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/193)).
 
 ## [17.0.0] - 2026-10-29
 
