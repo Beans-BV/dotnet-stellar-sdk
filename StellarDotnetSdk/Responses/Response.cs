@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 
@@ -31,6 +33,23 @@ public abstract class Response
     /// </summary>
     [JsonIgnore]
     protected int RateLimitReset { get; private set; }
+
+    /// <summary>
+    ///     The client that fetched this response, or <c>null</c> when none was recorded: the caller deserialized
+    ///     it, or a path other than <see cref="Requests.RequestBuilder{T}.Execute{TZ}" /> and
+    ///     <see cref="Link{TResponse}" />'s <c>Follow</c> fetched it. <see cref="Page{T}" /> follows its links with
+    ///     this client.
+    /// </summary>
+    [JsonIgnore]
+    internal HttpClient? HttpClient { get; set; }
+
+    /// <summary>
+    ///     The absolute URI of the request that fetched this response (a relative request URI resolved against
+    ///     the client's base address), recorded together with <see cref="HttpClient" />. <see cref="Page{T}" />
+    ///     sends its follows to this URI's scheme, host and port.
+    /// </summary>
+    [JsonIgnore]
+    internal Uri? RequestUri { get; set; }
 
     /// <summary>
     ///     Sets the rate limit information from HTTP response headers.

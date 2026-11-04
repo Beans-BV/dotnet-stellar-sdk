@@ -119,8 +119,10 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
     {
         var responseHandler = new ResponseHandler<TZ>();
 
-        var response = await HttpClient.GetAsync(uri);
-        return await responseHandler.HandleResponse(response);
+        // Read the shared client once, so the response records the client that actually sent the request.
+        var httpClient = HttpClient;
+        var response = await httpClient.GetAsync(uri);
+        return await responseHandler.HandleResponse(response, httpClient, uri);
     }
 
     /// <summary>

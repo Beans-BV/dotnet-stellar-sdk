@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -26,7 +27,24 @@ public class ResponseHandler<T> where T : class
     ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
     ///     deserializes to no object.
     /// </exception>
-    public async Task<T> HandleResponse(HttpResponseMessage response)
+    public Task<T> HandleResponse(HttpResponseMessage response)
+    {
+        return HandleResponse(response, null, null);
+    }
+
+    /// <summary>
+    ///     Processes an HTTP response like <see cref="HandleResponse(HttpResponseMessage)" />, and records on the
+    ///     deserialized <see cref="Response" /> the client that sent the request and the URI it was sent to.
+    /// </summary>
+    /// <param name="response">The HTTP response message to process.</param>
+    /// <param name="httpClient">The client that sent the request, or <c>null</c> when unknown.</param>
+    /// <param name="requestUri">The URI the request was sent to, or <c>null</c> when unknown.</param>
+    /// <returns>The deserialized response object of type <typeparamref name="T" />.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
+    internal async Task<T> HandleResponse(HttpResponseMessage response, HttpClient? httpClient, Uri? requestUri)
     {
         var statusCode = response.StatusCode;
         var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -63,8 +81,29 @@ public class ResponseHandler<T> where T : class
         if (responseObj is Response responseInstance)
         {
             responseInstance.SetHeaders(response.Headers);
+            responseInstance.HttpClient = httpClient;
+            responseInstance.RequestUri = ResolveRequestUri(httpClient, requestUri);
         }
 
         return responseObj;
+    }
+
+    /// <summary>
+    ///     Returns the absolute URI the request went to. <see cref="HttpClient" /> resolves a relative request URI
+    ///     against its <see cref="HttpClient.BaseAddress" /> before sending, and <see cref="Page{T}" /> follows its
+    ///     links on the recorded URI's origin, so the recorded URI has to be the resolved one.
+    /// </summary>
+    /// <returns>
+    ///     <paramref name="requestUri" /> when it is absolute, the resolved URI when it is relative and the client
+    ///     has a base address, or <c>null</c> when it cannot be resolved (the request could not have been sent).
+    /// </returns>
+    private static Uri? ResolveRequestUri(HttpClient? httpClient, Uri? requestUri)
+    {
+        if (requestUri is null || requestUri.IsAbsoluteUri)
+        {
+            return requestUri;
+        }
+
+        return httpClient?.BaseAddress is { } baseAddress ? new Uri(baseAddress, requestUri) : null;
     }
 }

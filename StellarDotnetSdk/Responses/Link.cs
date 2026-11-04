@@ -89,6 +89,11 @@ public class Link<TResponse> : Link where TResponse : Response
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <param name="parameters">An object whose properties are used for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <remarks>
+    ///     When the linked resource is a <see cref="Page{T}" />, the page keeps <paramref name="httpClient" /> and
+    ///     its <see cref="Page{T}.NextPage" /> and <see cref="Page{T}.PreviousPage" /> use it, so dispose the client
+    ///     only after paging through.
+    /// </remarks>
     /// <exception cref="ClientProtocolException">
     ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
     ///     deserializes to no object.
@@ -104,6 +109,11 @@ public class Link<TResponse> : Link where TResponse : Response
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <param name="parameters">A dictionary of parameter names and values for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <remarks>
+    ///     When the linked resource is a <see cref="Page{T}" />, the page keeps <paramref name="httpClient" /> and
+    ///     its <see cref="Page{T}.NextPage" /> and <see cref="Page{T}.PreviousPage" /> use it, so dispose the client
+    ///     only after paging through.
+    /// </remarks>
     /// <exception cref="ClientProtocolException">
     ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
     ///     deserializes to no object.
@@ -118,6 +128,11 @@ public class Link<TResponse> : Link where TResponse : Response
     /// </summary>
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <returns>The linked resource.</returns>
+    /// <remarks>
+    ///     When the linked resource is a <see cref="Page{T}" />, the page keeps <paramref name="httpClient" /> and
+    ///     its <see cref="Page{T}.NextPage" /> and <see cref="Page{T}.PreviousPage" /> use it, so dispose the client
+    ///     only after paging through.
+    /// </remarks>
     /// <exception cref="ClientProtocolException">
     ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
     ///     deserializes to no object.
@@ -168,11 +183,33 @@ public class Link<TResponse> : Link where TResponse : Response
         return Follow(new HttpClient(), parameters);
     }
 
+    /// <summary>
+    ///     Follows the link with <paramref name="httpClient" />, sending the request to the scheme, host and port
+    ///     of <paramref name="origin" /> whatever the link's href names, so the link cannot send the client's
+    ///     credentials elsewhere. A redirect from that server is followed by the client's handler as for any other
+    ///     request, with the client's default headers other than <c>Authorization</c>.
+    /// </summary>
+    /// <param name="httpClient">The HTTP client to use for the request.</param>
+    /// <param name="origin">A URI on the server to send the request to; only its scheme, host and port are used.</param>
+    /// <returns>The linked resource.</returns>
+    internal Task<TResponse> FollowOnOrigin(HttpClient httpClient, Uri origin)
+    {
+        var uri = new UriBuilder(Resolve((IDictionary<string, object>?)null))
+        {
+            Scheme = origin.Scheme,
+            Host = origin.Host,
+            Port = origin.Port,
+            UserName = "",
+            Password = "",
+        }.Uri;
+        return DoFollow(httpClient, uri);
+    }
+
     private async Task<TResponse> DoFollow(HttpClient httpClient, Uri uri)
     {
         var responseHandler = new ResponseHandler<TResponse>();
         var response = await httpClient.GetAsync(uri);
-        return await responseHandler.HandleResponse(response);
+        return await responseHandler.HandleResponse(response, httpClient, uri);
     }
 }
 
